@@ -11,7 +11,6 @@
 <body class="bg-slate-900 text-white antialiased p-4">
 
     <div class="max-w-xl mx-auto">
-        <!-- Bagian Pendaftaran -->
         <div id="registration-section" class="w-full bg-slate-800 p-6 rounded-2xl shadow-lg text-center mb-8">
             <h1 class="text-2xl font-bold text-emerald-400 mb-2">Antrian Charging Maka Kelapa Gading</h1>
             <p class="text-slate-400 mb-6">Masukkan Nama / Plat Nomor Anda</p>
@@ -20,17 +19,13 @@
             <p id="message" class="mt-4 h-5"></p>
         </div>
 
-        <!-- Bagian Status Antrian -->
         <div>
-            <!-- Slot Charging -->
             <div class="mb-6">
                 <h2 class="text-xl font-semibold text-slate-300 mb-3">Sedang Mengisi Daya</h2>
                 <div id="chargingSlotsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Slot diisi oleh JavaScript -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Daftar Tunggu -->
             <div>
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-xl font-semibold text-slate-300">Daftar Tunggu</h3>
@@ -45,29 +40,19 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // --- PASTE KONFIGURASI FIREBASE ANDA DI SINI ---
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAJLCDOUlUKXQnlta1IkbE1HDrqEXV7IG0",
-  authDomain: "antrian-maka-kelapa-gading.firebaseapp.com",
-  projectId: "antrian-maka-kelapa-gading",
-  storageBucket: "antrian-maka-kelapa-gading.firebasestorage.app",
-  messagingSenderId: "885396357573",
-  appId: "1:885396357573:web:4b9f814f89664b45b1cbac"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+        const firebaseConfig = {
+          apiKey: "AIzaSyAJLCDOUlUKXQnlta1IkbE1HDrqEXV7IG0",
+          authDomain: "antrian-maka-kelapa-gading.firebaseapp.com",
+          projectId: "antrian-maka-kelapa-gading",
+          storageBucket: "antrian-maka-kelapa-gading.firebasestorage.app",
+          messagingSenderId: "885396357573",
+          appId: "1:885396357573:web:4b9f814f89664b45b1cbac"
+        };
         // ---------------------------------------------
         
         // --- PENGATURAN UTAMA ---
@@ -83,24 +68,13 @@ const app = initializeApp(firebaseConfig);
 
         const nameInput = document.getElementById('nameInput');
         const registerButton = document.getElementById('registerButton');
+        const message = document.getElementById('message');
         const chargingSlotsContainer = document.getElementById('chargingSlotsContainer');
         const waitingCount = document.getElementById('waitingCount');
         const waitingList = document.getElementById('waitingList');
         let myPlate = localStorage.getItem('myMotorPlate');
 
-        onSnapshot(queueDocRef, (doc) => {
-            const data = doc.data() || { chargingSlots: Array(MAX_SLOTS).fill(null), waitingQueue: [] };
-            updateQueueView(data.chargingSlots, data.waitingQueue);
-            
-            const isUserInQueue = data.chargingSlots.some(s => s?.name === myPlate) || data.waitingQueue.some(q => q.name === myPlate);
-            if(isUserInQueue) {
-                 document.getElementById('registration-section').style.display = 'none';
-            } else {
-                 if (myPlate) localStorage.removeItem('myMotorPlate');
-                 document.getElementById('registration-section').style.display = 'block';
-            }
-        });
-
+        // Fungsi untuk merender tampilan antrian
         function updateQueueView(chargingSlots = [], waitingQueue = []) {
             chargingSlotsContainer.innerHTML = '';
             for (let i = 0; i < MAX_SLOTS; i++) {
@@ -136,12 +110,14 @@ const app = initializeApp(firebaseConfig);
             }
         }
         
+        // Fungsi untuk mendaftarkan motor
         async function registerMotor() {
             const name = nameInput.value.trim().toUpperCase();
             if (!name) return;
             
             registerButton.disabled = true;
             registerButton.textContent = "Memproses...";
+            message.textContent = '';
 
             try {
                 await runTransaction(db, async (transaction) => {
@@ -161,19 +137,24 @@ const app = initializeApp(firebaseConfig);
                         waitingQueue.push({ name, timestamp: new Date() });
                     }
                     
-                    transaction.set(queueDocRef, { chargingSlots, waitingQueue });
+                    transaction.set(queueDocRef, { chargingSlots, waitingQueue }, { merge: true });
                 });
                 
                 localStorage.setItem('myMotorPlate', name);
+                message.className = "mt-4 text-green-400 h-5";
+                message.textContent = "Berhasil terdaftar!";
+                nameInput.value = '';
+
             } catch (e) {
-                // handle error
+                message.className = "mt-4 text-red-400 h-5";
+                message.textContent = e.message || "Gagal mendaftar, coba lagi.";
             } finally {
                 registerButton.disabled = false;
                 registerButton.textContent = "DAFTAR ANTRIAN";
             }
         }
-        registerButton.addEventListener('click', registerMotor);
 
+        // Fungsi untuk memeriksa dan memajukan antrian secara otomatis
         async function checkAndAdvanceQueue() {
             try {
                 await runTransaction(db, async (transaction) => {
@@ -213,9 +194,27 @@ const app = initializeApp(firebaseConfig);
             }
         }
 
+        // Mendengarkan perubahan data secara realtime
+        onSnapshot(queueDocRef, (doc) => {
+            const data = doc.data() || { chargingSlots: Array(MAX_SLOTS).fill(null), waitingQueue: [] };
+            updateQueueView(data.chargingSlots, data.waitingQueue);
+            
+            const isUserInQueue = data.chargingSlots.some(s => s?.name === myPlate) || data.waitingQueue.some(q => q.name === myPlate);
+            if(isUserInQueue) {
+                 document.getElementById('registration-section').style.display = 'none';
+            } else {
+                 if (myPlate) localStorage.removeItem('myMotorPlate');
+                 document.getElementById('registration-section').style.display = 'block';
+            }
+        });
+
+        // Event Listeners
+        registerButton.addEventListener('click', registerMotor);
+        nameInput.addEventListener('keydown', e => e.key === 'Enter' && registerMotor());
+
+        // Menjalankan pengecekan antrian setiap 15 detik
         setInterval(checkAndAdvanceQueue, 15000);
+
     </script>
 </body>
 </html>
-
-
