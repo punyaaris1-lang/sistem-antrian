@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antrian Charging Cerdas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-slate-900 text-white antialiased p-4">
+
+    <div class="max-w-xl mx-auto">
+        <!-- Bagian Pendaftaran -->
+        <div id="registration-section" class="w-full bg-slate-800 p-6 rounded-2xl shadow-lg text-center mb-8">
+            <h1 class="text-2xl font-bold text-emerald-400 mb-2">Antrian Charging Maka Kelapa Gading</h1>
+            <p class="text-slate-400 mb-6">Masukkan Nama / Plat Nomor Anda</p>
+            <input type="text" id="nameInput" class="w-full bg-slate-700 border border-slate-600 text-white text-lg rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-4 placeholder-slate-400 mb-4" placeholder="e.g., B 1234 XYZ" required>
+            <button id="registerButton" class="w-full text-slate-900 bg-emerald-400 hover:bg-emerald-500 font-bold rounded-lg text-lg px-5 py-4 text-center transition-transform active:scale-95">DAFTAR ANTRIAN</button>
+            <p id="message" class="mt-4 h-5"></p>
+        </div>
+
+        <!-- Bagian Status Antrian -->
+        <div>
+            <!-- Slot Charging -->
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-slate-300 mb-3">Sedang Mengisi Daya</h2>
+                <div id="chargingSlotsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Slot diisi oleh JavaScript -->
+                </div>
+            </div>
+
+            <!-- Daftar Tunggu -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xl font-semibold text-slate-300">Daftar Tunggu</h3>
+                    <p class="text-slate-400"><span id="waitingCount">0</span> menunggu</p>
+                </div>
+                <ol id="waitingList" class="bg-slate-800 rounded-lg p-3 space-y-2 text-lg"></ol>
+            </div>
+        </div>
+         <div class="text-center mt-8 text-xs text-slate-500">
+            <p>Durasi charging disesuaikan otomatis berdasarkan kepadatan antrian.</p>
+            <p>Halaman ini diperbarui secara otomatis.</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // --- PASTE KONFIGURASI FIREBASE ANDA DI SINI ---
+        // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAJLCDOUlUKXQnlta1IkbE1HDrqEXV7IG0",
+  authDomain: "antrian-maka-kelapa-gading.firebaseapp.com",
+  projectId: "antrian-maka-kelapa-gading",
+  storageBucket: "antrian-maka-kelapa-gading.firebasestorage.app",
+  messagingSenderId: "885396357573",
+  appId: "1:885396357573:web:4b9f814f89664b45b1cbac"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+        // ---------------------------------------------
+        
+        // --- PENGATURAN UTAMA ---
+        const MAX_SLOTS = 2;
+        const DURATION_SHORT_MINUTES = 45; // Durasi saat antrian padat (>= 5)
+        const DURATION_LONG_MINUTES = 60;  // Durasi saat antrian sepi (< 5)
+        const CROWDED_THRESHOLD = 5;       // Batas antrian dianggap padat
+        // ------------------------
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const queueDocRef = doc(db, "antrian", "utama");
+
+        const nameInput = document.getElementById('nameInput');
+        const registerButton = document.getElementById('registerButton');
+        const chargingSlotsContainer = document.getElementById('chargingSlotsContainer');
+        const waitingCount = document.getElementById('waitingCount');
+        const waitingList = document.getElementById('waitingList');
+        let myPlate = localStorage.getItem('myMotorPlate');
+
+        onSnapshot(queueDocRef, (doc) => {
+            const data = doc.data() || { chargingSlots: Array(MAX_SLOTS).fill(null), waitingQueue: [] };
+            updateQueueView(data.chargingSlots, data.waitingQueue);
+            
+            const isUserInQueue = data.chargingSlots.some(s => s?.name === myPlate) || data.waitingQueue.some(q => q.name === myPlate);
+            if(isUserInQueue) {
+                 document.getElementById('registration-section').style.display = 'none';
+            } else {
+                 if (myPlate) localStorage.removeItem('myMotorPlate');
+                 document.getElementById('registration-section').style.display = 'block';
+            }
+        });
+
+        function updateQueueView(chargingSlots = [], waitingQueue = []) {
+            chargingSlotsContainer.innerHTML = '';
+            for (let i = 0; i < MAX_SLOTS; i++) {
+                const slot = chargingSlots[i];
+                let highlightClass = slot && slot.name === myPlate ? 'ring-2 ring-emerald-400' : 'border-2 border-slate-700';
+                let slotHTML = `<div class="p-4 rounded-xl min-h-[120px] flex flex-col justify-between ${highlightClass} ${slot ? 'bg-emerald-900/50' : 'bg-slate-700'}">`;
+                
+                if (slot && slot.startTime) {
+                    const sessionDurationMs = (slot.durationMinutes || DURATION_LONG_MINUTES) * 60 * 1000;
+                    const endTime = new Date(slot.startTime.seconds * 1000 + sessionDurationMs);
+                    const remainingMs = endTime - Date.now();
+                    const remainingMinutes = Math.ceil(remainingMs / 60000);
+                    const timeDisplay = remainingMs > 0 ? `Sisa <strong>${remainingMinutes} menit</strong>` : 'Waktu habis...';
+                    
+                    slotHTML += `<div><p class="text-sm text-emerald-300">Slot ${i + 1}</p><p class="text-xl font-bold break-words">${slot.name}</p><p class="text-xs text-slate-400 mt-1">Durasi: ${slot.durationMinutes} menit</p></div><p class="text-sm text-emerald-200 mt-2">${timeDisplay}</p>`;
+                } else {
+                    slotHTML += `<div class="flex items-center justify-center h-full"><p class="text-slate-400">Slot ${i+1} Kosong</p></div>`;
+                }
+                slotHTML += `</div>`;
+                chargingSlotsContainer.innerHTML += slotHTML;
+            }
+
+            waitingCount.textContent = waitingQueue.length;
+            waitingList.innerHTML = '';
+            if (waitingQueue.length === 0) {
+                waitingList.innerHTML = '<li class="text-center text-slate-500 p-4">Tidak ada antrian.</li>';
+            } else {
+                waitingQueue.forEach((item, index) => {
+                    let highlightClass = item.name === myPlate ? 'bg-emerald-800 ring-2 ring-emerald-400' : 'bg-slate-700';
+                    let youBadge = item.name === myPlate ? '<span class="ml-auto text-xs font-semibold bg-emerald-500 text-emerald-900 px-2 py-1 rounded-full">Anda</span>' : '';
+                    waitingList.innerHTML += `<li class="${highlightClass} p-3 rounded-md flex items-center"><span class="mr-3 font-bold text-slate-400">${index + 1}.</span> <span>${item.name}</span> ${youBadge}</li>`;
+                });
+            }
+        }
+        
+        async function registerMotor() {
+            const name = nameInput.value.trim().toUpperCase();
+            if (!name) return;
+            
+            registerButton.disabled = true;
+            registerButton.textContent = "Memproses...";
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const docSnap = await transaction.get(queueDocRef);
+                    let { chargingSlots = Array(MAX_SLOTS).fill(null), waitingQueue = [] } = docSnap.data() || {};
+                    
+                    const isAlreadyQueued = chargingSlots.some(s => s?.name === name) || waitingQueue.some(q => q.name === name);
+                    if(isAlreadyQueued) throw new Error("Anda sudah terdaftar dalam antrian.");
+
+                    const totalMotors = chargingSlots.filter(s => s).length + waitingQueue.length;
+                    const durationForThisSession = (totalMotors + 1) >= CROWDED_THRESHOLD ? DURATION_SHORT_MINUTES : DURATION_LONG_MINUTES;
+
+                    const emptySlotIndex = chargingSlots.indexOf(null);
+                    if (emptySlotIndex !== -1) {
+                        chargingSlots[emptySlotIndex] = { name, startTime: new Date(), durationMinutes: durationForThisSession };
+                    } else {
+                        waitingQueue.push({ name, timestamp: new Date() });
+                    }
+                    
+                    transaction.set(queueDocRef, { chargingSlots, waitingQueue });
+                });
+                
+                localStorage.setItem('myMotorPlate', name);
+            } catch (e) {
+                // handle error
+            } finally {
+                registerButton.disabled = false;
+                registerButton.textContent = "DAFTAR ANTRIAN";
+            }
+        }
+        registerButton.addEventListener('click', registerMotor);
+
+        async function checkAndAdvanceQueue() {
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const docSnap = await transaction.get(queueDocRef);
+                    if(!docSnap.exists()) return;
+
+                    let { chargingSlots = Array(MAX_SLOTS).fill(null), waitingQueue = [] } = docSnap.data();
+                    let hasChanged = false;
+
+                    for (let i = 0; i < MAX_SLOTS; i++) {
+                        const slot = chargingSlots[i];
+                        if (slot && slot.startTime) {
+                            const sessionDurationMs = (slot.durationMinutes || DURATION_LONG_MINUTES) * 60 * 1000;
+                            const endTime = new Date(slot.startTime.seconds * 1000 + sessionDurationMs);
+
+                            if (Date.now() > endTime) {
+                                if (waitingQueue.length > 0) {
+                                    const totalMotors = chargingSlots.filter(s => s).length - 1 + waitingQueue.length;
+                                    const durationForNextSession = totalMotors >= CROWDED_THRESHOLD ? DURATION_SHORT_MINUTES : DURATION_LONG_MINUTES;
+                                    
+                                    const nextInLine = waitingQueue.shift();
+                                    chargingSlots[i] = { name: nextInLine.name, startTime: new Date(), durationMinutes: durationForNextSession };
+                                } else {
+                                    chargingSlots[i] = null;
+                                }
+                                hasChanged = true;
+                            }
+                        }
+                    }
+
+                    if (hasChanged) {
+                        transaction.set(queueDocRef, { chargingSlots, waitingQueue });
+                    }
+                });
+            } catch (error) {
+                console.error("Gagal memajukan antrian:", error);
+            }
+        }
+
+        setInterval(checkAndAdvanceQueue, 15000);
+    </script>
+</body>
+</html>
+
+
