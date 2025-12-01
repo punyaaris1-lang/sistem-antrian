@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V36</title>
+    <title>Fast Charging V37 (Clean)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* TEMA V33 (SIMPLE DARK MODE) */
+        /* TEMA V33 (SUPER CLEAN DARK) */
         :root { 
             --bg: #0b101a; 
             --text: #ffffff; 
@@ -96,7 +96,6 @@
             color: #444; cursor: pointer; letter-spacing: 1px;
         }
         
-        /* HIDDEN ADMIN PANEL */
         .admin-panel { display: none; background: #000; padding: 15px; border: 1px solid #333; margin-top: 15px; border-radius: 10px; }
         .adm-btn { width: 100%; padding: 10px; margin-top: 5px; background: #333; color: #fff; border: 1px solid #555; cursor: pointer; }
 
@@ -165,57 +164,49 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        // --- SISTEM PINTAR (SUARA & LAYAR) ---
+        // --- SISTEM SILENT (SUARA & LAYAR) ---
         let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
         let wakeLock = null;
         const alarmAudio = document.getElementById('alarmSound');
 
-        // Fungsi Aktivasi Gabungan (Audio + Anti Sleep)
-        // Dipanggil saat tombol DAFTAR diklik, atau saat Login Admin
+        // Fungsi Aktivasi Gabungan (Jalan diam-diam)
         async function activateSystem() {
-            // 1. Kunci Layar (Anti Sleep) - Silent Mode
+            // 1. Kunci Layar (Tanpa Notif)
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
-                    // Kita tidak menampilkan notifikasi, biar bersih
-                    // Jika user pindah tab, lock lepas. Kita request lagi saat balik.
                     wakeLock.addEventListener('release', () => {}); 
                 }
-            } catch (err) { console.log("WakeLock Error (Ignored):", err); }
+            } catch (err) { /* Biarkan error diam */ }
 
-            // 2. Pancingan Audio
-            alarmAudio.volume = 1.0;
-            alarmAudio.muted = false;
+            // 2. Unlock Audio (Play 0.1 detik super cepat & senyap)
             try {
-                // Play 0.1 detik lalu pause, supaya browser "merestui" audio berikutnya
+                alarmAudio.volume = 1.0;
+                alarmAudio.muted = false;
                 await alarmAudio.play();
-                setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; }, 100);
-            } catch (e) { console.log("Audio unlock failed (user interaction needed)"); }
+                setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; }, 50); 
+            } catch (e) { /* Biarkan error diam */ }
         }
 
-        // Pancingan backup: Klik pertama dimanapun di halaman akan mengaktifkan sistem
+        // AUTO ACTIVATE: Saat user klik APA SAJA di halaman ini pertama kali
         document.body.addEventListener('click', activateSystem, { once: true });
-
-        // Jika layar mati/pindah tab dan balik lagi, request lock lagi
+        // RE-ACTIVATE: Jika user balik dari tab lain
         document.addEventListener('visibilitychange', async () => {
-            if (wakeLock !== null && document.visibilityState === 'visible') {
-                activateSystem();
-            }
+            if (wakeLock !== null && document.visibilityState === 'visible') activateSystem();
         });
 
         // --- ALARM LOGIC ---
         function triggerAlarm(name) {
             const myPlat = localStorage.getItem('myPlat');
             
-            // Bunyi Jika: Plat Saya ATAU Admin Login
             if((myPlat && name === myPlat) || isAdminLoggedIn) {
                 document.getElementById('alarmText').innerText = `Plat ${name}`;
                 document.getElementById('alarmModal').style.display = 'flex';
                 
                 alarmAudio.currentTime = 0;
                 alarmAudio.loop = true;
-                alarmAudio.play().catch(e => console.log("Audio Blocked"));
+                alarmAudio.play().catch(e => console.log("Audio block"));
                 
                 if(navigator.vibrate) navigator.vibrate([1000, 500, 1000]);
             }
@@ -229,7 +220,7 @@
 
         // --- LOGIC APLIKASI ---
         document.getElementById('btnDaftar').onclick = async () => {
-            await activateSystem(); // <--- AKTIVASI DISINI (GABUNG)
+            await activateSystem(); // Pastikan sistem hidup
             
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
@@ -249,7 +240,6 @@
                     if((d.blockedList||[]).includes(plat)) throw "Plat DIBLOKIR!";
                     if(s.some(x=>x?.name===plat) || q.some(x=>x?.name===plat)) throw "Sudah Terdaftar!";
 
-                    // Hitung Durasi
                     let dur = 0; 
                     if(bat >= 90) dur = Math.ceil((100-bat) * 2.2); 
                     else if(bat >= 80) dur = Math.ceil((100-bat) * 1.5);
@@ -270,7 +260,6 @@
 
         // --- RENDER ---
         setInterval(() => {
-            // Timer Loop visual
             document.querySelectorAll('[data-end]').forEach(el => {
                 const end = parseInt(el.dataset.end);
                 const name = el.dataset.name;
@@ -321,7 +310,6 @@
                     </div>`;
             }).join('');
 
-            // Render Queue
             const q = d.waitingQueue || [];
             document.getElementById('qCount').innerText = q.length;
             document.getElementById('queueList').innerHTML = q.length ? q.map((x,i)=>`
@@ -334,7 +322,7 @@
 
         // --- ACTIONS ---
         window.act = (i, type, platName) => {
-            activateSystem(); // Ensure active
+            activateSystem(); 
             const myPlat = localStorage.getItem('myPlat');
 
             if(type === 'stop' && !isAdminLoggedIn && myPlat !== platName) {
@@ -376,8 +364,8 @@
             if(p === '1131') {
                 document.getElementById('adminPanel').style.display = 'block';
                 isAdminLoggedIn = true;
-                activateSystem(); // Admin login juga mengaktifkan suara
-                alert("Mode Admin Aktif! Anda akan mendengar semua alarm.");
+                activateSystem(); 
+                alert("Mode Admin Aktif! (Suara & Layar On)");
             } else if(p) {
                 alert("PIN Salah");
             }
