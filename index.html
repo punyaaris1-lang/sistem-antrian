@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V39 (Original Fix)</title>
+    <title>Fast Charging V40 (Fixed Audio)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- TEMA CYBERPUNK ORIGINAL (V32) --- */
+        /* --- TEMA CYBERPUNK ORIGINAL (TAMPILAN DIJAMIN SAMA) --- */
         :root {
             --bg: #0b101a;
             --glass: rgba(255, 255, 255, 0.05);
@@ -152,8 +152,8 @@
 </head>
 <body>
 
-    <audio id="alarmSound" loop preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3">
+    <audio id="alarmSound" loop>
+        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
     </audio>
 
     <div id="masterModal" class="modal">
@@ -247,38 +247,41 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        // --- SISTEM GAIB (ANTI MATI & SUARA OTOMATIS) ---
+        // --- SISTEM GAIB V40 (ANTI MATI & SUARA TOUCH) ---
         let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
         let wakeLock = null;
+        let audioUnlocked = false; // Flag baru
         const alarmAudio = document.getElementById('alarmSound');
 
-        // FUNGSI AKTIVASI (Di-merge ke tombol daftar)
+        // FUNGSI AKTIVASI: Akan dipanggil setiap kali layar disentuh/diklik
         async function activateSystem() {
+            if(audioUnlocked) return; // Kalau sudah unlock, tidak usah trigger lagi biar ga error console
+
             // 1. KUNCI LAYAR (Silent)
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
-                    wakeLock.addEventListener('release', () => {}); 
+                    wakeLock.addEventListener('release', () => { audioUnlocked = false; }); 
                 }
             } catch (err) {}
 
-            // 2. KUNCI AUDIO (Silent Click)
+            // 2. KUNCI AUDIO (Play sebentar lalu pause)
             try {
                 alarmAudio.volume = 1.0;
                 alarmAudio.muted = false;
                 await alarmAudio.play();
-                setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; }, 50); 
+                setTimeout(() => { 
+                    alarmAudio.pause(); 
+                    alarmAudio.currentTime = 0; 
+                    audioUnlocked = true; // Tandai sukses
+                }, 100); 
             } catch (e) {}
         }
 
-        // Trigger otomatis saat user pertama kali klik dimanapun
-        document.body.addEventListener('click', activateSystem, { once: true });
-        
-        // Re-Trigger saat user kembali ke tab
-        document.addEventListener('visibilitychange', async () => {
-            if (wakeLock !== null && document.visibilityState === 'visible') activateSystem();
-        });
+        // PANCINGAN: Dengar Touchstart (HP) dan Click (PC) di seluruh body
+        document.body.addEventListener('click', activateSystem);
+        document.body.addEventListener('touchstart', activateSystem);
 
         window.toggleTheme = () => {
             const body = document.body;
@@ -304,7 +307,16 @@
                 showPopup('alarm', 'SELESAI!', `Motor <b>${name}</b> Selesai!`);
                 alarmAudio.currentTime = 0;
                 alarmAudio.loop = true; 
-                alarmAudio.play().catch(e => console.log("Audio block"));
+                
+                // FORCE PLAY
+                const playPromise = alarmAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Audio terblokir, tap layar segera!");
+                        // Kalau gagal, kita alert biar user tap layar
+                        alert(`MOTOR ${name} SELESAI! (Tap layar untuk mematikan alarm)`);
+                    });
+                }
 
                 if(navigator.vibrate) navigator.vibrate([1000, 500, 1000]);
             }
