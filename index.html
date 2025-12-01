@@ -565,5 +565,51 @@
             });
         };
     </script>
+    <!-- =============================== -->
+<!--  ALARM AUDIO                    -->
+<!-- =============================== -->
+<audio id="alarmAudio">
+    <source src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" type="audio/ogg">
+</audio>
+
+<script>
+// =====================================================
+// 1. Unlock Audio (WAJIB untuk Android supaya boleh bunyi)
+// =====================================================
+document.addEventListener('click', function unlockAudio() {
+    const a = document.getElementById('alarmAudio');
+    a.play().catch(() => {});
+    document.removeEventListener('click', unlockAudio);
+});
+
+// =====================================================
+// 2. Fungsi untuk memutar alarm
+// =====================================================
+function playAlarm() {
+    const a = document.getElementById('alarmAudio');
+    a.currentTime = 0;
+    a.play().catch(err => console.log("Gagal play alarm:", err));
+}
+
+// =====================================================
+// 3. Listener Firebase → bunyi kalau nomor berubah
+// =====================================================
+const db = firebase.database();
+const refNomor = db.ref("antrian/nomorSekarang");
+
+let lastNumber = null;
+
+refNomor.on("value", snapshot => {
+    const nomorBaru = snapshot.val();
+
+    // Kalau sudah ada nilai sebelumnya dan berubah → bunyikan alarm
+    if (lastNumber !== null && nomorBaru !== lastNumber) {
+        playAlarm();
+    }
+
+    lastNumber = nomorBaru;
+});
+</script>
+    
 </body>
 </html>
