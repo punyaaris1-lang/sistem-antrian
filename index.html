@@ -179,5 +179,55 @@
     });
 
   </script>
+  <!-- ========================================= -->
+<!--  ALARM AUDIO (WAJIB ADA DI ATAS SCRIPT)   -->
+<!-- ========================================= -->
+<audio id="alarmAudio">
+    <source src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" type="audio/ogg">
+</audio>
+
+<script>
+// =====================================================
+// 1. Unlock Audio (WAJIB untuk HP Android)
+// =====================================================
+document.addEventListener('click', function unlockAudio() {
+    const a = document.getElementById('alarmAudio');
+    a.play().catch(() => {});
+    document.removeEventListener('click', unlockAudio);
+});
+
+// =====================================================
+// 2. Fungsi untuk memutar alarm
+// =====================================================
+function playAlarm() {
+    const a = document.getElementById('alarmAudio');
+    a.currentTime = 0;
+    a.play().catch(err => console.log("Gagal play alarm:", err));
+}
+
+// =====================================================
+// 3. Listener ke Firebase Realtime Database
+//    → Ketika nomor antrian berubah → alarm bunyi
+// =====================================================
+
+// Contoh: sesuaikan dengan node database kamu
+// Misal kamu pakai: antrian/nomorSekarang
+const db = firebase.database();
+const refNomor = db.ref("antrian/nomorSekarang");
+
+let lastNumber = null;
+
+refNomor.on("value", snapshot => {
+    const nomorBaru = snapshot.val();
+
+    if (lastNumber !== null && nomorBaru !== lastNumber) {
+        // Nomor berubah → bunyikan alarm
+        playAlarm();
+    }
+
+    lastNumber = nomorBaru;
+});
+</script>
+  
 </body>
 </html>
