@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V32 (Security Fix)</title>
+    <title>Fast Charging V32 (Audio Fix)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
@@ -152,8 +152,8 @@
 </head>
 <body>
 
-    <audio id="alarmSound" loop>
-        <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..." type="audio/wav">
+    <audio id="alarmSound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3">
     </audio>
 
     <div id="masterModal" class="modal">
@@ -247,42 +247,21 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        // --- SECURITY & AUDIO ---
-        let audioCtx = null;
+        // --- AUDIO SYSTEM & STATE ---
+        let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
-        let isAdminLoggedIn = false; // State Admin
+        const alarmAudio = document.getElementById('alarmSound');
 
-        function initAudioAndNotif() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            g.gain.value = 0.01;
-            osc.connect(g); g.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.01);
-
-            if ("Notification" in window && Notification.permission !== "granted") {
-                Notification.requestPermission();
-            }
+        // Fungsi pancingan agar browser tidak memblokir audio
+        function unlockAudio() {
+            alarmAudio.play().then(() => {
+                alarmAudio.pause();
+                alarmAudio.currentTime = 0;
+            }).catch((e) => console.log("Menunggu interaksi user untuk audio..."));
         }
 
-        function playSiren() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(1000, audioCtx.currentTime + 0.5); 
-            osc.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 1.0);  
-            
-            gain.gain.value = 0.5;
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 2); 
-        }
-
-        document.body.addEventListener('click', initAudioAndNotif, { once: true });
+        // Wajib: User harus klik sekali agar audio aktif
+        document.body.addEventListener('click', unlockAudio, { once: true });
 
         window.toggleTheme = () => {
             const body = document.body;
@@ -299,17 +278,23 @@
         };
         if(localStorage.getItem('theme') === 'light') window.toggleTheme();
 
-        // --- TRIGGER ALARM (ONLY FOR OWNER) ---
+        // --- TRIGGER ALARM ---
         function triggerAlarm(name) {
-            const myPlat = localStorage.getItem('myPlat');
+            const myPlat = localStorage.getItem('myPlat'); // Ambil plat user ini
             
-            // HANYA BUNYI JIKA PLAT SAMA DENGAN YG DISIMPAN
-            if(myPlat && name === myPlat) {
+            // BUNYI JIKA: Plat sama DENGAN user HP ini, ATAU Admin sedang login
+            if((myPlat && name === myPlat) || isAdminLoggedIn) {
                 showPopup('alarm', 'SELESAI!', `Motor <b>${name}</b> Selesai!`);
-                if(window.alarmInterval) clearInterval(window.alarmInterval);
-                playSiren();
-                window.alarmInterval = setInterval(playSiren, 2500);
+                
+                // Play Audio Loop
+                alarmAudio.currentTime = 0;
+                alarmAudio.loop = true; 
+                alarmAudio.play().catch(e => console.log("Audio diblokir browser, tap layar"));
+
+                // Getar HP
                 if(navigator.vibrate) navigator.vibrate([1000, 500, 1000]);
+                
+                // Notifikasi Bar
                 if(Notification.permission === "granted") {
                     new Notification("FAST CHARGING", { body: `Plat ${name} Selesai!`, icon: "https://via.placeholder.com/128?text=⚡" });
                 }
@@ -317,7 +302,9 @@
         }
 
         window.stopAlarm = () => {
-            if(window.alarmInterval) { clearInterval(window.alarmInterval); window.alarmInterval = null; }
+            alarmAudio.pause();
+            alarmAudio.currentTime = 0;
+            alarmAudio.loop = false;
         };
 
         // --- POPUP SYSTEM ---
@@ -363,6 +350,7 @@
                         m.style.display = 'none'; 
                         document.getElementById('adminPanel').style.display = 'block'; 
                         isAdminLoggedIn = true;
+                        showPopup('success', 'ADMIN', 'Mode Admin Aktif. Alarm akan bunyi untuk semua.');
                     } 
                     else showPopup('error','GAGAL','PIN Salah!');
                 };
@@ -374,7 +362,7 @@
 
         // --- MAIN LOGIC ---
         document.getElementById('btnDaftar').onclick = async () => {
-            initAudioAndNotif(); 
+            unlockAudio(); // Pastikan audio siap
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
             const bat = parseInt(document.getElementById('userBattery').value);
@@ -382,7 +370,6 @@
             if(!plat || isNaN(bat)) { showPopup('error','DATA KURANG','Mohon isi plat & baterai.'); return; }
             btn.disabled=true; btn.innerText="PROSES...";
 
-            // SIMPAN PLAT DI HP
             localStorage.setItem('myPlat', plat);
 
             try {
@@ -425,7 +412,10 @@
                 } else {
                     el.innerText = "SELESAI"; el.style.color = "var(--soft-red)";
                     const key = name+end;
-                    if(!triggeredAlarms.has(key)) { triggeredAlarms.add(key); triggerAlarm(name); }
+                    if(!triggeredAlarms.has(key)) { 
+                        triggeredAlarms.add(key); 
+                        triggerAlarm(name); 
+                    }
                 }
             });
         }, 1000);
@@ -480,12 +470,11 @@
             `).join('') : '<div style="text-align:center; color:var(--text-muted); font-size:12px;">Antrian Kosong</div>';
         });
 
-        // --- ACTIONS (SECURED) ---
+        // --- ACTIONS ---
         window.act = (i, type, platName) => {
-            initAudioAndNotif();
+            unlockAudio();
             const myPlat = localStorage.getItem('myPlat');
 
-            // CEK KEPEMILIKAN (Kecuali Start, boleh siapa saja)
             if(type === 'stop' && !isAdminLoggedIn && myPlat !== platName) {
                 return showPopup('error', 'AKSES DITOLAK', 'Ini bukan kendaraan Anda!');
             }
@@ -565,51 +554,5 @@
             });
         };
     </script>
-    <!-- =============================== -->
-<!--  ALARM AUDIO                    -->
-<!-- =============================== -->
-<audio id="alarmAudio">
-    <source src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" type="audio/ogg">
-</audio>
-
-<script>
-// =====================================================
-// 1. Unlock Audio (WAJIB untuk Android supaya boleh bunyi)
-// =====================================================
-document.addEventListener('click', function unlockAudio() {
-    const a = document.getElementById('alarmAudio');
-    a.play().catch(() => {});
-    document.removeEventListener('click', unlockAudio);
-});
-
-// =====================================================
-// 2. Fungsi untuk memutar alarm
-// =====================================================
-function playAlarm() {
-    const a = document.getElementById('alarmAudio');
-    a.currentTime = 0;
-    a.play().catch(err => console.log("Gagal play alarm:", err));
-}
-
-// =====================================================
-// 3. Listener Firebase → bunyi kalau nomor berubah
-// =====================================================
-const db = firebase.database();
-const refNomor = db.ref("antrian/nomorSekarang");
-
-let lastNumber = null;
-
-refNomor.on("value", snapshot => {
-    const nomorBaru = snapshot.val();
-
-    // Kalau sudah ada nilai sebelumnya dan berubah → bunyikan alarm
-    if (lastNumber !== null && nomorBaru !== lastNumber) {
-        playAlarm();
-    }
-
-    lastNumber = nomorBaru;
-});
-</script>
-    
 </body>
 </html>
