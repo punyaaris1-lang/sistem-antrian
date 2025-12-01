@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V38 (Premium Stealth)</title>
+    <title>Fast Charging V39 (Original Fix)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* TEMA CYBERPUNK PREMIUM (KEMBALI KE DESAIN AWAL YG BAGUS) */
+        /* --- TEMA CYBERPUNK ORIGINAL (V32) --- */
         :root {
             --bg: #0b101a;
             --glass: rgba(255, 255, 255, 0.05);
@@ -22,17 +22,30 @@
             --input-bg: rgba(0, 0, 0, 0.4);
         }
 
+        [data-theme="light"] {
+            --bg: #f0f2f5;
+            --glass: #ffffff;
+            --text: #1a253a;
+            --text-muted: #556;
+            --cyan: #008c9e;
+            --cyan-dim: rgba(0, 140, 158, 0.1);
+            --soft-red: #d63031;
+            --border: #ccc;
+            --card-bg: #fff;
+            --input-bg: #f9f9f9;
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; font-family: 'Rajdhani', sans-serif; background-color: var(--bg); color: var(--text);
-            min-height: 100vh; padding: 20px; padding-bottom: 120px;
+            min-height: 100vh; padding: 20px; padding-bottom: 120px; transition: 0.3s;
         }
 
         .container { max-width: 480px; margin: 0 auto; position: relative; }
 
         /* HEADER */
         .header-row { 
-            display: flex; justify-content: center; align-items: center; 
+            display: flex; justify-content: space-between; align-items: center; 
             margin-top: 20px; margin-bottom: 5px;
         }
         
@@ -43,13 +56,19 @@
             text-shadow: 0 0 20px rgba(0, 229, 255, 0.3); letter-spacing: 1px;
         }
 
+        .theme-btn {
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--text); width: 35px; height: 35px; border-radius: 50%;
+            cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+        }
+
         .subtitle { 
-            text-align: center; color: var(--text-muted); font-size: 10px; 
+            text-align: left; color: var(--text-muted); font-size: 10px; 
             letter-spacing: 2px; margin-bottom: 25px; font-weight: bold;
             text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 15px;
         }
 
-        /* CARD MEWAH */
+        /* CARD */
         .glass-card {
             background: var(--glass); backdrop-filter: blur(10px);
             border: 1px solid var(--border); border-radius: 20px; padding: 25px;
@@ -57,7 +76,6 @@
         }
 
         label { display: block; font-family: 'Orbitron'; font-size: 10px; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 1px; }
-        
         input.field {
             width: 100%; background: var(--input-bg); border: 1px solid var(--border); color: var(--text);
             padding: 15px; border-radius: 10px; font-family: 'Rajdhani'; font-size: 20px;
@@ -72,7 +90,6 @@
             cursor: pointer; box-shadow: 0 0 20px var(--cyan-dim); margin-top: 5px;
         }
         
-        /* SLOT BATERAI KEREN */
         .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
         .slot-box {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px;
@@ -96,7 +113,7 @@
         .btn-start { background: var(--cyan); color: #000; }
         .btn-stop { background: rgba(255, 107, 107, 0.1); border: 1px solid var(--soft-red); color: var(--soft-red); }
 
-        /* MODAL POPUP */
+        /* POPUP MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-box { 
             background: var(--bg); border: 2px solid var(--cyan); padding: 25px; 
@@ -112,19 +129,23 @@
         .btn-modal.primary { background: var(--cyan); color: #000; }
         .btn-modal.danger { background: var(--soft-red); color: #fff; }
 
-        /* ADMIN FOOTER */
+        /* ADMIN */
         .admin-trigger { 
             text-align: center; margin-top: 40px; padding: 12px;
-            font-size: 12px; letter-spacing: 2px; color: #333; 
+            background: var(--cyan-dim); border: 1px dashed var(--cyan);
+            font-size: 12px; letter-spacing: 2px; color: var(--cyan); 
             cursor: pointer; font-weight: bold; border-radius: 8px;
-            transition: 0.3s;
         }
-        .admin-trigger:hover { color: var(--cyan); }
-
         .admin-panel { display: none; background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--soft-red); margin-top: 20px; }
         .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .adm-input { background: #222; border: 1px solid #444; color: #fff; padding: 10px; width: 100%; border-radius: 6px; }
         .adm-btn { width: 100%; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 5px; font-size: 11px; }
+        
+        .footer {
+            text-align: center; margin-top: 40px; font-family: 'Orbitron';
+            font-size: 12px; color: var(--cyan); font-weight: 900; letter-spacing: 2px;
+            text-shadow: 0 0 15px var(--cyan-dim);
+        }
 
         @keyframes pop { from{transform:scale(0.8); opacity:0} to{transform:scale(1); opacity:1} }
     </style>
@@ -151,6 +172,7 @@
     <div class="container">
         <div class="header-row">
             <h1>FAST CHARGING</h1>
+            <button class="theme-btn" onclick="toggleTheme()" id="themeIcon">☀️</button>
         </div>
         <div class="subtitle">KELAPA GADING | HOME OF MLU</div>
 
@@ -204,6 +226,8 @@
 
             <div onclick="document.getElementById('adminPanel').style.display='none'" style="text-align:center; margin-top:15px; font-size:10px; color:#555; cursor:pointer;">Tutup Panel</div>
         </div>
+
+        <div class="footer">Created by : MLU SQUAD</div>
     </div>
 
     <script type="module">
@@ -223,15 +247,15 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        // --- SISTEM STEALTH (DIAM-DIAM) ---
+        // --- SISTEM GAIB (ANTI MATI & SUARA OTOMATIS) ---
         let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
         let wakeLock = null;
         const alarmAudio = document.getElementById('alarmSound');
 
-        // Fungsi Aktivasi Gaib (Suara + Layar)
+        // FUNGSI AKTIVASI (Di-merge ke tombol daftar)
         async function activateSystem() {
-            // 1. Kunci Layar (Tanpa Notif)
+            // 1. KUNCI LAYAR (Silent)
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
@@ -239,7 +263,7 @@
                 }
             } catch (err) {}
 
-            // 2. Unlock Audio (Play 0.1 detik super cepat & senyap)
+            // 2. KUNCI AUDIO (Silent Click)
             try {
                 alarmAudio.volume = 1.0;
                 alarmAudio.muted = false;
@@ -248,24 +272,40 @@
             } catch (e) {}
         }
 
-        // AUTO ACTIVATE: Saat user klik APA SAJA di halaman ini
+        // Trigger otomatis saat user pertama kali klik dimanapun
         document.body.addEventListener('click', activateSystem, { once: true });
-        // RE-ACTIVATE: Jika user balik dari tab lain
+        
+        // Re-Trigger saat user kembali ke tab
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock !== null && document.visibilityState === 'visible') activateSystem();
         });
 
-        // --- ALARM LOGIC ---
+        window.toggleTheme = () => {
+            const body = document.body;
+            const btn = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                btn.innerText = "☀️";
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerText = "🌙";
+                localStorage.setItem('theme', 'light');
+            }
+        };
+        if(localStorage.getItem('theme') === 'light') window.toggleTheme();
+
+        // --- TRIGGER ALARM ---
         function triggerAlarm(name) {
             const myPlat = localStorage.getItem('myPlat');
             
+            // LOGIKA: Bunyi untuk Pemilik ATAU Admin
             if((myPlat && name === myPlat) || isAdminLoggedIn) {
                 showPopup('alarm', 'SELESAI!', `Motor <b>${name}</b> Selesai!`);
-                
                 alarmAudio.currentTime = 0;
-                alarmAudio.loop = true;
+                alarmAudio.loop = true; 
                 alarmAudio.play().catch(e => console.log("Audio block"));
-                
+
                 if(navigator.vibrate) navigator.vibrate([1000, 500, 1000]);
             }
         }
@@ -291,6 +331,7 @@
             t.innerText = title; ms.innerHTML = msg; 
             inp.style.display = 'none'; btnCancel.style.display = 'none';
             btnOk.className = 'btn-modal primary'; btnOk.innerText = 'OK';
+
             btnOk.onclick = null; 
 
             if(type === 'confirm') {
@@ -317,8 +358,8 @@
                         m.style.display = 'none'; 
                         document.getElementById('adminPanel').style.display = 'block'; 
                         isAdminLoggedIn = true;
-                        activateSystem(); // Admin login trigger aktivasi juga
-                        showPopup('success', 'ADMIN', 'Mode Admin Aktif.');
+                        activateSystem(); // Admin login juga mengaktifkan sistem
+                        showPopup('success', 'ADMIN', 'Mode Admin Aktif');
                     } 
                     else showPopup('error','GAGAL','PIN Salah!');
                 };
@@ -328,9 +369,10 @@
 
         window.openAdminLogin = () => showPopup('admin', 'ADMIN LOGIN', 'Masukkan PIN');
 
-        // --- APP LOGIC ---
+        // --- MAIN LOGIC ---
         document.getElementById('btnDaftar').onclick = async () => {
-            activateSystem(); 
+            await activateSystem(); // <--- AKTIVASI DISINI
+            
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
             const bat = parseInt(document.getElementById('userBattery').value);
@@ -367,7 +409,7 @@
             btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
         };
 
-        // --- RENDER ---
+        // --- RENDER & TIMER ---
         setInterval(() => {
             document.querySelectorAll('[data-end]').forEach(el => {
                 const end = parseInt(el.dataset.end);
@@ -480,7 +522,7 @@
             });
         };
 
-        // ADMIN
+        // ADMIN FUNCTIONS
         window.manualAssign = () => {
             const i = document.getElementById('manSlot').value;
             const p = document.getElementById('manPlat').value;
