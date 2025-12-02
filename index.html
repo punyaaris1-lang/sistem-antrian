@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V63 (Final Perfect)</title>
+    <title>Fast Charging V65 (Text Fix)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* --- TEMA PUTIH (LOGO BACKGROUND) --- */
         :root {
-            /* Opacity 0.85 agar logo di belakang terlihat pas */
             --bg-overlay: rgba(255, 255, 255, 0.85);
             --glass: rgba(255, 255, 255, 0.95);
             --text: #1a1a1a; --text-muted: #555;
             --cyan: #00bcd4; --soft-red: #ff3b3b;
-            --neon-yellow: #fff200; /* Kuning lebih terang */
+            --neon-yellow: #ccff00;
             --border: #ddd; --card-bg: #fff;
             --shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
@@ -24,7 +23,6 @@
         
         body {
             margin: 0; font-family: 'Rajdhani', sans-serif; color: var(--text); min-height: 100vh; padding: 20px; padding-bottom: 120px;
-            /* PASTIKAN FILE INI ADA DI FOLDER YG SAMA */
             background-image: url('1000240467.jpg'); 
             background-size: cover; background-position: center; background-attachment: fixed; position: relative;
         }
@@ -32,26 +30,20 @@
 
         .container { max-width: 480px; margin: 0 auto; position: relative; }
         .header-row { display: flex; justify-content: center; margin-top: 20px; margin-bottom: 5px; }
-        
-        /* JUDUL LEBIH TEGAS */
-        h1 { 
-            font-family: 'Orbitron', sans-serif; font-size: 28px; margin: 0; 
-            color: #000; letter-spacing: 2px; text-transform: uppercase;
-            text-shadow: 2px 2px 0px #fff; 
-        }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 11px; letter-spacing: 3px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; border-bottom: 3px solid var(--cyan); padding-bottom: 10px; display: inline-block; width: 100%; }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 26px; margin: 0; color: #000; letter-spacing: 2px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 11px; letter-spacing: 3px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; display: inline-block; width: 100%; }
 
         .glass-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 25px; }
         label { display: block; font-family: 'Orbitron'; font-size: 11px; color: #000; margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; }
-        input.field { width: 100%; background: #f8f9fa; border: 2px solid #ccc; color: #000; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
-        input.field:focus { border-color: var(--cyan); background: #fff; box-shadow: 0 0 10px rgba(0, 188, 212, 0.2); }
+        input.field { width: 100%; background: #f8f9fa; border: 2px solid #eee; color: #333; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
+        input.field:focus { border-color: var(--cyan); background: #fff; }
         
-        .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4); margin-top: 5px; transition: 0.2s; }
+        .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3); margin-top: 5px; transition: 0.2s; }
         .btn-cyan:active { transform: scale(0.98); }
 
         .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
         .slot-box { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 15px 5px; text-align: center; min-height: 170px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: var(--shadow); transition: 0.3s; }
-        .slot-box.active { border-color: var(--cyan); background: #e0f7fa; transform: translateY(-3px); }
+        .slot-box.active { border-color: var(--cyan); background: #f0fbff; transform: translateY(-3px); }
 
         .bat-icon { width: 40px; height: 70px; border: 3px solid #333; border-radius: 8px; position: relative; margin: 0 auto 15px; display: flex; align-items: flex-end; padding: 3px; background: #fff; }
         .bat-icon::before { content: ''; position: absolute; top: -6px; left: 12px; width: 12px; height: 4px; background: #333; }
@@ -62,39 +54,31 @@
         .btn-start { background: var(--cyan); color: #fff; }
         .btn-stop { background: #fff; border: 2px solid var(--soft-red); color: var(--soft-red); }
 
-        /* INFO BOX - DESAIN BARU (SANGAT MENCOLOK) */
-        @keyframes blinkBg {
-            0% { background-color: var(--neon-yellow); transform: scale(1); }
-            50% { background-color: #ffeb3b; transform: scale(1.02); }
-            100% { background-color: var(--neon-yellow); transform: scale(1); }
+        /* RULE INFO BERKEDIP */
+        @keyframes blinkBorder {
+            0% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
+            50% { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+            100% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
         }
-        
         .rule-info { 
-            font-size: 14px; 
-            color: #000; /* Teks Hitam di atas Kuning */
-            text-align: center; 
-            margin-top: 15px; 
-            font-family: 'Orbitron'; 
-            font-weight: 900;
-            padding: 15px; 
-            border-radius: 12px; 
-            background: var(--neon-yellow); /* Background Kuning Full */
-            border: 3px solid #000; /* Border Hitam Tegas */
-            box-shadow: 0 5px 15px rgba(255, 242, 0, 0.4);
-            animation: blinkBg 2s infinite; /* Berkedip Halus */
+            font-size: 14px; color: #333; text-align: center; 
+            margin-top: 15px; font-family: 'Orbitron'; font-weight: 900;
+            padding: 12px; border-radius: 12px; 
+            background: #fff; 
+            border: 3px solid var(--neon-yellow); 
+            animation: blinkBorder 1.5s infinite; 
             display: none;
             line-height: 1.5;
-            text-transform: uppercase;
         }
 
-        /* ADMIN PANEL */
-        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #555; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
+        #consoleLog { font-size: 10px; color: red; margin-top: 10px; text-align: center; display: none; font-family: monospace; white-space: pre-wrap; word-break: break-all; }
+
+        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #999; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
         .admin-panel { display: none; background: #fff; padding: 25px; border-radius: 20px; border: 2px solid var(--soft-red); margin-top: 20px; box-shadow: var(--shadow); }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; }
         .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .adm-input { background: #f9f9f9; border: 1px solid #ddd; color: #333; padding: 10px; width: 100%; border-radius: 8px; }
 
-        /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; }
         .modal-box { background: #fff; border-top: 5px solid var(--cyan); padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; animation: pop 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
@@ -140,7 +124,8 @@
             <input id="userBattery" type="number" class="field" placeholder="0 - 99">
             
             <div id="ruleInfo" class="rule-info"></div>
-            
+            <div id="consoleLog"></div>
+
             <button id="btnDaftar" class="btn-cyan" onclick="window.daftarAntrian()">DAFTAR ANTRIAN</button>
         </div>
 
@@ -185,7 +170,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // TOKEN FONNTE ANDA
+        // TOKEN FONNTE (BISA MULTIPLE TOKEN)
         const FONNTE_TOKENS = ["Fc8dWb7jiKr7CXuEZXBx"];
         
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
@@ -196,6 +181,14 @@
         let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
         const alarmAudio = document.getElementById('alarmSound');
+
+        // --- LOGGER ---
+        function appLog(msg) {
+            const el = document.getElementById('consoleLog');
+            if(msg.includes("GAGAL") || msg.includes("Error")) {
+                el.style.display = 'block'; el.innerText = msg;
+            }
+        }
 
         // --- SISTEM PEMILIKAN (MULTI-PLAT) ---
         function addMyPlat(plat) {
@@ -217,6 +210,17 @@
             return p;
         }
 
+        // --- GENERATE PESAN (FORMAT BARU) ---
+        function createMsg(type, plat, extra = "") {
+            return `Halo Sahabat MLU!
+
+${type} *${plat}* ${extra}.
+
+Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU .
+
+> _Sent via fonnte.com_`;
+        }
+
         // --- WA SENDER (SCHEDULED) ---
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
             const p = formatPhone(target);
@@ -229,12 +233,7 @@
             const y = sendTime.getFullYear(); const m = String(sendTime.getMonth()+1).padStart(2,'0'); const d = String(sendTime.getDate()).padStart(2,'0'); const h = String(sendTime.getHours()).padStart(2,'0'); const min = String(sendTime.getMinutes()).padStart(2,'0'); const s = String(sendTime.getSeconds()).padStart(2,'0');
             const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
 
-            const msg = `Halo Sahabat MLU!
-
-Pengecasan motor *${plat}* telah selesai (Target ${targetPersen}%).
-Mohon segera dicek.
-
-Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`;
+            const msg = createMsg("Pengecasan motor", plat, `telah selesai (Target ${targetPersen}%)`);
 
             const formData = new FormData();
             formData.append("target", p);
@@ -243,17 +242,22 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             formData.append("countryCode", "62"); 
 
             try {
-                fetch("https://api.fonnte.com/send", {
-                    method: "POST",
-                    headers: { "Authorization": randomToken },
-                    body: formData
-                });
+                fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData });
             } catch(e) {}
+        }
+
+        // --- WA INSTANT ---
+        async function sendWA(target, message) {
+            const p = formatPhone(target);
+            const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
+            const formData = new FormData();
+            formData.append("target", p); formData.append("message", message); formData.append("countryCode", "62"); formData.append("schedule", "0");
+            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
         }
 
         // --- DAFTAR ANTRIAN ---
         window.daftarAntrian = async () => {
-            // PANCING AUDIO (SILENT)
+            // Pancingan Audio
             try { alarmAudio.play().then(()=>{ setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;},100); }).catch(()=>{}); } catch(e){}
 
             const btn = document.getElementById('btnDaftar');
@@ -289,12 +293,15 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const empty = s.findIndex(x=>x===null);
                     if(empty!==-1) s[empty] = item; else q.push(item);
                     t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
+                    
+                    // KIRIM WA 1: MASUK ANTRIAN
+                    if(wa) sendWA(wa, createMsg("Motor", plat, "berhasil terdaftar di antrian. Mohon tunggu giliran"));
                 });
 
-                showPopup('success','BERHASIL','Masuk Antrian.');
+                showPopup('success','BERHASIL','Masuk Antrian. Cek WA Anda!');
                 document.getElementById('userPlat').value=''; document.getElementById('userBattery').value=''; document.getElementById('userWa').value='';
                 document.getElementById('ruleInfo').style.display='none';
-            } catch(e) { showPopup('error','GAGAL', e); }
+            } catch(e) { showPopup('error','GAGAL', e); appLog("Error: " + e); }
             btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
         };
 
@@ -324,7 +331,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                 let startMs = isRun ? (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) : 0;
                 let endMs = isRun ? startMs + (x.durationMinutes*60000) : 0;
                 let h = x.startBattery;
-                let targetInfo = `<div style="font-size:11px; color:var(--text-muted); font-weight:bold;">Target: ${x.targetLimit}%</div>`;
+                let targetInfo = `<div style="font-size:11px; color:#ff9800; font-weight:bold;">Target: ${x.targetLimit}%</div>`;
 
                 return `
                     <div class="slot-box active">
@@ -364,10 +371,10 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-                        // ALARM BUNYI (WA SUDAH DIJADWALKAN DI AWAL)
+                        // ALARM BUNYI (WA SUDAH DIJADWALKAN)
                         if(isAdminLoggedIn || isMyPlat(name)) {
                             alarmAudio.currentTime = 0;
-                            alarmAudio.play().catch(e => {});
+                            alarmAudio.play().catch(e => { appLog("Audio Blocked: " + e) });
                             showPopup('alarm', 'SELESAI', `Motor ${name}`);
                         }
                     }
@@ -389,8 +396,11 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                 runTransaction(db, async(t)=>{
                     const d = (await t.get(ref)).data(); const s = d.chargingSlots;
                     if(s[i]) {
-                        // JADWALKAN WA SELESAI SAAT KLIK MULAI
-                        if(s[i].phone) scheduleWhatsapp(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
+                        // KIRIM WA 2: MULAI (INSTAN) + JADWALKAN SELESAI
+                        if(s[i].phone) {
+                            sendWA(s[i].phone, createMsg("Motor", s[i].name, `mulai dicas. Estimasi ${s[i].durationMinutes} menit`));
+                            scheduleWhatsapp(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
+                        }
                         s[i].startTime = new Date();
                         t.update(ref, {chargingSlots:s});
                     }
@@ -411,7 +421,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
         
         window.startAllSlots = () => { 
             showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => { 
-                runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; s.forEach((slot) => { if(slot && !slot.startTime) { if(slot.phone) scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit); slot.startTime = new Date(); startedCount++; } }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); }); 
+                runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; s.forEach((slot) => { if(slot && !slot.startTime) { if(slot.phone) { sendWA(slot.phone, createMsg("Motor", slot.name, "mulai dicas")); scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit); } slot.startTime = new Date(); startedCount++; } }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); }); 
             }); 
         };
         
