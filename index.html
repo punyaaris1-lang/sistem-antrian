@@ -368,7 +368,7 @@
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-                        if(phone) sendWA(phone, `Halo Sahabat MLU! Motor *${name}* sudah selesai charging (Target ${targetVal}%). Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU .`);
+                        if(phone) sendWA(phone, `Halo Sahabat MLU! Motor *${name}* sudah selesai di charging (Target ${targetVal}%). Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU .`);
                         if(isAdminLoggedIn || isMyPlat(name)) {
                             alarmAudio.currentTime = 0;
                             alarmAudio.play().catch(e => {});
