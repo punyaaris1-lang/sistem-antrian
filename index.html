@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V45 (Rule MAKA)</title>
+    <title>Fast Charging V46 (Full Control)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- TEMA CYBERPUNK ORIGINAL (TETAP SAMA) --- */
+        /* --- TEMA CYBERPUNK PREMIUM --- */
         :root {
             --bg: #0b101a;
             --glass: rgba(255, 255, 255, 0.05);
@@ -17,7 +17,7 @@
             --cyan: #00e5ff;
             --cyan-dim: rgba(0, 229, 255, 0.1);
             --soft-red: #ff6b6b;
-            --yellow-warn: #f1c40f;
+            --neon-yellow: #ccff00; /* KUNING STABILO */
             --border: rgba(255, 255, 255, 0.1);
             --card-bg: rgba(255,255,255,0.03);
             --input-bg: rgba(0, 0, 0, 0.4);
@@ -52,8 +52,22 @@
         .btn-start { background: var(--cyan); color: #000; }
         .btn-stop { background: rgba(255, 107, 107, 0.1); border: 1px solid var(--soft-red); color: var(--soft-red); }
 
-        /* RULE INFO BOX */
-        .rule-info { font-size: 10px; color: var(--yellow-warn); text-align: center; margin-top: 5px; font-family: 'Orbitron'; line-height: 1.4; border: 1px dashed var(--yellow-warn); padding: 5px; border-radius: 5px; display: none; }
+        /* INFO BOX NEON BERKEDIP (PERMINTAAN BARU) */
+        @keyframes neonPulse {
+            0% { box-shadow: 0 0 5px var(--neon-yellow); border-color: var(--neon-yellow); opacity: 1; }
+            50% { box-shadow: 0 0 20px var(--neon-yellow), 0 0 10px var(--neon-yellow) inset; border-color: #fff; opacity: 0.8; }
+            100% { box-shadow: 0 0 5px var(--neon-yellow); border-color: var(--neon-yellow); opacity: 1; }
+        }
+        
+        .rule-info { 
+            font-size: 16px; color: var(--neon-yellow); text-align: center; 
+            margin-top: 15px; font-family: 'Orbitron'; font-weight: bold;
+            padding: 15px; border-radius: 10px; border: 2px solid var(--neon-yellow);
+            background: rgba(204, 255, 0, 0.05);
+            animation: neonPulse 1.5s infinite alternate; /* KEDIP */
+            text-shadow: 0 0 10px var(--neon-yellow);
+            display: none; /* Hidden by default */
+        }
 
         /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
@@ -63,9 +77,15 @@
         .btn-modal.primary { background: var(--cyan); color: #000; }
         .btn-modal.danger { background: var(--soft-red); color: #fff; }
 
-        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #333; cursor: pointer; font-weight: bold; border-radius: 8px; }
-        .admin-panel { display: none; background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--soft-red); margin-top: 20px; }
-        .adm-btn { width: 100%; padding: 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 5px; font-size: 11px; }
+        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #333; cursor: pointer; font-weight: bold; border-radius: 8px; transition: 0.3s; }
+        .admin-trigger:hover { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
+        
+        .admin-panel { display: none; background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--soft-red); margin-top: 20px; box-shadow: 0 0 20px rgba(255, 107, 107, 0.2); }
+        .adm-btn { width: 100%; padding: 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; letter-spacing: 1px; transition: 0.2s; }
+        .adm-btn:active { transform: scale(0.98); }
+        .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .adm-input { background: #222; border: 1px solid #444; color: #fff; padding: 10px; width: 100%; border-radius: 6px; }
+
         .footer { text-align: center; margin-top: 40px; font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 15px var(--cyan-dim); }
         @keyframes pop { from{transform:scale(0.8); opacity:0} to{transform:scale(1); opacity:1} }
     </style>
@@ -123,10 +143,29 @@
             <div id="queueList"></div>
         </div>
 
-        <div class="admin-trigger" onclick="openAdminLogin()">🔒 ADMIN LOGIN AREA</div>
+        <div class="admin-trigger" onclick="openAdminLogin()">🔒 ADMIN CONTROL PANEL</div>
         <div id="adminPanel" class="admin-panel">
-            <h4 style="color:var(--soft-red); text-align:center;">ADMIN CONTROL</h4>
-            <button onclick="resetAll()" class="adm-btn" style="background:var(--soft-red); color:#fff;">RESET TOTAL</button>
+            <h4 style="color:var(--soft-red); text-align:center; margin-top:0;">MASTER CONTROL</h4>
+            
+            <label style="color:#fff; margin-top:10px;">MANAJEMEN SLOT</label>
+            <div class="adm-row">
+                <select id="manSlot" class="adm-input" style="width:70%"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
+                <button onclick="clearSlotManual()" class="adm-btn" style="background:#444; color:#fff; width:30%;">HAPUS</button>
+            </div>
+
+            <label style="color:#fff; margin-top:5px;">AKSI MASSAL</label>
+            <button onclick="fillFromQueue()" class="adm-btn" style="background:var(--cyan); color:#000;">⬆️ NAIKKAN ANTRIAN (AUTO)</button>
+            <button onclick="startAllSlots()" class="adm-btn" style="background:var(--neon-yellow); color:#000;">⚡ MULAI SEMUA SLOT</button>
+            
+            <label style="color:#fff; margin-top:10px;">KEAMANAN</label>
+            <div class="adm-row">
+                <input id="blockPlatInput" placeholder="Plat Blokir" class="adm-input">
+                <button onclick="blockUser()" class="adm-btn" style="width:30%; background:var(--soft-red); color:#fff;">BLOK</button>
+            </div>
+
+            <label style="color:#fff; margin-top:10px;">ZONA BAHAYA</label>
+            <button onclick="resetAll()" class="adm-btn" style="border:1px solid var(--soft-red); background:none; color:var(--soft-red);">RESET DATA TOTAL</button>
+
             <div onclick="document.getElementById('adminPanel').style.display='none'" style="text-align:center; margin-top:15px; font-size:10px; color:#555; cursor:pointer;">Tutup Panel</div>
         </div>
         
@@ -137,8 +176,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // --- TOKEN FONNTE (SUDAH DIPASANG) ---
-        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx";
+        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; // Token User
         
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
@@ -149,37 +187,33 @@
         let triggeredAlarms = new Set();
         const alarmAudio = document.getElementById('alarmSound');
 
-        // --- FUNGSI KIRIM WA (FONNTE) ---
+        // --- WA SENDER ---
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
             const now = new Date();
             const sendTime = new Date(now.getTime() + durationMinutes * 60000);
+            const scheduleTime = sendTime.toISOString().slice(0, 19).replace('T', ' '); // Simple format
+
+            const msg = `Halo! Pengecasan motor *${plat}* telah selesai (Target ${targetPersen}%). Mohon segera dicek. Terima kasih!`;
+            const formData = new FormData();
+            formData.append("target", target); formData.append("message", msg); formData.append("schedule", 0); // 0 = Kirim delay sesuai server (tapi Fonnte butuh waktu spesifik, kita pakai fetch langsung tanpa schedule untuk start instant notification or use delay)
+            // Revisi: Karena startRealTime, kita kirim pesan NANTI. Fonnte butuh format YYYY-MM-DD HH:mm:ss
             
+            // Format Manual YYYY-MM-DD HH:mm:ss
             const y = sendTime.getFullYear();
             const m = String(sendTime.getMonth()+1).padStart(2,'0');
             const d = String(sendTime.getDate()).padStart(2,'0');
             const h = String(sendTime.getHours()).padStart(2,'0');
             const min = String(sendTime.getMinutes()).padStart(2,'0');
             const s = String(sendTime.getSeconds()).padStart(2,'0');
-            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
-
-            const msg = `Halo! Pengecasan motor *${plat}* telah selesai (Target ${targetPersen}%). Mohon segera dicek. Terima kasih sudah mengisi batrai motormu dirumahnya MLU! •MLU Squad`;
-
-            const formData = new FormData();
-            formData.append("target", target);
-            formData.append("message", msg);
-            formData.append("schedule", scheduleTime);
+            const fmtTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
+            
+            formData.set("schedule", fmtTime);
             formData.append("countryCode", "62"); 
 
-            try {
-                fetch("https://api.fonnte.com/send", {
-                    method: "POST",
-                    headers: { "Authorization": FONNTE_TOKEN },
-                    body: formData
-                });
-            } catch(e) { console.log(e); }
+            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE_TOKEN }, body: formData }); } catch(e){}
         }
 
-        // --- DAFTAR + HITUNG RULE MAKA ---
+        // --- DAFTAR ---
         document.getElementById('btnDaftar').onclick = async () => {
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
@@ -200,40 +234,28 @@
                     if((d.blockedList||[]).includes(plat)) throw "Plat DIBLOKIR!";
                     if(s.some(x=>x?.name===plat) || q.some(x=>x?.name===plat)) throw "Sudah Terdaftar!";
 
-                    // 1. HITUNG TOTAL ANTRIAN (SLOT ISI + WAITING)
-                    const occupied = s.filter(x => x !== null).length;
-                    const waiting = q.length;
-                    const totalAntrian = occupied + waiting;
-
-                    // 2. TERAPKAN RULE "MAKA" (DARI GAMBAR)
+                    // RULE MAKA
+                    const totalAntrian = s.filter(x => x !== null).length + q.length;
                     let targetLimit = 100;
                     if(totalAntrian < 3) targetLimit = 100;
                     else if(totalAntrian <= 6) targetLimit = 95;
                     else if(totalAntrian <= 10) targetLimit = 90;
                     else targetLimit = 85;
 
-                    // Cek jika baterai user sudah melebihi limit antrian
-                    if(bat >= targetLimit) throw `Antrian Ramai! Batas maks ${targetLimit}%. Baterai Anda ${bat}% sudah cukup.`;
+                    if(bat >= targetLimit) throw `Baterai cukup (${bat}%). Batas saat ini ${targetLimit}%.`;
 
-                    // 3. HITUNG DURASI BERDASARKAN TARGET LIMIT
-                    // (Kurva: 90-100 lambat, 80-90 sedang, <80 cepat)
                     let minutes = 0;
                     for(let b = bat; b < targetLimit; b++) {
-                        if(b >= 90) minutes += 2.2;
-                        else if(b >= 80) minutes += 1.5;
-                        else minutes += 0.8;
+                        if(b >= 90) minutes += 2.2; else if(b >= 80) minutes += 1.5; else minutes += 0.8;
                     }
-                    let dur = Math.ceil(minutes);
-                    if(dur < 2) dur = 2;
+                    let dur = Math.ceil(minutes); if(dur < 2) dur = 2;
 
                     const item = { name:plat, phone:wa, startBattery:bat, targetLimit:targetLimit, durationMinutes:dur, startTime:null };
-                    
                     const empty = s.findIndex(x=>x===null);
                     if(empty!==-1) s[empty] = item; else q.push(item);
-                    
                     t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                 });
-                showPopup('success','BERHASIL','Masuk Antrian. Klik MULAI saat colok.');
+                showPopup('success','BERHASIL','Masuk Antrian.');
                 document.getElementById('userPlat').value=''; document.getElementById('userBattery').value=''; document.getElementById('userWa').value='';
                 document.getElementById('ruleInfo').style.display='none';
             } catch(e) { showPopup('error','GAGAL', e); }
@@ -245,19 +267,25 @@
             const d = snap.data() || {};
             const slots = d.chargingSlots || [null,null,null];
             
-            // INFO RULE DI LAYAR
+            // LOGIKA TAMPILAN NEON BOX
             const q = d.waitingQueue || [];
             const occupied = slots.filter(x => x !== null).length;
             const total = occupied + q.length;
             
-            let ruleText = "Mode Sepi: Target 100%";
-            if(total >= 3 && total <= 6) ruleText = "Mode Normal: Batas Max 95%";
-            else if(total > 6 && total <= 10) ruleText = "Mode Ramai: Batas Max 90%";
-            else if(total > 10) ruleText = "Mode Padat: Batas Max 85%";
-            
             const infoBox = document.getElementById('ruleInfo');
-            infoBox.style.display = 'block';
-            infoBox.innerText = `STATUS: ${total} Unit. ${ruleText}`;
+            if(total > 0) {
+                let limit = 100;
+                if(total < 3) limit = 100;
+                else if(total <= 6) limit = 95;
+                else if(total <= 10) limit = 90;
+                else limit = 85;
+                
+                infoBox.style.display = 'block';
+                // TEKS BARU SESUAI REQUEST
+                infoBox.innerHTML = `ANTRIAN: ${total} UNIT<br>MAX CHARGING: ${limit}%`;
+            } else {
+                infoBox.style.display = 'none';
+            }
 
             document.getElementById('slotsContainer').innerHTML = slots.map((x,i)=>{
                 if(!x) return `<div class="slot-box" style="opacity:0.5; border-style:dashed;"><div class="bat-icon" style="border-color:var(--text-muted)"></div><div style="font-size:12px; color:var(--text-muted)">KOSONG</div></div>`;
@@ -269,7 +297,7 @@
                 
                 let time = `<div style="font-size:10px; color:var(--cyan);">Tap MULAI</div>`;
                 let h = x.startBattery;
-                let targetInfo = `<div style="font-size:9px; color:var(--yellow-warn);">Target: ${x.targetLimit}%</div>`;
+                let targetInfo = `<div style="font-size:9px; color:var(--neon-yellow);">Target: ${x.targetLimit}%</div>`;
 
                 if(isRun) {
                     const start = x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime();
@@ -313,17 +341,21 @@
             `).join('') : '<div style="text-align:center; color:#555; font-size:12px;">Antrian Kosong</div>';
         });
 
-        // ACTIONS
+        // --- ACTIONS ---
         window.act = (i, type, platName) => {
+            const myPlat = localStorage.getItem('myPlat');
+            // ADMIN OVERRIDE: Admin boleh stop punya siapa saja
+            if(type === 'stop' && !isAdminLoggedIn && myPlat !== platName) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
+            
+            // Konfirmasi Stop
             if(type === 'stop') {
-                const myPlat = localStorage.getItem('myPlat');
-                if(!isAdminLoggedIn && myPlat !== platName) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
-                showPopup('confirm', 'STOP', 'Stop Slot?', () => {
+                showPopup('confirm', 'STOP', 'Stop Slot ini?', () => {
                     runTransaction(db, async(t)=>{
                         const d = (await t.get(ref)).data();
                         let s = d.chargingSlots; let q = d.waitingQueue;
-                        s[i]=null; if(q.length){ s[i]={...q.shift(), startTime:null}; }
-                        t.update(ref, {chargingSlots:s, waitingQueue:q});
+                        s[i]=null; 
+                        // Auto fill logic removed from STOP, used manual promote instead to be safe
+                        t.update(ref, {chargingSlots:s});
                     });
                     alarmAudio.pause(); alarmAudio.currentTime=0;
                 });
@@ -347,7 +379,73 @@
             });
         };
 
+        // --- ADMIN FEATURES (NEW) ---
         window.openAdminLogin = () => showPopup('admin', 'ADMIN LOGIN', 'Masukkan PIN');
+        
+        window.clearSlotManual = () => {
+            const i = document.getElementById('manSlot').value;
+            showPopup('confirm', 'HAPUS', `Kosongkan Slot ${parseInt(i)+1}?`, () => {
+                runTransaction(db, async(t)=>{
+                    const s = (await t.get(ref)).data().chargingSlots;
+                    s[i] = null;
+                    t.update(ref, {chargingSlots:s});
+                });
+            });
+        };
+
+        window.fillFromQueue = () => {
+            runTransaction(db, async(t) => {
+                const d = (await t.get(ref)).data();
+                let s = d.chargingSlots;
+                let q = d.waitingQueue;
+
+                if(q.length === 0) throw "Antrian Kosong!";
+                const emptyIdx = s.findIndex(x => x === null);
+                if(emptyIdx === -1) throw "Semua Slot Penuh!";
+
+                // Pindahkan yg pertama
+                const mover = q.shift();
+                s[emptyIdx] = mover;
+                t.update(ref, {chargingSlots:s, waitingQueue:q});
+            }).catch(e => showPopup('error', 'GAGAL', e));
+        };
+
+        window.startAllSlots = () => {
+            showPopup('confirm', 'MULAI SEMUA', 'Start semua slot & kirim WA?', () => {
+                runTransaction(db, async(t)=>{
+                    const d = (await t.get(ref)).data();
+                    let s = d.chargingSlots;
+                    let startedCount = 0;
+                    
+                    s.forEach((slot, idx) => {
+                        if(slot && !slot.startTime) {
+                            if(slot.phone) scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit);
+                            slot.startTime = new Date();
+                            startedCount++;
+                        }
+                    });
+                    
+                    if(startedCount > 0) t.update(ref, {chargingSlots:s});
+                });
+            });
+        };
+
+        window.blockUser = async () => {
+            const p = document.getElementById('blockPlatInput').value.toUpperCase().trim();
+            if(!p) return;
+            await runTransaction(db, async (t) => {
+                const d = (await t.get(ref)).data(); const l = d.blockedList || [];
+                if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l});
+            });
+            showPopup('success', 'BLOKIR', `Plat ${p} diblokir.`);
+        };
+
+        window.resetAll = () => {
+            showPopup('confirm', 'RESET', 'Hapus SEMUA data?', () => {
+                setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]});
+            });
+        };
+
         function showPopup(type, title, msg, onOk = null) {
             const m = document.getElementById('masterModal');
             const box = document.getElementById('modalBox');
@@ -379,7 +477,6 @@
         }
         
         setInterval(() => { document.querySelectorAll('[data-end]').forEach(el => {}); }, 1000);
-        window.resetAll = () => { showPopup('confirm', 'RESET', 'Reset Semua?', () => { setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); }); };
     </script>
 </body>
 </html>
