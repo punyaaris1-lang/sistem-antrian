@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V60 (Scheduling Fix)</title>
+    <title>Fast Charging V62 (Final Message)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- TEMA PUTIH (V58) --- */
+        /* --- TEMA PUTIH (V61) --- */
         :root {
             --bg-overlay: rgba(255, 255, 255, 0.85);
             --glass: rgba(255, 255, 255, 0.95);
@@ -54,7 +54,6 @@
         .btn-start { background: var(--cyan); color: #fff; }
         .btn-stop { background: #fff; border: 2px solid var(--soft-red); color: var(--soft-red); }
 
-        /* RULE INFO BERKEDIP */
         @keyframes blinkBorder {
             0% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
             50% { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
@@ -118,11 +117,7 @@
             <input id="userPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
             
             <label>NOMOR WHATSAPP</label>
-            <div style="display:flex; gap:5px;">
-                <input id="userWa" class="field" type="number" placeholder="08xxxxxxxxxx" style="margin-bottom:0;">
-                <button onclick="window.testConnection()" style="width:70px; background:#f0f0f0; border:1px solid #ccc; border-radius:12px; cursor:pointer; font-weight:bold; font-size:10px; color:#555;">TES WA</button>
-            </div>
-            <div style="font-size:10px; color:#999; margin-bottom:15px; text-align:right; margin-top:5px;">*Klik TES WA untuk cek koneksi</div>
+            <input id="userWa" class="field" type="number" placeholder="08xxxxxxxxxx">
 
             <label>BATERAI (%)</label>
             <input id="userBattery" type="number" class="field" placeholder="0 - 99">
@@ -174,8 +169,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // TOKEN FONNTE (JANGAN DIHAPUS)
-        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; 
+        // TOKEN FONNTE (BISA MULTIPLE TOKEN)
+        const FONNTE_TOKENS = [
+            "Fc8dWb7jiKr7CXuEZXBx"
+        ];
         
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
@@ -214,23 +211,15 @@
             return p;
         }
 
-        window.testConnection = async () => {
-            const wa = document.getElementById('userWa').value;
-            if(!wa) return alert("Isi nomor WA dulu!");
-            sendWA(wa, "✅ TES KONEKSI BERHASIL!");
-            alert("Sedang mengirim... Cek WA Anda.");
-        };
-
-        // --- WA SENDER (SCHEDULING) ---
+        // --- SMART WA SENDER (SCHEDULED SAAT MULAI) ---
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
             const p = formatPhone(target);
-            
-            // LOGIC PENTING: JADWALKAN PESAN DI SERVER FONNTE (BUKAN DI BROWSER)
+            const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
+
+            // Hitung Waktu Selesai (Saat Pesan Akan Dikirim)
             const now = new Date();
-            // Kirim pesan SELESAI tepat saat durasi habis
-            const sendTime = new Date(now.getTime() + (durationMinutes * 60000)); 
+            const sendTime = new Date(now.getTime() + (durationMinutes * 60000));
             
-            // Format YYYY-MM-DD HH:mm:ss
             const y = sendTime.getFullYear();
             const m = String(sendTime.getMonth()+1).padStart(2,'0');
             const d = String(sendTime.getDate()).padStart(2,'0');
@@ -239,6 +228,7 @@
             const s = String(sendTime.getSeconds()).padStart(2,'0');
             const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
 
+            // ISI PESAN BARU (SESUAI REQUEST)
             const msg = `Halo Sahabat MLU!
 
 Pengecasan motor *${plat}* telah selesai (Target ${targetPersen}%).
@@ -249,35 +239,21 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             const formData = new FormData();
             formData.append("target", p);
             formData.append("message", msg);
-            formData.append("schedule", scheduleTime); // INI KUNCINYA
+            formData.append("schedule", scheduleTime); // JADWALKAN NANTI
             formData.append("countryCode", "62"); 
 
             try {
-                // KIRIM KE SERVER FONNTE (FIRE & FORGET)
                 fetch("https://api.fonnte.com/send", {
                     method: "POST",
-                    headers: { "Authorization": FONNTE_TOKEN },
+                    headers: { "Authorization": randomToken },
                     body: formData
-                });
-                console.log("Jadwal WA Berhasil Diset: " + scheduleTime);
+                }).then(r=>console.log("WA Scheduled")).catch(e=>{});
             } catch(e) { console.log(e); }
-        }
-
-        // --- WA SENDER (INSTANT) ---
-        async function sendWA(target, message) {
-            const p = formatPhone(target);
-            const formData = new FormData();
-            formData.append("target", p);
-            formData.append("message", message);
-            formData.append("countryCode", "62"); 
-            try {
-                fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE_TOKEN }, body: formData });
-            } catch(e) {}
         }
 
         // --- DAFTAR ANTRIAN ---
         window.daftarAntrian = async () => {
-            // Pancingan Audio (Wajib di awal)
+            // Pancingan Audio (Digabung ke tombol)
             try { alarmAudio.play().then(()=>{ setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;},100); }).catch(()=>{}); } catch(e){}
 
             const btn = document.getElementById('btnDaftar');
@@ -288,7 +264,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             if(!plat || !wa || isNaN(bat)) { showPopup('error','DATA KURANG','Isi semua data!'); return; }
             
             btn.disabled=true; btn.innerText="PROSES...";
-            addMyPlat(plat); 
+            addMyPlat(plat); // Simpan plat
 
             try {
                 await runTransaction(db, async(t)=>{
@@ -299,6 +275,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     if((d.blockedList||[]).includes(plat)) throw "Plat DIBLOKIR!";
                     if(s.some(x=>x?.name===plat) || q.some(x=>x?.name===plat)) throw "Sudah Terdaftar!";
 
+                    // RULE MAKA FIX
                     const totalAntrian = q.length; 
                     let targetLimit = 100;
                     if(totalAntrian < 3) targetLimit = 100; else if(totalAntrian <= 6) targetLimit = 95; else if(totalAntrian <= 10) targetLimit = 90; else targetLimit = 85;
@@ -372,7 +349,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             `).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
         });
 
-        // --- TIMER LOOP (ALARM BUNYI) ---
+        // --- TIMER LOOP ---
         setInterval(() => {
             document.querySelectorAll('.timer-display').forEach(el => {
                 const isRun = el.getAttribute('data-run') === 'true';
@@ -389,7 +366,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-                        // ALARM BUNYI DI LOKASI
+                        // ALARM BUNYI (WA SUDAH DIJADWALKAN DI AWAL)
                         if(isAdminLoggedIn || isMyPlat(name)) {
                             alarmAudio.currentTime = 0;
                             alarmAudio.play().catch(e => { appLog("Audio Blocked: " + e) });
@@ -411,10 +388,10 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     }); alarmAudio.pause(); alarmAudio.currentTime=0;
                 });
             } else if (type === 'start') {
-                // START = KIRIM WA JADWAL
                 runTransaction(db, async(t)=>{
                     const d = (await t.get(ref)).data(); const s = d.chargingSlots;
                     if(s[i]) {
+                        // JADWALKAN WA SELESAI SAAT KLIK MULAI (HEMAT KUOTA & AKURAT)
                         if(s[i].phone) scheduleWhatsapp(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
                         s[i].startTime = new Date();
                         t.update(ref, {chargingSlots:s});
