@@ -287,7 +287,7 @@
                     if(empty!==-1) s[empty] = item; else q.push(item);
                     t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                     
-                    if(wa) sendWA(wa, `Halo! Motor *${plat}* terdaftar di antrian. Mohon tunggu giliran / klik MULAI saat kabel dicolok.`);
+                    if(wa) sendWA(wa, `Halo Sahabat MLU! Motor kamu *${plat}* sudah terdaftar di antrian. Mohon tunggu giliran / klik MULAI saat kabel sudah dicolok.`);
                 });
 
                 showPopup('success','BERHASIL','Masuk Antrian.');
@@ -368,11 +368,11 @@
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-                        if(phone) sendWA(phone, `Halo! Motor *${name}* sudah selesai charging (Target ${targetVal}%). Silakan diambil.`);
+                        if(phone) sendWA(phone, `Halo Sahabat MLU! Motor *${name}* sudah selesai charging (Target ${targetVal}%). Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU .`);
                         if(isAdminLoggedIn || isMyPlat(name)) {
                             alarmAudio.currentTime = 0;
                             alarmAudio.play().catch(e => {});
-                            showPopup('alarm', 'SELESAI', `Motor ${name}`);
+                            showPopup('alarm', 'MOTOR KELAR CUKK', `Motor ${name}`);
                         }
                     }
                 }
