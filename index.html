@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V46 (Full Control)</title>
+    <title>Fast Charging V47 (Fix Timer)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- TEMA CYBERPUNK PREMIUM --- */
+        /* --- TEMA CYBERPUNK PREMIUM (TETAP SAMA) --- */
         :root {
             --bg: #0b101a;
             --glass: rgba(255, 255, 255, 0.05);
@@ -17,7 +17,7 @@
             --cyan: #00e5ff;
             --cyan-dim: rgba(0, 229, 255, 0.1);
             --soft-red: #ff6b6b;
-            --neon-yellow: #ccff00; /* KUNING STABILO */
+            --neon-yellow: #ccff00;
             --border: rgba(255, 255, 255, 0.1);
             --card-bg: rgba(255,255,255,0.03);
             --input-bg: rgba(0, 0, 0, 0.4);
@@ -47,44 +47,39 @@
         .bat-fill { width: 100%; background: var(--cyan); border-radius: 3px; transition: height 0.5s; box-shadow: 0 0 10px var(--cyan); }
         .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; color: #fff; text-shadow: 0 0 5px #000; z-index: 2; }
         .slot-box.active .bat-icon { border-color: var(--cyan); }
-        
+        .slot-box.active .bat-icon::before { background: var(--cyan); }
+
         .btn-act { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: bold; font-family: 'Orbitron'; font-size: 11px; margin-top: auto; cursor: pointer; }
         .btn-start { background: var(--cyan); color: #000; }
         .btn-stop { background: rgba(255, 107, 107, 0.1); border: 1px solid var(--soft-red); color: var(--soft-red); }
 
-        /* INFO BOX NEON BERKEDIP (PERMINTAAN BARU) */
+        /* NEON INFO BOX */
         @keyframes neonPulse {
-            0% { box-shadow: 0 0 5px var(--neon-yellow); border-color: var(--neon-yellow); opacity: 1; }
-            50% { box-shadow: 0 0 20px var(--neon-yellow), 0 0 10px var(--neon-yellow) inset; border-color: #fff; opacity: 0.8; }
-            100% { box-shadow: 0 0 5px var(--neon-yellow); border-color: var(--neon-yellow); opacity: 1; }
+            0% { box-shadow: 0 0 5px var(--neon-yellow); border-color: var(--neon-yellow); }
+            100% { box-shadow: 0 0 15px var(--neon-yellow); border-color: #fff; }
         }
-        
         .rule-info { 
-            font-size: 16px; color: var(--neon-yellow); text-align: center; 
+            font-size: 14px; color: var(--neon-yellow); text-align: center; 
             margin-top: 15px; font-family: 'Orbitron'; font-weight: bold;
-            padding: 15px; border-radius: 10px; border: 2px solid var(--neon-yellow);
-            background: rgba(204, 255, 0, 0.05);
-            animation: neonPulse 1.5s infinite alternate; /* KEDIP */
-            text-shadow: 0 0 10px var(--neon-yellow);
-            display: none; /* Hidden by default */
+            padding: 10px; border-radius: 10px; border: 2px solid var(--neon-yellow);
+            animation: neonPulse 1s infinite alternate;
+            display: none;
         }
 
+        /* ADMIN PANEL */
+        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #333; cursor: pointer; font-weight: bold; border-radius: 8px; }
+        .admin-panel { display: none; background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--soft-red); margin-top: 20px; }
+        .adm-btn { width: 100%; padding: 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; }
+        .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .adm-input { background: #222; border: 1px solid #444; color: #fff; padding: 10px; width: 100%; border-radius: 6px; }
+
         /* MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center; }
         .modal-box { background: var(--bg); border: 2px solid var(--cyan); padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; animation: pop 0.3s; }
         .modal-btns { display: flex; gap: 10px; }
         .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; background: #333; color: #fff; }
         .btn-modal.primary { background: var(--cyan); color: #000; }
         .btn-modal.danger { background: var(--soft-red); color: #fff; }
-
-        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #333; cursor: pointer; font-weight: bold; border-radius: 8px; transition: 0.3s; }
-        .admin-trigger:hover { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-        
-        .admin-panel { display: none; background: #000; padding: 20px; border-radius: 15px; border: 1px solid var(--soft-red); margin-top: 20px; box-shadow: 0 0 20px rgba(255, 107, 107, 0.2); }
-        .adm-btn { width: 100%; padding: 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; letter-spacing: 1px; transition: 0.2s; }
-        .adm-btn:active { transform: scale(0.98); }
-        .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .adm-input { background: #222; border: 1px solid #444; color: #fff; padding: 10px; width: 100%; border-radius: 6px; }
 
         .footer { text-align: center; margin-top: 40px; font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 15px var(--cyan-dim); }
         @keyframes pop { from{transform:scale(0.8); opacity:0} to{transform:scale(1); opacity:1} }
@@ -98,8 +93,7 @@
 
     <div id="masterModal" class="modal">
         <div id="modalBox" class="modal-box">
-            <span id="mIcon" style="font-size:40px; display:block; margin-bottom:10px;">✅</span>
-            <h3 id="mTitle" style="font-family:'Orbitron'; margin:0 0 10px; color:var(--text)">TITLE</h3>
+            <h3 id="mTitle" style="font-family:'Orbitron'; color:var(--text)">TITLE</h3>
             <p id="mMsg" style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Message</p>
             <input type="password" id="mInput" style="display:none; width:100%; padding:10px; text-align:center; margin-bottom:15px; border-radius:5px;" placeholder="PIN">
             <div class="modal-btns">
@@ -176,7 +170,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; // Token User
+        // TOKEN FONNTE (Pastikan Benar)
+        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; 
         
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
@@ -189,32 +184,45 @@
 
         // --- WA SENDER ---
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
-            const now = new Date();
-            const sendTime = new Date(now.getTime() + durationMinutes * 60000);
-            const scheduleTime = sendTime.toISOString().slice(0, 19).replace('T', ' '); // Simple format
+            // FIX: Format Nomor (Hapus 0 depan/spasi/dash, ganti 62)
+            let p = target.replace(/\D/g,'');
+            if(p.startsWith('0')) p = '62' + p.substring(1);
 
-            const msg = `Halo! Pengecasan motor *${plat}* telah selesai (Target ${targetPersen}%). Mohon segera dicek. Terima kasih!`;
-            const formData = new FormData();
-            formData.append("target", target); formData.append("message", msg); formData.append("schedule", 0); // 0 = Kirim delay sesuai server (tapi Fonnte butuh waktu spesifik, kita pakai fetch langsung tanpa schedule untuk start instant notification or use delay)
-            // Revisi: Karena startRealTime, kita kirim pesan NANTI. Fonnte butuh format YYYY-MM-DD HH:mm:ss
+            const now = new Date();
+            const sendTime = new Date(now.getTime() + durationMinutes * 60000); // Kirim saat selesai
             
-            // Format Manual YYYY-MM-DD HH:mm:ss
+            // Format YYYY-MM-DD HH:mm:ss (Wajib untuk Fonnte)
             const y = sendTime.getFullYear();
             const m = String(sendTime.getMonth()+1).padStart(2,'0');
             const d = String(sendTime.getDate()).padStart(2,'0');
             const h = String(sendTime.getHours()).padStart(2,'0');
             const min = String(sendTime.getMinutes()).padStart(2,'0');
             const s = String(sendTime.getSeconds()).padStart(2,'0');
-            const fmtTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
-            
-            formData.set("schedule", fmtTime);
+            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
+
+            const msg = `Halo! Pengecasan motor *${plat}* telah selesai (Target ${targetPersen}%). Mohon segera dicek. Terima kasih!`;
+
+            const formData = new FormData();
+            formData.append("target", p);
+            formData.append("message", msg);
+            formData.append("schedule", scheduleTime); 
             formData.append("countryCode", "62"); 
 
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE_TOKEN }, body: formData }); } catch(e){}
+            try {
+                fetch("https://api.fonnte.com/send", {
+                    method: "POST",
+                    headers: { "Authorization": FONNTE_TOKEN },
+                    body: formData
+                });
+                console.log(`WA Dijadwalkan ke ${p} jam ${scheduleTime}`);
+            } catch(e) { console.log("WA Error:", e); }
         }
 
         // --- DAFTAR ---
         document.getElementById('btnDaftar').onclick = async () => {
+            // UNLOCK AUDIO SAAT KLIK DAFTAR
+            alarmAudio.play().then(()=>{ setTimeout(()=>{alarmAudio.pause();},100); }).catch(e=>{});
+
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
             const wa = document.getElementById('userWa').value.trim();
@@ -242,7 +250,7 @@
                     else if(totalAntrian <= 10) targetLimit = 90;
                     else targetLimit = 85;
 
-                    if(bat >= targetLimit) throw `Baterai cukup (${bat}%). Batas saat ini ${targetLimit}%.`;
+                    if(bat >= targetLimit) throw `Baterai cukup (${bat}%). Batas ${targetLimit}%.`;
 
                     let minutes = 0;
                     for(let b = bat; b < targetLimit; b++) {
@@ -262,31 +270,24 @@
             btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
         };
 
-        // --- RENDER ---
+        // --- RENDER FIREBASE ---
         onSnapshot(ref, (snap) => {
             const d = snap.data() || {};
             const slots = d.chargingSlots || [null,null,null];
-            
-            // LOGIKA TAMPILAN NEON BOX
             const q = d.waitingQueue || [];
+
+            // NEON INFO
             const occupied = slots.filter(x => x !== null).length;
             const total = occupied + q.length;
-            
             const infoBox = document.getElementById('ruleInfo');
             if(total > 0) {
                 let limit = 100;
-                if(total < 3) limit = 100;
-                else if(total <= 6) limit = 95;
-                else if(total <= 10) limit = 90;
-                else limit = 85;
-                
+                if(total < 3) limit = 100; else if(total <= 6) limit = 95; else if(total <= 10) limit = 90; else limit = 85;
                 infoBox.style.display = 'block';
-                // TEKS BARU SESUAI REQUEST
                 infoBox.innerHTML = `ANTRIAN: ${total} UNIT<br>MAX CHARGING: ${limit}%`;
-            } else {
-                infoBox.style.display = 'none';
-            }
+            } else { infoBox.style.display = 'none'; }
 
+            // SLOT RENDER
             document.getElementById('slotsContainer').innerHTML = slots.map((x,i)=>{
                 if(!x) return `<div class="slot-box" style="opacity:0.5; border-style:dashed;"><div class="bat-icon" style="border-color:var(--text-muted)"></div><div style="font-size:12px; color:var(--text-muted)">KOSONG</div></div>`;
 
@@ -295,39 +296,20 @@
                     `<button class="btn-act btn-stop" onclick="window.act(${i},'stop', '${x.name}')">STOP</button>` :
                     `<button class="btn-act btn-start" onclick="window.act(${i},'start', '${x.name}')">MULAI</button>`;
                 
-                let time = `<div style="font-size:10px; color:var(--cyan);">Tap MULAI</div>`;
-                let h = x.startBattery;
-                let targetInfo = `<div style="font-size:9px; color:var(--neon-yellow);">Target: ${x.targetLimit}%</div>`;
+                // DATA DISIMPAN DI HTML UNTUK TIMER LOOP
+                let startMs = isRun ? (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) : 0;
+                let endMs = isRun ? startMs + (x.durationMinutes*60000) : 0;
 
-                if(isRun) {
-                    const start = x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime();
-                    const end = start + (x.durationMinutes*60000);
-                    const now = Date.now();
-                    const diff = end - now;
-
-                    if(diff > 0) {
-                        const m = Math.floor(diff/60000);
-                        const s = Math.floor((diff%60000)/1000);
-                        time = `<div style="font-size:16px; font-weight:bold; color:var(--cyan); margin:5px 0;">${m}:${s<10?'0'+s:s}</div>`;
-                        h = 100; 
-                    } else {
-                        time = `<div style="font-size:16px; font-weight:bold; color:var(--soft-red);">SELESAI</div>`;
-                        const key = x.name+end;
-                        if(!triggeredAlarms.has(key)) { 
-                            triggeredAlarms.add(key); 
-                            if(isAdminLoggedIn || localStorage.getItem('myPlat')===x.name) {
-                                alarmAudio.play().catch(()=>{}); 
-                                showPopup('alarm','SELESAI', `Plat ${x.name}`);
-                            }
-                        }
-                    }
-                }
                 return `
                     <div class="slot-box active">
-                        <div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div>
+                        <div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:x.startBattery}%"></div><div class="bat-bolt">⚡</div></div>
                         <div style="font-weight:bold;">${x.name}</div>
-                        ${targetInfo}
-                        ${time}
+                        <div style="font-size:9px; color:var(--neon-yellow);">Target: ${x.targetLimit}%</div>
+                        
+                        <div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" style="font-size:16px; font-weight:bold; color:var(--cyan); margin:5px 0;">
+                            ${isRun ? "..." : "Tap MULAI"}
+                        </div>
+
                         ${btn}
                     </div>`;
             }).join('');
@@ -341,20 +323,53 @@
             `).join('') : '<div style="text-align:center; color:#555; font-size:12px;">Antrian Kosong</div>';
         });
 
-        // --- ACTIONS ---
+        // --- TIMER LOOP (JANTUNG V47) ---
+        // Ini yg bikin angka jalan tiap detik tanpa refresh
+        setInterval(() => {
+            document.querySelectorAll('.timer-display').forEach(el => {
+                const isRun = el.getAttribute('data-run') === 'true';
+                if(!isRun) return;
+
+                const end = parseInt(el.getAttribute('data-end'));
+                const name = el.getAttribute('data-name');
+                const now = Date.now();
+                const diff = end - now;
+
+                if(diff > 0) {
+                    const m = Math.floor(diff/60000);
+                    const s = Math.floor((diff%60000)/1000);
+                    el.innerText = `${m}:${s<10?'0'+s:s}`;
+                    el.style.color = "var(--cyan)";
+                } else {
+                    el.innerText = "SELESAI";
+                    el.style.color = "var(--soft-red)";
+                    
+                    // TRIGGER ALARM (CLIENT SIDE)
+                    const key = name + end;
+                    if(!triggeredAlarms.has(key)) {
+                        triggeredAlarms.add(key);
+                        // Cek apakah Admin atau Pemilik
+                        const myPlat = localStorage.getItem('myPlat');
+                        if(isAdminLoggedIn || myPlat === name) {
+                            alarmAudio.currentTime = 0;
+                            alarmAudio.play().catch(e => console.log("Audio block"));
+                            showPopup('alarm', 'SELESAI', `Motor ${name}`);
+                        }
+                    }
+                }
+            });
+        }, 1000);
+
+        // ACTIONS
         window.act = (i, type, platName) => {
-            const myPlat = localStorage.getItem('myPlat');
-            // ADMIN OVERRIDE: Admin boleh stop punya siapa saja
-            if(type === 'stop' && !isAdminLoggedIn && myPlat !== platName) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
-            
-            // Konfirmasi Stop
             if(type === 'stop') {
-                showPopup('confirm', 'STOP', 'Stop Slot ini?', () => {
+                const myPlat = localStorage.getItem('myPlat');
+                if(!isAdminLoggedIn && myPlat !== platName) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
+                showPopup('confirm', 'STOP', 'Stop Slot?', () => {
                     runTransaction(db, async(t)=>{
                         const d = (await t.get(ref)).data();
                         let s = d.chargingSlots; let q = d.waitingQueue;
                         s[i]=null; 
-                        // Auto fill logic removed from STOP, used manual promote instead to be safe
                         t.update(ref, {chargingSlots:s});
                     });
                     alarmAudio.pause(); alarmAudio.currentTime=0;
@@ -379,16 +394,14 @@
             });
         };
 
-        // --- ADMIN FEATURES (NEW) ---
+        // ADMIN FUNCTIONS
         window.openAdminLogin = () => showPopup('admin', 'ADMIN LOGIN', 'Masukkan PIN');
         
         window.clearSlotManual = () => {
             const i = document.getElementById('manSlot').value;
             showPopup('confirm', 'HAPUS', `Kosongkan Slot ${parseInt(i)+1}?`, () => {
                 runTransaction(db, async(t)=>{
-                    const s = (await t.get(ref)).data().chargingSlots;
-                    s[i] = null;
-                    t.update(ref, {chargingSlots:s});
+                    const s = (await t.get(ref)).data().chargingSlots; s[i] = null; t.update(ref, {chargingSlots:s});
                 });
             });
         };
@@ -396,35 +409,27 @@
         window.fillFromQueue = () => {
             runTransaction(db, async(t) => {
                 const d = (await t.get(ref)).data();
-                let s = d.chargingSlots;
-                let q = d.waitingQueue;
-
+                let s = d.chargingSlots; let q = d.waitingQueue;
                 if(q.length === 0) throw "Antrian Kosong!";
                 const emptyIdx = s.findIndex(x => x === null);
                 if(emptyIdx === -1) throw "Semua Slot Penuh!";
-
-                // Pindahkan yg pertama
-                const mover = q.shift();
-                s[emptyIdx] = mover;
+                s[emptyIdx] = q.shift();
                 t.update(ref, {chargingSlots:s, waitingQueue:q});
             }).catch(e => showPopup('error', 'GAGAL', e));
         };
 
         window.startAllSlots = () => {
-            showPopup('confirm', 'MULAI SEMUA', 'Start semua slot & kirim WA?', () => {
+            showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => {
                 runTransaction(db, async(t)=>{
                     const d = (await t.get(ref)).data();
                     let s = d.chargingSlots;
                     let startedCount = 0;
-                    
-                    s.forEach((slot, idx) => {
+                    s.forEach((slot) => {
                         if(slot && !slot.startTime) {
                             if(slot.phone) scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit);
-                            slot.startTime = new Date();
-                            startedCount++;
+                            slot.startTime = new Date(); startedCount++;
                         }
                     });
-                    
                     if(startedCount > 0) t.update(ref, {chargingSlots:s});
                 });
             });
@@ -440,11 +445,7 @@
             showPopup('success', 'BLOKIR', `Plat ${p} diblokir.`);
         };
 
-        window.resetAll = () => {
-            showPopup('confirm', 'RESET', 'Hapus SEMUA data?', () => {
-                setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]});
-            });
-        };
+        window.resetAll = () => { showPopup('confirm', 'RESET', 'Reset Semua?', () => { setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); }); };
 
         function showPopup(type, title, msg, onOk = null) {
             const m = document.getElementById('masterModal');
@@ -475,8 +476,6 @@
                 btnOk.onclick = () => { if(inp.value === '1131') { m.style.display = 'none'; document.getElementById('adminPanel').style.display = 'block'; isAdminLoggedIn = true; } else showPopup('error','GAGAL','PIN Salah!'); };
             } else { icon.innerText = '✅'; btnOk.onclick = () => m.style.display = 'none'; }
         }
-        
-        setInterval(() => { document.querySelectorAll('[data-end]').forEach(el => {}); }, 1000);
     </script>
 </body>
 </html>
