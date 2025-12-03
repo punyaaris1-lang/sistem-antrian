@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Fast Charging V70 (Hybrid Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -19,7 +19,7 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; font-family: 'Rajdhani', sans-serif; color: var(--text); min-height: 100vh; padding: 20px; padding-bottom: 120px;
-            background-image: url('1000240467.jpg'); 
+            background-image: url('1000240467.jpg');
             background-size: cover; background-position: center; background-attachment: fixed; position: relative;
         }
         body::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: -1; }
@@ -43,11 +43,9 @@
         .btn-act { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: bold; font-family: 'Orbitron'; font-size: 11px; margin-top: auto; cursor: pointer; }
         .btn-start { background: var(--cyan); color: #fff; }
         .btn-stop { background: #fff; border: 2px solid var(--soft-red); color: var(--soft-red); }
-        
         @keyframes blinkBorder { 0% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); } 50% { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; } 100% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); } }
         .rule-info { font-size: 14px; color: #000; text-align: center; margin-top: 15px; font-family: 'Orbitron'; font-weight: 900; padding: 12px; border-radius: 12px; background: var(--neon-yellow); border: 3px solid #000; box-shadow: 0 5px 15px rgba(255,242,0,0.4); animation: blinkBorder 2s infinite; display: none; line-height: 1.5; text-transform: uppercase; }
         #consoleLog { font-size: 10px; color: red; margin-top: 10px; text-align: center; display: none; font-family: monospace; white-space: pre-wrap; }
-
         .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #999; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
         .admin-panel { display: none; background: #fff; padding: 25px; border-radius: 20px; border: 2px solid var(--soft-red); margin-top: 20px; box-shadow: var(--shadow); }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; }
@@ -61,6 +59,50 @@
         .btn-modal.danger { background: var(--soft-red); color: #fff; }
         .footer { text-align: center; margin-top: 50px; font-family: 'Orbitron'; font-size: 12px; color: #888; font-weight: 900; letter-spacing: 2px; }
         @keyframes pop { from{transform:scale(0.8); opacity:0} to{transform:scale(1); opacity:1} }
+
+        /* ========== iOS BUBBLE NOTIFICATION (CENTER) ========== */
+        .ios-bubble-wrap {
+            pointer-events: none;
+            position: fixed;
+            left: 50%;
+            top: 35%;
+            transform: translate(-50%, -50%) scale(0.85);
+            z-index: 12000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 220ms cubic-bezier(.2,.9,.2,1), transform 220ms cubic-bezier(.2,.9,.2,1);
+            opacity: 0;
+            filter: blur(0px);
+        }
+        .ios-bubble {
+            pointer-events: auto;
+            min-width: 220px;
+            max-width: 90%;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px) saturate(120%);
+            -webkit-backdrop-filter: blur(10px) saturate(120%);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            padding: 18px 18px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            transform: translateY(0);
+        }
+        .ios-bubble .icon {
+            width: 52px; height: 52px; border-radius: 12px; background: linear-gradient(135deg,#00c2d7,#00bcd4); display:flex; align-items:center; justify-content:center; color:white; font-size:22px; flex: 0 0 52px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+        .ios-bubble .text {
+            display:flex; flex-direction:column; gap:2px; color:#0b0b0b;
+        }
+        .ios-bubble .text .title { font-weight:800; font-family:'Orbitron'; font-size:15px; }
+        .ios-bubble .text .body { font-size:13px; color:#333; opacity:0.95; }
+        .ios-bubble.show {
+            opacity:1;
+            transform: translate(-50%, -50%) scale(1);
+        }
     </style>
 </head>
 <body>
@@ -81,6 +123,9 @@
             </div>
         </div>
     </div>
+
+    <!-- iOS Bubble container will be injected dynamically -->
+    <div id="iosBubbleContainer"></div>
 
     <div class="container">
         <div class="header-row"><h1>FAST CHARGING</h1></div>
@@ -193,7 +238,7 @@
             return p;
         }
 
-        // --- FORMAT PESAN ---
+        // --- FORMAT PESAN --- (TIDAK DIUBAH FORMAT WA)
         function createMsg(type, plat, extra = "") {
             return `*Halo Sahabat MLU!*
 
@@ -223,8 +268,47 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     method: "POST",
                     headers: { "Authorization": randomToken },
                     body: formData
-                }).catch(e=>{});
-            } catch(e) {}
+                }).catch(e=>{ console.warn("Fonnte fetch error:", e); });
+            } catch(e) { console.warn(e); }
+        }
+
+        // ========== iOS Bubble Notification ==========
+        function showIOSBubble(title, text, iconText = "🔋") {
+            try {
+                const container = document.getElementById('iosBubbleContainer');
+                // create wrapper
+                const wrap = document.createElement('div');
+                wrap.className = 'ios-bubble-wrap';
+                // create bubble
+                const bubble = document.createElement('div');
+                bubble.className = 'ios-bubble';
+                bubble.innerHTML = `
+                    <div class="icon">${iconText}</div>
+                    <div class="text">
+                        <div class="title">${title}</div>
+                        <div class="body">${text}</div>
+                    </div>
+                `;
+                wrap.appendChild(bubble);
+                container.appendChild(wrap);
+
+                // Force reflow then show
+                requestAnimationFrame(() => {
+                    wrap.classList.add('show');
+                    wrap.style.opacity = '1';
+                    wrap.style.transform = 'translate(-50%, -50%) scale(1)';
+                });
+
+                // Auto hide after 3s
+                setTimeout(() => {
+                    wrap.classList.remove('show');
+                    wrap.style.opacity = '0';
+                    wrap.style.transform = 'translate(-50%, -50%) scale(0.92)';
+                    setTimeout(() => {
+                        if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+                    }, 260);
+                }, 3000);
+            } catch(e) { console.warn("showIOSBubble err", e); }
         }
 
         // --- DAFTAR ANTRIAN ---
@@ -331,6 +415,8 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                 if(!isRun) return;
                 const end = parseInt(el.getAttribute('data-end'));
                 const name = el.getAttribute('data-name');
+                const phone = el.getAttribute('data-phone');
+                const target = el.getAttribute('data-target');
                 const diff = end - Date.now();
 
                 if(diff > 0) {
@@ -341,11 +427,18 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-                        // ALARM BUNYI
+
+                        // ALARM BUNYI & NOTIF iOS BUBBLE (tetap hanya untuk admin atau pemilik device)
                         if(isAdminLoggedIn || isMyPlat(name)) {
+                            // play alarm
                             alarmAudio.currentTime = 0;
-                            alarmAudio.play().catch(e => {});
+                            alarmAudio.play().catch(e => { console.warn("alarm play failed", e); });
+
+                            // show modal alarm (existing)
                             showPopup('alarm', 'SELESAI', `Motor ${name}`);
+
+                            // show iOS bubble notification in-page (center bubble)
+                            showIOSBubble("Charging Complete", `Motor ${name} selesai (Target ${target}%)`, "⚡");
                         }
                     }
                 }
@@ -377,8 +470,8 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                             const now = new Date();
                             const sendTime = new Date(now.getTime() + (s[i].durationMinutes * 60000));
                             // Format YYYY-MM-DD HH:mm:ss
-                            const y = sendTime.getFullYear(); const m = String(sendTime.getMonth()+1).padStart(2,'0'); const dd = String(sendTime.getDate()).padStart(2,'0'); const h = String(sendTime.getHours()).padStart(2,'0'); const min = String(sendTime.getMinutes()).padStart(2,'0'); const s = String(sendTime.getSeconds()).padStart(2,'0');
-                            const scheduleStr = `${y}-${m}-${dd} ${h}:${min}:${s}`;
+                            const y = sendTime.getFullYear(); const m = String(sendTime.getMonth()+1).padStart(2,'0'); const dd = String(sendTime.getDate()).padStart(2,'0'); const h = String(sendTime.getHours()).padStart(2,'0'); const min = String(sendTime.getMinutes()).padStart(2,'0'); const sSec = String(sendTime.getSeconds()).padStart(2,'0');
+                            const scheduleStr = `${y}-${m}-${dd} ${h}:${min}:${sSec}`;
                             
                             sendFonnte(s[i].phone, createMsg("Pengecasan motor", s[i].name, `telah selesai (Target ${s[i].targetLimit}%)`), scheduleStr);
                         }
