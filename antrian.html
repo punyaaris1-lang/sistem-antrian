@@ -79,14 +79,12 @@
             width: 45px; height: 80px; border: 3px solid #555; border-radius: 8px; 
             position: relative; display: flex; align-items: flex-end; padding: 3px; margin-top: 5px;
         }
-        /* NUB BATERAI DI TENGAH */
         .bat-icon::before { 
             content: ''; position: absolute; top: -7px; 
-            left: 50%; transform: translateX(-50%); /* Center trick */
+            left: 50%; transform: translateX(-50%);
             width: 16px; height: 4px; background: #555; 
             border-radius: 2px 2px 0 0;
         }
-        
         .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; }
         .bat-bolt { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
@@ -110,8 +108,8 @@
             border-bottom: 1px solid rgba(255,255,255,0.1); color: #ccc; font-size: 14px; align-items: center;
         }
         
-        /* MODAL KEREN */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        /* MODAL & ADMIN */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-box { 
             background: #0b101a; border: 2px solid #00bcd4; padding: 30px; 
             border-radius: 20px; width: 85%; max-width: 320px; text-align: center; 
@@ -124,13 +122,9 @@
             border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
         }
         .btn-close-modal { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #555; font-size: 20px; cursor: pointer; }
-
-        /* ADMIN PANEL */
         .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Orbitron'; margin-top: 8px; font-weight: bold; font-size: 12px; }
         .adm-row { display: flex; gap: 10px; margin-top: 8px; }
-        
-        /* BUTTON VARIANTS */
         .btn-blue { background: #00bcd4; color: #000; }
         .btn-red { background: #ff3b3b; color: #fff; }
         .btn-yellow { background: #ff9800; color: #000; }
@@ -265,7 +259,6 @@
 
         // === CORE LOGIC ===
         function prime() { 
-            // Silent Audio Unlock - Tidak bunyi, hanya memancing browser
             if(aud.paused) {
                 aud.volume = 0.01; 
                 aud.play().then(()=>{ 
@@ -285,6 +278,18 @@
         
         function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
+        // CALCULATE DURATION (TIERED LOGIC)
+        function calculateDuration(bat, target) {
+            let totalMinutes = 0;
+            for (let i = bat; i < target; i++) {
+                if (i < 50) totalMinutes += 1.0; 
+                else if (i < 80) totalMinutes += 1.2; 
+                else if (i < 90) totalMinutes += 1.5; 
+                else totalMinutes += 2.0; 
+            }
+            return Math.ceil(totalMinutes);
+        }
+
         document.getElementById('btnDaftar').onclick = async () => {
             prime();
             const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
@@ -294,8 +299,17 @@
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
                 
-                let limit=100; if(q.length>2) limit=q.length>5?90:95;
-                let dur=0; for(let i=b;i<limit;i++) dur+=(i>=90?2.2:(i>=80?1.5:0.8)); dur=Math.ceil(dur); if(dur<2) dur=2;
+                // HITUNG TARGET & DURASI
+                const totalAntri = q.length + s.filter(x=>x!==null).length;
+                let limit = 100;
+                if(totalAntri >= 10) limit = 85;
+                else if(totalAntri >= 6) limit = 90;
+                else if(totalAntri >= 3) limit = 95;
+                
+                if(b >= limit) throw "Baterai Cukup";
+
+                let dur = calculateDuration(b, limit);
+                if(dur<2) dur=2;
                 
                 const item={name:p, phone:w, startBattery:b, durationMinutes:dur, targetLimit:limit, startTime:null};
                 const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
@@ -309,9 +323,15 @@
         window.act = (i, type) => {
             prime();
             runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(); const s=d.chargingSlots;
-                if(type==='stop') { s[i]=null; }
-                else {
+                const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue;
+                
+                if(type==='stop') { 
+                    s[i]=null; 
+                    // AUTO PROMOTE
+                    if(q.length > 0) {
+                        s[i] = q.shift(); 
+                    }
+                } else {
                     s[i].startTime = new Date();
                     if(s[i].phone) {
                         sendWA(s[i].phone, msg("Motor", s[i].name, "mulai dicas"));
@@ -319,13 +339,13 @@
                         sendWA(s[i].phone, msg("Motor", s[i].name, "selesai"), end);
                     }
                 }
-                t.update(ref, {chargingSlots:s});
+                t.update(ref, {chargingSlots:s, waitingQueue:q});
             });
         };
 
         // === ADMIN FEATURES ===
         window.clrSlot = () => { const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})}); };
-        window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0){const e=s.indexOf(null);if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} }); };
+        window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} ); };
         window.startAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); }); };
         window.stopAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); }); };
         window.resAll = () => { if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
@@ -341,33 +361,19 @@
             showModal('BLOKIR', `Plat ${p} diblokir.`); 
         };
 
-        // Fungsi hapus antrian per item
         window.delQ = (i, name) => {
-            // Cek Admin atau Pemilik
-            const myPlat = localStorage.getItem('myPlat');
-            if(isAdmin || myPlat === name) {
-                runTransaction(db, async(t)=>{ 
-                    const q=(await t.get(ref)).data().waitingQueue; 
-                    q.splice(i,1); 
-                    t.update(ref, {waitingQueue:q}); 
-                });
-            } else {
-                showModal('AKSES DITOLAK', 'Bukan antrian Anda!');
-            }
+            if(isAdmin || localStorage.getItem('myPlat') === name) {
+                runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); });
+            } else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');
         };
 
-        // Fitur Pindah Antrian ke Atas (Prioritas)
         window.moveQueueTop = () => {
-            const plat = prompt("Masukkan Plat yang mau diprioritaskan:");
+            const plat = prompt("Masukkan Plat:");
             if(!plat) return;
             runTransaction(db, async(t)=>{
                 const q = (await t.get(ref)).data().waitingQueue;
                 const idx = q.findIndex(x => x.name === plat.toUpperCase());
-                if(idx > 0) { // Kalau ditemukan dan bukan yg pertama
-                    const item = q.splice(idx, 1)[0];
-                    q.unshift(item); // Pindah ke depan
-                    t.update(ref, {waitingQueue: q});
-                }
+                if(idx > 0) { q.unshift(q.splice(idx, 1)[0]); t.update(ref, {waitingQueue: q}); }
             });
         };
 
@@ -375,7 +381,6 @@
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
             
-            // RENDER QUEUE LIST (Ada tombol hapus)
             document.getElementById('qList').innerHTML = q.map((x,i)=>`
                 <div class="wait-row">
                     <div><b>${x.name}</b> (${x.startBattery}%)</div>
@@ -383,11 +388,15 @@
                 </div>
             `).join('');
             
+            const totalAntri = q.length + s.filter(x=>x!==null).length;
             const inf = document.getElementById('info');
-            if(q.length>0) { inf.style.display='block'; inf.innerText=`ANTRIAN: ${q.length}`; } else inf.style.display='none';
+            if(totalAntri > 0) { 
+                let l=100; if(totalAntri>=10) l=85; else if(totalAntri>=6) l=90; else if(totalAntri>=3) l=95;
+                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${totalAntri} UNIT<br>MAX CHARGING: ${l}%`; 
+            } else inf.style.display='none';
 
             document.getElementById('slots').innerHTML = s.map((x,i)=>{
-                if(!x) return `<div class="slot"><div class="bat-icon"></div><small style="color:#888">KOSONG</small></div>`;
+                if(!x) return `<div class="slot"><div class="bat-wrap"><div class="bat-icon"></div></div><small style="color:#888">KOSONG</small></div>`;
                 const isRun=!!x.startTime;
                 let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
                 let txt="Tap Mulai"; let h=x.startBattery;
@@ -397,9 +406,10 @@
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
                     else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } }
                 }
-                return `<div class="slot ${isRun?'active':''}"><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div>`;
+                return `<div class="slot ${isRun?'active':''}"><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div>`;
             }).join('');
         });
     </script>
 </body>
 </html>
+
