@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLU SUPER APP V91</title>
+    <title>MLU SUPER APP V92</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800;900&family=Syne:wght@700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
+
     <style>
         /* GLOBAL */
-        :root { --bg-overlay: rgba(0,0,0,0.7); --text: #fff; --cyan: #00bcd4; --soft-red: #ff3b3b; --neon-yellow: #ccff00; }
+        :root { --bg-overlay: rgba(0,0,0,0.6); --text: #fff; --cyan: #00bcd4; --soft-red: #ff3b3b; --neon-yellow: #ccff00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Rajdhani', sans-serif; background: #0b101a url('1763947427555.jpg') no-repeat center/cover fixed; color: #fff; height: 100vh; overflow: hidden; position: relative; }
         body::before { content:''; position:absolute; inset:0; background:var(--bg-overlay); z-index:-1; }
 
-        /* PAGE TRANSITION */
-        .page-section { position: absolute; inset: 0; display: none; flex-direction: column; overflow-y: auto; background: #0b101a; z-index: 10; animation: fadeIn 0.3s; }
-        
-        /* HOME MENU */
-        #page-home { display: flex; justify-content: center; align-items: center; text-align: center; background: transparent; z-index: 20; }
+        .page-section { position: absolute; inset: 0; display: none; flex-direction: column; overflow-y: auto; background: #f4f4f4; z-index: 10; animation: fadeIn 0.3s; }
+        #page-home { background: transparent; display: flex; justify-content: center; align-items: center; text-align: center; z-index: 20; }
+
+        /* MENU UTAMA */
         .logo-area h1 { font-family: 'Orbitron'; font-size: 38px; margin: 0; letter-spacing: 2px; text-shadow: 0 0 15px var(--cyan); }
         .squad-text { font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #000; background: var(--neon-yellow); padding: 5px 10px; border-radius: 4px; display: inline-block; margin-top: 10px; animation: blink 1.5s infinite; }
         @keyframes blink { 50% { opacity: 0.6; } }
@@ -32,44 +31,62 @@
         .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; }
         .menu-text span { font-size: 11px; color: #aaa; }
 
-        /* HEADER NAV */
+        /* NAV HEADER */
         .nav-header { display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border-bottom: 1px solid #ccc; color: #333; position: sticky; top: 0; z-index: 99; }
         .btn-back { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
         .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; }
 
-        /* LOKASI (NATIVE STYLE) */
-        #page-lokasi { background: #fff; color: #333; }
-        .map-container { width: 100%; height: calc(100% - 70px); position: relative; }
-        #fullMap { width: 100%; height: 100%; }
+        /* =========================
+           STYLE KHUSUS PETA (MIRIP ASLI)
+           ========================= */
+        #page-lokasi { background: #fff; color: #333; padding: 0; overflow: hidden; }
         
-        .loc-list-overlay { 
-            position: absolute; bottom: 0; left: 0; right: 0; 
-            background: #fff; border-top-left-radius: 20px; border-top-right-radius: 20px; 
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1); max-height: 50%; overflow-y: auto; padding: 20px; z-index: 1000;
-        }
-        .loc-item { background: #f9f9f9; border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .loc-item:active { background: #e0f7fa; border-color: var(--cyan); }
-        
-        /* ANTRIAN (WHITE) */
-        #page-antrian { background: #f4f4f4; background-image: url('1763947427555.jpg'); background-size: cover; background-attachment: fixed; }
-        #page-antrian::before { content:''; position:fixed; inset:0; background: rgba(255,255,255,0.92); z-index:-1; }
-        .glass-card { background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
-        .field { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 10px; background: #f9f9f9; font-family: 'Rajdhani'; font-weight: bold; text-align: center; margin-bottom: 10px; color: #333; font-size: 18px; }
-        .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
-        .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .slot-box { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 10px 5px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
-        .slot-box.active { border-color: var(--cyan); background: #e0f7fa; }
-        .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 5px; margin: 0 auto 5px; position: relative; }
-        .bat-fill { width: 100%; background: var(--cyan); height: 50%; position: absolute; bottom: 0; }
-        
-        /* SOS */
-        #page-sos { background: #f4f4f4; }
-        .sos-card { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
-        .sos-icon { font-size: 30px; }
+        /* Container Peta */
+        #map { width: 100%; height: 100%; z-index: 1; }
 
-        /* MODAL */
+        /* Overlay List Lokasi (Bawah) */
+        .loc-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: #fff; border-top-left-radius: 24px; border-top-right-radius: 24px;
+            box-shadow: 0 -5px 30px rgba(0,0,0,0.15);
+            max-height: 60%; display: flex; flex-direction: column;
+            z-index: 1000; transition: 0.3s;
+        }
+        .loc-handle { width: 40px; height: 5px; background: #ddd; border-radius: 5px; margin: 10px auto; }
+        
+        .loc-header-content { padding: 0 20px 10px; }
+        .loc-title-big { font-family: 'Inter'; font-weight: 800; font-size: 20px; margin: 0; }
+        .loc-badge { background: rgba(204,255,0,0.2); color: #88aa00; font-size: 10px; padding: 4px 8px; border-radius: 8px; font-weight: 800; display: inline-block; margin-bottom: 5px; }
+
+        .loc-list-scroll { overflow-y: auto; padding: 0 20px 80px 20px; flex: 1; }
+        
+        .loc-item { 
+            background: #fff; border: 1px solid #eee; border-radius: 16px; padding: 15px; 
+            margin-bottom: 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: 0.2s;
+        }
+        .loc-item:active { background: #f0fbff; border-color: var(--cyan); }
+        .loc-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+        .loc-info { font-size: 11px; color: #888; }
+        .loc-dist { font-family: 'Syne'; font-weight: 700; font-size: 14px; color: var(--cyan); }
+        .btn-go { background: var(--cyan); color: #fff; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 12px; }
+
+        /* ========================= */
+        /* STYLE ANTRIAN & SOS (TETAP) */
+        /* ========================= */
+        /* (Style Antrian V73 dipersingkat disini agar muat) */
+        .antrian-wrap { padding: 20px; padding-bottom: 100px; }
+        .glass-card { background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
+        .field { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 10px; background: #f9f9f9; font-weight: bold; text-align: center; margin-bottom: 10px; }
+        .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .slot-box { background: #fff; border: 2px solid #eee; border-radius: 10px; padding: 10px 5px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
+        .slot-box.active { border-color: var(--cyan); background: #e0f7fa; }
+        .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 4px; margin: 0 auto 5px; position: relative; }
+        .bat-fill { width: 100%; background: var(--cyan); height: 50%; position: absolute; bottom: 0; }
+        .sos-card { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
-        .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; text-align: center; color: #333; }
+        .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; text-align: center; }
         
         @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     </style>
@@ -78,53 +95,56 @@
 
     <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
 
+    <div id="masterModal" class="modal"><div class="modal-box"><h3 id="mTitle">TITLE</h3><p id="mMsg">Msg</p><div style="display:flex; gap:10px; justify-content:center;"><button onclick="closeModal()" style="padding:10px 20px;">OK</button></div></div></div>
+
     <div id="page-home" class="page-section" style="display:flex;">
-        <div class="logo-area">
-            <h1>MLU APPS</h1>
-            <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
-        </div>
+        <div class="logo-area"><h1>MLU APPS</h1><div class="squad-text">MAKA LINTAS UTARA SQUAD</div></div>
         <div class="menu-grid">
-            <div class="menu-btn" onclick="initMapPage()">
-                <div class="menu-icon">📍</div>
-                <div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
-            </div>
-            <div class="menu-btn" onclick="goTo('page-sos')">
-                <div class="menu-icon">🆘</div>
-                <div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div>
-            </div>
-            <div class="menu-btn" onclick="goTo('page-antrian')">
-                <div class="menu-icon">⚡</div>
-                <div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
-            </div>
+            <div class="menu-btn" onclick="initMap()"><div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div></div>
+            <div class="menu-btn" onclick="goTo('page-sos')"><div class="menu-icon">🆘</div><div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div></div>
+            <div class="menu-btn" onclick="goTo('page-antrian')"><div class="menu-icon">⚡</div><div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div></div>
         </div>
-        <div style="margin-top:40px; font-size:10px; color:#aaa;">v9.2 Final | MLU Squad</div>
+        <div style="margin-top:40px; font-size:10px; color:#555;">v9.2 | MLU Squad</div>
     </div>
 
     <div id="page-lokasi" class="page-section">
-        <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span></div>
-        <div class="map-container">
-            <div id="fullMap"></div>
-            <div class="loc-list-overlay" id="locList">
-                <p style="text-align:center; color:#888; font-size:12px;">Memuat Lokasi...</p>
+        <div class="nav-header" style="position:absolute; top:0; left:0; right:0; z-index:1001; background:rgba(255,255,255,0.9); backdrop-filter:blur(5px);">
+            <button class="btn-back" onclick="goTo('page-home')">⬅</button>
+            <span class="nav-title">PETA LOKASI</span>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="loc-overlay">
+            <div class="loc-handle"></div>
+            <div class="loc-header-content">
+                <span class="loc-badge">TERDEKAT</span>
+                <h2 class="loc-title-big" id="nearestName">Mencari Lokasi...</h2>
+                <p style="font-size:12px; color:#666; margin:0;" id="nearestInfo">Pastikan GPS Aktif</p>
             </div>
+            <div class="loc-list-scroll" id="locListContainer">
+                </div>
         </div>
     </div>
 
-    <div id="page-sos" class="page-section">
+    <div id="page-sos" class="page-section" style="background:#f4f4f4;">
         <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-title">DARURAT</span></div>
         <div style="padding:20px;">
             <div class="sos-card" onclick="wa('628123456789','TOWING')" style="border-left:5px solid orange;">
-                <div class="sos-icon">🚑</div><div><h4 style="margin:0;font-family:'Orbitron'">TOWING</h4><p style="margin:0;font-size:12px;color:#666">Bantuan unit mogok</p></div>
+                <div style="font-size:30px;">🚑</div><div><h4>TOWING</h4><p style="margin:0;font-size:12px;color:#666">Bantuan unit mogok</p></div>
             </div>
             <div class="sos-card" onclick="wa('628123456789','URC')" style="border-left:5px solid red;">
-                <div class="sos-icon">🚨</div><div><h4 style="margin:0;font-family:'Orbitron'">URC</h4><p style="margin:0;font-size:12px;color:#666">Tim Reaksi Cepat</p></div>
+                <div style="font-size:30px;">🚨</div><div><h4>URC</h4><p style="margin:0;font-size:12px;color:#666">Tim Reaksi Cepat</p></div>
+            </div>
+            <div class="sos-card" onclick="wa('628123456789','TAGIHAN')" style="border-left:5px solid green;">
+                <div style="font-size:30px;">💳</div><div><h4>ADMIN</h4><p style="margin:0;font-size:12px;color:#666">Info Tagihan</p></div>
             </div>
         </div>
     </div>
 
     <div id="page-antrian" class="page-section">
         <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
-        <div style="padding:20px; max-width:480px; margin:0 auto;">
+        <div class="antrian-wrap">
             <div class="glass-card">
                 <label>PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
                 <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxx">
@@ -136,90 +156,107 @@
                 <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>DAFTAR TUNGGU</span><span id="qCount">0</span></div>
                 <div id="qList" style="margin-top:10px;"></div>
             </div>
-            <div style="text-align:center; margin-top:30px; font-size:10px; color:#999; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
+            
+            <div style="text-align:center; margin-top:30px; color:#999; font-size:10px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
             <div id="adminPanel" style="display:none; background:#fff; padding:20px; margin-top:20px; border:2px solid red; border-radius:15px;">
                 <h4 style="text-align:center; margin:0 0 10px; color:red;">MASTER</h4>
-                <button onclick="resetAll()" style="width:100%; padding:10px; background:red; color:white; border:none; border-radius:8px;">RESET TOTAL</button>
+                <div style="display:flex; gap:5px;">
+                    <select id="mSlot" class="field" style="padding:5px; font-size:14px;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select>
+                    <button onclick="clrSlot()" class="btn-cyan" style="background:#666;">HAPUS</button>
+                </div>
+                <button onclick="resAll()" class="btn-cyan" style="background:red; margin-top:5px;">RESET TOTAL</button>
             </div>
         </div>
     </div>
-
-    <div id="sysModal" class="modal"><div class="modal-box"><h3 id="modT">TITLE</h3><p id="modM">Message</p><button onclick="document.getElementById('sysModal').style.display='none'" class="btn-cyan" style="padding:10px;">OK</button></div></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // --- CONFIG ---
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        // --- DATA LOKASI DUMMY (EDIT DISINI UNTUK NAMBAH LOKASI) ---
+        const LOCATIONS = [
+            { name: "Showroom Kelapa Gading", lat: -6.1686, lng: 106.9004, type: "Fast | 24 Jam", nozzle: "3 Nozzle" },
+            { name: "Motoriz Sukapura", lat: -6.1425, lng: 106.9256, type: "Fast | 08-22", nozzle: "2 Nozzle" },
+            { name: "Motoriz Meruya", lat: -6.2078, lng: 106.7373, type: "Fast | 08-22", nozzle: "2 Nozzle" },
+            { name: "Klinik Pratama Condet", lat: -6.2833, lng: 106.8555, type: "Fast | 24 Jam", nozzle: "2 Nozzle" },
+            { name: "Duta Kranji Bekasi", lat: -6.2297, lng: 106.9755, type: "Fast | 24 Jam", nozzle: "1 Nozzle" }
+        ];
+
         const FONNTE = ["Fc8dWb7jiKr7CXuEZXBx"];
         const FB_CONF = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
-        
         const app = initializeApp(FB_CONF); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
-        let map = null; let chargers = []; let isAdmin = false;
+        let map = null; let userMarker = null;
 
-        // --- NAVIGATION ---
-        window.goTo = (id) => { 
-            document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); 
-            document.getElementById(id).style.display='flex'; 
-            if(id === 'page-antrian') document.getElementById(id).style.display='block'; // Scroll fix
-        };
-        window.wa = (no, txt) => window.open(`https://wa.me/${no}?text=${encodeURIComponent(txt)}`, '_blank');
-        window.popup = (t,m) => { document.getElementById('modT').innerText=t; document.getElementById('modM').innerText=m; document.getElementById('sysModal').style.display='flex'; };
+        window.goTo = (id) => { document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); document.getElementById(id).style.display='flex'; if(id==='page-antrian') document.getElementById(id).style.display='block'; };
+        window.wa = (n,t) => window.open(`https://wa.me/${n}?text=${t}`, '_blank');
+        window.closeModal = () => document.getElementById('masterModal').style.display='none';
+        window.popup = (t,m) => { document.getElementById('mTitle').innerText=t; document.getElementById('mMsg').innerText=m; document.getElementById('masterModal').style.display='flex'; };
 
-        // --- MAPS ENGINE (NATIVE) ---
-        window.initMapPage = async () => {
+        // --- MAPS ENGINE (LOKASI FC) ---
+        window.initMap = () => {
             window.goTo('page-lokasi');
             if(!map) {
-                map = L.map('fullMap').setView([-6.2, 106.8], 10);
+                map = L.map('map', {zoomControl:false}).setView([-6.2, 106.8], 10);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
                 
-                // Load Data dari Google Sheet Bapak (Real Data)
-                try {
-                    const res = await fetch(SHEET_URL);
-                    const text = await res.text();
-                    const rows = text.split('\n').slice(1);
-                    
-                    let listHTML = '';
-                    rows.forEach((r, i) => {
-                        const c = r.split(',');
-                        if(c.length < 5) return;
-                        const name = c[0]; const lat = parseFloat(c[4]); const lng = parseFloat(c[5]);
+                // Render Marker
+                LOCATIONS.forEach(l => {
+                    L.marker([l.lat, l.lng]).addTo(map).bindPopup(`<b>${l.name}</b><br><a href="https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}&travelmode=two_wheeler" target="_blank">Navigasi</a>`);
+                });
+
+                // GPS User
+                if(navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(p => {
+                        const lat = p.coords.latitude; const lng = p.coords.longitude;
+                        if(userMarker) userMarker.remove();
+                        userMarker = L.circleMarker([lat, lng], {color:'blue', radius:8}).addTo(map);
+                        map.setView([lat, lng], 12);
                         
-                        // Tambah Marker
-                        if(!isNaN(lat) && !isNaN(lng)) {
-                            L.marker([lat, lng]).addTo(map).bindPopup(`<b>${name}</b><br><a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">Navigasi</a>`);
-                            
-                            // Tambah ke List Bawah
-                            listHTML += `<div class="loc-item" onclick="window.open('https://maps.google.com/?q=${lat},${lng}','_blank')">
-                                <div><b>${name}</b><br><small style="color:#888">${c[2] || 'FC'}</small></div>
-                                <button style="background:var(--cyan); color:#fff; border:none; padding:5px 10px; border-radius:5px;">GO</button>
-                            </div>`;
-                        }
+                        // Hitung Jarak & Sortir
+                        LOCATIONS.forEach(l => {
+                            const dLat = (l.lat-lat)*Math.PI/180; const dLon = (l.lng-lng)*Math.PI/180;
+                            const a = Math.sin(dLat/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(l.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+                            l.dist = (6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
+                        });
+                        LOCATIONS.sort((a,b) => parseFloat(a.dist) - parseFloat(b.dist));
+                        renderLocList();
                     });
-                    document.getElementById('locList').innerHTML = listHTML;
-                } catch(e) { document.getElementById('locList').innerHTML = '<p>Gagal memuat data.</p>'; }
+                } else { renderLocList(); }
             }
-            setTimeout(()=>map.invalidateSize(), 500);
         };
 
+        function renderLocList() {
+            const nearest = LOCATIONS[0];
+            document.getElementById('nearestName').innerText = nearest.name;
+            document.getElementById('nearestInfo').innerText = `${nearest.dist || '--'} KM • ${nearest.type}`;
+            
+            let html = '';
+            LOCATIONS.forEach(l => {
+                html += `
+                <div class="loc-item" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}&travelmode=two_wheeler', '_blank')">
+                    <div>
+                        <div class="loc-name">${l.name}</div>
+                        <div class="loc-info">${l.nozzle} • ${l.type}</div>
+                    </div>
+                    <div class="loc-dist">${l.dist || '--'} KM</div>
+                    <button class="btn-go">GO</button>
+                </div>`;
+            });
+            document.getElementById('locListContainer').innerHTML = html;
+        }
+
         // --- ANTRIAN LOGIC (V69) ---
-        const audio = document.getElementById('alarmSound');
-        function prime() { if(audio.paused) audio.play().then(()=>{setTimeout(()=>{audio.pause();audio.currentTime=0;},100)}).catch(()=>{}); }
+        // (Sama seperti V69 tapi disesuaikan layout)
+        const alarm = document.getElementById('alarmSound');
+        function prime() { if(alarm.paused) alarm.play().then(()=>{setTimeout(()=>{alarm.pause();alarm.currentTime=0;},100)}).catch(()=>{}); }
         document.body.addEventListener('click', prime);
 
-        // WA Helper
-        async function sendFonnte(target, msg, scheduleTime=null) {
-            const p = target.replace(/\D/g,'').replace(/^0/,'62');
-            const fd = new FormData(); fd.append("target", p); fd.append("message", msg); fd.append("countryCode", "62");
-            if(scheduleTime) {
-                const ux = Math.floor(new Date(scheduleTime).getTime()/1000);
-                fd.append("schedule", ux);
-            } else fd.append("schedule", "0");
-            
-            const token = FONNTE[0];
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": token }, body: fd }); } catch(e){}
+        async function sendWA(t, m, sch=null) {
+            let p = t.replace(/\D/g,'').replace(/^0/,'62');
+            const fd = new FormData(); fd.append("target", p); fd.append("message", m); fd.append("countryCode", "62"); fd.append("schedule", sch?Math.floor(new Date(sch).getTime()/1000):"0");
+            const rnd = FONNTE[Math.floor(Math.random()*FONNTE.length)];
+            fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }).catch(()=>{});
         }
 
         window.daftar = async () => {
@@ -227,84 +264,70 @@
             const p = document.getElementById('uPlat').value.toUpperCase();
             const w = document.getElementById('uWa').value;
             const b = parseInt(document.getElementById('uBat').value);
-            if(!p || !w || isNaN(b)) return popup('ERROR','Data kurang');
+            if(!p || !w || isNaN(b)) return popup('ERROR','Data Kurang');
             
             await runTransaction(db, async(t)=>{
-                const d = (await t.get(ref)).data() || {};
-                let s = d.chargingSlots || [null,null,null];
-                let q = d.waitingQueue || [];
+                const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
+                if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
                 
-                // Hitung Durasi
-                let dur = 0; for(let i=b; i<100; i++) dur += (i>=90?2.2 : (i>=80?1.5:0.8));
+                let dur = 0; for(let i=b; i<100; i++) dur += (i>=90?2.2:(i>=80?1.5:0.8));
                 dur = Math.ceil(dur); if(dur<2) dur=2;
-
+                
                 const item = { name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:100 };
                 const empty = s.indexOf(null);
-                if(empty !== -1) s[empty] = item; else q.push(item);
-                
+                if(empty!==-1) s[empty]=item; else q.push(item);
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-                if(w) sendFonnte(w, `*Halo Sahabat MLU!*\nMotor ${p} masuk antrian.`);
+                if(w) sendWA(w, `*Halo Sahabat MLU!*\nMotor *${p}* berhasil terdaftar.`);
             });
-            popup('SUKSES','Berhasil daftar');
+            popup('SUKSES','Masuk Antrian');
             document.getElementById('uPlat').value='';
         };
 
         window.act = (i, type) => {
             prime();
             runTransaction(db, async(t)=>{
-                const d = (await t.get(ref)).data(); const s = d.chargingSlots;
-                if(type === 'stop') { s[i] = null; }
-                else { 
+                const d=(await t.get(ref)).data(); const s=d.chargingSlots;
+                if(type==='stop') { s[i]=null; }
+                else {
                     s[i].startTime = new Date();
                     if(s[i].phone) {
-                        sendFonnte(s[i].phone, `*Halo Sahabat MLU!*\nMotor ${s[i].name} mulai dicas.`);
+                        sendWA(s[i].phone, `*Halo Sahabat MLU!*\nMotor *${s[i].name}* mulai dicas.`);
                         const end = new Date(Date.now() + s[i].durationMinutes*60000);
-                        // Schedule WA Finish
-                        const y=end.getFullYear(); const m=String(end.getMonth()+1).padStart(2,'0'); const dd=String(end.getDate()).padStart(2,'0'); 
-                        const h=String(end.getHours()).padStart(2,'0'); const min=String(end.getMinutes()).padStart(2,'0'); const sec=String(end.getSeconds()).padStart(2,'0');
-                        const schStr = `${y}-${m}-${dd} ${h}:${min}:${sec}`;
-                        
-                        // Note: Fonnte butuh UNIX atau String YYYY-MM-DD HH:mm:ss. Kita pakai String biar aman zona waktu.
-                        const fd = new FormData(); fd.append("target", s[i].phone.replace(/\D/g,'').replace(/^0/,'62'));
-                        fd.append("message", `*Halo Sahabat MLU!*\nMotor ${s[i].name} selesai.`);
-                        fd.append("schedule", schStr);
-                        fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE[0] }, body: fd });
+                        sendWA(s[i].phone, `*Halo Sahabat MLU!*\nMotor *${s[i].name}* selesai.`, end);
                     }
                 }
                 t.update(ref, {chargingSlots:s});
             });
         };
 
-        // Render
         onSnapshot(ref, (snap) => {
-            const d = snap.data() || {}; const s = d.chargingSlots || [null,null,null];
-            document.getElementById('qCount').innerText = (d.waitingQueue||[]).length;
+            const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
+            document.getElementById('qCount').innerText = q.length;
+            document.getElementById('queueList').innerHTML = q.map((x,i)=>`<div><b>${x.name}</b> <span style="color:#888">(${x.startBattery}%)</span></div>`).join('');
+            
             document.getElementById('slotContainer').innerHTML = s.map((x,i)=>{
                 if(!x) return `<div class="slot-box"><div class="bat-icon"></div><div style="font-size:10px;color:#aaa">KOSONG</div></div>`;
                 const isRun = !!x.startTime;
                 const btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
-                let txt = "Tap Mulai";
+                let txt = "Tap Mulai"; let h=x.startBattery;
                 if(isRun) {
-                    const end = (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
+                    const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
                     const diff = end - Date.now();
-                    if(diff > 0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; }
-                    else { txt="SELESAI"; if(isAdmin) audio.play().catch(()=>{}); }
+                    if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
+                    else { txt="SELESAI"; alarm.play().catch(()=>{}); }
                 }
-                return `<div class="slot-box active" style="border-color:${txt==='SELESAI'?'red':'var(--cyan)'}">
-                    <div class="bat-icon"><div class="bat-fill" style="height:100%"></div></div>
-                    <div style="font-weight:bold">${x.name}</div>
-                    <div style="color:var(--cyan); font-weight:bold; margin:5px 0;">${txt}</div>
-                    ${btn}
-                </div>`;
+                return `<div class="slot-box ${isRun?'active':''}"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div></div><div style="font-weight:bold">${x.name}</div><div style="color:var(--cyan);font-weight:bold;margin:5px 0;">${txt}</div>${btn}</div>`;
             }).join('');
         });
 
-        // Loop Timer UI
-        setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000);
+        setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000); // Trigger refresh UI
 
-        // Admin
-        window.adminLog = () => { if(prompt("PIN")==='1131') { document.getElementById('adminPanel').style.display='block'; isAdmin=true; } };
-        window.resetAll = () => { if(confirm("Reset?")) setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); };
+        // ADMIN
+        window.adminLog=()=>{ if(prompt("PIN")==='1131') document.getElementById('adminPanel').style.display='block'; };
+        window.clearSlotManual=()=>{ const i=document.getElementById('manSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})}); };
+        window.resetAll=()=>{ if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
+        window.fillFromQueue=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0){const e=s.indexOf(null);if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}}});};
+        window.startAllSlots=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach(x=>{if(x&&!x.startTime)x.startTime=new Date()}); t.update(ref,{chargingSlots:s});});};
 
     </script>
 </body>
