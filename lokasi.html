@@ -2,21 +2,257 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOKASI FC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PETA LOKASI MLU</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Syne:wght@700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <style>
-        body { margin: 0; overflow: hidden; background: #fff; font-family: 'Inter', sans-serif; }
-        .header { position: absolute; top: 0; width: 100%; z-index: 999; background: rgba(255,255,255,0.9); padding: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .btn-back { text-decoration: none; font-size: 24px; color: #333; }
-        iframe { width: 100vw; height: 100vh; border: none; }
+        :root {
+            --accent: #CCFF00; --dark: #050505; --card-bg: #ffffff; --text: #1a1a1a;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; background: var(--dark); }
+
+        /* HEADER */
+        .header {
+            background: #fff; padding: 15px; display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; position: relative;
+        }
+        .btn-back { text-decoration: none; font-size: 24px; color: #000; border: 1px solid #eee; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .header h1 { font-family: 'Orbitron'; font-size: 18px; margin: 0; color: #000; text-transform: uppercase; }
+
+        /* MAP CONTAINER */
+        #map { flex: 1; width: 100%; background: #222; z-index: 1; }
+
+        /* LIST OVERLAY (BAWAH) */
+        .list-overlay {
+            background: #fff; border-top-left-radius: 24px; border-top-right-radius: 24px;
+            padding: 20px 0; display: flex; flex-direction: column;
+            position: relative; z-index: 999; box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            max-height: 45vh; /* Setengah layar */
+        }
+        .drag-handle { width: 40px; height: 5px; background: #ddd; border-radius: 5px; margin: 0 auto 15px; }
+
+        /* HERO CARD (TERDEKAT) */
+        .hero-section { padding: 0 20px; margin-bottom: 20px; }
+        .hero-card {
+            background: #f8f9fa; border: 1px solid #eee; border-radius: 16px; padding: 15px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .hero-badge { 
+            background: rgba(204,255,0,0.2); color: #88aa00; font-size: 10px; 
+            padding: 4px 8px; border-radius: 8px; font-weight: 800; width: fit-content;
+        }
+        .hero-title { font-family: 'Inter'; font-weight: 800; font-size: 20px; color: #000; margin: 0; }
+        .hero-info { font-size: 12px; color: #666; margin: 0; display: flex; gap: 10px; }
+        .btn-nav {
+            background: #1a1a1a; color: #fff; text-align: center; padding: 12px;
+            border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 14px;
+            display: block; margin-top: 5px;
+        }
+
+        /* SCROLLABLE LIST */
+        .scroll-area { overflow-y: auto; padding: 0 20px 20px; flex: 1; }
+        .list-item {
+            background: #fff; border-bottom: 1px solid #eee; padding: 15px 0;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .item-name { font-weight: 700; font-size: 15px; color: #000; margin-bottom: 3px; }
+        .item-meta { font-size: 11px; color: #888; }
+        .item-dist { font-family: 'Syne'; font-weight: 800; font-size: 14px; color: #00bcd4; }
+        
+        /* LOADING */
+        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(0,0,0,0.7); color: #fff; padding: 10px 20px; border-radius: 20px; z-index: 2000; font-size: 12px; }
     </style>
 </head>
 <body>
+
     <div class="header">
         <a href="index.html" class="btn-back">⬅</a>
-        <span style="font-size: 18px; color: #333;">PETA LOKASI</span>
+        <h1>PETA LOKASI</h1>
     </div>
-    <iframe src="https://punyaaris1-lang.github.io/LokasiFC/index.html#map" style="margin-top: 60px; height: calc(100vh - 60px);"></iframe>
+
+    <div id="map"></div>
+    <div id="loading">Memuat Data Lokasi...</div>
+
+    <div class="list-overlay">
+        <div class="drag-handle"></div>
+        
+        <div class="hero-section" id="heroSection" style="display:none;">
+            <div class="hero-card">
+                <div style="display:flex; justify-content:space-between;">
+                    <span class="hero-badge">● TERDEKAT</span>
+                    <span class="item-dist" id="heroDist">-- KM</span>
+                </div>
+                <h2 class="hero-title" id="heroName">Nama Lokasi</h2>
+                <p class="hero-info" id="heroDesc">Alamat / Info</p>
+                <a href="#" id="heroLink" target="_blank" class="btn-nav">NAVIGASI GOOGLE MAPS ↗</a>
+            </div>
+        </div>
+
+        <div class="scroll-area" id="listContainer">
+            </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // CONFIG
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA"; // Token Peta Gratis
+        
+        let map = L.map('map', {zoomControl: false}).setView([-6.200000, 106.816666], 11); // Default Jakarta
+        let userMarker = null;
+        let locations = [];
+
+        // Tile Layer (Jawg Maps - Tampilan Bersih)
+        L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {
+            attribution: '', maxZoom: 18
+        }).addTo(map);
+
+        // Custom Icon
+        const pinIcon = L.divIcon({
+            className: 'custom-pin',
+            html: `<div style="background:#00bcd4; width:14px; height:14px; border:2px solid #fff; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.3);"></div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+        });
+
+        async function loadData() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const text = await response.text();
+                const rows = text.split('\n').slice(1); // Skip header
+
+                locations = rows.map((row, index) => {
+                    const cols = row.split(',');
+                    // Pastikan kolom lat/lng ada (Index 4 dan 5 di sheet bapak)
+                    if (cols.length < 6) return null;
+                    
+                    return {
+                        id: index,
+                        name: cols[0].replace(/"/g, ''),
+                        city: cols[1],
+                        type: cols[2],
+                        lat: parseFloat(cols[4]),
+                        lng: parseFloat(cols[5]),
+                        link: cols[6], // Link Gmaps
+                        nozzle: cols[7] || '-',
+                        dist: 9999 // Default jauh
+                    };
+                }).filter(item => item && !isNaN(item.lat));
+
+                // Render Markers
+                locations.forEach(loc => {
+                    L.marker([loc.lat, loc.lng], {icon: pinIcon})
+                     .addTo(map)
+                     .bindPopup(`<b>${loc.name}</b><br>${loc.type}`);
+                });
+
+                // Get User GPS
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(successGPS, errorGPS);
+                } else {
+                    renderList(); // Render tanpa jarak jika GPS mati
+                }
+
+            } catch (err) {
+                alert("Gagal memuat data lokasi.");
+            }
+        }
+
+        function successGPS(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // Update Peta ke Lokasi User
+            map.setView([lat, lng], 13);
+            if(userMarker) map.removeLayer(userMarker);
+            
+            // Marker User (Biru Kedip)
+            userMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'user-pin',
+                    html: `<div style="background:#0066ff; width:16px; height:16px; border:3px solid #fff; border-radius:50%; box-shadow:0 0 0 4px rgba(0,100,255,0.2);"></div>`
+                })
+            }).addTo(map);
+
+            // Hitung Jarak
+            locations.forEach(loc => {
+                loc.dist = getDistanceFromLatLonInKm(lat, lng, loc.lat, loc.lng);
+            });
+
+            // Sortir dari terdekat
+            locations.sort((a, b) => a.dist - b.dist);
+            
+            renderList();
+        }
+
+        function errorGPS() {
+            alert("GPS tidak aktif. Menampilkan lokasi default.");
+            renderList();
+        }
+
+        function renderList() {
+            document.getElementById('loading').style.display = 'none';
+            const container = document.getElementById('listContainer');
+            container.innerHTML = "";
+
+            // 1. Update Hero Section (Terdekat)
+            if(locations.length > 0) {
+                const top = locations[0];
+                document.getElementById('heroSection').style.display = 'block';
+                document.getElementById('heroName').innerText = top.name;
+                document.getElementById('heroDesc').innerText = `${top.nozzle} • ${top.type}`;
+                document.getElementById('heroDist').innerText = top.dist.toFixed(1) + " KM";
+                // Link Google Maps Langsung
+                const gmapsLink = top.link && top.link.includes('http') ? top.link : `https://www.google.com/maps/dir/?api=1&destination=${top.lat},${top.lng}&travelmode=two_wheeler`;
+                document.getElementById('heroLink').href = gmapsLink;
+            }
+
+            // 2. Render Sisa List
+            locations.forEach(loc => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.onclick = () => {
+                    map.flyTo([loc.lat, loc.lng], 16); // Zoom ke lokasi saat diklik
+                    // Update Hero juga
+                    document.getElementById('heroName').innerText = loc.name;
+                    document.getElementById('heroDesc').innerText = `${loc.nozzle} • ${loc.type}`;
+                    document.getElementById('heroDist').innerText = loc.dist.toFixed(1) + " KM";
+                    const gmapsLink = loc.link && loc.link.includes('http') ? loc.link : `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}&travelmode=two_wheeler`;
+                    document.getElementById('heroLink').href = gmapsLink;
+                };
+
+                item.innerHTML = `
+                    <div>
+                        <div class="item-name">${loc.name}</div>
+                        <div class="item-meta">${loc.nozzle} • ${loc.type}</div>
+                    </div>
+                    <div class="item-dist">${loc.dist.toFixed(1)} km</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Rumus Jarak (Haversine)
+        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+            var R = 6371; 
+            var dLat = deg2rad(lat2-lat1);  
+            var dLon = deg2rad(lon2-lon1); 
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            var d = R * c; 
+            return d;
+        }
+        function deg2rad(deg) { return deg * (Math.PI/180); }
+
+        // Start
+        loadData();
+
+    </script>
 </body>
 </html>
