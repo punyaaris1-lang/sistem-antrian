@@ -3,199 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLU SUPER APP V90</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>MLU SUPER APP V91</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800;900&family=Syne:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
-        /* =========================================
-           GLOBAL STYLE
-           ========================================= */
-        :root {
-            --bg-overlay: rgba(0, 0, 0, 0.6); 
-            --text: #fff;
-            --cyan: #00bcd4;
-            --soft-red: #ff3b3b;
-            --neon-yellow: #ccff00;
-            --shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-
+        /* GLOBAL */
+        :root { --bg-overlay: rgba(0,0,0,0.7); --text: #fff; --cyan: #00bcd4; --soft-red: #ff3b3b; --neon-yellow: #ccff00; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            margin: 0; font-family: 'Rajdhani', sans-serif; 
-            color: var(--text); height: 100vh; overflow: hidden;
-            background-color: #0b101a;
-            background-image: url('1763947427555.jpg'); 
-            background-size: cover; background-position: center; 
-            background-attachment: fixed; position: relative;
-        }
-        
-        body::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: -1; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: #0b101a url('1763947427555.jpg') no-repeat center/cover fixed; color: #fff; height: 100vh; overflow: hidden; position: relative; }
+        body::before { content:''; position:absolute; inset:0; background:var(--bg-overlay); z-index:-1; }
 
-        /* =========================================
-           HALAMAN (PAGE SECTIONS)
-           ========================================= */
-        .page-section {
-            position: absolute; inset: 0; display: none; 
-            flex-direction: column; overflow-y: auto; padding: 20px;
-            padding-bottom: 100px; animation: fadeIn 0.3s;
-            z-index: 10;
-        }
+        /* PAGE TRANSITION */
+        .page-section { position: absolute; inset: 0; display: none; flex-direction: column; overflow-y: auto; background: #0b101a; z-index: 10; animation: fadeIn 0.3s; }
         
-        #page-home { display: flex; justify-content: center; align-items: center; text-align: center; z-index: 20; }
+        /* HOME MENU */
+        #page-home { display: flex; justify-content: center; align-items: center; text-align: center; background: transparent; z-index: 20; }
+        .logo-area h1 { font-family: 'Orbitron'; font-size: 38px; margin: 0; letter-spacing: 2px; text-shadow: 0 0 15px var(--cyan); }
+        .squad-text { font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #000; background: var(--neon-yellow); padding: 5px 10px; border-radius: 4px; display: inline-block; margin-top: 10px; animation: blink 1.5s infinite; }
+        @keyframes blink { 50% { opacity: 0.6; } }
 
-        /* =========================================
-           MENU UTAMA (HOME)
-           ========================================= */
-        .logo-area h1 { 
-            font-family: 'Orbitron'; font-size: 38px; margin: 0; 
-            color: #fff; letter-spacing: 3px; text-shadow: 0 0 15px var(--cyan);
-        }
-        
-        @keyframes blinkText { 50% { opacity: 0.5; } }
-        .squad-text {
-            font-family: 'Orbitron'; font-size: 14px; font-weight: bold;
-            color: #000; background: var(--neon-yellow);
-            padding: 5px 15px; border-radius: 5px;
-            margin-top: 10px; display: inline-block;
-            animation: blinkText 1.5s infinite;
-            border: 2px solid #fff;
-        }
-
-        .menu-grid { display: grid; gap: 20px; width: 100%; max-width: 400px; margin-top: 50px; }
-        
-        .menu-btn {
-            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--cyan);
-            padding: 25px; border-radius: 20px; cursor: pointer;
-            display: flex; align-items: center; gap: 20px;
-            box-shadow: 0 0 15px rgba(0, 188, 212, 0.2); transition: 0.2s;
-            backdrop-filter: blur(5px);
-        }
+        .menu-grid { display: grid; gap: 15px; width: 100%; max-width: 380px; margin-top: 40px; padding: 20px; }
+        .menu-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--cyan); padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; backdrop-filter: blur(5px); transition: 0.2s; }
         .menu-btn:active { transform: scale(0.96); background: var(--cyan); }
-        
-        .menu-icon { 
-            font-size: 32px; width: 60px; height: 60px; 
-            background: rgba(0, 188, 212, 0.1); border-radius: 15px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--cyan); border: 1px solid var(--cyan);
-        }
-        
-        .menu-text { text-align: left; }
-        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; }
-        .menu-text span { font-size: 12px; color: #aaa; }
+        .menu-icon { font-size: 28px; width: 50px; height: 50px; background: rgba(0,210,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--cyan); border: 1px solid var(--cyan); }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; }
+        .menu-text span { font-size: 11px; color: #aaa; }
 
-        /* =========================================
-           HEADER NAVIGASI
-           ========================================= */
-        .nav-header {
-            display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
-            background: #fff; padding: 15px; border-radius: 15px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: sticky; top: 0; z-index: 999;
-        }
-        .btn-back {
-            background: #eee; border: none; color: #333;
-            font-size: 24px; width: 45px; height: 45px; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; color: #333; }
+        /* HEADER NAV */
+        .nav-header { display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border-bottom: 1px solid #ccc; color: #333; position: sticky; top: 0; z-index: 99; }
+        .btn-back { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+        .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; }
 
-        /* =========================================
-           LOKASI PAGE (IFRAME FIX)
-           ========================================= */
-        #page-lokasi { padding: 0; overflow: hidden; background: #fff; }
-        /* Trik CSS: Memotong header bawaan dari website luar */
-        .map-container { 
-            width: 100%; height: 100%; overflow: hidden; position: relative; 
-        }
-        .map-frame { 
-            width: 100%; height: 110%; border: none; 
-            position: absolute; top: -60px; left: 0; /* Menggeser ke atas agar header tertutup */
-        }
+        /* LOKASI (NATIVE STYLE) */
+        #page-lokasi { background: #fff; color: #333; }
+        .map-container { width: 100%; height: calc(100% - 70px); position: relative; }
+        #fullMap { width: 100%; height: 100%; }
         
-        /* =========================================
-           SOS PAGE
-           ========================================= */
-        .sos-container { display: grid; gap: 15px; margin-top: 20px; }
-        .btn-sos {
-            background: #fff; border: none; padding: 25px; border-radius: 15px;
-            display: flex; align-items: center; gap: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s;
+        .loc-list-overlay { 
+            position: absolute; bottom: 0; left: 0; right: 0; 
+            background: #fff; border-top-left-radius: 20px; border-top-right-radius: 20px; 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1); max-height: 50%; overflow-y: auto; padding: 20px; z-index: 1000;
         }
-        .btn-sos:active { transform: scale(0.98); }
-        .btn-sos h4 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #333; }
-        .btn-sos p { margin: 0; font-size: 13px; color: #666; }
+        .loc-item { background: #f9f9f9; border: 1px solid #eee; border-radius: 12px; padding: 15px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .loc-item:active { background: #e0f7fa; border-color: var(--cyan); }
         
-        .btn-sos.yellow { border-left: 8px solid orange; }
-        .btn-sos.red { border-left: 8px solid var(--soft-red); }
-        .btn-sos.green { border-left: 8px solid #25D366; }
-
-        /* =========================================
-           ANTRIAN PAGE
-           ========================================= */
-        #page-antrian { 
-            background: #f4f4f4; 
-            background-image: url('1763947427555.jpg');
-            background-size: cover; background-attachment: fixed;
-            z-index: 50;
-        }
-        #page-antrian::before {
-            content:''; position:fixed; inset:0; background: rgba(255,255,255,0.92); z-index:-1;
-        }
-
-        .antrian-container { max-width: 480px; margin: 0 auto; }
-        .glass-card { background: #fff; border: 1px solid #ddd; border-radius: 20px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        
-        .field { width: 100%; background: #f8f9fa; border: 2px solid #ccc; color: #000; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; text-align: center; outline: none; margin-bottom: 15px; }
-        .field:focus { border-color: var(--cyan); background: #fff; }
-        .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3); }
-        
-        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .slot-box { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 10px 5px; text-align: center; min-height: 160px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        /* ANTRIAN (WHITE) */
+        #page-antrian { background: #f4f4f4; background-image: url('1763947427555.jpg'); background-size: cover; background-attachment: fixed; }
+        #page-antrian::before { content:''; position:fixed; inset:0; background: rgba(255,255,255,0.92); z-index:-1; }
+        .glass-card { background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
+        .field { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 10px; background: #f9f9f9; font-family: 'Rajdhani'; font-weight: bold; text-align: center; margin-bottom: 10px; color: #333; font-size: 18px; }
+        .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+        .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .slot-box { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 10px 5px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
         .slot-box.active { border-color: var(--cyan); background: #e0f7fa; }
-
-        .bat-icon { width: 36px; height: 60px; border: 2px solid #555; border-radius: 6px; position: relative; margin: 0 auto 10px; display: flex; align-items: flex-end; padding: 2px; background: #fff; }
-        .bat-icon::before { content: ''; position: absolute; top: -5px; left: 10px; width: 12px; height: 3px; background: #555; }
-        .bat-fill { width: 100%; background: var(--cyan); border-radius: 3px; transition: height 0.5s; }
-        .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; color: #333; z-index: 2; }
+        .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 5px; margin: 0 auto 5px; position: relative; }
+        .bat-fill { width: 100%; background: var(--cyan); height: 50%; position: absolute; bottom: 0; }
         
-        .btn-act { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: bold; font-family: 'Orbitron'; font-size: 10px; margin-top: auto; cursor: pointer; }
-        .btn-start { background: var(--cyan); color: #fff; }
-        .btn-stop { background: #fff; border: 2px solid var(--soft-red); color: var(--soft-red); }
-
-        @keyframes neonPulse { 0% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); } 50% { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; } 100% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); } }
-        .rule-info { font-size: 14px; color: #000; text-align: center; margin-top: 15px; font-family: 'Orbitron'; font-weight: 900; padding: 12px; border-radius: 12px; background: #fff; border: 3px solid var(--neon-yellow); animation: neonPulse 1.5s infinite; display: none; }
+        /* SOS */
+        #page-sos { background: #f4f4f4; }
+        .sos-card { background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
+        .sos-icon { font-size: 30px; }
 
         /* MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 12000; align-items: center; justify-content: center; }
-        .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; border-top: 5px solid var(--cyan); }
-        .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; margin: 5px; }
-        .btn-modal.primary { background: var(--cyan); color: #fff; }
-        .btn-modal.danger { background: var(--soft-red); color: #fff; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; text-align: center; color: #333; }
         
-        /* ADMIN */
-        .admin-trigger { text-align: center; margin-top: 30px; padding: 10px; border: 1px dashed #333; color: #555; font-size: 10px; cursor: pointer; border-radius: 8px; }
-        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
-        
-        @keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     </style>
 </head>
 <body>
 
     <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
-    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
-
-    <div id="masterModal" class="modal">
-        <div id="modalBox" class="modal-box">
-            <h3 id="mTitle" style="font-family:'Orbitron'; margin:0 0 10px; color:#333">TITLE</h3>
-            <p id="mMsg" style="color:#666; font-size:14px; margin-bottom:20px;">Message</p>
-            <input type="password" id="mInput" class="field" style="display:none; font-size:18px;" placeholder="PIN">
-            <div style="display:flex;">
-                <button id="mBtnCancel" class="btn-modal" onclick="closeModal()" style="display:none; background:#eee; color:#333;">BATAL</button>
-                <button id="mBtnOk" class="btn-modal primary" onclick="closeModal()">OK</button>
-            </div>
-        </div>
-    </div>
 
     <div id="page-home" class="page-section" style="display:flex;">
         <div class="logo-area">
@@ -203,230 +84,228 @@
             <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
         </div>
         <div class="menu-grid">
-            <div class="menu-btn" onclick="goToPage('page-lokasi')">
+            <div class="menu-btn" onclick="initMapPage()">
                 <div class="menu-icon">📍</div>
                 <div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
             </div>
-            <div class="menu-btn" onclick="goToPage('page-sos')">
+            <div class="menu-btn" onclick="goTo('page-sos')">
                 <div class="menu-icon">🆘</div>
                 <div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div>
             </div>
-            <div class="menu-btn" onclick="goToPage('page-antrian')">
+            <div class="menu-btn" onclick="goTo('page-antrian')">
                 <div class="menu-icon">⚡</div>
                 <div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
             </div>
         </div>
-        <div style="margin-top:40px; font-size:10px; color:#555;">v9.0 | MLU Squad</div>
+        <div style="margin-top:40px; font-size:10px; color:#aaa;">v9.2 Final | MLU Squad</div>
     </div>
 
     <div id="page-lokasi" class="page-section">
-        <div class="nav-header">
-            <button class="btn-back" onclick="goToPage('page-home')">⬅</button>
-            <span class="nav-title">PETA LOKASI</span>
-        </div>
+        <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span></div>
         <div class="map-container">
-            <iframe class="map-frame" src="https://punyaaris1-lang.github.io/LokasiFC/"></iframe>
+            <div id="fullMap"></div>
+            <div class="loc-list-overlay" id="locList">
+                <p style="text-align:center; color:#888; font-size:12px;">Memuat Lokasi...</p>
+            </div>
         </div>
     </div>
 
-    <div id="page-sos" class="page-section" style="background:#f4f4f4;">
-        <div class="nav-header"><button class="btn-back" onclick="goToPage('page-home')">⬅</button><span class="nav-title">BANTUAN DARURAT</span></div>
-        <div class="sos-container">
-            <div class="btn-sos yellow" onclick="window.open('https://wa.me/628123456789?text=TOWING', '_blank')"><div style="font-size:30px;">🚑</div><div><h4>TOWING</h4><p>Bantuan unit mogok</p></div></div>
-            <div class="btn-sos red" onclick="window.open('https://wa.me/628123456789?text=KECELAKAAN', '_blank')"><div style="font-size:30px;">🚨</div><div><h4>URC</h4><p>Tim Reaksi Cepat</p></div></div>
-            <div class="btn-sos green" onclick="window.open('https://wa.me/628123456789?text=TAGIHAN', '_blank')"><div style="font-size:30px;">💳</div><div><h4>ADMIN</h4><p>Info Tagihan</p></div></div>
+    <div id="page-sos" class="page-section">
+        <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-title">DARURAT</span></div>
+        <div style="padding:20px;">
+            <div class="sos-card" onclick="wa('628123456789','TOWING')" style="border-left:5px solid orange;">
+                <div class="sos-icon">🚑</div><div><h4 style="margin:0;font-family:'Orbitron'">TOWING</h4><p style="margin:0;font-size:12px;color:#666">Bantuan unit mogok</p></div>
+            </div>
+            <div class="sos-card" onclick="wa('628123456789','URC')" style="border-left:5px solid red;">
+                <div class="sos-icon">🚨</div><div><h4 style="margin:0;font-family:'Orbitron'">URC</h4><p style="margin:0;font-size:12px;color:#666">Tim Reaksi Cepat</p></div>
+            </div>
         </div>
     </div>
 
     <div id="page-antrian" class="page-section">
-        <div class="nav-header"><button class="btn-back" onclick="goToPage('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
-        <div class="antrian-container">
+        <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
+        <div style="padding:20px; max-width:480px; margin:0 auto;">
             <div class="glass-card">
-                <label style="color:#333;">PLAT NOMOR</label>
-                <input id="userPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-                <label style="color:#333;">NOMOR WHATSAPP</label>
-                <input id="userWa" class="field" type="number" placeholder="08xxxxxxxxxx">
-                <label style="color:#333;">BATERAI (%)</label>
-                <input id="userBattery" type="number" class="field" placeholder="0 - 99">
-                <div id="ruleInfo" class="rule-info"></div>
-                <button id="btnDaftar" class="btn-cyan" onclick="window.daftarAntrian()">DAFTAR ANTRIAN</button>
+                <label>PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxx">
+                <label>BATERAI (%)</label><input id="uBat" class="field" type="number" placeholder="0 - 99">
+                <button class="btn-cyan" onclick="daftar()">DAFTAR ANTRIAN</button>
             </div>
-
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px; justify-content:center;">
-                <div style="width:10px; height:10px; background:var(--cyan); border-radius:50%;"></div>
-                <span style="font-family:'Orbitron'; font-size:12px; color:#333; font-weight:bold;">STATUS 3 SLOT</span>
+            <div class="slots-grid" id="slotContainer"></div>
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>DAFTAR TUNGGU</span><span id="qCount">0</span></div>
+                <div id="qList" style="margin-top:10px;"></div>
             </div>
-
-            <div class="slots-grid" id="slotsContainer">
-                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#888;">Loading...</div>
-            </div>
-
-            <div class="glass-card" style="padding:15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:10px;">
-                    <span style="font-family:'Orbitron'; font-size:12px; color:#333; font-weight:bold;">DAFTAR TUNGGU</span>
-                    <span id="qCount" style="font-size:12px; color:var(--cyan); font-weight:bold;">0</span>
-                </div>
-                <div id="queueList"></div>
-            </div>
-
-            <div class="admin-trigger" onclick="window.openAdminLogin()">🔒 ADMIN CONTROL</div>
-            
-            <div id="adminPanel" class="admin-panel">
-                <h4 style="color:var(--soft-red); text-align:center; margin-top:0; font-family:'Orbitron'">MASTER CONTROL</h4>
-                <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <select id="manSlot" class="field" style="width:70%; font-size:14px; padding:10px;"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
-                    <button onclick="window.clearSlotManual()" class="btn-modal danger" style="width:30%;">HAPUS</button>
-                </div>
-                <button onclick="window.fillFromQueue()" class="btn-cyan" style="width:100%; margin-bottom:10px;">⬆️ NAIKKAN ANTRIAN</button>
-                <button onclick="window.startAllSlots()" class="btn-cyan" style="width:100%; background:#333; color:#fff;">⚡ MULAI SEMUA</button>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <input id="blockPlatInput" class="field" placeholder="Blokir Plat" style="font-size:14px; padding:10px; margin:0;">
-                    <button onclick="window.blockUser()" class="btn-modal danger" style="width:30%; margin:0;">BLOK</button>
-                </div>
-                <button onclick="window.resetAll()" class="btn-modal danger" style="width:100%; margin-top:10px; background:none; border:1px solid var(--soft-red);">RESET TOTAL</button>
-                <div onclick="document.getElementById('adminPanel').style.display='none'" style="text-align:center; margin-top:15px; font-size:10px; color:#555; cursor:pointer;">Tutup Panel</div>
+            <div style="text-align:center; margin-top:30px; font-size:10px; color:#999; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
+            <div id="adminPanel" style="display:none; background:#fff; padding:20px; margin-top:20px; border:2px solid red; border-radius:15px;">
+                <h4 style="text-align:center; margin:0 0 10px; color:red;">MASTER</h4>
+                <button onclick="resetAll()" style="width:100%; padding:10px; background:red; color:white; border:none; border-radius:8px;">RESET TOTAL</button>
             </div>
         </div>
     </div>
 
+    <div id="sysModal" class="modal"><div class="modal-box"><h3 id="modT">TITLE</h3><p id="modM">Message</p><button onclick="document.getElementById('sysModal').style.display='none'" class="btn-cyan" style="padding:10px;">OK</button></div></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        const FONNTE_TOKENS = ["Fc8dWb7jiKr7CXuEZXBx"];
-        const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
-        const app = initializeApp(firebaseConfig); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
-        let isAdminLoggedIn = false; let triggeredAlarms = new Set(); const alarmAudio = document.getElementById('alarmSound'); const fakeVideo = document.getElementById('fakeVideo');
-
-        // NAVIGATION
-        window.goToPage = (id) => { document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); document.getElementById(id).style.display='flex'; if(id==='page-antrian') document.getElementById(id).style.display='block'; };
-        window.closeFrame = () => window.goToPage('page-home'); window.closeAntrian = () => window.goToPage('page-home');
-        window.openAntrian = () => window.goToPage('page-antrian');
+        // --- CONFIG ---
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        const FONNTE = ["Fc8dWb7jiKr7CXuEZXBx"];
+        const FB_CONF = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         
-        // LOKASI FIX: PANGGIL URL ASLI, CUMA DI IFRAME KITA POTONG HEADERNYA DGN CSS
-        window.openFrame = (url, title) => { 
-            document.getElementById('frameTitle').innerText=title; 
-            document.getElementById('contentFrame').src=url; 
-            window.goToPage('page-frame'); 
+        const app = initializeApp(FB_CONF); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
+        let map = null; let chargers = []; let isAdmin = false;
+
+        // --- NAVIGATION ---
+        window.goTo = (id) => { 
+            document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); 
+            document.getElementById(id).style.display='flex'; 
+            if(id === 'page-antrian') document.getElementById(id).style.display='block'; // Scroll fix
+        };
+        window.wa = (no, txt) => window.open(`https://wa.me/${no}?text=${encodeURIComponent(txt)}`, '_blank');
+        window.popup = (t,m) => { document.getElementById('modT').innerText=t; document.getElementById('modM').innerText=m; document.getElementById('sysModal').style.display='flex'; };
+
+        // --- MAPS ENGINE (NATIVE) ---
+        window.initMapPage = async () => {
+            window.goTo('page-lokasi');
+            if(!map) {
+                map = L.map('fullMap').setView([-6.2, 106.8], 10);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                
+                // Load Data dari Google Sheet Bapak (Real Data)
+                try {
+                    const res = await fetch(SHEET_URL);
+                    const text = await res.text();
+                    const rows = text.split('\n').slice(1);
+                    
+                    let listHTML = '';
+                    rows.forEach((r, i) => {
+                        const c = r.split(',');
+                        if(c.length < 5) return;
+                        const name = c[0]; const lat = parseFloat(c[4]); const lng = parseFloat(c[5]);
+                        
+                        // Tambah Marker
+                        if(!isNaN(lat) && !isNaN(lng)) {
+                            L.marker([lat, lng]).addTo(map).bindPopup(`<b>${name}</b><br><a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">Navigasi</a>`);
+                            
+                            // Tambah ke List Bawah
+                            listHTML += `<div class="loc-item" onclick="window.open('https://maps.google.com/?q=${lat},${lng}','_blank')">
+                                <div><b>${name}</b><br><small style="color:#888">${c[2] || 'FC'}</small></div>
+                                <button style="background:var(--cyan); color:#fff; border:none; padding:5px 10px; border-radius:5px;">GO</button>
+                            </div>`;
+                        }
+                    });
+                    document.getElementById('locList').innerHTML = listHTML;
+                } catch(e) { document.getElementById('locList').innerHTML = '<p>Gagal memuat data.</p>'; }
+            }
+            setTimeout(()=>map.invalidateSize(), 500);
         };
 
-        function primeSystem() { if(alarmAudio.paused) alarmAudio.play().then(()=>{setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;alarmAudio.volume=1.0;},100);}).catch(()=>{}); if(fakeVideo.paused) fakeVideo.play().catch(()=>{}); }
-        document.body.addEventListener('click', primeSystem); document.body.addEventListener('touchstart', primeSystem);
-        
-        function addMyPlat(plat) { let p=JSON.parse(localStorage.getItem('myPlats')||'[]'); if(!p.includes(plat)) p.push(plat); localStorage.setItem('myPlats', JSON.stringify(p)); }
-        function isMyPlat(plat) { return JSON.parse(localStorage.getItem('myPlats')||'[]').includes(plat); }
-        window.closeModal = () => document.getElementById('masterModal').style.display = 'none';
-        function formatPhone(p) { p = p.replace(/\D/g,''); if(p.startsWith('0')) p = '62' + p.substring(1); if(!p.startsWith('62')) p = '62' + p; return p; }
-        function createMsg(type, plat, extra="") { return `*Halo Sahabat MLU!*\n\n${type} *${plat}* ${extra}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`; }
+        // --- ANTRIAN LOGIC (V69) ---
+        const audio = document.getElementById('alarmSound');
+        function prime() { if(audio.paused) audio.play().then(()=>{setTimeout(()=>{audio.pause();audio.currentTime=0;},100)}).catch(()=>{}); }
+        document.body.addEventListener('click', prime);
 
-        async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
-            const p = formatPhone(target); const rnd = FONNTE_TOKENS[Math.floor(Math.random()*FONNTE_TOKENS.length)];
-            const now = new Date(); const sendTime = new Date(now.getTime() + (durationMinutes*60000));
-            const y=sendTime.getFullYear(); const m=String(sendTime.getMonth()+1).padStart(2,'0'); const d=String(sendTime.getDate()).padStart(2,'0'); const h=String(sendTime.getHours()).padStart(2,'0'); const min=String(sendTime.getMinutes()).padStart(2,'0'); const s=String(sendTime.getSeconds()).padStart(2,'0');
-            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
-            const msg = createMsg("Pengecasan motor", plat, `telah selesai (Target ${targetPersen}%)`);
-            const fd = new FormData(); fd.append("target", p); fd.append("message", msg); fd.append("schedule", scheduleTime); fd.append("countryCode", "62"); 
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }); } catch(e){}
-        }
-        async function sendWA(target, message) {
-            const p = formatPhone(target); const rnd = FONNTE_TOKENS[Math.floor(Math.random()*FONNTE_TOKENS.length)];
-            const fd = new FormData(); fd.append("target", p); fd.append("message", message); fd.append("countryCode", "62"); fd.append("schedule", "0");
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }); } catch(e){}
+        // WA Helper
+        async function sendFonnte(target, msg, scheduleTime=null) {
+            const p = target.replace(/\D/g,'').replace(/^0/,'62');
+            const fd = new FormData(); fd.append("target", p); fd.append("message", msg); fd.append("countryCode", "62");
+            if(scheduleTime) {
+                const ux = Math.floor(new Date(scheduleTime).getTime()/1000);
+                fd.append("schedule", ux);
+            } else fd.append("schedule", "0");
+            
+            const token = FONNTE[0];
+            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": token }, body: fd }); } catch(e){}
         }
 
-        window.daftarAntrian = async () => {
-            primeSystem();
-            const btn=document.getElementById('btnDaftar'); const plat=document.getElementById('userPlat').value.toUpperCase().trim(); const wa=document.getElementById('userWa').value.trim(); const bat=parseInt(document.getElementById('userBattery').value);
-            if(!plat || !wa || isNaN(bat)) { showPopup('error','DATA KURANG','Isi semua data!'); return; }
-            btn.disabled=true; btn.innerText="PROSES..."; addMyPlat(plat); 
-            try {
-                await runTransaction(db, async(t)=>{
-                    const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
-                    if((d.blockedList||[]).includes(plat)) throw "Plat DIBLOKIR!"; if(s.some(x=>x?.name===plat)||q.some(x=>x?.name===plat)) throw "Sudah Terdaftar!";
-                    const totalAntrian=q.length; let targetLimit=100;
-                    if(totalAntrian<3) targetLimit=100; else if(totalAntrian<=6) targetLimit=95; else if(totalAntrian<=10) targetLimit=90; else targetLimit=85;
-                    if(bat>=targetLimit) throw `Baterai cukup (${bat}%). Batas ${targetLimit}%.`;
-                    let minutes=0; for(let b=bat; b<targetLimit; b++) { if(b>=90) minutes+=2.2; else if(b>=80) minutes+=1.5; else minutes+=0.8; }
-                    let dur=Math.ceil(minutes); if(dur<2) dur=2;
-                    const item={name:plat, phone:wa, startBattery:bat, targetLimit:targetLimit, durationMinutes:dur, startTime:null};
-                    const empty=s.findIndex(x=>x===null); if(empty!==-1) s[empty]=item; else q.push(item);
-                    t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-                    if(wa) sendWA(wa, createMsg("Motor", plat, "berhasil terdaftar di antrian"));
-                });
-                showPopup('success','BERHASIL','Masuk Antrian.'); document.getElementById('userPlat').value=''; document.getElementById('userBattery').value=''; document.getElementById('userWa').value=''; document.getElementById('ruleInfo').style.display='none';
-            } catch(e) { showPopup('error','GAGAL', e); } btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
+        window.daftar = async () => {
+            prime();
+            const p = document.getElementById('uPlat').value.toUpperCase();
+            const w = document.getElementById('uWa').value;
+            const b = parseInt(document.getElementById('uBat').value);
+            if(!p || !w || isNaN(b)) return popup('ERROR','Data kurang');
+            
+            await runTransaction(db, async(t)=>{
+                const d = (await t.get(ref)).data() || {};
+                let s = d.chargingSlots || [null,null,null];
+                let q = d.waitingQueue || [];
+                
+                // Hitung Durasi
+                let dur = 0; for(let i=b; i<100; i++) dur += (i>=90?2.2 : (i>=80?1.5:0.8));
+                dur = Math.ceil(dur); if(dur<2) dur=2;
+
+                const item = { name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:100 };
+                const empty = s.indexOf(null);
+                if(empty !== -1) s[empty] = item; else q.push(item);
+                
+                t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
+                if(w) sendFonnte(w, `*Halo Sahabat MLU!*\nMotor ${p} masuk antrian.`);
+            });
+            popup('SUKSES','Berhasil daftar');
+            document.getElementById('uPlat').value='';
         };
 
-        onSnapshot(ref, (snap) => {
-            const d=snap.data()||{}; const slots=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
-            const total=q.length; const infoBox=document.getElementById('ruleInfo');
-            if(total>0) { let limit=100; if(total<3) limit=100; else if(total<=6) limit=95; else if(total<=10) limit=90; else limit=85; infoBox.style.display='block'; infoBox.innerHTML=`ANTRIAN: ${total} UNIT <br> MAX CHARGE: ${limit}%`; } else { infoBox.style.display='none'; }
-            document.getElementById('slotsContainer').innerHTML = slots.map((x,i)=>{
-                if(!x) return `<div class="slot-box" style="opacity:0.6; border:2px dashed #ccc;"><div class="bat-icon" style="border-color:#ccc; background:none;"></div><div style="font-size:12px; color:#999;">KOSONG</div></div>`;
-                const isRun=!!x.startTime; 
-                let btn=isRun ? `<button class="btn-act btn-stop" onclick="window.act(${i},'stop','${x.name}')">STOP</button>` : `<button class="btn-act btn-start" onclick="window.act(${i},'start','${x.name}')">MULAI</button>`;
-                let startMs=isRun ? (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) : 0;
-                let endMs=isRun ? startMs+(x.durationMinutes*60000) : 0;
-                let h=x.startBattery;
-                let targetInfo=`<div style="font-size:11px; color:var(--text-muted); font-weight:bold;">Target: ${x.targetLimit}%</div>`;
-                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:x.startBattery}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div><div style="font-weight:bold; font-size:18px; color:#333;">${x.name}</div>${targetInfo}<div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" data-phone="${x.phone}" data-target="${x.targetLimit}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">${isRun ? "..." : "Tap MULAI"}</div>${btn}</div>`;
-            }).join('');
-            document.getElementById('qCount').innerText = q.length;
-            document.getElementById('queueList').innerHTML = q.length ? q.map((x,i)=>`<div style="display:flex; justify-content:space-between; padding:12px; background:#f9f9f9; margin-bottom:8px; border-radius:10px; border:1px solid #eee;"><div><b style="color:#333;">${x.name}</b> <span style="font-size:11px; color:#777;">(${x.startBattery}% -> ${x.targetLimit}%)</span></div><button onclick="window.delQ(${i}, '${x.name}')" style="background:none; border:none; color:var(--soft-red); font-weight:bold;">✕</button></div>`).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
-        });
-
-        setInterval(() => {
-            document.querySelectorAll('.timer-display').forEach(el => {
-                const isRun = el.getAttribute('data-run')==='true'; if(!isRun) return;
-                const end=parseInt(el.getAttribute('data-end')); const name=el.getAttribute('data-name');
-                const diff=end-Date.now();
-                if(diff>0) { const m=Math.floor(diff/60000); const s=Math.floor((diff%60000)/1000); el.innerText=`${m}:${s<10?'0'+s:s}`; el.style.color="var(--cyan)"; }
-                else {
-                    el.innerText="SELESAI"; el.style.color="var(--soft-red)";
-                    const key=name+end; if(!triggeredAlarms.has(key)) {
-                        triggeredAlarms.add(key);
-                        if(isAdminLoggedIn || isMyPlat(name)) { alarmAudio.currentTime=0; alarmAudio.play().catch(e=>{}); showPopup('alarm','SELESAI', `Motor ${name}`); }
+        window.act = (i, type) => {
+            prime();
+            runTransaction(db, async(t)=>{
+                const d = (await t.get(ref)).data(); const s = d.chargingSlots;
+                if(type === 'stop') { s[i] = null; }
+                else { 
+                    s[i].startTime = new Date();
+                    if(s[i].phone) {
+                        sendFonnte(s[i].phone, `*Halo Sahabat MLU!*\nMotor ${s[i].name} mulai dicas.`);
+                        const end = new Date(Date.now() + s[i].durationMinutes*60000);
+                        // Schedule WA Finish
+                        const y=end.getFullYear(); const m=String(end.getMonth()+1).padStart(2,'0'); const dd=String(end.getDate()).padStart(2,'0'); 
+                        const h=String(end.getHours()).padStart(2,'0'); const min=String(end.getMinutes()).padStart(2,'0'); const sec=String(end.getSeconds()).padStart(2,'0');
+                        const schStr = `${y}-${m}-${dd} ${h}:${min}:${sec}`;
+                        
+                        // Note: Fonnte butuh UNIX atau String YYYY-MM-DD HH:mm:ss. Kita pakai String biar aman zona waktu.
+                        const fd = new FormData(); fd.append("target", s[i].phone.replace(/\D/g,'').replace(/^0/,'62'));
+                        fd.append("message", `*Halo Sahabat MLU!*\nMotor ${s[i].name} selesai.`);
+                        fd.append("schedule", schStr);
+                        fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE[0] }, body: fd });
                     }
                 }
+                t.update(ref, {chargingSlots:s});
             });
-        }, 1000);
-
-        window.act = (i, type, platName) => {
-            primeSystem();
-            if(type==='stop') {
-                if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
-                showPopup('confirm', 'STOP', 'Stop Slot?', () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; s[i]=null; t.update(ref, {chargingSlots:s}); }); alarmAudio.pause(); alarmAudio.currentTime=0; });
-            } else if (type==='start') {
-                runTransaction(db, async(t)=>{
-                    const d=(await t.get(ref)).data(); const s=d.chargingSlots;
-                    if(s[i]) {
-                        if(s[i].phone) {
-                            sendWA(s[i].phone, createMsg("Motor", s[i].name, `mulai dicas. Estimasi ${s[i].durationMinutes} menit`));
-                            scheduleWhatsapp(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
-                        }
-                        s[i].startTime=new Date(); t.update(ref, {chargingSlots:s});
-                    }
-                });
-            }
         };
 
-        window.delQ=(i, platName)=>{ if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan antrian Anda!'); showPopup('confirm','HAPUS', 'Hapus antrian?', ()=>{ runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); }); }); };
-        window.openAdminLogin=()=>showPopup('admin', 'ADMIN LOGIN', 'Masukkan PIN');
-        window.clearSlotManual=()=>{ const i=document.getElementById('manSlot').value; showPopup('confirm', 'HAPUS', 'Kosongkan Slot?', ()=>{ runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s[i]=null; t.update(ref, {chargingSlots:s}); }); }); };
-        window.fillFromQueue=()=>{ runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length===0) throw "Antrian Kosong!"; const emptyIdx=s.findIndex(x=>x===null); if(emptyIdx===-1) throw "Semua Slot Penuh!"; s[emptyIdx]=q.shift(); t.update(ref, {chargingSlots:s, waitingQueue:q}); }).catch(e=>showPopup('error','GAGAL',e)); };
-        window.startAllSlots=()=>{ showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', ()=>{ runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let startedCount=0; s.forEach((slot, idx)=>{ if(slot && !slot.startTime) { window.act(idx,'start',slot.name); startedCount++; } }); }); }); };
-        window.blockUser=async()=>{ const p=document.getElementById('blockPlatInput').value.toUpperCase().trim(); if(!p) return; await runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const l=d.blockedList||[]; if(!l.includes(p)) l.push(p); t.update(ref, {blockedList:l}); }); showPopup('success', 'BLOKIR', `Plat ${p} diblokir.`); };
-        window.resetAll=()=>{ showPopup('confirm', 'RESET', 'Reset Semua?', ()=>{ setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); }); };
+        // Render
+        onSnapshot(ref, (snap) => {
+            const d = snap.data() || {}; const s = d.chargingSlots || [null,null,null];
+            document.getElementById('qCount').innerText = (d.waitingQueue||[]).length;
+            document.getElementById('slotContainer').innerHTML = s.map((x,i)=>{
+                if(!x) return `<div class="slot-box"><div class="bat-icon"></div><div style="font-size:10px;color:#aaa">KOSONG</div></div>`;
+                const isRun = !!x.startTime;
+                const btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
+                let txt = "Tap Mulai";
+                if(isRun) {
+                    const end = (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
+                    const diff = end - Date.now();
+                    if(diff > 0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; }
+                    else { txt="SELESAI"; if(isAdmin) audio.play().catch(()=>{}); }
+                }
+                return `<div class="slot-box active" style="border-color:${txt==='SELESAI'?'red':'var(--cyan)'}">
+                    <div class="bat-icon"><div class="bat-fill" style="height:100%"></div></div>
+                    <div style="font-weight:bold">${x.name}</div>
+                    <div style="color:var(--cyan); font-weight:bold; margin:5px 0;">${txt}</div>
+                    ${btn}
+                </div>`;
+            }).join('');
+        });
 
-        function showPopup(type, title, msg, onOk = null) {
-            const m=document.getElementById('masterModal'); const box=document.getElementById('modalBox'); const icon=document.getElementById('mIcon'); const t=document.getElementById('mTitle'); const ms=document.getElementById('mMsg'); const btnOk=document.getElementById('mBtnOk'); const btnCancel=document.getElementById('mBtnCancel'); const inp=document.getElementById('mInput');
-            m.style.display='flex'; m.className='modal'; box.style.borderColor='var(--cyan)'; t.innerText=title; ms.innerHTML=msg; inp.style.display='none'; btnCancel.style.display='none'; btnOk.className='btn-modal primary'; btnOk.innerText='OK'; btnOk.onclick=null; 
-            if(type==='confirm') { icon.innerText='❓'; btnCancel.style.display='block'; btnOk.innerText='YA'; btnCancel.onclick=()=>m.style.display='none'; btnOk.onclick=()=>{ m.style.display='none'; if(onOk) onOk(); }; }
-            else if(type==='error') { icon.innerText='❌'; box.style.borderColor='var(--soft-red)'; btnOk.className='btn-modal danger'; btnOk.innerText='TUTUP'; btnOk.onclick=()=>m.style.display='none'; }
-            else if(type==='alarm') { icon.innerText='🔔'; box.style.borderColor='var(--soft-red)'; btnOk.className='btn-modal danger'; btnOk.innerText='MATIKAN ALARM'; btnOk.onclick=()=>{ alarmAudio.pause(); alarmAudio.currentTime=0; m.style.display='none'; }; }
-            else if(type==='admin') { icon.innerText='🔒'; inp.style.display='block'; inp.value=''; inp.focus(); btnOk.innerText='LOGIN'; btnCancel.style.display='block'; btnCancel.onclick=()=>m.style.display='none'; btnOk.onclick=()=>{ if(inp.value==='1131') { m.style.display='none'; document.getElementById('adminPanel').style.display='block'; isAdminLoggedIn=true; } else showPopup('error','GAGAL','PIN Salah!'); }; }
-            else { icon.innerText='✅'; btnOk.onclick=()=>m.style.display='none'; }
-        }
+        // Loop Timer UI
+        setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000);
+
+        // Admin
+        window.adminLog = () => { if(prompt("PIN")==='1131') { document.getElementById('adminPanel').style.display='block'; isAdmin=true; } };
+        window.resetAll = () => { if(confirm("Reset?")) setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); };
+
     </script>
 </body>
 </html>
