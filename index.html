@@ -8,20 +8,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
         /* ================= GLOBAL VARS ================= */
         :root {
             --bg-dark: #0b101a;
+            --text-light: #ffffff;
             --cyan: #00bcd4;
             --soft-red: #ff3b3b;
             --neon-yellow: #ccff00;
-            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --card-bg: rgba(255,255,255,0.1);
+            --shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; background: #000; }
 
-        /* ================= 1. HALAMAN UTAMA (DARK - LOCKED) ================= */
+        /* ================= 1. HALAMAN UTAMA (DARK) ================= */
         #page-home {
             position: absolute; inset: 0; z-index: 50; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
@@ -38,7 +41,7 @@
         }
         @keyframes blink { 50% { opacity: 0.7; } }
 
-        .menu-grid { display: grid; gap: 20px; width: 85%; max-width: 350px; margin-top: 50px; }
+        .menu-grid { display: grid; gap: 20px; width: 85%; max-width: 350px; margin-top: 50px; position: relative; z-index: 10; }
         
         .menu-btn {
             background: rgba(255,255,255,0.1); border: 1px solid var(--cyan);
@@ -51,125 +54,76 @@
         .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; color: #fff; }
         .menu-text span { font-size: 11px; color: #aaa; }
 
-        /* ================= CONTAINER HALAMAN ================= */
+        /* ================= HALAMAN DALAM (WHITE THEME) ================= */
         .page-section {
-            position: absolute; inset: 0; z-index: 10;
+            position: absolute; inset: 0; background: #f4f4f4; z-index: 10;
             display: none; flex-direction: column;
         }
-
-        /* Header Navigasi Umum */
+        
+        /* Header Navigasi */
         .nav-header {
             background: #fff; padding: 15px; display: flex; align-items: center; gap: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 100;
         }
-        .btn-back { background: #eee; border: 1px solid #ccc; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; color: #333; display:flex; align-items:center; justify-content:center; }
+        .btn-back { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; color: #333; display:flex; align-items:center; justify-content:center; }
         .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; color: #333; }
 
-        /* ================= 2. LOKASI FC (LOCKED) ================= */
+        /* ================= 2. LOKASI PAGE (NATIVE MAP) ================= */
         #page-lokasi { background: #fff; }
-        #map-view { flex: 1; position: relative; }
+        .map-container { flex: 1; position: relative; z-index: 1; }
         #map { width: 100%; height: 100%; }
         
         .loc-list-overlay {
             position: absolute; bottom: 0; left: 0; right: 0;
             background: #fff; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            max-height: 45%; display: flex; flex-direction: column;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.2); z-index: 1000;
+            max-height: 40%; overflow-y: auto; padding: 20px; z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
         }
-        .loc-header-area { padding: 15px 20px; border-bottom: 1px solid #eee; text-align: center; }
-        .loc-scroll-area { overflow-y: auto; padding: 10px 20px 20px; }
         .loc-item {
             background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 10px;
-            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
         }
 
-        /* ================= 3. SOS (LOCKED) ================= */
-        #page-sos { background: #f4f4f4; }
-        .sos-container { padding: 20px; display: grid; gap: 15px; }
+        /* ================= 3. SOS PAGE ================= */
+        .sos-container { display: grid; gap: 15px; padding: 20px; }
         .btn-sos {
             background: #fff; padding: 20px; border-radius: 15px; border: none;
             display: flex; align-items: center; gap: 15px; cursor: pointer; color: #333;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow); border-left: 5px solid #ccc;
         }
         .btn-sos.yellow { border-left: 8px solid orange; }
         .btn-sos.red { border-left: 8px solid var(--soft-red); }
         .btn-sos.green { border-left: 8px solid #25D366; }
 
-        /* ================= 4. ANTRIAN (FIXED LAYOUT) ================= */
+        /* ================= 4. ANTRIAN PAGE ================= */
         #page-antrian { 
-            background: #f4f4f4; 
-            /* Background samar agar tidak polos */
-            background-image: url('1763947427555.jpg');
-            background-size: cover;
-            background-attachment: fixed;
+            background: #f4f4f4;
+            background-image: url('1763947427555.jpg'); background-size: cover; background-attachment: fixed; 
         }
-        /* Overlay Putih Tebal agar teks terbaca */
-        #page-antrian::before {
-            content: ''; position: absolute; inset: 0;
-            background: rgba(255, 255, 255, 0.92); z-index: -1;
-        }
-
-        .antrian-wrap { 
-            padding: 20px; padding-bottom: 100px; max-width: 480px; margin: 0 auto; 
-            position: relative; z-index: 2;
-        }
+        #page-antrian::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.92); z-index: 0; }
         
-        /* Kartu Putih Tegas */
-        .white-card { 
-            background: #ffffff; border: 1px solid #ccc; 
-            border-radius: 15px; padding: 20px; margin-bottom: 20px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
-        }
-
-        .field-label { font-family: 'Orbitron'; font-size: 10px; color: #555; font-weight: bold; margin-bottom: 5px; display: block; }
+        .antrian-content { position: relative; z-index: 2; padding: 20px; padding-bottom: 100px; overflow-y: auto; height: 100%; }
         
-        .input-box { 
-            width: 100%; padding: 12px; border: 2px solid #ddd; 
-            border-radius: 10px; background: #f8f9fa; 
-            text-align: center; font-weight: bold; font-size: 18px; 
-            margin-bottom: 15px; color: #000;
-        }
-        .input-box:focus { border-color: var(--cyan); background: #fff; }
+        .glass-card { background: #fff; border-radius: 15px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 15px; border: 1px solid #ddd; }
+        .field { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; background: #f9f9f9; text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #000; }
+        .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
         
-        .btn-submit { 
-            width: 100%; padding: 15px; background: var(--cyan); 
-            color: #fff; border: none; border-radius: 10px; 
-            font-family: 'Orbitron'; font-weight: bold; cursor: pointer; 
-            box-shadow: 0 4px 10px rgba(0,188,212,0.3);
-        }
-
-        /* Slot Charging */
-        .slot-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .slot-item { 
-            background: #fff; border: 2px solid #eee; border-radius: 12px; 
-            padding: 10px 5px; text-align: center; min-height: 150px; 
-            display: flex; flex-direction: column; justify-content: center; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .slot-item.active { border-color: var(--cyan); background: #e0f7fa; }
-        
-        .bat-outer { width: 30px; height: 50px; border: 2px solid #333; border-radius: 5px; margin: 0 auto 5px; position: relative; background: #fff; }
-        .bat-inner { width: 100%; background: var(--cyan); height: 50%; position: absolute; bottom: 0; transition: height 0.3s; }
-        
-        .btn-act { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: bold; margin-top: auto; cursor: pointer; color: #fff; font-size: 10px; }
-        .btn-start { background: var(--cyan); } 
-        .btn-stop { background: var(--soft-red); }
-
-        /* Info Rule Neon */
-        @keyframes neonP { 0%,100%{border-color:var(--neon-yellow)} 50%{border-color:#ffd700} }
-        .info-neon { 
-            text-align: center; padding: 10px; border-radius: 10px; 
-            background: #fff; border: 3px solid var(--neon-yellow); 
-            margin-bottom: 15px; font-weight: bold; color: #000; 
-            animation: neonP 1.5s infinite; display: none;
-        }
+        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .slot-box { background: #fff; border: 2px solid #eee; border-radius: 10px; padding: 10px 5px; text-align: center; min-height: 140px; display: flex; flex-direction: column; justify-content: center; }
+        .slot-box.active { border-color: var(--cyan); background: #e0f7fa; }
+        .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 5px; margin: 0 auto 5px; position: relative; }
+        .bat-fill { width: 100%; background: var(--cyan); height: 50%; position: absolute; bottom: 0; }
+        .btn-act { width: 100%; padding: 5px; margin-top: 5px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; color: #fff; font-size: 10px; }
+        .btn-start { background: var(--cyan); } .btn-stop { background: var(--soft-red); }
 
         /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 12000; align-items: center; justify-content: center; }
         .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; max-width: 300px; text-align: center; color: #333; }
         
-        /* ADMIN */
-        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
+        /* ADMIN & INFO */
+        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid red; border-radius: 15px; margin-top: 20px; position: relative; z-index: 999; }
+        @keyframes neonP { 0%,100%{border-color:var(--neon-yellow)} 50%{border-color:#ffd700} }
+        .rule-info { text-align: center; padding: 10px; border-radius: 10px; background: #fff; border: 3px solid var(--neon-yellow); margin-bottom: 15px; font-weight: bold; color: #000; animation: neonP 1.5s infinite; display: none; }
     </style>
 </head>
 <body>
@@ -177,18 +131,18 @@
     <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
     <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;pointer-events:none;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
 
-    <div id="masterModal" class="modal"><div class="modal-box"><h3 id="mTitle">TITLE</h3><p id="mMsg">Msg</p><button onclick="closeModal()" class="btn-submit" style="padding:10px;">OK</button></div></div>
+    <div id="masterModal" class="modal"><div class="modal-box"><h3 id="mTitle">TITLE</h3><p id="mMsg">Msg</p><button onclick="document.getElementById('masterModal').style.display='none'" class="btn-cyan" style="padding:10px 20px; margin-top:10px;">OK</button></div></div>
 
-    <div id="page-home" style="display:flex;">
+    <div id="page-home" class="page-section" style="display:flex;">
         <div class="logo-area"><h1>MLU APPS</h1><div class="squad-text">MAKA LINTAS UTARA SQUAD</div></div>
         <div class="menu-grid">
-            <div class="menu-btn" onclick="initLokasi()">
+            <div class="menu-btn" onclick="showPage('page-lokasi'); initMap();">
                 <div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
             </div>
-            <div class="menu-btn" onclick="openPage('page-sos')">
+            <div class="menu-btn" onclick="showPage('page-sos')">
                 <div class="menu-icon">🆘</div><div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div>
             </div>
-            <div class="menu-btn" onclick="openPage('page-antrian')">
+            <div class="menu-btn" onclick="showPage('page-antrian')">
                 <div class="menu-icon">⚡</div><div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
             </div>
         </div>
@@ -196,134 +150,100 @@
     </div>
 
     <div id="page-lokasi" class="page-section" style="background:#fff;">
-        <div class="nav-header"><button class="btn-back" onclick="openPage('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span></div>
-        <div id="map-view"><div id="map"></div></div>
-        <div class="loc-list-overlay">
-            <div class="loc-header-area">
-                <div style="width:40px; height:5px; background:#ddd; border-radius:5px; margin:0 auto 10px;"></div>
-                <h3 style="margin:0; font-family:'Orbitron'; color:#333;">DAFTAR LOKASI</h3>
-            </div>
-            <div class="loc-scroll-area" id="locListContainer">
-                <p style="text-align:center; color:#999;">Memuat data...</p>
+        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span></div>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="loc-list-overlay" id="locList">
+                <p style="text-align:center; color:#999;">Memuat data lokasi...</p>
             </div>
         </div>
     </div>
 
     <div id="page-sos" class="page-section" style="background:#f4f4f4;">
-        <div class="nav-header"><button class="btn-back" onclick="openPage('page-home')">⬅</button><span class="nav-title">DARURAT</span></div>
-        <div class="sos-container" style="padding:20px;">
-            <div class="btn-sos yellow" onclick="wa('628123456789','TOWING')"><span style="font-size:30px">🚑</span><div><h4 style="margin:0">TOWING</h4><small>Bantuan Mogok</small></div></div>
-            <div class="btn-sos red" onclick="wa('628123456789','URC')"><span style="font-size:30px">🚨</span><div><h4 style="margin:0">URC</h4><small>Tim Reaksi Cepat</small></div></div>
-            <div class="btn-sos green" onclick="wa('628123456789','TAGIHAN')"><span style="font-size:30px">💳</span><div><h4 style="margin:0">ADMIN</h4><small>Info Tagihan</small></div></div>
+        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">DARURAT</span></div>
+        <div class="sos-container">
+            <div class="btn-sos yellow" onclick="wa('628123456789','TOWING')"><span style="font-size:30px">🚑</span><div><h4>TOWING</h4><small>Bantuan unit mogok</small></div></div>
+            <div class="btn-sos red" onclick="wa('628123456789','URC')"><span style="font-size:30px">🚨</span><div><h4>URC</h4><small>Tim Reaksi Cepat</small></div></div>
+            <div class="btn-sos green" onclick="wa('628123456789','TAGIHAN')"><span style="font-size:30px">💳</span><div><h4>ADMIN</h4><small>Info Tagihan</small></div></div>
         </div>
     </div>
 
     <div id="page-antrian" class="page-section">
-        <div class="nav-header"><button class="btn-back" onclick="openPage('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
-        <div class="antrian-wrap">
-            
-            <div class="white-card">
-                <span class="field-label">PLAT NOMOR</span>
-                <input id="uPlat" class="input-box" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-                
-                <span class="field-label">WHATSAPP</span>
-                <input id="uWa" class="input-box" type="number" placeholder="08xxxxxxxxxx">
-                
-                <span class="field-label">BATERAI (%)</span>
-                <input id="uBat" class="input-box" type="number" placeholder="0 - 99">
-                
-                <div id="ruleInfo" class="info-neon"></div>
-                
-                <button id="btnDaftar" class="btn-submit">DAFTAR ANTRIAN</button>
+        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
+        <div class="antrian-content">
+            <div class="glass-card">
+                <label>PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxxxxxxxxx">
+                <label>BATERAI (%)</label><input id="uBat" class="field" type="number" placeholder="0 - 99">
+                <div id="ruleInfo" class="rule-info"></div>
+                <button class="btn-cyan" id="btnDaftar">DAFTAR ANTRIAN</button>
             </div>
-
-            <div style="text-align:center; font-family:'Orbitron'; font-weight:bold; color:#333; margin-bottom:10px;">STATUS 3 SLOT</div>
-            
-            <div class="slot-container" id="slotContainer"></div>
-            
-            <div class="white-card">
-                <div style="display:flex; justify-content:space-between; font-weight:bold; color:#333;">
-                    <span>DAFTAR TUNGGU</span><span id="qCount" style="color:var(--cyan)">0</span>
-                </div>
+            <div class="slots-grid" id="slotContainer"></div>
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; color:#333;"><span>DAFTAR TUNGGU</span><span id="qCount">0</span></div>
                 <div id="qList" style="margin-top:10px;"></div>
             </div>
-
-            <div style="text-align:center; margin-top:20px; color:#999; font-size:10px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN CONTROL</div>
-            
+            <div style="text-align:center; margin-top:20px; color:#999; font-size:10px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
             <div id="adminPanel" class="admin-panel">
                 <h4 style="text-align:center; color:red; margin:0 0 10px;">MASTER CONTROL</h4>
-                <div style="display:flex; gap:5px;">
-                    <select id="mSlot" class="input-box" style="font-size:14px; padding:5px; margin:0;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select>
-                    <button id="btnDelSlot" class="btn-submit" style="background:#666; margin:0;">HAPUS</button>
-                </div>
-                <button id="btnFill" class="btn-submit" style="margin-top:10px;">⬆ NAIKKAN</button>
-                <button id="btnStartAll" class="btn-submit" style="margin-top:10px; background:#333;">⚡ MULAI SEMUA</button>
-                <button id="btnReset" class="btn-submit" style="margin-top:10px; background:red;">RESET TOTAL</button>
+                <div style="display:flex; gap:5px;"><select id="mSlot" class="field" style="padding:5px; font-size:14px;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select><button id="btnDelSlot" class="btn-cyan" style="background:#666">HAPUS</button></div>
+                <button id="btnFill" class="btn-cyan" style="margin-top:5px;">⬆ NAIKKAN</button>
+                <button id="btnStartAll" class="btn-cyan" style="margin-top:5px; background:#333;">⚡ MULAI SEMUA</button>
+                <button id="btnReset" class="btn-cyan" style="margin-top:5px; background:red;">RESET TOTAL</button>
             </div>
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // --- GLOBAL NON-MODULE FUNCTIONS (Agar tombol pasti jalan) ---
-        function openPage(id) {
+        // NAVIGATION SYSTEM
+        function showPage(id) {
             document.querySelectorAll('.page-section').forEach(e => e.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
-            if(id === 'page-antrian') document.getElementById(id).style.display = 'block'; 
         }
         
         function wa(n, t) { window.open(`https://wa.me/${n}?text=${encodeURIComponent(t)}`, '_blank'); }
         function closeModal() { document.getElementById('masterModal').style.display='none'; }
 
-        // --- MAPS ENGINE ---
+        // MAPS ENGINE (NATIVE)
         let map = null;
-        const JAWG_API = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
-        let locations = [];
+        
+        async function initMap() {
+            if(map) return; // Jangan init ulang
+            map = L.map('map', {zoomControl:false}).setView([-6.2, 106.8], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        async function initLokasi() {
-            openPage('page-lokasi');
-            if(!map) {
-                map = L.map('map', {zoomControl:false}).setView([-6.2, 106.8], 10);
-                L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(map);
-                try {
-                    const res = await fetch(SHEET_URL);
-                    const txt = await res.text();
-                    locations = txt.split('\n').slice(1).map(r => {
-                        const c = r.split(','); if(c.length<5) return null;
-                        return { name:c[0], type:c[2], lat:parseFloat(c[4]), lng:parseFloat(c[5]), nozzle:c[7], dist:999 };
-                    }).filter(x=>x);
+            try {
+                const res = await fetch(SHEET_URL);
+                const txt = await res.text();
+                const locations = txt.split('\n').slice(1).map(r => {
+                    const c = r.split(','); if(c.length<5) return null;
+                    return { name:c[0], type:c[2], lat:parseFloat(c[4]), lng:parseFloat(c[5]), nozzle:c[7] };
+                }).filter(x=>x);
 
-                    if(navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(p => {
-                            const lat = p.coords.latitude; const lng = p.coords.longitude;
-                            L.circleMarker([lat,lng],{color:'#00bcd4',radius:8}).addTo(map);
-                            map.setView([lat,lng], 12);
-                            locations.forEach(l => {
-                                const R=6371; const dLat=(l.lat-lat)*Math.PI/180; const dLon=(l.lng-lng)*Math.PI/180;
-                                const a=Math.sin(dLat/2)**2+Math.cos(lat*Math.PI/180)*Math.cos(l.lat*Math.PI/180)*Math.sin(dLon/2)**2;
-                                l.dist=(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
-                            });
-                            locations.sort((a,b)=>a.dist-b.dist);
-                            renderLocList();
-                        });
-                    } else { renderLocList(); }
-                } catch(e){}
-            }
+                let html = '';
+                locations.forEach(l => {
+                    if(!isNaN(l.lat)) {
+                        L.marker([l.lat,l.lng]).addTo(map).bindPopup(`<b>${l.name}</b>`);
+                        html += `
+                        <div class="loc-item" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}','_blank')">
+                            <div><div style="font-weight:bold;color:#333">${l.name}</div><div style="font-size:11px;color:#666">${l.nozzle} • ${l.type}</div></div>
+                            <button style="background:var(--cyan);color:#fff;border:none;padding:5px 10px;border-radius:5px;">GO</button>
+                        </div>`;
+                    }
+                });
+                document.getElementById('locList').innerHTML = html;
+                
+                if(navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(p => {
+                        const lat = p.coords.latitude; const lng = p.coords.longitude;
+                        L.circleMarker([lat,lng],{color:'blue',radius:8}).addTo(map);
+                        map.setView([lat,lng], 12);
+                    });
+                }
+            } catch(e){ document.getElementById('locList').innerText="Gagal memuat data."; }
+            
             setTimeout(()=>map.invalidateSize(), 500);
-        }
-
-        function renderLocList() {
-            let html = '';
-            locations.forEach(l => {
-                L.marker([l.lat,l.lng]).addTo(map).bindPopup(`<b>${l.name}</b>`);
-                html += `
-                <div class="loc-item" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}&travelmode=two_wheeler','_blank')">
-                    <div><div style="font-weight:bold; color:#333;">${l.name}</div><div style="font-size:11px;color:#666">${l.nozzle} • ${l.type}</div></div>
-                    <div style="font-family:'Syne';color:var(--cyan);font-weight:bold">${l.dist} KM</div>
-                </div>`;
-            });
-            document.getElementById('locListContainer').innerHTML = html;
         }
     </script>
 
@@ -334,17 +254,18 @@
         const FONNTE_TOKENS = ["Fc8dWb7jiKr7CXuEZXBx"];
         const FB_CONF = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(FB_CONF); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
+        
         let isAdminLoggedIn = false; let triggeredAlarms = new Set(); 
         const alarmAudio = document.getElementById('alarmSound'); const fakeVideo = document.getElementById('fakeVideo');
 
-        // Binding Buttons
+        // BUTTON BINDINGS
         document.getElementById('btnDaftar').onclick = () => daftar();
         document.getElementById('btnDelSlot').onclick = () => clrSlot();
         document.getElementById('btnFill').onclick = () => fillQ();
         document.getElementById('btnStartAll').onclick = () => startAll();
         document.getElementById('btnReset').onclick = () => resAll();
 
-        function prime() { if(alarmAudio.paused) alarmAudio.play().then(()=>{setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;alarmAudio.volume=1.0;},100)}).catch(()=>{}); document.getElementById('fakeVideo').play().catch(()=>{}); }
+        function prime() { if(alarmAudio.paused) alarmAudio.play().then(()=>{setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;},100)}).catch(()=>{}); document.getElementById('fakeVideo').play().catch(()=>{}); }
         document.body.addEventListener('click', prime);
 
         function addMyPlat(plat) { let p=JSON.parse(localStorage.getItem('myPlats')||'[]'); if(!p.includes(plat)) p.push(plat); localStorage.setItem('myPlats', JSON.stringify(p)); }
@@ -377,12 +298,15 @@
             await runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
+                
                 const total = q.length; let limit = 100; if(total>2) limit = total>5 ? (total>9 ? 85 : 90) : 95;
                 let dur = 0; for(let i=b; i<limit; i++) dur += (i>=90?2.2 : (i>=80?1.5:0.8));
                 dur = Math.ceil(dur); if(dur<2) dur=2;
+
                 const item = { name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:limit };
                 const empty = s.indexOf(null);
                 if(empty !== -1) s[empty] = item; else q.push(item);
+                
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                 if(w) waInstant(w, createMsg("Motor", p, "berhasil terdaftar di antrian"));
             });
@@ -424,7 +348,7 @@
             if(q.length>0) { info.style.display='block'; info.innerHTML=`ANTRIAN: ${q.length} <br> MAX CHARGE: ${q.length>2 ? (q.length>5?90:95) : 100}%`; } else info.style.display='none';
 
             document.getElementById('slotContainer').innerHTML = s.map((x,i)=>{
-                if(!x) return `<div class="slot-box"><div class="bat-outer"><div class="bat-inner" style="height:0%"></div></div><div style="font-size:12px;color:#888">KOSONG</div></div>`;
+                if(!x) return `<div class="slot-box"><div class="bat-icon"></div><div style="font-size:10px;color:#aaa">KOSONG</div></div>`;
                 const isRun = !!x.startTime;
                 let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop','${x.name}')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start','${x.name}')">MULAI</button>`;
                 let txt = "Tap Mulai"; let h=x.startBattery;
@@ -434,7 +358,7 @@
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
                     else { txt="SELESAI"; const key=x.name+end; if(!triggeredAlarms.has(key)) { triggeredAlarms.add(key); if(isAdmin||isMyPlat(x.name)) alarmAudio.play().catch(()=>{}); window.popup('ALARM', `Motor ${x.name} Selesai!`); } }
                 }
-                return `<div class="slot-box ${isRun?'active':''}"><div class="bat-outer"><div class="bat-inner" style="height:${h}%"></div></div><div style="font-weight:bold;color:#333">${x.name}</div><div style="color:${txt==='SELESAI'?'red':'var(--cyan)'};font-weight:bold;margin:5px 0;font-size:18px">${txt}</div>${btn}</div>`;
+                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div></div><div style="font-weight:bold;color:#333">${x.name}</div><div style="color:${txt==='SELESAI'?'red':'var(--cyan)'};font-weight:bold;margin:5px 0;font-size:18px">${txt}</div>${btn}</div>`;
             }).join('');
         });
         setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000);
