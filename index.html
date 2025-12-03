@@ -1,525 +1,525 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>MAKA FastCharging</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Syne:wght@700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MAKA SUPER APP V90</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800;900&family=Syne:wght@700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-
+    
     <style>
+        /* =========================================
+           GLOBAL VARS (DARK & LIGHT MIX)
+           ========================================= */
         :root {
-            --bg: #050505;
-            --card: #111;
-            --card-border: #222;
+            --bg-dark: #050505;
+            --card-dark: #111;
             --accent: #CCFF00; /* Kuning Stabilo */
             --cyan: #00d2ff;
             --danger: #FF3B30;
-            --text: #ffffff;
-            --text-mute: #888;
+            --text-light: #fff;
+            --text-dark: #1a1a1a;
+            
+            /* UI Antrian (Putih) */
+            --bg-white: #f4f4f4;
+            --card-white: #fff;
+            --border-light: #ddd;
         }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg-dark); color: var(--text-light); height: 100vh; overflow: hidden; }
 
-        /* LOADER */
-        .loader { position: fixed; inset:0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease-out; }
-        .loader-logo { width: 150px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(204, 255, 0, 0.3)); animation: floatLogo 3s infinite; }
-        @keyframes floatLogo { 0%{transform:translateY(0)} 50%{transform:translateY(-10px)} 100%{transform:translateY(0)} }
-        #animText1 { font-size: 1rem; color: var(--accent); margin-bottom: 5px; font-weight: 600; }
-        #animText2 { font-family: 'Syne'; font-size: 1.8rem; font-weight: 800; color: #fff; text-transform: uppercase; margin-bottom: 10px; text-align: center; }
-        #animText3 { font-size: 0.9rem; color: var(--cyan); letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 40px; opacity: 0; transition: opacity 1s; text-align: center; }
-        .loader-actions { display: flex; flex-direction: column; gap: 15px; width: 80%; max-width: 300px; opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
-        .loader-actions.show { opacity: 1; transform: translateY(0); }
-        .btn-entry { padding: 15px; border-radius: 12px; font-weight: 800; text-transform: uppercase; border: none; width: 100%; cursor: pointer; }
-        .btn-entry.primary { background: var(--accent); color: #000; }
-        .btn-entry.danger { background: rgba(255,59,48,0.2); border: 1px solid var(--danger); color: var(--danger); }
-
-        /* HEADER */
-        .header { padding: 20px 25px 10px; display: flex; justify-content: space-between; align-items: flex-start; flex-shrink: 0; position: relative; z-index: 50; background: linear-gradient(180deg, #050505 90%, transparent); }
-        .header-text { display: flex; flex-direction: column; max-width: 55%; }
-        .label-top { font-size: 0.7rem; color: var(--text-mute); letter-spacing: 1px; font-weight: 700; margin-bottom: 5px; }
-        .header h1 { font-family: 'Inter', sans-serif; font-size: 10vw; margin: 0; line-height: 0.9; font-weight: 900; letter-spacing: -1px; color: #fff; }
-        .label-bottom { font-size: 0.75rem; color: var(--accent); letter-spacing: 1px; font-weight: 700; margin-top: 8px; }
-
-        /* KONTROL KANAN ATAS (TOGGLE + MENU) */
-        .top-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; position: absolute; right: 25px; top: 25px; }
+        /* =========================================
+           1. INTRO / MENU UTAMA
+           ========================================= */
+        .page-section {
+            position: absolute; inset: 0; display: none; 
+            flex-direction: column; overflow-y: auto; z-index: 10;
+            background: var(--bg-dark);
+        }
         
-        /* TOGGLE SWITCH (DIKEMBALIKAN) */
-        .toggle-mode { background: #222; border: 1px solid #444; border-radius: 20px; display: flex; padding: 2px; }
-        .t-btn { padding: 6px 12px; font-size: 0.65rem; font-weight: 800; color: #888; cursor: pointer; border-radius: 18px; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        #page-home { 
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            background: linear-gradient(rgba(5,5,5,0.85), rgba(5,5,5,0.85)), url('1763947427555.jpg');
+            background-size: cover; background-position: center;
+            z-index: 20;
+        }
+
+        .loader-logo { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(204, 255, 0, 0.3)); animation: floatLogo 3s infinite; }
+        @keyframes floatLogo { 0%{transform:translateY(0)} 50%{transform:translateY(-10px)} 100%{transform:translateY(0)} }
+        
+        #animText1 { font-size: 1rem; color: var(--accent); font-weight: 600; font-family: 'Inter'; }
+        #animText2 { font-family: 'Syne'; font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+        #animText3 { font-size: 0.8rem; color: var(--cyan); letter-spacing: 2px; font-weight: 700; margin-bottom: 40px; opacity: 0; transition: 1s; }
+
+        .home-menu { display: flex; flex-direction: column; gap: 15px; width: 80%; max-width: 300px; opacity: 0; transform: translateY(20px); transition: 0.8s; }
+        .home-menu.show { opacity: 1; transform: translateY(0); }
+
+        .btn-home {
+            padding: 16px; border-radius: 12px; font-weight: 800; font-family: 'Orbitron';
+            border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-size: 14px; transition: 0.2s; text-transform: uppercase;
+        }
+        .btn-home:active { transform: scale(0.95); }
+        .btn-loc { background: var(--accent); color: #000; box-shadow: 0 0 15px rgba(204, 255, 0, 0.3); }
+        .btn-sos { background: rgba(255, 59, 48, 0.2); border: 2px solid var(--danger); color: var(--danger); }
+        .btn-queue { background: var(--cyan); color: #000; box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); }
+
+        /* =========================================
+           2. HALAMAN LOKASI (MAPS ENGINE)
+           ========================================= */
+        #page-lokasi { background: #050505; padding: 0; }
+        
+        /* Header Lokasi */
+        .loc-header { 
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(180deg, #050505 90%, transparent); position: sticky; top: 0; z-index: 50;
+        }
+        .loc-title h1 { font-family: 'Inter'; font-weight: 900; font-size: 24px; margin: 0; line-height: 1; }
+        .loc-title span { font-size: 10px; color: var(--accent); letter-spacing: 1px; font-weight: 700; }
+        
+        /* Toggle List/Map */
+        .toggle-view { background: #222; border-radius: 20px; padding: 2px; display: flex; border: 1px solid #333; }
+        .t-btn { padding: 6px 12px; font-size: 10px; font-weight: 800; color: #888; cursor: pointer; border-radius: 18px; }
         .t-btn.active { background: var(--accent); color: #000; }
 
-        /* MENU BUTTONS */
-        .menu-row { display: flex; gap: 8px; }
-        .menu-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid #333; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; transition: 0.2s; }
-        .menu-btn svg { width: 18px; height: 18px; fill: currentColor; }
-        .menu-btn:active { transform: scale(0.9); background: var(--accent); color: #000; border-color: var(--accent); }
-        .menu-btn.sos { border-color: var(--danger); color: var(--danger); background: rgba(255, 59, 48, 0.1); }
-        .menu-btn.sos:active { background: var(--danger); color: #fff; }
-
-        /* CONTAINER UTAMA */
-        #view-list { display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%; }
-        #view-map { display: none; flex: 1; width: 100%; height: 100%; position: relative; }
+        /* List View */
+        #view-list { padding: 10px 20px; padding-bottom: 80px; }
+        #view-map { display: none; height: calc(100% - 70px); position: relative; }
         #fullMap { width: 100%; height: 100%; }
 
-        /* HERO SECTION */
-        .hero-section { padding: 10px 25px; margin-bottom: 20px; flex-shrink: 0; }
-        .hero-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 24px; padding: 20px; position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; min-height: 180px; justify-content: center; transition: 0.3s; }
-        .hero-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        
-        /* Label FC Terdekat dalam Kotak */
-        .radar-status { 
-            display: flex; align-items: center; gap: 8px; 
-            font-size: 0.65rem; font-weight: 800; color: var(--accent); 
-            letter-spacing: 1px; text-transform: uppercase;
-            background: rgba(204,255,0,0.1); padding: 6px 12px; border-radius: 20px; border: 1px solid rgba(204,255,0,0.3);
+        /* Hero Card (Terdekat) */
+        .hero-card { 
+            background: var(--card-dark); border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none; flex-direction: column;
         }
-        .gps-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); animation: pulse 1s infinite; }
-        @keyframes pulse { 0% {opacity:1} 50% {opacity:0.3} 100% {opacity:1} }
+        .hero-top { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .badge-radar { background: rgba(204,255,0,0.1); color: var(--accent); font-size: 10px; padding: 4px 8px; border-radius: 10px; border: 1px solid rgba(204,255,0,0.3); font-weight: 800; }
+        .hero-dist { font-family: 'Syne'; color: var(--accent); font-weight: 700; }
+        .hero-name { font-family: 'Inter'; font-weight: 800; font-size: 24px; color: #fff; margin: 0 0 5px 0; }
+        .hero-info { color: #888; font-size: 12px; margin-bottom: 15px; border-left: 2px solid var(--accent); padding-left: 10px; }
+        .btn-nav-hero { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; }
 
-        .hero-dist { background: rgba(0,0,0,0.6); border: 1px solid var(--accent); padding: 4px 10px; border-radius: 8px; font-family: 'Syne'; font-size: 0.9rem; font-weight: 700; color: var(--accent); }
-        .hero-name { font-family: 'Inter', sans-serif; font-size: clamp(1.8rem, 8vw, 2.2rem); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 5px; }
-        .hero-info { font-size: 0.85rem; color: #aaa; margin-bottom: 20px; padding-left: 12px; border-left: 3px solid var(--accent); line-height: 1.5; }
-        .btn-nav-hero { display: block; width: 100%; padding: 14px; background: var(--accent); color: #000; text-align: center; text-decoration: none; font-weight: 800; border-radius: 12px; font-size: 0.9rem; letter-spacing: 0.5px; box-shadow: 0 4px 20px rgba(204, 255, 0, 0.2); cursor: pointer; border: none; }
-
-        /* LIST SECTION */
-        .list-section { flex: 1; overflow-y: auto; padding-bottom: 50px; }
-        .city-group { margin-bottom: 30px; }
-        .city-header { padding: 0 25px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .city-title { color: var(--text); font-family: 'Syne'; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-        .city-line { height: 1px; background: #333; flex-grow: 1; }
+        /* City Group (Horizontal Scroll) */
+        .city-group { margin-bottom: 25px; }
+        .city-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 0 5px; }
+        .city-name { font-family: 'Syne'; font-weight: 700; font-size: 14px; color: #fff; }
+        .city-line { height: 1px; background: #333; flex: 1; }
         
-        /* FIXED: Horizontal Scroll (Netflix Style) */
-        .h-scroll { 
-            display: flex; gap: 15px; overflow-x: auto; 
-            padding: 0 25px; scroll-snap-type: x mandatory; 
-            scrollbar-width: none; 
-        }
-        .h-scroll::-webkit-scrollbar { display: none; }
-
+        .h-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .mini-card { 
-            min-width: 160px; width: 160px; height: 190px; 
-            border-radius: 18px; padding: 15px; 
-            display: flex; flex-direction: column; justify-content: space-between; 
-            scroll-snap-align: start; flex-shrink: 0; text-decoration: none; position: relative; overflow: hidden; 
-            transition: transform 0.2s; cursor: pointer; 
+            min-width: 140px; height: 170px; border-radius: 15px; padding: 12px; 
+            display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+            position: relative; overflow: hidden; transition: 0.2s;
         }
-        .mini-card:active { transform: scale(0.95); }
-
-        /* WARNA WARNI SELANG SELING */
-        .style-1 { background: linear-gradient(145deg, #111, #1a1a1a); border: 1px solid #333; color: white; }
-        .style-2 { background: linear-gradient(145deg, #022c22, #064e3b); border: 1px solid #065f46; color: #d1fae5; }
-        .style-3 { background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid #1e3a8a; color: #bfdbfe; }
-        .bg-bolt { position: absolute; right: -10px; bottom: -20px; font-size: 5rem; opacity: 0.1; transform: rotate(-15deg); pointer-events: none; color: #fff; }
+        .mini-card:active { transform: scale(0.96); }
+        /* Variasi Warna Card */
+        .c-1 { background: linear-gradient(145deg, #111, #1a1a1a); border: 1px solid #333; }
+        .c-2 { background: linear-gradient(145deg, #022c22, #064e3b); border: 1px solid #065f46; }
+        .c-3 { background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid #1e3a8a; }
         
-        .mini-top h3 { margin: 0 0 8px 0; font-size: 0.9rem; line-height: 1.3; font-weight: 700; color: inherit; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .mini-info { font-size: 0.7rem; opacity: 0.8; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px; line-height: 1.4; z-index: 2; color: inherit; }
-        .mini-dist { font-size: 0.85rem; color: var(--accent); font-weight: 800; z-index: 2; text-align: right; margin-top: 5px; }
+        .mini-title { font-weight: 700; font-size: 13px; line-height: 1.2; margin-bottom: 5px; }
+        .mini-det { font-size: 10px; opacity: 0.7; }
+        .mini-dist { font-weight: 800; font-size: 12px; color: var(--accent); text-align: right; }
 
-        /* MAP OVERLAY (NAVIGASI DALAM APLIKASI) */
-        .map-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); display: flex; flex-direction: column; }
+        /* Modal Map Overlay */
+        .map-overlay { 
+            position: fixed; inset: 0; background: #000; z-index: 200; 
+            transform: translateY(100%); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
         .map-overlay.active { transform: translateY(0); }
-        .map-container { flex: 1; width: 100%; background: #111; position: relative; }
-        
-        /* Panel Bawah Map */
-        .map-controls { 
-            background: #111; padding: 25px; border-top: 1px solid #333; 
-            display: flex; flex-direction: column; gap: 15px; 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.5); position: relative; z-index: 10000;
-        }
-        .map-title { font-family: 'Inter'; font-weight: 800; font-size: 1.4rem; color: #fff; margin: 0; }
-        .map-subtitle { font-size: 0.9rem; color: #888; margin: 0 0 10px 0; border-left: 3px solid var(--accent); padding-left: 10px; }
-        
-        .btn-gmaps-start { 
-            width: 100%; padding: 16px; background: var(--accent); color: #000; 
-            border: none; border-radius: 12px; font-weight: 800; text-transform: uppercase; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; 
-            text-decoration: none; font-size: 0.95rem;
-        }
-        .btn-map-close { 
-            position: absolute; top: 20px; left: 20px; 
-            background: rgba(0,0,0,0.8); color: #fff; border: 1px solid #333;
-            width: 40px; height: 40px; border-radius: 50%; font-weight: 700; 
-            display: flex; align-items: center; justify-content: center; cursor: pointer; 
-            z-index: 10001; font-size: 1.2rem;
-        }
+        .map-canvas { flex: 1; background: #222; }
+        .map-panel { background: #111; padding: 20px; border-top: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
+        .btn-gmaps { background: var(--accent); color: #000; padding: 15px; border-radius: 10px; font-weight: 800; text-align: center; text-decoration: none; }
+        .btn-close-map { position: absolute; top: 20px; left: 20px; width: 40px; height: 40px; background: rgba(0,0,0,0.7); border: 1px solid #333; color: #fff; border-radius: 50%; z-index: 999; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
 
-        /* Leaflet Custom */
-        .leaflet-control-attribution { display: none !important; }
-        .leaflet-routing-container { display: none !important; } /* Hide text instruction */
-
-        /* MODALS */
-        .modal { position: fixed; inset: 0; background: #000; z-index: 2000; transform: translateY(100%); transition: 0.3s ease; display: flex; flex-direction: column; }
-        .modal.show { transform: translateY(0); }
-        .modal-head { padding: 25px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; }
-        .close-btn { background: #222; border: 1px solid #333; color: #fff; font-size: 0.8rem; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 700; }
-        .modal-body { padding: 25px; overflow-y: auto; flex: 1; }
-        .modal-foot { padding: 20px; border-top: 1px solid #222; background: #050505; }
-        .btn-close-bot { width: 100%; padding: 15px; border-radius: 12px; background: #111; border: 1px solid #333; color: var(--accent); font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .help-row { background: #111; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; text-decoration: none; color: white; margin-bottom: 10px; border: 1px solid #222; }
-        .news-item { margin-bottom: 30px; border-bottom: 1px solid #222; padding-bottom: 20px; }
+        /* =========================================
+           3. HALAMAN SOS (V84)
+           ========================================= */
+        #page-sos { background: var(--bg-white); color: var(--text-dark); }
+        .nav-header { display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 50; }
+        .btn-back { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+        .nav-txt { font-family: 'Orbitron'; font-weight: bold; font-size: 16px; }
         
-        /* FIXED SLIDESHOW CSS */
-        .slide-container { 
-            width: 100%; aspect-ratio: 16/9; background: #111; border-radius: 12px; 
-            overflow: hidden; margin-bottom: 15px; 
-            display: flex; flex-wrap: nowrap; /* WAJIB: Agar ke samping */
-            scroll-snap-type: x mandatory; overflow-x: auto; 
-            scroll-behavior: smooth; scrollbar-width: none;
+        .sos-grid { display: grid; gap: 15px; padding: 20px; }
+        .sos-card { background: #fff; padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; border-left: 5px solid #ccc; }
+        .sos-card.red { border-color: var(--danger); } .sos-card.yellow { border-color: orange; } .sos-card.green { border-color: #25D366; }
+        
+        /* =========================================
+           4. HALAMAN ANTRIAN (V73)
+           ========================================= */
+        #page-antrian { 
+            background: #f4f4f4; 
+            background-image: url('1763947427555.jpg'); background-size: cover; background-attachment: fixed;
+            padding-bottom: 100px;
         }
-        .slide-box-multi { 
-            flex: 0 0 100%; /* WAJIB: Agar 1 foto 100% lebar */
-            width: 100%; height: 100%; scroll-snap-align: start; 
-        }
-        .slide-box-multi img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        #page-antrian::before { content:''; position:fixed; inset:0; background: rgba(255,255,255,0.92); z-index:-1; }
+        
+        .antrian-wrap { max-width: 480px; margin: 0 auto; padding: 20px; }
+        .q-card { background: #fff; border: 1px solid #ddd; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        .field { width: 100%; background: #f9f9f9; border: 2px solid #ccc; padding: 12px; border-radius: 10px; font-family: 'Rajdhani'; font-weight: 700; text-align: center; margin-bottom: 10px; font-size: 18px; }
+        .btn-start-q { width: 100%; background: var(--cyan); color: #fff; border: none; padding: 15px; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+        
+        /* Battery Slots */
+        .slot-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .slot-item { background: #fff; border: 2px solid #eee; border-radius: 12px; height: 150px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .slot-item.active { border-color: var(--cyan); background: #e0f7fa; }
+        .bat-icon-q { width: 30px; height: 50px; border: 2px solid #555; border-radius: 5px; position: relative; margin-bottom: 5px; }
+        .bat-icon-q::before { content:''; position:absolute; top:-4px; left:8px; width:10px; height:2px; background:#555; }
+        .bat-fill-q { width: 100%; background: var(--cyan); border-radius: 2px; transition: height 0.5s; }
+
+        /* Admin & Modals (Simpel) */
+        .admin-float { margin-top: 30px; text-align: center; font-size: 10px; color: #999; cursor: pointer; border: 1px dashed #ccc; padding: 10px; border-radius: 8px; }
+        .admin-box { display: none; background: #fff; border: 2px solid var(--soft-red); padding: 15px; border-radius: 15px; margin-top: 20px; }
+        
+        /* Modal Universal */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; align-items: center; justify-content: center; }
+        .modal-c { background: #fff; width: 85%; max-width: 320px; padding: 25px; border-radius: 15px; text-align: center; border-top: 5px solid var(--cyan); color: #333; }
+        .btn-mod { flex: 1; padding: 10px; margin: 5px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+
     </style>
 </head>
 <body>
 
-    <div id="loader" class="loader">
-        <img src="mlu-logo.png" alt="Logo" class="loader-logo">
-        <div id="animText1">SELAMAT DATANG</div>
+    <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
+
+    <div id="page-home" class="page-section" style="display:flex;">
+        <img src="mlu-logo.png" class="loader-logo" onerror="this.style.display='none'"> <div id="animText1">SELAMAT DATANG</div>
         <div id="animText2">SAHABAT MLU</div>
         <div id="animText3">• MLU | Mau Ape Lu •</div>
-        <div class="loader-actions" id="loaderBtns">
-            <button class="btn-entry primary" onclick="enterApp('home')">LOKASI FC ⚡</button>
-            <button class="btn-entry danger" onclick="enterApp('sos')">BANTUAN SOS 🚨</button>
+        
+        <div class="home-menu">
+            <button class="btn-home btn-loc" onclick="initLokasi()">📍 LOKASI FC</button>
+            <button class="btn-home btn-sos" onclick="goTo('page-sos')">🆘 BANTUAN SOS</button>
+            <button class="btn-home btn-queue" onclick="goTo('page-antrian')">⚡ ANTRIAN ONLINE</button>
         </div>
+        
+        <div style="margin-top:40px; font-size:10px; color:#888;">v9.0 | MLU Squad</div>
     </div>
 
-    <div class="header">
-        <div class="header-text">
-            <div class="label-top">LOKASI</div>
-            <h1>FAST<br>CHARGING</h1>
-            <div class="label-bottom">MAKA LINTAS UTARA</div>
-        </div>
-        <div class="top-controls">
-            <div class="toggle-mode">
-                <div id="btnList" class="t-btn active" onclick="switchView('list')">☰ LIST</div>
-                <div id="btnMap" class="t-btn" onclick="switchView('map')">🗺️ PETA</div>
-            </div>
-            <div class="menu-row">
-                <button class="menu-btn" onclick="nav('news')" title="Info"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></button>
-                <button class="menu-btn sos" onclick="nav('sos')" title="SOS"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></button>
+    <div id="page-lokasi" class="page-section">
+        <div class="loc-header">
+            <div class="loc-title"><h1>FAST<br>CHARGING</h1><span>MAKA LINTAS UTARA</span></div>
+            <div class="toggle-view">
+                <div id="btnList" class="t-btn active" onclick="viewMapMode('list')">☰ LIST</div>
+                <div id="btnMap" class="t-btn" onclick="viewMapMode('map')">🗺️ PETA</div>
             </div>
         </div>
-    </div>
 
-    <div id="view-list">
-        <div class="hero-section">
-            <div id="heroContainer">
-                <div id="scanState" class="hero-card" style="align-items:center; text-align:center;">
-                    <div class="gps-dot" style="width:20px; height:20px; margin-bottom:15px;"></div>
-                    <h2 style="opacity:0.5; font-size:1.2rem; margin-top:0;">Mencari Sinyal GPS...</h2>
-                    <p style="color:#666; font-size:0.8rem; margin:0;">Pastikan Lokasi/GPS HP Aktif</p>
+        <div id="view-list">
+            <div id="scanGPS" class="hero-card" style="display:flex; align-items:center; text-align:center;">
+                <h2 style="font-size:14px; color:#888; margin:0;">Mencari GPS...</h2>
+            </div>
+            <div id="heroFound" class="hero-card">
+                <div class="hero-top">
+                    <div class="badge-radar">📡 TERDEKAT</div>
+                    <div class="hero-dist" id="heroDist">-- KM</div>
                 </div>
-                <div id="foundState" class="hero-card" style="display:none;">
-                    <div class="hero-header">
-                        <div class="radar-status"><div class="gps-dot"></div> FC TERDEKAT</div>
-                        <div class="hero-dist" id="heroDist">-- KM</div>
-                    </div>
-                    <h2 class="hero-name" id="heroName">Nama Lokasi</h2>
-                    <div class="hero-info" id="heroInfo">Info Loading...</div>
-                    <button id="btnHeroNav" class="btn-nav-hero" onclick="openMapModal()">LIHAT DI PETA 📍</button>
-                </div>
+                <h2 class="hero-name" id="heroName">Lokasi</h2>
+                <div class="hero-info" id="heroInfo">...</div>
+                <button class="btn-nav-hero" onclick="openMapInternal()">LIHAT DI PETA</button>
             </div>
+            
+            <div id="listContainer"></div>
         </div>
-        <div class="list-section" id="mainListContainer"></div>
-    </div>
 
-    <div id="view-map">
-        <div id="fullMap"></div>
+        <div id="view-map">
+            <div id="fullMap"></div>
+        </div>
+        
+        <button onclick="goTo('page-home')" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:#fff; border:none; padding:10px 20px; border-radius:20px; z-index:99; font-weight:bold; box-shadow:0 5px 15px rgba(0,0,0,0.5);">🏠 HOME</button>
     </div>
 
     <div id="mapOverlay" class="map-overlay">
-        <button class="btn-map-close" onclick="closeMapModal()">✕</button>
-        <div id="map" class="map-container"></div>
-        <div class="map-controls">
-            <div><h3 id="mapTitle" class="map-title">Nama Lokasi</h3><p id="mapSub" class="map-subtitle">Jarak: -- KM</p></div>
-            <a href="#" id="btnGmaps" target="_blank" class="btn-gmaps-start">MULAI JALAN (GOOGLE MAPS) ↗</a>
+        <button class="btn-close-map" onclick="closeMapInternal()">✕</button>
+        <div id="mapCanvas" class="map-canvas"></div>
+        <div class="map-panel">
+            <h3 id="ovTitle" style="color:#fff; font-family:'Orbitron'; margin:0;">Lokasi</h3>
+            <p id="ovDist" style="color:#888; font-size:12px;">-- KM</p>
+            <a id="btnGmaps" href="#" target="_blank" class="btn-gmaps">NAVIGASI GOOGLE MAPS ↗</a>
         </div>
     </div>
 
-    <div id="modal-news" class="modal">
-        <div class="modal-head"><h2>INFO & EVENT</h2><button class="close-btn" onclick="closeModal()">✕</button></div>
-        <div class="modal-body" id="newsContainer"></div>
-        <div class="modal-foot"><button class="btn-close-bot" onclick="closeModal()">KEMBALI KE HOME</button></div>
+    <div id="page-sos" class="page-section">
+        <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-txt">BANTUAN DARURAT</span></div>
+        <div class="sos-grid">
+            <div class="sos-card yellow" onclick="wa('628123456789', 'TOWING')">
+                <div style="font-size:30px;">🚑</div><div><h4 style="margin:0;">TOWING</h4><p style="margin:0; font-size:12px; color:#666;">Bantuan unit mogok</p></div>
+            </div>
+            <div class="sos-card red" onclick="wa('628123456789', 'KECELAKAAN')">
+                <div style="font-size:30px;">🚨</div><div><h4 style="margin:0;">URC</h4><p style="margin:0; font-size:12px; color:#666;">Tim Reaksi Cepat</p></div>
+            </div>
+            <div class="sos-card green" onclick="wa('628123456789', 'TAGIHAN')">
+                <div style="font-size:30px;">💳</div><div><h4 style="margin:0;">ADMIN</h4><p style="margin:0; font-size:12px; color:#666;">Info Tagihan</p></div>
+            </div>
+        </div>
     </div>
 
-    <div id="modal-sos" class="modal">
-        <div class="modal-head"><h2 style="color:var(--danger);">DARURAT (SOS)</h2><button class="close-btn" onclick="closeModal()">✕</button></div>
-        <div class="modal-body">
-            <p style="text-align:center; color:#888; margin-bottom:20px;">Klik untuk Chat WhatsApp:</p>
-            <a href="https://wa.me/6287722285445" class="help-row"><div style="font-size:1.5rem;">🚑</div><div><div style="font-weight:700;">Towing / Unit Mogok</div></div></a>
-            <a href="https://wa.me/6283179721893" class="help-row"><div style="font-size:1.5rem;">🚨</div><div><div style="font-weight:700;">URC Kecelakaan</div></div></a>
-            <a href="https://wa.me/6285117468556" class="help-row"><div style="font-size:1.5rem;">💳</div><div><div style="font-weight:700;">Admin Tagihan</div></div></a>
+    <div id="page-antrian" class="page-section">
+        <div class="nav-header"><button class="btn-back" onclick="goTo('page-home')">⬅</button><span class="nav-txt">ANTRIAN CHARGING</span></div>
+        <div class="antrian-wrap">
+            <div class="glass-card">
+                <label>PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxx">
+                <label>BATERAI (%)</label><input id="uBat" class="field" type="number" placeholder="0-99">
+                <button class="btn-start-q" onclick="daftar()">DAFTAR ANTRIAN</button>
+            </div>
+            
+            <div class="slot-row" id="slotContainer"></div>
+            
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px;"><span>WAITING LIST</span><span id="qCount" style="color:var(--cyan)">0</span></div>
+                <div id="qList"></div>
+            </div>
+
+            <div class="admin-float" onclick="adminLog()">🔒 ADMIN CONTROL</div>
+            <div id="adminP" class="admin-box">
+                <h4 style="color:var(--soft-red); text-align:center; margin:0 0 10px;">MASTER</h4>
+                <div style="display:flex; gap:5px; margin-bottom:5px;"><select id="mSlot" class="field" style="padding:5px; font-size:14px;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select><button onclick="clrSlot()" class="btn-mod danger">HAPUS</button></div>
+                <button onclick="fillQ()" class="btn-start-q" style="margin-bottom:5px;">⬆ NAIKKAN</button>
+                <button onclick="resAll()" class="btn-mod danger" style="width:100%; border:1px solid red; background:none; color:red;">RESET</button>
+            </div>
         </div>
-        <div class="modal-foot"><button class="btn-close-bot" style="color:var(--danger); border-color:var(--danger);" onclick="closeModal()">TUTUP DARURAT</button></div>
     </div>
+
+    <div id="sysModal" class="modal"><div class="modal-c"><h3 id="modT">TITLE</h3><p id="modM">Msg</p><div style="display:flex;"><button id="modNo" class="btn-mod" onclick="closeMod()">BATAL</button><button id="modYes" class="btn-mod primary">OK</button></div></div></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-    <script>
-        // --- CONFIG API & DATABASE ---
-        const JAWG_API = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA"; // Ganti jika token limit
-        const URL_LOKASI = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv"; 
-        const URL_BERITA = "https://docs.google.com/spreadsheets/d/1qh_aKEQQvN0B1E6ONO0LGIpuQ6phzc-ALc4SduClMyY/export?format=csv"; 
+        /* --- CONFIG --- */
+        const JAWG_API = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        const FONNTE = ["Fc8dWb7jiKr7CXuEZXBx"];
+        const FB_CONF = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
 
-        let chargers = [];
-        let userLat = null; let userLng = null;
-        let map = null; let mapFull = null; let currentMapTarget = null;
-
-        function startApp() {
-            document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
-            loadDataBackground();
-        }
-
-        async function loadDataBackground() {
-            try {
-                const [txtLoc, txtNews] = await Promise.all([
-                    fetch(URL_LOKASI).then(r=>r.text()),
-                    fetch(URL_BERITA).then(r=>r.ok?r.text():"")
-                ]);
-
-                chargers = txtLoc.split('\n').slice(1).map((r, i) => {
-                    const c = r.split(',');
-                    let latStr = c[4] ? c[4].replace(',', '.') : '';
-                    let lngStr = c[5] ? c[5].replace(',', '.') : '';
-                    let latVal = parseFloat(latStr);
-                    let lngVal = parseFloat(lngStr);
-                    if(c.length < 5 || isNaN(latVal) || isNaN(lngVal)) return null;
-                    return { 
-                        id: i, name:c[0], city:c[1], type:c[2], status:c[3], 
-                        lat:latVal, lng:lngVal, link:c[6]||'',
-                        nozzle: c[7] || '-', cost: c[8] || '-'
-                    };
-                }).filter(i=>i);
-
-                renderList(); 
-                if(txtNews) renderNews(txtNews);
-
-                if (navigator.geolocation) {
-                    navigator.geolocation.watchPosition(
-                        (p) => { 
-                            userLat=p.coords.latitude; 
-                            userLng=p.coords.longitude; 
-                            processData(); 
-                        },
-                        (err) => {},
-                        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
-                    );
-                }
-            } catch(e) {}
-        }
-
-        function switchView(mode) {
-            const listBtn = document.getElementById('btnList');
-            const mapBtn = document.getElementById('btnMap');
-            const listView = document.getElementById('view-list');
-            const mapView = document.getElementById('view-map');
-
-            if(mode === 'list') {
-                listBtn.classList.add('active'); mapBtn.classList.remove('active');
-                listView.style.display = 'flex'; mapView.style.display = 'none';
-            } else {
-                mapBtn.classList.add('active'); listBtn.classList.remove('active');
-                listView.style.display = 'none'; mapView.style.display = 'block';
-                initFullMap();
-            }
-        }
-
-        function initFullMap() {
-            if(!mapFull) {
-                mapFull = L.map('fullMap', {zoomControl:false}).setView([-6.200000, 106.816666], 11);
-                L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(mapFull);
-            }
-            setTimeout(() => { mapFull.invalidateSize(); }, 200);
-            
-            if(userLat) {
-                const userIcon = L.divIcon({className: 'gps-dot', iconSize: [15,15]});
-                L.marker([userLat, userLng], {icon: userIcon}).addTo(mapFull);
-                mapFull.setView([userLat, userLng], 12);
-            }
-            
-            chargers.forEach(item => {
-                L.marker([item.lat, item.lng]).addTo(mapFull)
-                 .bindPopup(`<b>${item.name}</b><br>${item.nozzle} Nozzle<br><a href="#" onclick="openMapModalFromCluster(${item.id})" style="color:#00d2ff; font-weight:bold; margin-top:5px; display:block;">LIHAT DETAIL</a>`);
-            });
-        }
+        /* --- INIT --- */
+        const app = initializeApp(FB_CONF); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
+        let chargers = []; let userLat, userLng; let mapL, mapFull;
+        let isAdmin = false; const alarm = document.getElementById('alarmSound');
         
-        function openMapModalFromCluster(id) {
-            const item = chargers.find(c => c.id === id);
-            if(item) openMapModal(item);
-        }
+        /* --- INTRO ANIMATION --- */
+        setTimeout(() => { document.querySelector('.home-menu').classList.add('show'); document.getElementById('animText3').style.opacity='1'; }, 500);
 
-        // NAVIGASI DALAM (MAP + ROUTING)
-        function openMapModal(item) {
-            if (!item) item = currentMapTarget;
-            currentMapTarget = item;
+        /* --- NAVIGATION --- */
+        window.goTo = (id) => { document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); document.getElementById(id).style.display='flex'; if(id==='page-antrian') document.getElementById(id).style.display='block'; };
+        window.wa = (no, txt) => window.open(`https://wa.me/${no}?text=${encodeURIComponent(txt)}`, '_blank');
+        window.closeMod = () => document.getElementById('sysModal').style.display='none';
 
-            document.getElementById('mapOverlay').classList.add('active');
-            document.getElementById('mapTitle').innerText = item.name;
-            document.getElementById('mapSub').innerText = `Jarak: ${item.dist ? item.dist.toFixed(1) : '--'} KM`;
-            
-            const realLink = (item.link && item.link.length > 10) ? item.link : `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lng}`;
-            document.getElementById('btnGmaps').href = realLink;
-
-            setTimeout(() => {
-                if(map) { map.remove(); map = null; }
-                
-                map = L.map('map', {zoomControl: false}).setView([item.lat, item.lng], 14);
-                L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(map);
-
-                if(userLat) {
-                    const userIcon = L.divIcon({className: 'gps-dot', iconSize: [15,15]});
-                    L.marker([userLat, userLng], {icon: userIcon}).addTo(map).bindPopup("Lokasi Anda");
-
-                    // ROUTING MACHINE (GARIS BIRU)
-                    L.Routing.control({
-                        waypoints: [
-                            L.latLng(userLat, userLng),
-                            L.latLng(item.lat, item.lng)
-                        ],
-                        lineOptions: { styles: [{color: '#00d2ff', opacity: 0.8, weight: 5}] },
-                        createMarker: function() { return null; },
-                        addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: true, show: false
-                    }).addTo(map);
-                }
-
-                L.marker([item.lat, item.lng]).addTo(map).bindPopup(item.name).openPopup();
-
-            }, 300);
-        }
-
-        function closeMapModal() { document.getElementById('mapOverlay').classList.remove('active'); }
-
-        function enterApp(mode) {
-            document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 600);
-            if(mode === 'sos') nav('sos');
-        }
-
-        function renderNews(csvText) {
-            const rows = csvText.split('\n').slice(1);
-            const container = document.getElementById('newsContainer');
-            container.innerHTML = '';
-            rows.forEach(r => {
-                const cols = r.split(','); 
-                if(cols.length < 3) return;
-                let images = [];
-                cols.forEach(val => { if(val.includes('http') && (val.includes('.jpg') || val.includes('.png') || val.includes('ibb'))) images.push(val); });
-                let imgHTML = '';
-                if(images.length > 0) {
-                    imgHTML = `<div class="slide-container">`;
-                    images.forEach(url => { imgHTML += `<div class="slide-box-multi"><img src="${url}"></div>`; });
-                    imgHTML += `</div>`;
-                }
-                container.innerHTML += `<div class="news-item">${imgHTML}<h3 style="color:var(--accent); margin-bottom:5px;">${cols[0]}</h3><p style="color:#aaa; font-size:0.85rem; margin-top:0;">${cols[1]}</p><p style="line-height:1.5; color:#ddd; font-size:0.9rem;">${cols[2]}</p></div>`;
-            });
-            // Auto Slide
-            setInterval(() => {
-                document.querySelectorAll('.slide-container').forEach(slider => {
-                    if (slider.scrollLeft >= (slider.scrollWidth - slider.clientWidth)) slider.scrollTo({left: 0, behavior: 'smooth'});
-                    else slider.scrollBy({left: slider.clientWidth, behavior: 'smooth'});
-                });
-            }, 3000);
-        }
+        /* --- MAPS ENGINE (DARI SCRIPT BAPAK) --- */
+        window.initLokasi = async () => {
+            window.goTo('page-lokasi');
+            if(chargers.length === 0) {
+                try {
+                    const res = await fetch(SHEET_URL); const txt = await res.text();
+                    chargers = txt.split('\n').slice(1).map((r,i)=>{
+                        const c = r.split(','); if(c.length<5) return null;
+                        return { id:i, name:c[0], type:c[2], lat:parseFloat(c[4]), lng:parseFloat(c[5]), link:c[6], dist:9999 };
+                    }).filter(x=>x);
+                    
+                    if(navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(p=>{
+                            userLat=p.coords.latitude; userLng=p.coords.longitude;
+                            chargers.forEach(c => c.dist = getDist(userLat, userLng, c.lat, c.lng));
+                            chargers.sort((a,b)=>a.dist-b.dist);
+                            renderLocList();
+                        });
+                    }
+                } catch(e){}
+            }
+        };
 
         function getDist(lat1, lon1, lat2, lon2) {
             const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180;
             const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
             return (R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
         }
-        function getMapLink(i) {
-            if(i.link && i.link.length > 10) return i.link;
-            if(userLat) return `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${i.lat},${i.lng}&travelmode=motorcycle`;
-            return `https://www.google.com/maps/search/?api=1&query=${i.lat},${i.lng}`;
-        }
 
-        function processData() {
-            if(userLat) { 
-                chargers.forEach(c => c.dist=parseFloat(getDist(userLat,userLng,c.lat,c.lng))); 
-                chargers.sort((a,b)=> { if(isNaN(a.dist)) return 1; if(isNaN(b.dist)) return -1; return a.dist-b.dist; });
-            }
-            
-            if(chargers.length > 0) {
-                const n = chargers[0];
-                currentMapTarget = n;
-                document.getElementById('scanState').style.display = 'none';
-                document.getElementById('foundState').style.display = 'flex';
-                document.getElementById('heroName').innerText = n.name;
-                document.getElementById('heroDist').innerText = n.dist.toFixed(1) + ' KM';
-                document.getElementById('heroInfo').innerText = `${n.city} • ${n.type}\n${n.nozzle} Nozzle • ${n.cost}`;
-                document.getElementById('btnHeroNav').onclick = function() { openMapModal(n); };
-                renderList();
-            }
-        }
-
-        function renderList() {
-            const listCont = document.getElementById('mainListContainer');
-            let scrollState = {};
-            document.querySelectorAll('.city-group').forEach(group => {
-                const title = group.querySelector('.city-title').innerText;
-                scrollState[title] = group.querySelector('.h-scroll').scrollLeft;
-            });
-            listCont.innerHTML = ''; 
-            let grouped = {};
-            for(let i=0; i<chargers.length; i++) {
-                let item = chargers[i];
-                let city = item.city || 'Lainnya';
-                if(!grouped[city]) grouped[city] = [];
-                grouped[city].push(item);
-            }
-            let colorIdx = 0;
-            Object.keys(grouped).forEach(city => {
-                let groupHTML = `<div class="city-group"><div class="city-header"><div class="city-title">${city}</div><div class="city-line"></div></div><div class="h-scroll">`;
-                grouped[city].forEach(item => {
-                    let styleClass = `style-${(colorIdx % 3) + 1}`;
-                    colorIdx++;
-                    let itemJson = JSON.stringify(item).replace(/'/g, "\\'");
-                    groupHTML += `
-                    <div onclick='openMapModal(${itemJson})' class="mini-card ${styleClass}">
-                        <div class="bg-bolt">⚡</div>
-                        <div class="mini-top"><h3>${item.name}</h3><div class="mini-info">${item.type}<br>${item.nozzle} Nozzle • ${item.cost}</div></div>
-                        <div class="mini-bot"><div class="mini-dist">${item.dist ? item.dist.toFixed(1)+' KM' : ''}</div></div>
-                    </div>`;
+        function renderLocList() {
+            document.getElementById('scanGPS').style.display='none';
+            if(chargers.length>0) {
+                const h = chargers[0];
+                document.getElementById('heroFound').style.display='flex';
+                document.getElementById('heroName').innerText = h.name;
+                document.getElementById('heroDist').innerText = h.dist + ' KM';
+                document.getElementById('heroInfo').innerText = h.type;
+                
+                let html = '';
+                let grp = {}; chargers.forEach(c=>{ let k=c.type||'Lainnya'; if(!grp[k]) grp[k]=[]; grp[k].push(c); });
+                
+                Object.keys(grp).forEach((k, idx)=>{
+                    html += `<div class="city-group"><div class="city-head"><div class="city-name">${k}</div><div class="city-line"></div></div><div class="h-scroll">`;
+                    grp[k].forEach(c=>{
+                        html += `<div class="mini-card c-${(idx%3)+1}" onclick="openMapInternal(${c.id})">
+                        <div class="mini-title">${c.name}</div><div class="mini-dist">${c.dist} KM</div></div>`;
+                    });
+                    html += `</div></div>`;
                 });
-                groupHTML += `</div></div>`;
-                listCont.innerHTML += groupHTML;
-            });
-            document.querySelectorAll('.city-group').forEach(group => {
-                const title = group.querySelector('.city-title').innerText;
-                if(scrollState[title]) group.querySelector('.h-scroll').scrollLeft = scrollState[title];
-            });
+                document.getElementById('listContainer').innerHTML = html;
+            }
         }
 
-        function nav(p) {
-            document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));
-            if(p==='news') document.getElementById('modal-news').classList.add('show');
-            if(p==='sos') document.getElementById('modal-sos').classList.add('show');
-        }
-        function closeModal() { document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show')); }
+        window.viewMapMode = (m) => {
+            if(m==='list') { document.getElementById('view-list').style.display='block'; document.getElementById('view-map').style.display='none'; document.getElementById('btnList').classList.add('active'); document.getElementById('btnMap').classList.remove('active'); }
+            else { 
+                document.getElementById('view-list').style.display='none'; document.getElementById('view-map').style.display='block'; 
+                document.getElementById('btnMap').classList.add('active'); document.getElementById('btnList').classList.remove('active');
+                if(!mapFull) {
+                    mapFull = L.map('fullMap').setView([-6.2, 106.8], 10);
+                    L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(mapFull);
+                    chargers.forEach(c=>L.marker([c.lat,c.lng]).addTo(mapFull).bindPopup(c.name));
+                }
+                setTimeout(()=>mapFull.invalidateSize(), 200);
+            }
+        };
 
-        function animateText(id, txt, delay) {
-            const el = document.getElementById(id);
-            el.innerHTML = txt.split('').map(l => `<span class="letter">${l===' '?' ':l}</span>`).join('');
-            const letters = el.querySelectorAll('.letter');
-            let i=0; return new Promise(r=>{ const t=setInterval(()=>{ if(i<letters.length){letters[i].classList.add('active');i++}else{clearInterval(t);r()} }, delay) });
+        window.openMapInternal = (id) => {
+            const c = id ? chargers.find(x=>x.id===id) : chargers[0];
+            if(!c) return;
+            document.getElementById('mapOverlay').classList.add('active');
+            document.getElementById('ovTitle').innerText = c.name;
+            document.getElementById('ovDist').innerText = c.dist + " KM";
+            document.getElementById('btnGmaps').href = c.link || `http://maps.google.com/?q=${c.lat},${c.lng}`;
+            
+            if(mapL) mapL.remove();
+            mapL = L.map('mapCanvas').setView([c.lat, c.lng], 15);
+            L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(mapL);
+            L.marker([c.lat, c.lng]).addTo(mapL);
+        };
+        window.closeMapInternal = () => document.getElementById('mapOverlay').classList.remove('active');
+
+        /* --- ANTRIAN ONLINE (V69) --- */
+        function prime() { if(alarm.paused) alarm.play().then(()=>{setTimeout(()=>{alarm.pause();alarm.currentTime=0;},100)}).catch(()=>{}); }
+        document.body.addEventListener('click', prime);
+
+        async function sendWA(p, msg, sch=null) {
+            p = p.replace(/\D/g,''); if(p.startsWith('0')) p='62'+p.substring(1);
+            const fd = new FormData(); fd.append("target", p); fd.append("message", msg); fd.append("countryCode", "62");
+            if(sch) { 
+                const ux = Math.floor(new Date(sch).getTime()/1000); fd.append("schedule", ux); 
+            } else fd.append("schedule", "0");
+            const rnd = FONNTE[Math.floor(Math.random()*FONNTE.length)];
+            fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }).catch(()=>{});
         }
+
+        window.daftar = async () => {
+            prime();
+            const p = document.getElementById('uPlat').value.toUpperCase().trim();
+            const w = document.getElementById('uWa').value.trim();
+            const b = parseInt(document.getElementById('uBat').value);
+            if(!p || !w || isNaN(b)) return popup('error','DATA KURANG','Isi semua');
+            
+            try {
+                await runTransaction(db, async(t)=>{
+                    const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
+                    if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
+                    
+                    let dur = 0;
+                    const total = q.length;
+                    let limit = 100; 
+                    if(total>2) limit = total>5 ? (total>9 ? 85 : 90) : 95;
+                    if(b>=limit) throw "Baterai Cukup";
+
+                    for(let i=b; i<limit; i++) { dur += (i>=90?2.2 : (i>=80?1.5:0.8)); }
+                    dur = Math.ceil(dur); if(dur<2) dur=2;
+
+                    const item = { name:p, phone:w, startBattery:b, targetLimit:limit, durationMinutes:dur, startTime:null };
+                    const idx = s.findIndex(x=>x===null);
+                    if(idx!==-1) s[idx]=item; else q.push(item);
+                    
+                    t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
+                    if(w) sendWA(w, `*Halo Sahabat MLU!*\nMotor *${p}* masuk antrian.`);
+                });
+                popup('success','BERHASIL','Masuk Antrian');
+            } catch(e){ popup('error','GAGAL', e); }
+        };
+
+        onSnapshot(ref, (snap) => {
+            const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
+            document.getElementById('qCount').innerText = q.length;
+            document.getElementById('queueList').innerHTML = q.map((x,i)=>`<div style="display:flex;justify-content:space-between;margin-bottom:5px;"><b>${x.name}</b><button style="color:red;background:none;border:none;" onclick="delQ(${i},'${x.name}')">✕</button></div>`).join('');
+            
+            document.getElementById('slotContainer').innerHTML = s.map((x,i)=>{
+                if(!x) return `<div class="slot-item"><div class="bat-icon-q" style="border-color:#ccc"></div><div style="font-size:10px;color:#ccc">KOSONG</div></div>`;
+                const isRun = !!x.startTime;
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop','${x.name}')">STOP</button>` 
+                                : `<button class="btn-act btn-start" onclick="act(${i},'start','${x.name}')">MULAI</button>`;
+                let time = "Tap Mulai";
+                let h = x.startBattery;
+                
+                if(isRun) {
+                    const start = x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime();
+                    const end = start + (x.durationMinutes*60000);
+                    const diff = end - Date.now();
+                    if(diff>0) {
+                        const m=Math.floor(diff/60000); const ss=Math.floor((diff%60000)/1000);
+                        time = `${m}:${ss}`; h=100;
+                    } else {
+                        time = "SELESAI";
+                        const key = x.name+end;
+                        if(!triggeredAlarms.has(key)) {
+                            triggeredAlarms.add(key);
+                            alarm.currentTime=0; alarm.play().catch(()=>{});
+                            popup('alarm','SELESAI',`Motor ${x.name}`);
+                        }
+                    }
+                }
+                return `<div class="slot-item ${isRun?'active':''}"><div class="bat-icon-q"><div class="bat-fill-q" style="height:${h}%"></div></div><div style="font-weight:bold;font-size:12px">${x.name}</div><div style="font-size:14px;color:var(--cyan);font-weight:bold;margin:5px 0;">${time}</div>${btn}</div>`;
+            }).join('');
+        });
+
+        // HELPER GLOBAL
+        window.act = (i, type, pName) => {
+            prime();
+            if(type==='stop') {
+                if(!isAdmin && localStorage.getItem('myPlat')!==pName) return popup('error','DITOLAK','Bukan punya Anda');
+                popup('confirm','STOP','Stop slot?', ()=>{
+                    runTransaction(db, async(t)=>{ 
+                        const d=(await t.get(ref)).data(); const s=d.chargingSlots; s[i]=null; t.update(ref,{chargingSlots:s});
+                    }); alarm.pause(); alarm.currentTime=0;
+                });
+            } else {
+                runTransaction(db, async(t)=>{
+                    const d=(await t.get(ref)).data(); const s=d.chargingSlots;
+                    if(s[i]) {
+                        s[i].startTime=new Date(); 
+                        if(s[i].phone) {
+                            const end = new Date(Date.now() + s[i].durationMinutes*60000);
+                            // WA 2 & 3 (Instant + Schedule)
+                            sendWA(s[i].phone, `*Halo Sahabat MLU!*\nMotor *${s[i].name}* mulai dicas.`);
+                            scheduleWhatsapp(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
+                        }
+                        t.update(ref,{chargingSlots:s});
+                    }
+                });
+            }
+        };
         
-        async function runIntro() {
-            await animateText('animText1', "SELAMAT DATANG", 40);
-            await animateText('animText2', "SAHABAT MLU", 30);
-            document.getElementById('animText3').style.opacity = '1'; 
-            setTimeout(() => { document.querySelector('.loader-actions').classList.add('show'); }, 500);
-            loadDataBackground();
+        // ADMIN & UTILS
+        window.adminLog=()=>{ if(prompt("PIN")==='1131') { document.getElementById('adminP').style.display='block'; isAdmin=true; } };
+        window.delQ=(i,n)=>{ if(isAdmin||localStorage.getItem('myPlat')===n) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();d.waitingQueue.splice(i,1);t.update(ref,{waitingQueue:d.waitingQueue})}); };
+        window.clearSlotManual=()=>{const i=document.getElementById('manSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
+        window.fillFromQueue=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0){const e=s.indexOf(null);if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}}});};
+        window.startAllSlots=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach(x=>{if(x&&!x.startTime)x.startTime=new Date()}); t.update(ref,{chargingSlots:s});});};
+        window.resetAll=()=>{if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]});};
+
+        function popup(type, t, m, cb) {
+            const mod = document.getElementById('masterModal');
+            document.getElementById('mTitle').innerText=t; document.getElementById('mMsg').innerText=m;
+            document.getElementById('mBtnOk').onclick=()=>{ mod.style.display='none'; if(cb)cb(); };
+            document.getElementById('mBtnCancel').style.display = type==='confirm'?'block':'none';
+            document.getElementById('mBtnCancel').onclick=()=>{mod.style.display='none';};
+            mod.style.display='flex';
         }
-        runIntro();
+        // Loop UI Refresh
+        setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000);
+
     </script>
 </body>
 </html>
