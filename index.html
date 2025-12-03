@@ -3,164 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLU SUPER APP V94</title>
+    <title>MLU SUPER APP V94 (FINAL MERGE)</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800;900&family=Syne:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
-        /* GLOBAL VARS */
+        /* ================= GLOBAL ================= */
         :root {
-            --bg-overlay: rgba(0, 0, 0, 0.7); 
-            --text: #fff; --cyan: #00bcd4; --soft-red: #ff3b3b; --neon-yellow: #ccff00;
-            --card-bg: rgba(255,255,255,0.1); --border: rgba(255,255,255,0.2);
+            --bg-dark: #0b101a;
+            --text-light: #fff; --text-dark: #1a1a1a;
+            --cyan: #00bcd4; --soft-red: #ff3b3b; --neon-yellow: #ccff00;
+            --accent: #CCFF00; /* Dari Script Peta Bapak */
+            --card-dark: #111;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            margin: 0; font-family: 'Rajdhani', sans-serif; 
-            color: var(--text); height: 100vh; overflow: hidden;
-            background-color: #0b101a;
-            background-image: url('1763947427555.jpg'); 
-            background-size: cover; background-position: center; 
-            background-attachment: fixed; position: relative;
-        }
-        body::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: 0; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; background: #000; }
 
-        /* HALAMAN (PAGE SYSTEM) */
-        .page-section {
-            position: absolute; inset: 0; display: none; 
-            flex-direction: column; overflow-y: auto; padding: 20px;
-            padding-bottom: 100px; z-index: 10;
-            background: rgba(11, 16, 26, 0.95); /* Latar gelap semi transparan */
+        /* ================= 1. HOME PAGE (DARK) ================= */
+        #page-home {
+            position: absolute; inset: 0; z-index: 50; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            background: url('1763947427555.jpg') no-repeat center center/cover;
         }
-        
-        #page-home { 
-            display: flex; justify-content: center; align-items: center; text-align: center; 
-            background: transparent; z-index: 20; /* Home paling atas */
-        }
+        #page-home::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: -1; }
 
-        /* HOME DESIGN */
-        .logo-area { position: relative; z-index: 2; }
-        .logo-area h1 { 
-            font-family: 'Orbitron'; font-size: 42px; margin: 0; 
-            color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px var(--cyan);
-        }
+        .logo-area h1 { font-family: 'Orbitron'; font-size: 38px; color: #fff; margin: 0; letter-spacing: 3px; text-shadow: 0 0 20px var(--cyan); }
         .squad-text {
-            font-family: 'Orbitron'; font-size: 14px; font-weight: bold;
-            color: #000; background: var(--neon-yellow);
-            padding: 5px 15px; border-radius: 5px; margin-top: 10px; 
-            display: inline-block; border: 2px solid #fff;
-            animation: blink 1.5s infinite;
+            font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #000;
+            background: var(--neon-yellow); padding: 5px 15px; border-radius: 4px;
+            margin-top: 10px; animation: blink 1.5s infinite; border: 2px solid #fff;
         }
         @keyframes blink { 50% { opacity: 0.7; } }
 
-        .menu-grid { display: grid; gap: 20px; width: 100%; max-width: 400px; margin-top: 50px; position: relative; z-index: 2; }
-        
+        .menu-grid { display: grid; gap: 20px; width: 85%; max-width: 350px; margin-top: 50px; }
         .menu-btn {
             background: rgba(255,255,255,0.1); border: 1px solid var(--cyan);
-            padding: 25px; border-radius: 20px; cursor: pointer;
-            display: flex; align-items: center; gap: 20px;
-            backdrop-filter: blur(10px); transition: 0.2s;
+            padding: 20px; border-radius: 15px; cursor: pointer;
+            display: flex; align-items: center; gap: 20px; backdrop-filter: blur(5px);
+            transition: 0.2s;
         }
-        .menu-btn:active { transform: scale(0.95); background: var(--cyan); }
-        .menu-icon { font-size: 32px; width: 60px; text-align: center; }
-        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; }
-        .menu-text span { font-size: 12px; color: #ccc; }
+        .menu-btn:active { background: var(--cyan); transform: scale(0.95); }
+        .menu-icon { font-size: 28px; width: 50px; text-align: center; }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; color: #fff; }
+        .menu-text span { font-size: 11px; color: #aaa; }
 
-        /* HEADER NAV */
-        .nav-header {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: #fff; color: #333; border-radius: 15px; margin-bottom: 20px;
-            position: sticky; top: 0; z-index: 100;
+        /* ================= 2. LOKASI PAGE (SCRIPT ASLI BAPAK) ================= */
+        #page-lokasi {
+            position: absolute; inset: 0; z-index: 40; background: #f4f4f4; color: #333;
+            display: none; flex-direction: column; overflow-y: auto;
         }
-        .btn-back { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 24px; cursor: pointer; color: #333; }
-        .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; }
+        /* Header Peta */
+        .loc-header { 
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            background: #fff; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 99;
+        }
+        .loc-title h1 { font-family: 'Inter'; font-weight: 900; font-size: 22px; margin: 0; line-height: 1; color: #000; }
+        
+        /* Hero Section (Dari Script Bapak) */
+        .hero-section { padding: 20px; }
+        .hero-card { 
+            background: #fff; border-radius: 24px; padding: 20px; position: relative; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; flex-direction: column; 
+            min-height: 180px; justify-content: center; border: 1px solid #eee;
+        }
+        .radar-status { 
+            display: inline-flex; align-items: center; gap: 8px; 
+            font-size: 0.7rem; font-weight: 800; color: #006400; 
+            background: #ccff0033; padding: 6px 12px; border-radius: 20px; 
+            border: 1px solid #ccff00; margin-bottom: 10px; width: fit-content;
+        }
+        .gps-dot { width: 8px; height: 8px; background: #76c000; border-radius: 50%; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% {opacity:1} 50% {opacity:0.3} 100% {opacity:1} }
+        
+        .hero-name { font-family: 'Inter'; font-size: 24px; font-weight: 800; color: #000; margin: 0 0 5px 0; }
+        .hero-info { font-size: 13px; color: #666; margin-bottom: 15px; border-left: 3px solid var(--accent); padding-left: 10px; }
+        .btn-nav-hero { display: block; width: 100%; padding: 14px; background: #1a1a1a; color: #fff; text-align: center; font-weight: 800; border-radius: 12px; border: none; cursor: pointer; }
+        .hero-dist { position: absolute; top: 20px; right: 20px; font-family: 'Syne'; font-weight: 700; font-size: 16px; background: #eee; padding: 5px 10px; border-radius: 8px; }
 
-        /* LOKASI PAGE */
-        #page-lokasi { padding: 0; background: #fff; }
-        .map-container { width: 100%; height: 100%; position: relative; }
-        #fullMap { width: 100%; height: 100%; }
-        .loc-list-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0; background: #fff;
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-            max-height: 40%; overflow-y: auto; padding: 20px; z-index: 1000;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.2); color: #333;
+        /* List Horizontal (Dari Script Bapak) */
+        .city-group { margin-bottom: 20px; }
+        .city-header { padding: 0 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .city-title { font-family: 'Syne'; font-weight: 700; font-size: 14px; text-transform: uppercase; color: #888; }
+        .h-scroll { display: flex; gap: 15px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; padding-bottom: 10px; }
+        .mini-card { 
+            min-width: 160px; height: 180px; border-radius: 18px; padding: 15px; 
+            display: flex; flex-direction: column; justify-content: space-between; 
+            background: #fff; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative; overflow: hidden; cursor: pointer;
         }
-        .loc-item {
-            background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 10px;
-            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
-        }
+        .mini-top h3 { margin: 0 0 5px 0; font-size: 14px; font-weight: 700; color: #000; }
+        .mini-info { font-size: 11px; color: #666; line-height: 1.4; }
+        .mini-dist { font-size: 16px; font-family: 'Syne'; font-weight: 800; color: var(--cyan); text-align: right; }
 
-        /* SOS PAGE */
-        #page-sos { background: #f4f4f4; }
-        .sos-container { display: grid; gap: 15px; margin-top: 10px; }
-        .btn-sos {
-            background: #fff; padding: 20px; border-radius: 15px; border: none;
-            display: flex; align-items: center; gap: 15px; cursor: pointer; color: #333;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .btn-sos.yellow { border-left: 8px solid orange; }
-        .btn-sos.red { border-left: 8px solid var(--soft-red); }
-        .btn-sos.green { border-left: 8px solid #25D366; }
+        /* Map Overlay (Pop up Peta) */
+        .map-overlay { position: fixed; inset: 0; background: #fff; z-index: 200; transform: translateY(100%); transition: 0.3s; display: flex; flex-direction: column; }
+        .map-overlay.active { transform: translateY(0); }
+        .map-container { flex: 1; width: 100%; background: #eee; }
+        .map-controls { padding: 20px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); }
+        .btn-close-map { position: absolute; top: 20px; left: 20px; width: 40px; height: 40px; background: #fff; border-radius: 50%; border: 1px solid #ccc; z-index: 1000; cursor: pointer; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
-        /* ANTRIAN PAGE (White Theme) */
-        #page-antrian { background: #f4f4f4; color: #333; }
-        .glass-card { background: #fff; border: 1px solid #ddd; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
-        .field { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 10px; background: #f9f9f9; text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #000; }
-        .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+        /* ================= 3. SOS & ANTRIAN (WHITE THEME) ================= */
+        #page-sos, #page-antrian {
+            position: absolute; inset: 0; z-index: 40; background: #f4f4f4; 
+            display: none; flex-direction: column; overflow-y: auto;
+        }
+        #page-antrian { 
+            background-image: url('1763947427555.jpg'); background-size: cover; background-attachment: fixed;
+        }
+        #page-antrian::before { content:''; position:fixed; inset:0; background: rgba(255,255,255,0.92); z-index:-1; }
+
+        .nav-header-sub { background: #fff; padding: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 99; }
+        .btn-back { background: #f0f0f0; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; color: #333; }
+        
+        /* SOS Buttons */
+        .sos-grid { padding: 20px; display: grid; gap: 15px; }
+        .btn-sos { background: #fff; padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
+        .btn-sos.yellow { border-left: 5px solid orange; } .btn-sos.red { border-left: 5px solid var(--soft-red); } .btn-sos.green { border-left: 5px solid #25D366; }
+
+        /* Antrian Form */
+        .antrian-wrap { padding: 20px; padding-bottom: 100px; max-width: 480px; margin: 0 auto; }
+        .glass-card { background: #fff; border-radius: 15px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .field { width: 100%; padding: 12px; background: #f9f9f9; border: 2px solid #ddd; border-radius: 10px; font-family: 'Rajdhani'; font-weight: bold; text-align: center; font-size: 18px; margin-bottom: 10px; outline: none; color: #333; }
+        .field:focus { border-color: var(--cyan); background: #fff; }
+        .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; font-family: 'Orbitron'; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; }
+        
         .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .slot-box { background: #fff; border: 2px solid #eee; border-radius: 10px; padding: 10px 5px; text-align: center; min-height: 140px; display: flex; flex-direction: column; justify-content: center; }
         .slot-box.active { border-color: var(--cyan); background: #e0f7fa; }
-        .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 5px; margin: 0 auto 5px; position: relative; }
+        .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 4px; margin: 0 auto 5px; position: relative; }
         .bat-fill { width: 100%; background: var(--cyan); height: 50%; position: absolute; bottom: 0; }
-        
-        .btn-act { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: bold; margin-top: auto; cursor: pointer; color: #fff; }
+        .btn-act { width: 100%; padding: 5px; margin-top: 5px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; color: #fff; font-family: 'Orbitron'; font-size: 10px; }
         .btn-start { background: var(--cyan); } .btn-stop { background: var(--soft-red); }
 
-        /* MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 12000; align-items: center; justify-content: center; }
+        /* Modal & Admin */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 11000; justify-content: center; align-items: center; }
         .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; max-width: 300px; text-align: center; color: #333; }
-        
-        /* ADMIN */
-        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid red; border-radius: 15px; margin-top: 20px; }
-        .rule-info { display: none; text-align: center; padding: 10px; background: var(--neon-yellow); border: 2px solid #000; border-radius: 10px; margin-top: 10px; font-weight: bold; }
+        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
+
+        /* NEON INFO */
+        @keyframes neonP { 0%,100%{border-color:var(--neon-yellow)} 50%{border-color:#ffd700} }
+        .rule-info { text-align: center; padding: 10px; border-radius: 10px; background: #fff; border: 3px solid var(--neon-yellow); animation: neonP 1.5s infinite; display: none; font-weight: bold; color: #000; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
-    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;pointer-events:none;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
 
-    <div id="masterModal" class="modal"><div class="modal-box"><h3 id="mTitle">TITLE</h3><p id="mMsg">Msg</p><button onclick="closeModal()" class="btn-cyan">OK</button></div></div>
+    <div id="masterModal" class="modal"><div class="modal-box"><h3 id="mTitle">TITLE</h3><p id="mMsg">Msg</p><button onclick="document.getElementById('masterModal').style.display='none'" class="btn-cyan" style="padding:10px;">OK</button></div></div>
 
-    <div id="page-home" class="page-section" style="display:flex;">
-        <div class="logo-area"><h1>MLU APPS</h1><div class="squad-text">MAKA LINTAS UTARA SQUAD</div></div>
+    <div id="page-home" style="z-index:50;">
+        <div style="margin-bottom:40px; text-align:center;">
+            <div class="logo-area"><h1>MLU APPS</h1><div class="squad-text">MAKA LINTAS UTARA SQUAD</div></div>
+        </div>
         <div class="menu-grid">
             <div class="menu-btn" onclick="startLokasi()">
-                <div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
+                <div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari Charging Station</span></div>
             </div>
-            <div class="menu-btn" onclick="showPage('page-sos')">
+            <div class="menu-btn" onclick="goTo('page-sos')">
                 <div class="menu-icon">🆘</div><div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div>
             </div>
-            <div class="menu-btn" onclick="showPage('page-antrian')">
+            <div class="menu-btn" onclick="goTo('page-antrian')">
                 <div class="menu-icon">⚡</div><div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
             </div>
         </div>
-        <div style="margin-top:40px; font-size:10px; color:#aaa;">v9.4 Final | MLU Squad</div>
+        <div style="position:absolute; bottom:30px; font-size:10px; color:#aaa;">v9.4 Final</div>
     </div>
 
-    <div id="page-lokasi" class="page-section">
-        <div class="nav-header" style="position:absolute; top:0; width:100%; z-index:1001; background:rgba(255,255,255,0.9);">
-            <button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span>
-        </div>
-        <div class="map-container">
-            <div id="fullMap"></div>
-            <div class="loc-list-overlay" id="locList"></div>
+    <div id="page-lokasi" class="page-section" style="background:#f8f9fa;">
+        <div class="loc-header"><div class="loc-title"><h1>FAST<br>CHARGING</h1><span>MAKA LINTAS UTARA</span></div><button class="btn-back" onclick="goHome()">⬅</button></div>
+        
+        <div style="padding:20px;">
+            <div id="scanGPS" class="hero-card" style="align-items:center; text-align:center;">
+                <div class="gps-dot" style="width:15px; height:15px; background:var(--accent); border-radius:50%; margin-bottom:10px;"></div>
+                <h3 style="color:#888; margin:0;">Mencari Sinyal GPS...</h3>
+            </div>
+            
+            <div id="heroFound" class="hero-card" style="display:none;">
+                <div class="hero-top"><div class="radar-status">📡 TERDEKAT</div><div class="hero-dist" id="heroDist">-- KM</div></div>
+                <h2 class="hero-name" id="heroName">Nama Lokasi</h2>
+                <div class="hero-info" id="heroInfo">...</div>
+                <button class="btn-nav-hero" onclick="openMapModal()">LIHAT DI PETA 📍</button>
+            </div>
+
+            <div id="locListContainer" style="margin-top:20px;"></div>
         </div>
     </div>
 
     <div id="page-sos" class="page-section">
-        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">BANTUAN DARURAT</span></div>
+        <div class="nav-header-sub"><button class="btn-back" onclick="goHome()">⬅</button><span class="nav-title">DARURAT</span></div>
         <div class="sos-container" style="padding:20px;">
             <div class="btn-sos yellow" onclick="wa('628123456789','TOWING')"><span style="font-size:30px">🚑</span><div><h4>TOWING</h4><small>Bantuan Mogok</small></div></div>
             <div class="btn-sos red" onclick="wa('628123456789','URC')"><span style="font-size:30px">🚨</span><div><h4>URC</h4><small>Tim Reaksi Cepat</small></div></div>
@@ -169,176 +203,230 @@
     </div>
 
     <div id="page-antrian" class="page-section">
-        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
-        <div style="padding:20px; max-width:480px; margin:0 auto;">
+        <div class="nav-header-sub"><button class="btn-back" onclick="goHome()">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
+        <div class="antrian-wrap">
             <div class="glass-card">
                 <label>PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-                <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxxxxxxxxx">
+                <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxx">
                 <label>BATERAI (%)</label><input id="uBat" class="field" type="number" placeholder="0 - 99">
                 <div id="ruleInfo" class="rule-info"></div>
-                <button class="btn-cyan" id="btnDaftar">DAFTAR ANTRIAN</button>
+                <button class="btn-cyan" onclick="daftar()">DAFTAR ANTRIAN</button>
             </div>
             <div class="slots-grid" id="slotContainer"></div>
             <div class="glass-card">
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><b>DAFTAR TUNGGU</b><span id="qCount">0</span></div>
-                <div id="qList"></div>
+                <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>DAFTAR TUNGGU</span><span id="qCount">0</span></div>
+                <div id="qList" style="margin-top:5px;"></div>
             </div>
-            <div style="text-align:center; margin-top:20px; color:#999; font-size:10px;" onclick="toggleAdmin()">🔒 ADMIN</div>
+            <div style="text-align:center; margin-top:30px; color:#999; font-size:10px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
             <div id="adminPanel" class="admin-panel">
-                <h4 style="text-align:center; color:red; margin:0 0 10px;">MASTER CONTROL</h4>
-                <div style="display:flex; gap:5px;"><select id="mSlot" class="field" style="font-size:14px; padding:5px;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select><button id="btnDelSlot" class="btn-cyan" style="background:#666">HAPUS</button></div>
-                <button id="btnFill" class="btn-cyan" style="margin-top:5px;">⬆ NAIKKAN</button>
-                <button id="btnStartAll" class="btn-cyan" style="margin-top:5px; background:#333;">⚡ MULAI SEMUA</button>
-                <button id="btnReset" class="btn-cyan" style="margin-top:5px; background:red;">RESET TOTAL</button>
+                <h4 style="text-align:center; color:red; margin:0 0 10px;">MASTER</h4>
+                <div style="display:flex; gap:5px;"><select id="mSlot" class="field" style="font-size:14px; padding:5px;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select><button onclick="clrSlot()" class="btn-cyan" style="background:#666;">HAPUS</button></div>
+                <button onclick="fillQ()" class="btn-cyan" style="margin-top:5px;">⬆ NAIKKAN</button>
+                <button onclick="startAll()" class="btn-cyan" style="margin-top:5px; background:#333;">⚡ MULAI SEMUA</button>
+                <button onclick="resAll()" class="btn-cyan" style="margin-top:5px; background:red;">RESET TOTAL</button>
             </div>
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <div id="mapOverlay" class="map-overlay" style="position:fixed; inset:0; background:#fff; z-index:200; transform:translateY(100%); transition:0.3s; display:flex; flex-direction:column;">
+        <button class="btn-close-map" onclick="closeMapModal()" style="position:absolute; top:20px; left:20px; width:40px; height:40px; border-radius:50%; z-index:999; background:#fff; border:1px solid #ccc; font-weight:bold;">✕</button>
+        <div id="mapCanvas" style="flex:1; background:#eee;"></div>
+        <div style="padding:20px; background:#fff; box-shadow:0 -5px 20px rgba(0,0,0,0.1);">
+            <h3 id="ovTitle" style="margin:0; font-family:'Orbitron'">Nama Lokasi</h3>
+            <p id="ovDist" style="color:#666; font-size:12px;">-- KM</p>
+            <a id="btnGmaps" href="#" target="_blank" class="btn-cyan" style="display:block; text-align:center; text-decoration:none;">BUKA GOOGLE MAPS ↗</a>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // --- CONFIG ---
+        // --- DATA LOKASI DARI SCRIPT BAPAK ---
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        const JAWG_API = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
+
+        // --- FIREBASE ---
         const FONNTE = ["Fc8dWb7jiKr7CXuEZXBx"];
         const FB_CONF = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
-
         const app = initializeApp(FB_CONF); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
-        let map = null; let locations = []; let audio = document.getElementById('alarmSound');
         
-        // --- NAVIGATION (STANDARD JS) ---
-        window.showPage = (id) => {
-            document.querySelectorAll('.page-section').forEach(e => e.style.display = 'none');
-            document.getElementById(id).style.display = 'flex';
-            if(id==='page-antrian') document.getElementById(id).style.display = 'block';
-        };
-        window.wa = (n, t) => window.open(`https://wa.me/${n}?text=${encodeURIComponent(t)}`, '_blank');
-        window.closeModal = () => document.getElementById('masterModal').style.display='none';
-        window.popup = (t,m) => { document.getElementById('mTitle').innerText=t; document.getElementById('mMsg').innerText=m; document.getElementById('masterModal').style.display='flex'; };
-        window.toggleAdmin = () => { if(prompt("PIN")==='1131') document.getElementById('adminPanel').style.display='block'; };
+        let mapL = null; let userLat, userLng; let chargers = []; let currentTarget = null;
+        let isAdmin = false; let triggeredAlarms = new Set(); 
+        const audio = document.getElementById('alarmSound'); const fakeVideo = document.getElementById('fakeVideo');
 
-        // --- MAPS ---
+        // NAV
+        window.goHome = () => { document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); };
+        window.goTo = (id) => { document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); document.getElementById(id).style.display='flex'; if(id==='page-antrian') document.getElementById(id).style.display='block'; };
+        window.wa = (n,t) => window.open(`https://wa.me/${n}?text=${encodeURIComponent(t)}`, '_blank');
+        window.popup = (t,m) => { document.getElementById('mTitle').innerText=t; document.getElementById('mMsg').innerText=m; document.getElementById('masterModal').style.display='flex'; };
+        window.closeModal = () => document.getElementById('masterModal').style.display='none';
+
+        // --- LOKASI ENGINE (NATIVE) ---
         window.startLokasi = async () => {
-            window.showPage('page-lokasi');
-            if(!map) {
-                map = L.map('fullMap', {zoomControl:false}).setView([-6.2, 106.8], 10);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            window.goTo('page-lokasi');
+            if(chargers.length === 0) {
                 try {
                     const res = await fetch(SHEET_URL); const txt = await res.text();
-                    locations = txt.split('\n').slice(1).map(r => {
+                    chargers = txt.split('\n').slice(1).map((r,i)=>{
                         const c = r.split(','); if(c.length<5) return null;
-                        return { name:c[0], lat:parseFloat(c[4]), lng:parseFloat(c[5]), type:c[2], dist:999 };
+                        return { id:i, name:c[0], type:c[2], lat:parseFloat(c[4]), lng:parseFloat(c[5]), link:c[6], nozzle:c[7], dist:999 };
                     }).filter(x=>x);
                     
                     if(navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(p => {
-                            const lat = p.coords.latitude; const lng = p.coords.longitude;
-                            L.circleMarker([lat,lng],{color:'blue',radius:8}).addTo(map);
-                            locations.forEach(l => {
-                                const d = 6371 * Math.acos(Math.cos(lat*Math.PI/180)*Math.cos(l.lat*Math.PI/180)*Math.cos((l.lng-lng)*Math.PI/180) + Math.sin(lat*Math.PI/180)*Math.sin(l.lat*Math.PI/180));
-                                l.dist = d.toFixed(1);
+                        navigator.geolocation.getCurrentPosition(p=>{
+                            userLat=p.coords.latitude; userLng=p.coords.longitude;
+                            chargers.forEach(c => {
+                                const R=6371; const dLat=(c.lat-userLat)*Math.PI/180; const dLon=(c.lng-userLng)*Math.PI/180;
+                                const a=Math.sin(dLat/2)**2+Math.cos(userLat*Math.PI/180)*Math.cos(c.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+                                c.dist=(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
                             });
-                            locations.sort((a,b)=>a.dist-b.dist);
-                            renderLoc();
+                            chargers.sort((a,b)=>a.dist-b.dist);
+                            renderLocList();
                         });
-                    } else { renderLoc(); }
+                    } else { renderLocList(); }
                 } catch(e){}
             }
         };
 
-        function renderLoc() {
-            let html = '';
-            locations.forEach(l => {
-                L.marker([l.lat,l.lng]).addTo(map).bindPopup(`<b>${l.name}</b><br><a href='https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}' target='_blank'>Navigasi</a>`);
-                html += `<div class="loc-item" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}','_blank')"><div><b>${l.name}</b><br><small>${l.type}</small></div><b>${l.dist} KM</b></div>`;
-            });
-            document.getElementById('locList').innerHTML = html;
+        function renderLocList() {
+            document.getElementById('scanGPS').style.display='none';
+            if(chargers.length>0) {
+                const h = chargers[0];
+                currentTarget = h;
+                document.getElementById('heroFound').style.display='flex';
+                document.getElementById('heroName').innerText = h.name;
+                document.getElementById('heroDist').innerText = h.dist + ' KM';
+                document.getElementById('heroInfo').innerText = `${h.nozzle} • ${h.type}`;
+                
+                let html = '';
+                chargers.forEach(c => {
+                    html += `<div class="loc-item" onclick="openMap(${c.id})">
+                        <div><div style="font-weight:bold">${c.name}</div><div style="font-size:11px;color:#666">${c.nozzle}</div></div>
+                        <div style="font-family:'Syne';color:var(--cyan);font-weight:bold">${c.dist} KM</div>
+                    </div>`;
+                });
+                document.getElementById('locListContainer').innerHTML = html;
+            }
         }
+
+        window.openMapModal = () => window.openMap(currentTarget.id);
+        
+        window.openMap = (id) => {
+            const c = chargers.find(x=>x.id===id); if(!c) return;
+            document.getElementById('mapOverlay').classList.add('active');
+            document.getElementById('ovTitle').innerText = c.name;
+            document.getElementById('ovDist').innerText = c.dist + " KM";
+            const link = c.link || `https://maps.google.com/?q=${c.lat},${c.lng}`;
+            document.getElementById('btnGmaps').href = link;
+
+            if(mapL) mapL.remove();
+            mapL = L.map('mapCanvas').setView([c.lat, c.lng], 15);
+            L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(mapL);
+            L.marker([c.lat, c.lng]).addTo(mapL).bindPopup(c.name).openPopup();
+            if(userLat) L.circleMarker([userLat,userLng], {color:'blue',radius:8}).addTo(mapL);
+        };
+        window.closeMapModal = () => document.getElementById('mapOverlay').classList.remove('active');
 
         // --- ANTRIAN LOGIC ---
         function prime() { if(audio.paused) audio.play().then(()=>{setTimeout(()=>{audio.pause();audio.currentTime=0;},100)}).catch(()=>{}); document.getElementById('fakeVideo').play().catch(()=>{}); }
         document.body.addEventListener('click', prime);
 
-        async function sendWA(t, m, sch=null) {
-            let p = t.replace(/\D/g,''); if(p.startsWith('0')) p='62'+p.substring(1);
-            const fd = new FormData(); fd.append("target", p); fd.append("message", m); fd.append("countryCode", "62"); 
-            if(sch) fd.append("schedule", Math.floor(new Date(sch).getTime()/1000)); else fd.append("schedule", "0");
-            const rnd = FONNTE[Math.floor(Math.random()*FONNTE.length)];
+        function addMyPlat(plat) { let p=JSON.parse(localStorage.getItem('myPlats')||'[]'); if(!p.includes(plat)) p.push(plat); localStorage.setItem('myPlats', JSON.stringify(p)); }
+        function isMyPlat(plat) { return JSON.parse(localStorage.getItem('myPlats')||'[]').includes(plat); }
+        function formatPhone(p) { p = p.replace(/\D/g,''); if(p.startsWith('0')) p='62'+p.substring(1); return p; }
+        function createMsg(type, plat, extra="") { return `*Halo Sahabat MLU!*\n\n${type} *${plat}* ${extra}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`; }
+
+        async function waSched(target, plat, durationMinutes, targetPersen) {
+            const p = formatPhone(target); const rnd = FONNTE[Math.floor(Math.random()*FONNTE.length)];
+            const now = new Date(); const sendTime = new Date(now.getTime() + (durationMinutes * 60000));
+            const y=sendTime.getFullYear(); const m=String(sendTime.getMonth()+1).padStart(2,'0'); const d=String(sendTime.getDate()).padStart(2,'0'); const h=String(sendTime.getHours()).padStart(2,'0'); const min=String(sendTime.getMinutes()).padStart(2,'0'); const s=String(sendTime.getSeconds()).padStart(2,'0');
+            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
+            const msg = createMsg("Pengecasan motor", plat, `telah selesai (Target ${targetPersen}%)`);
+            const fd = new FormData(); fd.append("target", p); fd.append("message", msg); fd.append("schedule", scheduleTime); fd.append("countryCode", "62"); 
             try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }); } catch(e){}
         }
-        
-        function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`; }
+        async function waInstant(target, message) {
+            const p = formatPhone(target); const rnd = FONNTE[Math.floor(Math.random()*FONNTE.length)];
+            const fd = new FormData(); fd.append("target", p); fd.append("message", message); fd.append("countryCode", "62"); fd.append("schedule", "0");
+            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }); } catch(e){}
+        }
 
-        // Event Listener untuk Tombol (Agar tidak macet)
-        document.getElementById('btnDaftar').onclick = () => {
+        window.daftar = async () => {
             prime();
-            const p = document.getElementById('uPlat').value.toUpperCase();
-            const w = document.getElementById('uWa').value;
-            const b = parseInt(document.getElementById('uBat').value);
+            const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
             if(!p || !w || isNaN(b)) return popup('ERROR','Data Kurang');
             
-            runTransaction(db, async(t)=>{
+            await runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
-                let limit=100; if(q.length>2) limit=q.length>5?(q.length>9?85:90):95;
-                let dur=0; for(let i=b;i<limit;i++) dur+=(i>=90?2.2:(i>=80?1.5:0.8));
-                dur=Math.ceil(dur); if(dur<2) dur=2;
-                const item={name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:limit};
-                const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
+                
+                const total = q.length; let limit = 100; if(total>2) limit = total>5 ? (total>9 ? 85 : 90) : 95;
+                let dur = 0; for(let i=b; i<limit; i++) dur += (i>=90?2.2 : (i>=80?1.5:0.8));
+                dur = Math.ceil(dur); if(dur<2) dur=2;
+
+                const item = { name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:limit };
+                const empty = s.indexOf(null);
+                if(empty !== -1) s[empty] = item; else q.push(item);
+                
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-                if(w) sendWA(w, msg("Motor", p, "berhasil terdaftar"));
+                if(w) waInstant(w, createMsg("Motor", p, "berhasil terdaftar di antrian"));
             });
             popup('SUKSES','Masuk Antrian'); document.getElementById('uPlat').value='';
         };
 
-        window.act = (i, type) => {
+        window.act = (i, type, pName) => {
             prime();
             runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data(); const s=d.chargingSlots;
-                if(type==='stop') { s[i]=null; }
+                if(type==='stop') { 
+                    if(!isAdmin && localStorage.getItem('myPlat')!==pName) return popup('DITOLAK','Bukan Punya Anda');
+                    s[i]=null; 
+                }
                 else {
                     s[i].startTime = new Date();
                     if(s[i].phone) {
-                        sendWA(s[i].phone, msg("Motor", s[i].name, "mulai dicas"));
-                        const end = new Date(Date.now() + s[i].durationMinutes*60000);
-                        sendWA(s[i].phone, msg("Pengecasan motor", s[i].name, "selesai"), end);
+                        waInstant(s[i].phone, createMsg("Motor", s[i].name, `mulai dicas. Estimasi ${s[i].durationMinutes} menit`));
+                        waSched(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
                     }
                 }
                 t.update(ref, {chargingSlots:s});
             });
         };
 
-        // ADMIN EVENTS
-        document.getElementById('btnDelSlot').onclick = () => { const i=document.getElementById('mSlot').value; runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s[i]=null; t.update(ref,{chargingSlots:s}); }); };
-        document.getElementById('btnFill').onclick = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0){const e=s.indexOf(null); if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} }); };
-        document.getElementById('btnReset').onclick = () => { if(confirm("RESET?")) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
-        
-        // RENDER
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
-            document.getElementById('qList').innerHTML = q.map((x)=>`<div>${x.name} (${x.startBattery}%)</div>`).join('');
-            const info=document.getElementById('ruleInfo');
-            if(q.length>0) { info.style.display='block'; info.innerHTML=`ANTRIAN: ${q.length} <br> MAX: ${q.length>2?(q.length>5?90:95):100}%`; } else info.style.display='none';
+            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div><b>${x.name}</b> <span style="color:#888">(${x.startBattery}%)</span></div>`).join('');
+            
+            const info = document.getElementById('ruleInfo');
+            if(q.length>0) { info.style.display='block'; info.innerHTML=`ANTRIAN: ${q.length} <br> MAX CHARGE: ${q.length>2 ? (q.length>5?90:95) : 100}%`; } else info.style.display='none';
 
             document.getElementById('slotContainer').innerHTML = s.map((x,i)=>{
                 if(!x) return `<div class="slot-box"><div class="bat-icon"></div><div style="font-size:10px;color:#aaa">KOSONG</div></div>`;
-                const isRun=!!x.startTime;
-                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
-                let txt="Tap Mulai"; let h=x.startBattery;
+                const isRun = !!x.startTime;
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop','${x.name}')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start','${x.name}')">MULAI</button>`;
+                let txt = "Tap Mulai"; let h=x.startBattery;
                 if(isRun) {
                     const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
                     const diff = end - Date.now();
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
-                    else { txt="SELESAI"; audio.play().catch(()=>{}); }
+                    else { txt="SELESAI"; if(isAdmin||isMyPlat(x.name)) audio.play().catch(()=>{}); }
                 }
-                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div></div><div style="font-weight:bold">${x.name}</div><div style="color:var(--cyan);font-weight:bold;margin:5px 0;">${txt}</div>${btn}</div>`;
+                return `<div class="slot-box ${isRun?'active':''}" style="border-color:${txt==='SELESAI'?'red':(isRun?'var(--cyan)':'#eee')}">
+                    <div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div></div><div style="font-weight:bold">${x.name}</div><div style="color:${txt==='SELESAI'?'red':'var(--cyan)'};font-weight:bold;margin:5px 0;">${txt}</div>${btn}</div>`;
             }).join('');
         });
-        
-        // UI LOOP
-        setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000);
+
+        setInterval(()=>{ onSnapshot(ref,()=>{}) }, 1000); // UI Refresh
+
+        // ADMIN
+        window.adminLog=()=>{ if(prompt("PIN")==='1131') { document.getElementById('adminPanel').style.display='block'; isAdmin=true; } };
+        window.delQ=(i)=>{ if(isAdmin) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();d.waitingQueue.splice(i,1);t.update(ref,{waitingQueue:d.waitingQueue})}); };
+        window.clearSlotManual=()=>{const i=document.getElementById('manSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
+        window.fillFromQueue=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0){const e=s.indexOf(null);if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}}});};
+        window.startAllSlots=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); t.update(ref,{chargingSlots:s});});};
+        window.resetAll=()=>{if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]});};
     </script>
 </body>
 </html>
