@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLU SUPER APP V96</title>
+    <title>MLU SUPER APP V97</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -15,6 +15,7 @@
         :root {
             --bg-dark: #0b101a;
             --text-light: #ffffff;
+            --text-dark: #1a1a1a;
             --cyan: #00bcd4;
             --soft-red: #ff3b3b;
             --neon-yellow: #ccff00;
@@ -24,12 +25,13 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; background: #000; }
 
-        /* ================= 1. HALAMAN UTAMA (DARK) ================= */
+        /* ================= 1. HALAMAN UTAMA (RESTORED V91) ================= */
         #page-home {
             position: absolute; inset: 0; z-index: 50; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
             background: url('1763947427555.jpg') no-repeat center center/cover;
         }
+        /* Overlay Gelap */
         #page-home::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: -1; }
 
         .logo-area h1 { font-family: 'Orbitron'; font-size: 38px; color: #fff; margin: 0; letter-spacing: 3px; text-shadow: 0 0 20px var(--cyan); }
@@ -41,7 +43,7 @@
         }
         @keyframes blink { 50% { opacity: 0.7; } }
 
-        .menu-grid { display: grid; gap: 20px; width: 85%; max-width: 350px; margin-top: 50px; position: relative; z-index: 10; }
+        .menu-grid { display: grid; gap: 20px; width: 85%; max-width: 350px; margin-top: 50px; }
         
         .menu-btn {
             background: rgba(255,255,255,0.1); border: 1px solid var(--cyan);
@@ -50,6 +52,7 @@
             transition: 0.2s; text-decoration: none; color: white;
         }
         .menu-btn:active { background: var(--cyan); transform: scale(0.95); }
+        
         .menu-icon { font-size: 28px; width: 50px; text-align: center; }
         .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; color: #fff; }
         .menu-text span { font-size: 11px; color: #aaa; }
@@ -68,47 +71,48 @@
         .btn-back { background: #eee; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; color: #333; display:flex; align-items:center; justify-content:center; }
         .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; color: #333; }
 
-        /* ================= 2. LOKASI PAGE (NATIVE MAP) ================= */
-        #page-lokasi { background: #fff; }
-        .map-container { flex: 1; position: relative; z-index: 1; }
+        /* Content Scrollable */
+        .content-scroll { flex: 1; overflow-y: auto; padding: 20px; position: relative; z-index: 1; }
+
+        /* ================= STYLE KHUSUS PETA (LOKASI - RESTORED V88) ================= */
+        #map-view { flex: 1; position: relative; z-index: 1; }
         #map { width: 100%; height: 100%; }
         
+        /* List Lokasi di Bawah Peta */
         .loc-list-overlay {
             position: absolute; bottom: 0; left: 0; right: 0;
             background: #fff; border-top-left-radius: 20px; border-top-right-radius: 20px;
-            max-height: 40%; overflow-y: auto; padding: 20px; z-index: 1000;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            max-height: 45%; display: flex; flex-direction: column;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2); z-index: 1000;
         }
+        .loc-header-area { padding: 15px 20px; border-bottom: 1px solid #eee; text-align: center; }
+        .loc-scroll-area { overflow-y: auto; padding: 10px 20px 20px; }
+        
         .loc-item {
-            background: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 10px;
-            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+            background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 15px;
+            margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        .loc-item:active { border-color: var(--cyan); background: #e0f7fa; }
 
-        /* ================= 3. SOS PAGE ================= */
-        .sos-container { display: grid; gap: 15px; padding: 20px; }
+        /* ================= STYLE SOS & ANTRIAN ================= */
         .btn-sos {
-            background: #fff; padding: 20px; border-radius: 15px; border: none;
-            display: flex; align-items: center; gap: 15px; cursor: pointer; color: #333;
+            background: #fff; padding: 20px; border-radius: 15px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 15px; cursor: pointer;
             box-shadow: var(--shadow); border-left: 5px solid #ccc;
         }
-        .btn-sos.yellow { border-left: 8px solid orange; }
-        .btn-sos.red { border-left: 8px solid var(--soft-red); }
-        .btn-sos.green { border-left: 8px solid #25D366; }
+        .btn-sos.red { border-color: var(--soft-red); }
+        .btn-sos.yellow { border-color: orange; }
+        .btn-sos.green { border-color: #25D366; }
 
-        /* ================= 4. ANTRIAN PAGE ================= */
-        #page-antrian { 
-            background: #f4f4f4;
-            background-image: url('1763947427555.jpg'); background-size: cover; background-attachment: fixed; 
-        }
-        #page-antrian::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.92); z-index: 0; }
-        
-        .antrian-content { position: relative; z-index: 2; padding: 20px; padding-bottom: 100px; overflow-y: auto; height: 100%; }
-        
+        /* Antrian Form */
+        .antrian-wrap { padding: 20px; padding-bottom: 100px; max-width: 480px; margin: 0 auto; }
         .glass-card { background: #fff; border-radius: 15px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 15px; border: 1px solid #ddd; }
         .field { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; background: #f9f9f9; text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 10px; color: #000; }
+        .field:focus { border-color: var(--cyan); background: #fff; }
         .btn-cyan { width: 100%; padding: 15px; background: var(--cyan); color: #fff; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
         
-        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .slot-box { background: #fff; border: 2px solid #eee; border-radius: 10px; padding: 10px 5px; text-align: center; min-height: 140px; display: flex; flex-direction: column; justify-content: center; }
         .slot-box.active { border-color: var(--cyan); background: #e0f7fa; }
         .bat-icon { width: 30px; height: 50px; border: 2px solid #555; border-radius: 5px; margin: 0 auto 5px; position: relative; }
@@ -120,8 +124,8 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 12000; align-items: center; justify-content: center; }
         .modal-box { background: #fff; padding: 25px; border-radius: 15px; width: 85%; max-width: 300px; text-align: center; color: #333; }
         
-        /* ADMIN & INFO */
-        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid red; border-radius: 15px; margin-top: 20px; position: relative; z-index: 999; }
+        /* ADMIN */
+        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
         @keyframes neonP { 0%,100%{border-color:var(--neon-yellow)} 50%{border-color:#ffd700} }
         .rule-info { text-align: center; padding: 10px; border-radius: 10px; background: #fff; border: 3px solid var(--neon-yellow); margin-bottom: 15px; font-weight: bold; color: #000; animation: neonP 1.5s infinite; display: none; }
     </style>
@@ -136,45 +140,49 @@
     <div id="page-home" class="page-section" style="display:flex;">
         <div class="logo-area"><h1>MLU APPS</h1><div class="squad-text">MAKA LINTAS UTARA SQUAD</div></div>
         <div class="menu-grid">
-            <div class="menu-btn" onclick="showPage('page-lokasi'); initMap();">
+            <div class="menu-btn" onclick="initLokasi()">
                 <div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
             </div>
-            <div class="menu-btn" onclick="showPage('page-sos')">
+            <div class="menu-btn" onclick="openPage('page-sos')">
                 <div class="menu-icon">🆘</div><div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div>
             </div>
-            <div class="menu-btn" onclick="showPage('page-antrian')">
+            <div class="menu-btn" onclick="openPage('page-antrian')">
                 <div class="menu-icon">⚡</div><div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
             </div>
         </div>
-        <div style="position:absolute; bottom:30px; font-size:10px; color:#888;">v9.6 Final</div>
+        <div style="position:absolute; bottom:30px; font-size:10px; color:#888;">v9.7 Final</div>
     </div>
 
     <div id="page-lokasi" class="page-section" style="background:#fff;">
-        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span></div>
-        <div class="map-container">
-            <div id="map"></div>
-            <div class="loc-list-overlay" id="locList">
+        <div class="nav-header"><button class="btn-back" onclick="openPage('page-home')">⬅</button><span class="nav-title">PETA LOKASI</span></div>
+        <div id="map-view"><div id="map"></div></div>
+        <div class="loc-list-overlay">
+            <div class="loc-header-area">
+                <div style="width:40px; height:5px; background:#ddd; border-radius:5px; margin:0 auto 10px;"></div>
+                <h3 style="margin:0; font-family:'Orbitron'; color:#333;">DAFTAR LOKASI</h3>
+            </div>
+            <div class="loc-scroll-area" id="locListContainer">
                 <p style="text-align:center; color:#999;">Memuat data lokasi...</p>
             </div>
         </div>
     </div>
 
     <div id="page-sos" class="page-section" style="background:#f4f4f4;">
-        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">DARURAT</span></div>
-        <div class="sos-container">
-            <div class="btn-sos yellow" onclick="wa('628123456789','TOWING')"><span style="font-size:30px">🚑</span><div><h4>TOWING</h4><small>Bantuan unit mogok</small></div></div>
-            <div class="btn-sos red" onclick="wa('628123456789','URC')"><span style="font-size:30px">🚨</span><div><h4>URC</h4><small>Tim Reaksi Cepat</small></div></div>
-            <div class="btn-sos green" onclick="wa('628123456789','TAGIHAN')"><span style="font-size:30px">💳</span><div><h4>ADMIN</h4><small>Info Tagihan</small></div></div>
+        <div class="nav-header"><button class="btn-back" onclick="openPage('page-home')">⬅</button><span class="nav-title">DARURAT</span></div>
+        <div class="sos-container" style="padding:20px;">
+            <div class="btn-sos yellow" onclick="wa('628123456789','TOWING')"><span style="font-size:30px">🚑</span><div><h4 style="margin:0">TOWING</h4><small>Bantuan unit mogok</small></div></div>
+            <div class="btn-sos red" onclick="wa('628123456789','URC')"><span style="font-size:30px">🚨</span><div><h4 style="margin:0">URC</h4><small>Tim Reaksi Cepat</small></div></div>
+            <div class="btn-sos green" onclick="wa('628123456789','TAGIHAN')"><span style="font-size:30px">💳</span><div><h4 style="margin:0">ADMIN</h4><small>Info Tagihan</small></div></div>
         </div>
     </div>
 
-    <div id="page-antrian" class="page-section">
-        <div class="nav-header"><button class="btn-back" onclick="showPage('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
-        <div class="antrian-content">
+    <div id="page-antrian" class="page-section" style="background:#f4f4f4;">
+        <div class="nav-header"><button class="btn-back" onclick="openPage('page-home')">⬅</button><span class="nav-title">ANTRIAN CHARGING</span></div>
+        <div class="antrian-wrap">
             <div class="glass-card">
-                <label>PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-                <label>WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxxxxxxxxx">
-                <label>BATERAI (%)</label><input id="uBat" class="field" type="number" placeholder="0 - 99">
+                <label style="color:#333;">PLAT NOMOR</label><input id="uPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                <label style="color:#333;">NOMOR WHATSAPP</label><input id="uWa" class="field" type="number" placeholder="08xxxxxxxxxx">
+                <label style="color:#333;">BATERAI (%)</label><input id="uBat" class="field" type="number" placeholder="0 - 99">
                 <div id="ruleInfo" class="rule-info"></div>
                 <button class="btn-cyan" id="btnDaftar">DAFTAR ANTRIAN</button>
             </div>
@@ -183,7 +191,7 @@
                 <div style="display:flex; justify-content:space-between; font-weight:bold; color:#333;"><span>DAFTAR TUNGGU</span><span id="qCount">0</span></div>
                 <div id="qList" style="margin-top:10px;"></div>
             </div>
-            <div style="text-align:center; margin-top:20px; color:#999; font-size:10px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
+            <div style="text-align:center; margin-top:30px; color:#999; font-size:10px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
             <div id="adminPanel" class="admin-panel">
                 <h4 style="text-align:center; color:red; margin:0 0 10px;">MASTER CONTROL</h4>
                 <div style="display:flex; gap:5px;"><select id="mSlot" class="field" style="padding:5px; font-size:14px;"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select><button id="btnDelSlot" class="btn-cyan" style="background:#666">HAPUS</button></div>
@@ -194,56 +202,69 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // NAVIGATION SYSTEM
-        function showPage(id) {
+        // --- GLOBAL NAVIGATION (NON-MODULE AGAR TOMBOL SELALU BISA DIKLIK) ---
+        function openPage(id) {
             document.querySelectorAll('.page-section').forEach(e => e.style.display = 'none');
             document.getElementById(id).style.display = 'flex';
+            if(id === 'page-antrian') document.getElementById(id).style.display = 'block'; 
         }
         
         function wa(n, t) { window.open(`https://wa.me/${n}?text=${encodeURIComponent(t)}`, '_blank'); }
         function closeModal() { document.getElementById('masterModal').style.display='none'; }
 
-        // MAPS ENGINE (NATIVE)
+        // --- MAPS ENGINE ---
         let map = null;
+        const JAWG_API = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
-        
-        async function initMap() {
-            if(map) return; // Jangan init ulang
-            map = L.map('map', {zoomControl:false}).setView([-6.2, 106.8], 10);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        let locations = [];
 
-            try {
-                const res = await fetch(SHEET_URL);
-                const txt = await res.text();
-                const locations = txt.split('\n').slice(1).map(r => {
-                    const c = r.split(','); if(c.length<5) return null;
-                    return { name:c[0], type:c[2], lat:parseFloat(c[4]), lng:parseFloat(c[5]), nozzle:c[7] };
-                }).filter(x=>x);
+        async function initLokasi() {
+            openPage('page-lokasi');
+            if(!map) {
+                map = L.map('map', {zoomControl:false}).setView([-6.2, 106.8], 10);
+                L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(map);
+                try {
+                    const res = await fetch(SHEET_URL);
+                    const txt = await res.text();
+                    locations = txt.split('\n').slice(1).map(r => {
+                        const c = r.split(','); if(c.length<5) return null;
+                        return { name:c[0], type:c[2], lat:parseFloat(c[4]), lng:parseFloat(c[5]), nozzle:c[7], dist:999 };
+                    }).filter(x=>x);
 
-                let html = '';
-                locations.forEach(l => {
-                    if(!isNaN(l.lat)) {
-                        L.marker([l.lat,l.lng]).addTo(map).bindPopup(`<b>${l.name}</b>`);
-                        html += `
-                        <div class="loc-item" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}','_blank')">
-                            <div><div style="font-weight:bold;color:#333">${l.name}</div><div style="font-size:11px;color:#666">${l.nozzle} • ${l.type}</div></div>
-                            <button style="background:var(--cyan);color:#fff;border:none;padding:5px 10px;border-radius:5px;">GO</button>
-                        </div>`;
-                    }
-                });
-                document.getElementById('locList').innerHTML = html;
-                
-                if(navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(p => {
-                        const lat = p.coords.latitude; const lng = p.coords.longitude;
-                        L.circleMarker([lat,lng],{color:'blue',radius:8}).addTo(map);
-                        map.setView([lat,lng], 12);
-                    });
-                }
-            } catch(e){ document.getElementById('locList').innerText="Gagal memuat data."; }
-            
+                    if(navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(p => {
+                            const lat = p.coords.latitude; const lng = p.coords.longitude;
+                            L.circleMarker([lat,lng],{color:'#00bcd4',radius:8}).addTo(map);
+                            map.setView([lat,lng], 12);
+                            locations.forEach(l => {
+                                const R=6371; const dLat=(l.lat-lat)*Math.PI/180; const dLon=(l.lng-lng)*Math.PI/180;
+                                const a=Math.sin(dLat/2)**2+Math.cos(lat*Math.PI/180)*Math.cos(l.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+                                l.dist=(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
+                            });
+                            locations.sort((a,b)=>a.dist-b.dist);
+                            renderLocList();
+                        });
+                    } else { renderLocList(); }
+                } catch(e){ document.getElementById('locListContainer').innerHTML = '<p style="text-align:center">Gagal memuat data.</p>'; }
+            }
             setTimeout(()=>map.invalidateSize(), 500);
+        }
+
+        function renderLocList() {
+            let html = '';
+            locations.forEach(l => {
+                if(!isNaN(l.lat)) {
+                    L.marker([l.lat,l.lng]).addTo(map).bindPopup(`<b>${l.name}</b>`);
+                    html += `
+                    <div class="loc-item" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${l.lat},${l.lng}&travelmode=two_wheeler','_blank')">
+                        <div><div style="font-weight:bold; color:#333;">${l.name}</div><div style="font-size:11px;color:#666">${l.nozzle} • ${l.type}</div></div>
+                        <div style="font-family:'Syne';color:var(--cyan);font-weight:bold">${l.dist} KM</div>
+                    </div>`;
+                }
+            });
+            document.getElementById('locListContainer').innerHTML = html;
         }
     </script>
 
@@ -258,14 +279,14 @@
         let isAdminLoggedIn = false; let triggeredAlarms = new Set(); 
         const alarmAudio = document.getElementById('alarmSound'); const fakeVideo = document.getElementById('fakeVideo');
 
-        // BUTTON BINDINGS
+        // BIND BUTTONS (PENTING AGAR TIDAK MACET)
         document.getElementById('btnDaftar').onclick = () => daftar();
         document.getElementById('btnDelSlot').onclick = () => clrSlot();
         document.getElementById('btnFill').onclick = () => fillQ();
         document.getElementById('btnStartAll').onclick = () => startAll();
         document.getElementById('btnReset').onclick = () => resAll();
 
-        function prime() { if(alarmAudio.paused) alarmAudio.play().then(()=>{setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;},100)}).catch(()=>{}); document.getElementById('fakeVideo').play().catch(()=>{}); }
+        function prime() { if(alarmAudio.paused) alarmAudio.play().then(()=>{setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;alarmAudio.volume=1.0;},100)}).catch(()=>{}); document.getElementById('fakeVideo').play().catch(()=>{}); }
         document.body.addEventListener('click', prime);
 
         function addMyPlat(plat) { let p=JSON.parse(localStorage.getItem('myPlats')||'[]'); if(!p.includes(plat)) p.push(plat); localStorage.setItem('myPlats', JSON.stringify(p)); }
@@ -306,7 +327,6 @@
                 const item = { name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:limit };
                 const empty = s.indexOf(null);
                 if(empty !== -1) s[empty] = item; else q.push(item);
-                
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                 if(w) waInstant(w, createMsg("Motor", p, "berhasil terdaftar di antrian"));
             });
@@ -333,7 +353,7 @@
         };
 
         window.delQ = (i) => { runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); }); };
-        window.adminLog = () => { if(prompt("PIN")==='1131') { document.getElementById('adminPanel').style.display='block'; isAdmin=true; } };
+        window.adminLog = () => { if(prompt("PIN")==='1131') document.getElementById('adminPanel').style.display='block'; };
         window.clrSlot = () => { const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})}); };
         window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0){const e=s.indexOf(null);if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} }); };
         window.resAll = () => { if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
@@ -342,7 +362,7 @@
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
-            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div style="color:#333;">${x.name} (${x.startBattery}%) <span style="color:red;cursor:pointer;float:right;" onclick="delQ(${i})">✕</span></div>`).join('');
+            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div><b>${x.name}</b> <span style="color:#888">(${x.startBattery}%)</span> <span style="color:red;cursor:pointer;float:right;" onclick="delQ(${i})">✕</span></div>`).join('');
             
             const info = document.getElementById('ruleInfo');
             if(q.length>0) { info.style.display='block'; info.innerHTML=`ANTRIAN: ${q.length} <br> MAX CHARGE: ${q.length>2 ? (q.length>5?90:95) : 100}%`; } else info.style.display='none';
@@ -350,7 +370,7 @@
             document.getElementById('slotContainer').innerHTML = s.map((x,i)=>{
                 if(!x) return `<div class="slot-box"><div class="bat-icon"></div><div style="font-size:10px;color:#aaa">KOSONG</div></div>`;
                 const isRun = !!x.startTime;
-                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop','${x.name}')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start','${x.name}')">MULAI</button>`;
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
                 let txt = "Tap Mulai"; let h=x.startBattery;
                 if(isRun) {
                     const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
