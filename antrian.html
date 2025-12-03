@@ -111,7 +111,7 @@
         }
         
         /* MODAL KEREN */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-box { 
             background: #0b101a; border: 2px solid #00bcd4; padding: 30px; 
             border-radius: 20px; width: 85%; max-width: 320px; text-align: center; 
@@ -265,7 +265,13 @@
 
         // === CORE LOGIC ===
         function prime() { 
-            if(aud.paused) aud.play().then(()=>{setTimeout(()=>{aud.pause();aud.currentTime=0},100)}).catch(()=>{}); 
+            // Silent Audio Unlock - Tidak bunyi, hanya memancing browser
+            if(aud.paused) {
+                aud.volume = 0.01; 
+                aud.play().then(()=>{ 
+                    setTimeout(()=>{ aud.pause(); aud.currentTime=0; aud.volume=1.0; }, 100); 
+                }).catch(()=>{});
+            }
             if(vid.paused) vid.play().catch(()=>{});
         }
         document.body.addEventListener('click', prime);
@@ -391,12 +397,7 @@
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
                     else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } }
                 }
-                return `<div class="slot ${isRun?'active':''}">
-                    <div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div>
-                    <div class="plat-text">${x.name}</div>
-                    <div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>
-                    ${btn}
-                </div>`;
+                return `<div class="slot ${isRun?'active':''}"><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div>`;
             }).join('');
         });
     </script>
