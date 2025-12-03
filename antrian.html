@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ANTRIAN CHARGING</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* COPY STYLE V73 PUTIH DI SINI (SAYA SINGKAT AGAR RAPI) */
+        :root { --cyan: #00bcd4; --soft-red: #ff3b3b; --neon: #ccff00; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Rajdhani'; background: #f4f4f4; padding-bottom: 100px; }
+        
+        .header { background: #fff; padding: 20px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 99; }
+        .btn-back { text-decoration: none; font-size: 24px; color: #333; }
+        h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #333; }
+
+        .container { padding: 20px; max-width: 480px; margin: 0 auto; }
+        .card { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        label { display: block; font-weight: bold; font-size: 12px; margin-bottom: 5px; font-family: 'Orbitron'; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 15px; outline: none; font-family: 'Rajdhani'; }
+        input:focus { border-color: var(--cyan); background: #f9f9f9; }
+        
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; color: #fff; }
+        .btn-cyan { background: var(--cyan); } 
+        .btn-stop { background: var(--soft-red); padding: 8px; font-size: 12px; margin-top: 5px; }
+        .btn-start { background: var(--cyan); padding: 8px; font-size: 12px; margin-top: 5px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .slot { background: #fff; border: 2px solid #eee; border-radius: 10px; padding: 10px 5px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
+        .slot.active { border-color: var(--cyan); background: #e0f7fa; }
+        
+        .icon-bat { width: 30px; height: 50px; border: 2px solid #333; border-radius: 4px; margin: 0 auto 5px; position: relative; }
+        .fill { width: 100%; background: var(--cyan); position: absolute; bottom: 0; }
+        
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; }
+        .modal-box { background: #fff; padding: 20px; border-radius: 15px; width: 80%; text-align: center; }
+
+        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid red; border-radius: 15px; margin-top: 20px; }
+        
+        @keyframes neon { 0%,100%{border-color:var(--neon)} 50%{border-color:#ffd700} }
+        .info { text-align: center; padding: 10px; border: 3px solid var(--neon); border-radius: 10px; margin-bottom: 15px; font-weight: bold; animation: neon 1.5s infinite; display: none; }
+    </style>
+</head>
+<body>
+
+    <audio id="alarm" loop><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+    <div id="modal" class="modal"><div class="modal-box"><h3 id="mT"></h3><p id="mM"></p><button onclick="document.getElementById('modal').style.display='none'" class="btn btn-cyan" style="padding:10px">OK</button></div></div>
+
+    <div class="header"><a href="index.html" class="btn-back">⬅</a><h2>ANTRIAN CHARGING</h2></div>
+
+    <div class="container">
+        <div class="card">
+            <label>PLAT NOMOR</label><input id="uPlat" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+            <label>WHATSAPP</label><input id="uWa" type="number" placeholder="08xxx">
+            <label>BATERAI (%)</label><input id="uBat" type="number" placeholder="0 - 99">
+            <div id="info" class="info"></div>
+            <button class="btn btn-cyan" id="btnDaftar">DAFTAR ANTRIAN</button>
+        </div>
+        
+        <div style="text-align:center; font-weight:bold; margin-bottom:10px;">STATUS 3 SLOT</div>
+        <div class="grid" id="slots"></div>
+        
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>WAITING LIST</span><span id="qCount">0</span></div>
+            <div id="qList" style="margin-top:10px;"></div>
+        </div>
+        
+        <div style="text-align:center; color:#999; font-size:10px; margin-top:30px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
+        <div id="admin" class="admin-panel">
+            <h4 style="color:red; text-align:center; margin:0 0 10px;">MASTER CONTROL</h4>
+            <button onclick="fillQ()" class="btn btn-cyan">NAIKKAN ANTRIAN</button>
+            <button onclick="resAll()" class="btn btn-cyan" style="background:red; margin-top:10px;">RESET TOTAL</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        const FONNTE = ["Fc8dWb7jiKr7CXuEZXBx"];
+        const FB = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
+        const db = getFirestore(initializeApp(FB)); const ref = doc(db, "antrian", "utama");
+        let isAdmin = false; let triggered = new Set(); const aud = document.getElementById('alarm');
+
+        // CORE LOGIC (V69)
+        function prime() { if(aud.paused) aud.play().then(()=>{setTimeout(()=>{aud.pause();aud.currentTime=0},100)}).catch(()=>{}); }
+        document.body.addEventListener('click', prime);
+        
+        function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
+        function fmt(p) { p=p.replace(/\D/g,''); if(p.startsWith('0'))p='62'+p.substring(1); return p; }
+
+        async function wa(tgt, txt, sch=null) {
+            const fd = new FormData(); fd.append("target", fmt(tgt)); fd.append("message", txt); fd.append("countryCode", "62");
+            if(sch) fd.append("schedule", Math.floor(new Date(sch).getTime()/1000)); else fd.append("schedule", "0");
+            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE[0] }, body: fd }); } catch(e){}
+        }
+
+        document.getElementById('btnDaftar').onclick = async () => {
+            prime();
+            const p=document.getElementById('uPlat').value.toUpperCase(); const w=document.getElementById('uWa').value; const b=parseInt(document.getElementById('uBat').value);
+            if(!p||!w||isNaN(b)) return alert("Data Kurang");
+            
+            await runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
+                if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
+                
+                let dur=0; for(let i=b;i<100;i++) dur+=(i>=90?2.2:(i>=80?1.5:0.8)); dur=Math.ceil(dur); if(dur<2)dur=2;
+                const item={name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:100};
+                const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
+                
+                t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
+                if(w) wa(w, msg("Motor", p, "masuk antrian"));
+            });
+            alert("Berhasil"); document.getElementById('uPlat').value='';
+        };
+
+        window.act = (i, type) => {
+            prime();
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data(); const s=d.chargingSlots;
+                if(type==='stop') { s[i]=null; }
+                else {
+                    s[i].startTime = new Date();
+                    if(s[i].phone) {
+                        wa(s[i].phone, msg("Motor", s[i].name, "mulai dicas"));
+                        const end = new Date(Date.now() + s[i].durationMinutes*60000);
+                        wa(s[i].phone, msg("Motor", s[i].name, "selesai"), end);
+                    }
+                }
+                t.update(ref, {chargingSlots:s});
+            });
+        };
+
+        onSnapshot(ref, (snap) => {
+            const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
+            document.getElementById('qCount').innerText = q.length;
+            document.getElementById('qList').innerHTML = q.map(x=>`<div>${x.name}</div>`).join('');
+            
+            const inf = document.getElementById('info');
+            if(q.length>0) { inf.style.display='block'; inf.innerText=`ANTRIAN: ${q.length}`; } else inf.style.display='none';
+
+            document.getElementById('slots').innerHTML = s.map((x,i)=>{
+                if(!x) return `<div class="slot"><div class="icon-bat"></div><small>KOSONG</small></div>`;
+                const isRun=!!x.startTime;
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
+                let txt="Tap Mulai"; let h=x.startBattery;
+                if(isRun) {
+                    const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
+                    const diff = end - Date.now();
+                    if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
+                    else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); alert("SELESAI!"); } }
+                }
+                return `<div class="slot ${isRun?'active':''}"><div class="icon-bat"><div class="fill" style="height:${h}%"></div></div><b>${x.name}</b><div style="color:${txt==='SELESAI'?'red':'#00bcd4'}">${txt}</div>${btn}</div>`;
+            }).join('');
+        });
+        
+        setInterval(()=>{onSnapshot(ref,()=>{})},1000);
+        window.adminLog=()=>{if(prompt("PIN")==='1131')document.getElementById('admin').style.display='block'};
+        window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0&&s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}})};
+        window.resAll=()=>{if(confirm('Reset?'))setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]})};
+    </script>
+</body>
+</html>
