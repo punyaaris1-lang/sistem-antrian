@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V72 (System Notif)</title>
+    <title>Fast Charging V75 (Unix Stable)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
@@ -35,7 +35,7 @@
 
         .glass-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 25px; }
         label { display: block; font-family: 'Orbitron'; font-size: 11px; color: #000; margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; }
-        input.field { width: 100%; background: #f8f9fa; border: 2px solid #eee; color: #333; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
+        input.field { width: 100%; background: #f8f9fa; border: 2px solid #ccc; color: #000; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
         input.field:focus { border-color: var(--cyan); background: #fff; }
         
         .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3); margin-top: 5px; transition: 0.2s; }
@@ -63,21 +63,17 @@
             font-size: 14px; color: #333; text-align: center; 
             margin-top: 15px; font-family: 'Orbitron'; font-weight: 900;
             padding: 12px; border-radius: 12px; 
-            background: #fff; 
-            border: 3px solid var(--neon-yellow); 
-            animation: blinkBorder 1.5s infinite; 
-            display: none;
-            line-height: 1.5;
+            background: #fff; border: 3px solid var(--neon-yellow); 
+            animation: blinkBorder 1.5s infinite; display: none;
+            line-height: 1.5; text-transform: uppercase;
         }
 
-        /* ADMIN PANEL */
         .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #999; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
         .admin-panel { display: none; background: #fff; padding: 25px; border-radius: 20px; border: 2px solid var(--soft-red); margin-top: 20px; box-shadow: var(--shadow); }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; }
         .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .adm-input { background: #f9f9f9; border: 1px solid #ddd; color: #333; padding: 10px; width: 100%; border-radius: 8px; }
 
-        /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; }
         .modal-box { background: #fff; border-top: 5px solid var(--cyan); padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; animation: pop 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
@@ -91,9 +87,8 @@
 </head>
 <body>
 
-    <audio id="alarmSound" loop preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3">
-    </audio>
+    <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
+    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;pointer-events:none;position:fixed;"><source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAs9tZGF0AAACrQYF//+63AgXgAAAAJBlLmZmZ2xpYnZkcy5zb2Z0IHZvMC4xMC4xMjkxAAAAAAABAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" type="video/mp4"></video>
 
     <div id="masterModal" class="modal">
         <div id="modalBox" class="modal-box">
@@ -115,15 +110,12 @@
         <div class="glass-card">
             <label>PLAT NOMOR</label>
             <input id="userPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-            
             <label>NOMOR WHATSAPP</label>
             <input id="userWa" class="field" type="number" placeholder="08xxxxxxxxxx">
-
             <label>BATERAI (%)</label>
             <input id="userBattery" type="number" class="field" placeholder="0 - 99">
             
             <div id="ruleInfo" class="rule-info"></div>
-            
             <button id="btnDaftar" class="btn-cyan" onclick="window.daftarAntrian()">DAFTAR ANTRIAN</button>
         </div>
 
@@ -131,11 +123,8 @@
             <div style="width:10px; height:10px; background:var(--cyan); border-radius:50%;"></div>
             <span style="font-family:'Orbitron'; font-size:12px; color:#333; font-weight:bold;">STATUS 3 SLOT</span>
         </div>
-
-        <div class="slots-grid" id="slotsContainer">
-            <div style="grid-column:1/-1; text-align:center; padding:40px; color:#999;">Loading System...</div>
-        </div>
-
+        <div class="slots-grid" id="slotsContainer"><div style="grid-column:1/-1; text-align:center; padding:40px; color:#999;">Loading System...</div></div>
+        
         <div class="glass-card" style="padding:20px; min-height:100px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:2px solid #f0f0f0; padding-bottom:10px;">
                 <span style="font-family:'Orbitron'; font-size:12px; color:#333; font-weight:bold;">DAFTAR TUNGGU</span>
@@ -160,7 +149,6 @@
             <button onclick="window.resetAll()" class="adm-btn" style="border:2px solid var(--soft-red); background:none; color:var(--soft-red);">RESET DATA TOTAL</button>
             <div onclick="document.getElementById('adminPanel').style.display='none'" style="text-align:center; margin-top:15px; font-size:10px; color:#999; cursor:pointer;">Tutup Panel</div>
         </div>
-        
         <div class="footer">Created by : MLU SQUAD</div>
     </div>
 
@@ -169,7 +157,6 @@
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const FONNTE_TOKENS = ["Fc8dWb7jiKr7CXuEZXBx"];
-        
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -178,46 +165,22 @@
         let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
         const alarmAudio = document.getElementById('alarmSound');
+        const fakeVideo = document.getElementById('fakeVideo');
 
-        // --- REQUEST SYSTEM NOTIFICATION ---
-        // Ini inti V72: Meminta izin Notifikasi Sistem HP
-        function requestNotificationPermission() {
-            if (!("Notification" in window)) return;
-            Notification.requestPermission().then((permission) => {
-                if (permission === "granted") {
-                    console.log("Notifikasi Diizinkan");
-                }
-            });
-        }
-
-        function sendSystemNotification(title, body) {
-            if (Notification.permission === "granted") {
-                new Notification(title, {
-                    body: body,
-                    icon: "https://via.placeholder.com/128?text=⚡",
-                    vibrate: [200, 100, 200]
-                });
-            }
-        }
-
-        // --- PANCINGAN AUDIO & NOTIFIKASI ---
-        function primeSystem() {
-            // 1. Pancing Audio
+        // --- KEEP AWAKE SYSTEM (AUDIO & VIDEO) ---
+        function keepAwake() {
             if(alarmAudio.paused) {
                 alarmAudio.volume = 0.01;
-                alarmAudio.play().then(() => {
-                    setTimeout(() => { alarmAudio.pause(); alarmAudio.volume = 1.0; alarmAudio.currentTime = 0; }, 100);
-                }).catch(()=>{});
+                alarmAudio.play().then(() => { 
+                    setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; alarmAudio.volume = 1.0; }, 100); 
+                }).catch(() => {});
+                // Play fake video to keep screen on
+                fakeVideo.play().catch(()=>{});
             }
-            // 2. Minta Izin Notif
-            requestNotificationPermission();
         }
+        document.body.addEventListener('click', keepAwake);
+        document.body.addEventListener('touchstart', keepAwake);
 
-        // Pasang di interaksi
-        document.body.addEventListener('click', primeSystem);
-        document.body.addEventListener('touchstart', primeSystem);
-
-        // --- SISTEM PEMILIKAN ---
         function addMyPlat(plat) {
             let plats = JSON.parse(localStorage.getItem('myPlats') || '[]');
             if(!plats.includes(plat)) plats.push(plat);
@@ -229,35 +192,32 @@
         }
 
         window.closeModal = () => document.getElementById('masterModal').style.display = 'none';
-
-        function formatPhone(p) {
-            p = p.replace(/\D/g,'');
-            if(p.startsWith('0')) p = '62' + p.substring(1);
-            if(!p.startsWith('62')) p = '62' + p;
-            return p;
-        }
+        function formatPhone(p) { p = p.replace(/\D/g,''); if(p.startsWith('0')) p = '62' + p.substring(1); if(!p.startsWith('62')) p = '62' + p; return p; }
 
         function createMsg(type, plat, extra = "") {
-            return `*Halo Sahabat MLU!*
-
-${type} *${plat}* ${extra}.
-
-Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`;
+            return `*Halo Sahabat MLU!*\n\n${type} *${plat}* ${extra}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`;
         }
 
+        // --- SMART WA SCHEDULING (UNIX TIMESTAMP) ---
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
             const p = formatPhone(target);
             const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
-            const now = new Date();
-            const sendTime = new Date(now.getTime() + (durationMinutes * 60000));
-            const y = sendTime.getFullYear(); const m = String(sendTime.getMonth()+1).padStart(2,'0'); const d = String(sendTime.getDate()).padStart(2,'0'); const h = String(sendTime.getHours()).padStart(2,'0'); const min = String(sendTime.getMinutes()).padStart(2,'0'); const s = String(sendTime.getSeconds()).padStart(2,'0');
-            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
+            
+            // Hitung Waktu Selesai (UNIX TIMESTAMP DETIK)
+            const nowUnix = Math.floor(Date.now() / 1000);
+            const scheduleUnix = nowUnix + (durationMinutes * 60); // Detik sekarang + Durasi detik
+            
             const msg = createMsg("Pengecasan motor", plat, `telah selesai (Target ${targetPersen}%)`);
             const formData = new FormData();
-            formData.append("target", p); formData.append("message", msg); formData.append("schedule", scheduleTime); formData.append("countryCode", "62"); 
+            formData.append("target", p); 
+            formData.append("message", msg); 
+            formData.append("schedule", scheduleUnix); // KIRIM FORMAT UNIX
+            formData.append("countryCode", "62"); 
+            
             try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
         }
 
+        // --- WA INSTANT ---
         async function sendWA(target, message) {
             const p = formatPhone(target);
             const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
@@ -266,17 +226,15 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
         }
 
-        // --- DAFTAR ANTRIAN ---
+        // --- DAFTAR ---
         window.daftarAntrian = async () => {
-            primeSystem(); 
-
+            keepAwake();
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
             const wa = document.getElementById('userWa').value.trim();
             const bat = parseInt(document.getElementById('userBattery').value);
 
             if(!plat || !wa || isNaN(bat)) { showPopup('error','DATA KURANG','Isi semua data!'); return; }
-            
             btn.disabled=true; btn.innerText="PROSES...";
             addMyPlat(plat); 
 
@@ -285,20 +243,15 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const d = (await t.get(ref)).data() || {};
                     let s = d.chargingSlots || [null,null,null];
                     let q = d.waitingQueue || [];
-
                     if((d.blockedList||[]).includes(plat)) throw "Plat DIBLOKIR!";
                     if(s.some(x=>x?.name===plat) || q.some(x=>x?.name===plat)) throw "Sudah Terdaftar!";
-
                     const totalAntrian = q.length; 
                     let targetLimit = 100;
                     if(totalAntrian < 3) targetLimit = 100; else if(totalAntrian <= 6) targetLimit = 95; else if(totalAntrian <= 10) targetLimit = 90; else targetLimit = 85;
-
                     if(bat >= targetLimit) throw `Baterai cukup (${bat}%). Batas ${targetLimit}%.`;
-
                     let minutes = 0;
                     for(let b = bat; b < targetLimit; b++) { if(b >= 90) minutes += 2.2; else if(b >= 80) minutes += 1.5; else minutes += 0.8; }
                     let dur = Math.ceil(minutes); if(dur < 2) dur = 2;
-
                     const item = { name:plat, phone:wa, startBattery:bat, targetLimit:targetLimit, durationMinutes:dur, startTime:null };
                     const empty = s.findIndex(x=>x===null);
                     if(empty!==-1) s[empty] = item; else q.push(item);
@@ -306,7 +259,6 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     
                     if(wa) sendWA(wa, createMsg("Motor", plat, "berhasil terdaftar di antrian"));
                 });
-
                 showPopup('success','BERHASIL','Masuk Antrian.');
                 document.getElementById('userPlat').value=''; document.getElementById('userBattery').value=''; document.getElementById('userWa').value='';
                 document.getElementById('ruleInfo').style.display='none';
@@ -314,56 +266,37 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
         };
 
-        // --- RENDER UI ---
+        // --- RENDER ---
         onSnapshot(ref, (snap) => {
             const d = snap.data() || {};
             const slots = d.chargingSlots || [null,null,null];
             const q = d.waitingQueue || [];
-
             const total = q.length;
             const infoBox = document.getElementById('ruleInfo');
             if(total > 0) {
                 let limit = 100;
                 if(total < 3) limit = 100; else if(total <= 6) limit = 95; else if(total <= 10) limit = 90; else limit = 85;
-                infoBox.style.display = 'block'; 
-                infoBox.innerHTML = `ANTRIAN: ${total} UNIT <br> MAX CHARGE: ${limit}%`;
+                infoBox.style.display = 'block'; infoBox.innerHTML = `ANTRIAN: ${total} UNIT <br> MAX CHARGE: ${limit}%`;
             } else { infoBox.style.display = 'none'; }
 
             document.getElementById('slotsContainer').innerHTML = slots.map((x,i)=>{
                 if(!x) return `<div class="slot-box" style="opacity:0.6; border:2px dashed #ccc;"><div class="bat-icon" style="border-color:#ccc; background:none;"></div><div style="font-size:12px; color:#999; font-weight:bold;">KOSONG</div></div>`;
-
                 const isRun = !!x.startTime; 
-                let btn = isRun ? 
-                    `<button class="btn-act btn-stop" onclick="window.act(${i},'stop', '${x.name}')">STOP</button>` :
-                    `<button class="btn-act btn-start" onclick="window.act(${i},'start', '${x.name}')">MULAI</button>`;
-                
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="window.act(${i},'stop', '${x.name}')">STOP</button>` : `<button class="btn-act btn-start" onclick="window.act(${i},'start', '${x.name}')">MULAI</button>`;
                 let startMs = isRun ? (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) : 0;
                 let endMs = isRun ? startMs + (x.durationMinutes*60000) : 0;
                 let h = x.startBattery;
                 let targetInfo = `<div style="font-size:11px; color:var(--text-muted); font-weight:bold;">Target: ${x.targetLimit}%</div>`;
-
-                return `
-                    <div class="slot-box active">
-                        <div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:h}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div>
-                        <div style="font-weight:bold; font-size:18px; color:#333;">${x.name}</div>
-                        ${targetInfo}
-                        <div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" data-phone="${x.phone}" data-target="${x.targetLimit}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">
-                            ${isRun ? "..." : "Tap MULAI"}
-                        </div>
-                        ${btn}
-                    </div>`;
+                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:h}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div><div style="font-weight:bold; font-size:18px; color:#333;">${x.name}</div>${targetInfo}<div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">${isRun ? "..." : "Tap MULAI"}</div>${btn}</div>`;
             }).join('');
-
             document.getElementById('qCount').innerText = q.length;
             document.getElementById('queueList').innerHTML = q.length ? q.map((x,i)=>`
                 <div style="display:flex; justify-content:space-between; padding:12px; background:#f9f9f9; margin-bottom:8px; border-radius:10px; border:1px solid #eee;">
                     <div><b style="color:#333;">${x.name}</b> <span style="font-size:11px; color:#777;">(${x.startBattery}% -> ${x.targetLimit}%)</span></div>
                     <button onclick="window.delQ(${i}, '${x.name}')" style="background:none; border:none; color:var(--soft-red); font-weight:bold;">✕</button>
-                </div>
-            `).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
+                </div>`).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
         });
 
-        // --- TIMER LOOP ---
         setInterval(() => {
             document.querySelectorAll('.timer-display').forEach(el => {
                 const isRun = el.getAttribute('data-run') === 'true';
@@ -371,7 +304,6 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                 const end = parseInt(el.getAttribute('data-end'));
                 const name = el.getAttribute('data-name');
                 const diff = end - Date.now();
-
                 if(diff > 0) {
                     const m = Math.floor(diff/60000); const s = Math.floor((diff%60000)/1000);
                     el.innerText = `${m}:${s<10?'0'+s:s}`; el.style.color = "var(--cyan)";
@@ -380,15 +312,8 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-
-                        // FIRE SYSTEM NOTIFICATION (BUAT YG BROWSER DI-MINIMIZE)
-                        if(Notification.permission === "granted") {
-                            sendSystemNotification("MOTOR SELESAI!", `Plat ${name} sudah penuh.`);
-                        }
-
                         if(isAdminLoggedIn || isMyPlat(name)) {
-                            alarmAudio.currentTime = 0;
-                            alarmAudio.play().catch(e => {});
+                            alarmAudio.currentTime = 0; alarmAudio.play().catch(e => {});
                             showPopup('alarm', 'SELESAI', `Motor ${name}`);
                         }
                     }
@@ -396,10 +321,8 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             });
         }, 1000);
 
-        // ACTIONS
         window.act = (i, type, platName) => {
-            primeSystem();
-
+            keepAwake();
             if(type === 'stop') {
                 if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
                 showPopup('confirm', 'STOP', 'Stop Slot?', () => {
@@ -423,24 +346,11 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             }
         };
 
-        window.delQ = (i, platName) => {
-            if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan antrian Anda!');
-            showPopup('confirm','HAPUS', 'Hapus antrian?', () => {
-                runTransaction(db, async(t)=>{ const q = (await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); });
-            });
-        };
-
+        window.delQ = (i, platName) => { if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan antrian Anda!'); showPopup('confirm','HAPUS', 'Hapus antrian?', () => { runTransaction(db, async(t)=>{ const q = (await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); }); }); };
         window.openAdminLogin = () => showPopup('admin', 'ADMIN LOGIN', 'Masukkan PIN');
         window.clearSlotManual = () => { const i = document.getElementById('manSlot').value; showPopup('confirm', 'HAPUS', 'Kosongkan Slot?', () => { runTransaction(db, async(t)=>{ const s = (await t.get(ref)).data().chargingSlots; s[i] = null; t.update(ref, {chargingSlots:s}); }); }); };
         window.fillFromQueue = () => { runTransaction(db, async(t) => { const d = (await t.get(ref)).data(); let s = d.chargingSlots; let q = d.waitingQueue; if(q.length === 0) throw "Antrian Kosong!"; const emptyIdx = s.findIndex(x => x === null); if(emptyIdx === -1) throw "Semua Slot Penuh!"; s[emptyIdx] = q.shift(); t.update(ref, {chargingSlots:s, waitingQueue:q}); }).catch(e => showPopup('error', 'GAGAL', e)); };
-        
-        window.startAllSlots = () => { 
-            showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => { 
-                runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; 
-                s.forEach((slot, idx) => { if(slot && !slot.startTime) { window.act(idx, 'start', slot.name); startedCount++; } }); }); 
-            }); 
-        };
-        
+        window.startAllSlots = () => { showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => { runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; s.forEach((slot) => { if(slot && !slot.startTime) { if(slot.phone) { sendWA(slot.phone, createMsg("Motor", slot.name, "mulai dicas")); scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit); } slot.startTime = new Date(); startedCount++; } }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); }); }); };
         window.blockUser = async () => { const p = document.getElementById('blockPlatInput').value.toUpperCase().trim(); if(!p) return; await runTransaction(db, async (t) => { const d = (await t.get(ref)).data(); const l = d.blockedList || []; if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l}); }); showPopup('success', 'BLOKIR', `Plat ${p} diblokir.`); };
         window.resetAll = () => { showPopup('confirm', 'RESET', 'Reset Semua?', () => { setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); }); };
 
