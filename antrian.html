@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANTRIAN CHARGING</title>
+    <title>ANTRIAN CHARGING V102</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         /* GLOBAL DARK THEME */
@@ -122,19 +122,28 @@
             border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
         }
         .btn-close-modal { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #555; font-size: 20px; cursor: pointer; }
+
         .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Orbitron'; margin-top: 8px; font-weight: bold; font-size: 12px; }
-        .adm-row { display: flex; gap: 10px; margin-top: 8px; }
         .btn-blue { background: #00bcd4; color: #000; }
         .btn-red { background: #ff3b3b; color: #fff; }
         .btn-yellow { background: #ff9800; color: #000; }
         .btn-dark { background: #333; color: #fff; border: 1px solid #555; }
 
+        /* TOMBOL TES AUDIO */
+        .btn-test-audio {
+            background: #333; color: #ccc; border: 1px solid #555; 
+            padding: 5px 10px; border-radius: 5px; font-size: 10px; 
+            margin-left: 10px; cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <audio id="alarm" loop><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+    <audio id="alarm" loop preload="auto">
+        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
+    </audio>
+    
     <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;pointer-events:none;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
 
     <div id="mod" class="modal">
@@ -156,7 +165,10 @@
 
     <div class="container">
         <div class="card">
-            <label>PLAT NOMOR</label>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label>PLAT NOMOR</label>
+                <button onclick="testAudio()" class="btn-test-audio">🔔 TES SUARA</button>
+            </div>
             <input id="uPlat" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
             
             <label>NOMOR WHATSAPP</label>
@@ -192,21 +204,11 @@
                     <button onclick="clrSlot()" class="adm-btn btn-dark" style="width:30%; margin:0;">HAPUS</button>
                 </div>
             </div>
-
             <button onclick="fillQ()" class="adm-btn btn-blue">NAIKKAN ANTRIAN (AUTO)</button>
             <div class="adm-row">
                 <button onclick="startAll()" class="adm-btn btn-yellow" style="flex:1;">⚡ START ALL</button>
                 <button onclick="stopAll()" class="adm-btn btn-red" style="flex:1;">🛑 STOP ALL</button>
             </div>
-
-            <div style="background:#222; padding:10px; border-radius:10px; margin-top:10px;">
-                <label style="color:#888; font-size:9px;">MANAJEMEN ANTRIAN</label>
-                <div style="display:flex; gap:10px;">
-                    <button onclick="resetQueue()" class="adm-btn btn-dark" style="margin:0; font-size:10px;">RESET ANTRIAN SAJA</button>
-                     <button onclick="moveQueueTop()" class="adm-btn btn-blue" style="margin:0; font-size:10px;">PINDAH KE ATAS</button>
-                </div>
-            </div>
-
             <div class="adm-row" style="margin-top:15px;">
                 <input id="blockPlatInput" placeholder="Plat Blokir" style="font-size:14px; padding:10px; margin:0; background:#000;">
                 <button onclick="blockUser()" class="adm-btn btn-red" style="width:40%; margin:0;">BLOK</button>
@@ -226,28 +228,24 @@
         let isAdmin = false; let triggered = new Set(); 
         const aud = document.getElementById('alarm'); const vid = document.getElementById('fakeVideo');
 
-        // === UI HELPERS ===
+        // EXPOSE UI HELPERS
+        window.testAudio = () => { aud.play().then(()=>alert("Suara Aktif!")).catch(e=>alert("Gagal: "+e)); };
+
         function showModal(title, msg, action=null, showInput=false) {
             const mod = document.getElementById('mod');
             document.getElementById('mt').innerText = title;
             document.getElementById('mm').innerText = msg;
             const inp = document.getElementById('modalInputArea');
             const btn = document.getElementById('modalActionBtn');
-            
             inp.style.display = showInput ? 'block' : 'none';
             if(showInput) document.getElementById('adminPinInput').value = '';
-
-            btn.onclick = () => {
-                if(action) action();
-                else mod.style.display = 'none';
-            };
+            btn.onclick = () => { if(action) action(); else mod.style.display = 'none'; };
             mod.style.display = 'flex';
         }
 
         window.showAdminLogin = () => {
-            showModal("ADMIN LOGIN", "Masukkan PIN Keamanan:", () => {
-                const pin = document.getElementById('adminPinInput').value;
-                if(pin === '1131') {
+            showModal("ADMIN LOGIN", "Masukkan PIN:", () => {
+                if(document.getElementById('adminPinInput').value === '1131') {
                     document.getElementById('mod').style.display = 'none';
                     document.getElementById('admPan').style.display = 'block';
                     isAdmin = true;
@@ -257,7 +255,7 @@
             }, true);
         };
 
-        // === CORE LOGIC ===
+        // CORE LOGIC
         function prime() { 
             if(aud.paused) {
                 aud.volume = 0.01; 
@@ -267,7 +265,6 @@
             }
             if(vid.paused) vid.play().catch(()=>{});
         }
-        document.body.addEventListener('click', prime);
 
         function sendWA(target, msg, sch=null) {
             let p = target.replace(/\D/g,''); if(p.startsWith('0')) p='62'+p.substring(1);
@@ -278,20 +275,20 @@
         
         function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
-        // CALCULATE DURATION (TIERED LOGIC)
+        // CALCULATION LOGIC
         function calculateDuration(bat, target) {
-            let totalMinutes = 0;
-            for (let i = bat; i < target; i++) {
-                if (i < 50) totalMinutes += 1.0; 
-                else if (i < 80) totalMinutes += 1.2; 
-                else if (i < 90) totalMinutes += 1.5; 
-                else totalMinutes += 2.0; 
+            let min = 0;
+            for(let i=bat; i<target; i++) {
+                if (i < 50) min += 1.0; 
+                else if (i < 80) min += 1.2; 
+                else if (i < 90) min += 1.5; 
+                else min += 2.0; 
             }
-            return Math.ceil(totalMinutes);
+            return Math.ceil(min);
         }
 
         document.getElementById('btnDaftar').onclick = async () => {
-            prime();
+            prime(); // Pancing Audio Diam-diam
             const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
             if(!p || !w || isNaN(b)) return showModal('ERROR','Isi Semua Data');
             
@@ -299,7 +296,6 @@
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
                 
-                // HITUNG TARGET & DURASI
                 const totalAntri = q.length + s.filter(x=>x!==null).length;
                 let limit = 100;
                 if(totalAntri >= 10) limit = 85;
@@ -307,9 +303,7 @@
                 else if(totalAntri >= 3) limit = 95;
                 
                 if(b >= limit) throw "Baterai Cukup";
-
-                let dur = calculateDuration(b, limit);
-                if(dur<2) dur=2;
+                let dur = calculateDuration(b, limit); if(dur<2) dur=2;
                 
                 const item={name:p, phone:w, startBattery:b, durationMinutes:dur, targetLimit:limit, startTime:null};
                 const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
@@ -327,10 +321,7 @@
                 
                 if(type==='stop') { 
                     s[i]=null; 
-                    // AUTO PROMOTE
-                    if(q.length > 0) {
-                        s[i] = q.shift(); 
-                    }
+                    if(q.length > 0) s[i] = q.shift(); // AUTO PROMOTE
                 } else {
                     s[i].startTime = new Date();
                     if(s[i].phone) {
@@ -343,39 +334,13 @@
             });
         };
 
-        // === ADMIN FEATURES ===
         window.clrSlot = () => { const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})}); };
         window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} ); };
         window.startAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); }); };
         window.stopAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); }); };
         window.resAll = () => { if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
-        window.resetQueue = () => { runTransaction(db,async(t)=>{t.update(ref,{waitingQueue:[]})}); };
-        
-        window.blockUser = async () => { 
-            const p = document.getElementById('blockPlatInput').value.toUpperCase().trim(); 
-            if(!p) return; 
-            await runTransaction(db, async (t) => { 
-                const d = (await t.get(ref)).data(); const l = d.blockedList || []; 
-                if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l}); 
-            }); 
-            showModal('BLOKIR', `Plat ${p} diblokir.`); 
-        };
-
-        window.delQ = (i, name) => {
-            if(isAdmin || localStorage.getItem('myPlat') === name) {
-                runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); });
-            } else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');
-        };
-
-        window.moveQueueTop = () => {
-            const plat = prompt("Masukkan Plat:");
-            if(!plat) return;
-            runTransaction(db, async(t)=>{
-                const q = (await t.get(ref)).data().waitingQueue;
-                const idx = q.findIndex(x => x.name === plat.toUpperCase());
-                if(idx > 0) { q.unshift(q.splice(idx, 1)[0]); t.update(ref, {waitingQueue: q}); }
-            });
-        };
+        window.blockUser = async () => { const p = document.getElementById('blockPlatInput').value.toUpperCase().trim(); if(!p) return; await runTransaction(db, async (t) => { const d = (await t.get(ref)).data(); const l = d.blockedList || []; if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l}); }); showModal('BLOKIR', `Plat ${p} diblokir.`); };
+        window.delQ = (i, name) => { if(isAdmin || localStorage.getItem('myPlat') === name) runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); }); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!'); };
 
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
@@ -384,15 +349,15 @@
             document.getElementById('qList').innerHTML = q.map((x,i)=>`
                 <div class="wait-row">
                     <div><b>${x.name}</b> (${x.startBattery}%)</div>
-                    <div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div>
+                    <div style="color:${isAdmin?'#ff3b3b':'#888'}; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div>
                 </div>
             `).join('');
             
-            const totalAntri = q.length + s.filter(x=>x!==null).length;
             const inf = document.getElementById('info');
-            if(totalAntri > 0) { 
-                let l=100; if(totalAntri>=10) l=85; else if(totalAntri>=6) l=90; else if(totalAntri>=3) l=95;
-                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${totalAntri} UNIT<br>MAX CHARGING: ${l}%`; 
+            if(q.length>0) { 
+                let l=100; const total = q.length + s.filter(x=>x!==null).length;
+                if(total>=10) l=85; else if(total>=6) l=90; else if(total>=3) l=95;
+                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} UNIT<br>MAX CHARGING: ${l}%`; 
             } else inf.style.display='none';
 
             document.getElementById('slots').innerHTML = s.map((x,i)=>{
@@ -406,10 +371,16 @@
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
                     else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } }
                 }
-                return `<div class="slot ${isRun?'active':''}"><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div>`;
+                return `<div class="slot ${isRun?'active':''}">
+                    <div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div>
+                    <div class="plat-text">${x.name}</div>
+                    <div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>
+                    ${btn}
+                </div>`;
             }).join('');
         });
+        
+        setInterval(()=>{ const s=document.getElementById('slots'); if(s) s.style.opacity=s.style.opacity==='0.99'?'1':'0.99'; }, 1000);
     </script>
 </body>
 </html>
-
