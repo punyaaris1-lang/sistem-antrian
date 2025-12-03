@@ -3,50 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ANTRIAN CHARGING</title>
+    <title>ANTRIAN (DARK)</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* COPY STYLE V73 PUTIH DI SINI (SAYA SINGKAT AGAR RAPI) */
-        :root { --cyan: #00bcd4; --soft-red: #ff3b3b; --neon: #ccff00; }
-        * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Rajdhani'; background: #f4f4f4; padding-bottom: 100px; }
-        
-        .header { background: #fff; padding: 20px; display: flex; align-items: center; gap: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 99; }
-        .btn-back { text-decoration: none; font-size: 24px; color: #333; }
-        h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #333; }
+        /* TEMA GELAP (SAMA DENGAN HOME) */
+        :root {
+            --bg-dark: #0b101a;
+            --text: #ffffff;
+            --text-muted: #8899a6;
+            --cyan: #00e5ff;
+            --soft-red: #ff3b3b;
+            --neon-yellow: #ccff00;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --input-bg: rgba(0, 0, 0, 0.5);
+            --border: rgba(255, 255, 255, 0.15);
+            --shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            margin: 0; font-family: 'Rajdhani', sans-serif; 
+            background-color: #000; color: var(--text);
+            background-image: url('1763947427555.jpg'); 
+            background-size: cover; background-attachment: fixed; background-position: center;
+            padding-bottom: 100px; 
+        }
+        /* Overlay Gelap agar teks terbaca */
+        body::before { content:''; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:-1; }
+
+        /* HEADER */
+        .header { 
+            background: rgba(0,0,0,0.6); padding: 15px; display: flex; align-items: center; gap: 15px; 
+            border-bottom: 1px solid var(--border); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100; 
+        }
+        .btn-back { text-decoration: none; font-size: 24px; color: var(--cyan); width: 40px; height: 40px; border: 1px solid var(--cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; letter-spacing: 1px; }
+
+        /* CONTAINER */
         .container { padding: 20px; max-width: 480px; margin: 0 auto; }
-        .card { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
         
-        label { display: block; font-weight: bold; font-size: 12px; margin-bottom: 5px; font-family: 'Orbitron'; }
-        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 15px; outline: none; font-family: 'Rajdhani'; }
-        input:focus { border-color: var(--cyan); background: #f9f9f9; }
+        /* KARTU GELAP */
+        .card { 
+            background: var(--card-bg); padding: 25px; border-radius: 20px; 
+            box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border); 
+            backdrop-filter: blur(5px);
+        }
         
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; color: #fff; }
-        .btn-cyan { background: var(--cyan); } 
-        .btn-stop { background: var(--soft-red); padding: 8px; font-size: 12px; margin-top: 5px; }
-        .btn-start { background: var(--cyan); padding: 8px; font-size: 12px; margin-top: 5px; }
+        /* INPUT GELAP */
+        label { display: block; font-weight: bold; font-size: 11px; margin-bottom: 8px; font-family: 'Orbitron'; color: var(--text-muted); letter-spacing: 1px; }
+        input { 
+            width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 12px; 
+            background: var(--input-bg); text-align: center; font-size: 20px; font-weight: bold; 
+            margin-bottom: 15px; outline: none; font-family: 'Rajdhani'; color: #fff; 
+        }
+        input:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
         
+        /* BUTTONS */
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; color: #000; transition: 0.2s; font-size: 14px; }
+        .btn:active { transform: scale(0.98); }
+        .btn-cyan { background: var(--cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
+        
+        /* SLOTS */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .slot { background: #fff; border: 2px solid #eee; border-radius: 10px; padding: 10px 5px; text-align: center; min-height: 150px; display: flex; flex-direction: column; justify-content: center; }
-        .slot.active { border-color: var(--cyan); background: #e0f7fa; }
+        .slot { 
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; 
+            padding: 10px 5px; text-align: center; min-height: 160px; 
+            display: flex; flex-direction: column; justify-content: center; 
+        }
+        .slot.active { border-color: var(--cyan); background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
         
-        .icon-bat { width: 30px; height: 50px; border: 2px solid #333; border-radius: 4px; margin: 0 auto 5px; position: relative; }
-        .fill { width: 100%; background: var(--cyan); position: absolute; bottom: 0; }
+        .icon-bat { width: 30px; height: 50px; border: 2px solid #666; border-radius: 4px; margin: 0 auto 10px; position: relative; background: transparent; }
+        .fill { width: 100%; background: var(--cyan); position: absolute; bottom: 0; transition: height 0.5s; border-radius: 1px; }
         
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; }
-        .modal-box { background: #fff; padding: 20px; border-radius: 15px; width: 80%; text-align: center; }
+        .btn-act { width: 100%; padding: 8px; margin-top: 8px; border-radius: 6px; border: none; color: #000; font-weight: bold; cursor: pointer; font-size: 10px; font-family: 'Orbitron'; }
+        .btn-go { background: var(--cyan); } 
+        .btn-stop { background: rgba(255, 59, 59, 0.2); border: 1px solid var(--soft-red); color: var(--soft-red); }
 
-        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid red; border-radius: 15px; margin-top: 20px; }
-        
-        @keyframes neon { 0%,100%{border-color:var(--neon)} 50%{border-color:#ffd700} }
-        .info { text-align: center; padding: 10px; border: 3px solid var(--neon); border-radius: 10px; margin-bottom: 15px; font-weight: bold; animation: neon 1.5s infinite; display: none; }
+        /* INFO NEON */
+        @keyframes neon { 0%,100%{border-color:var(--neon-yellow); box-shadow:0 0 5px var(--neon-yellow)} 50%{border-color:#fff; box-shadow:0 0 15px var(--neon-yellow)} }
+        .info { 
+            text-align: center; padding: 12px; border: 2px solid var(--neon-yellow); 
+            border-radius: 10px; margin-bottom: 15px; font-weight: bold; 
+            animation: neon 1.5s infinite; display: none; background: rgba(204, 255, 0, 0.05); color: #fff;
+            font-family: 'Orbitron'; letter-spacing: 1px;
+        }
+
+        /* LIST WAIT */
+        .wait-item { display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid var(--border); color:#ccc; font-size:14px; }
+        .wait-title { font-family: 'Orbitron'; color: var(--cyan); font-size: 12px; letter-spacing: 1px; }
+
+        /* MODAL & ADMIN */
+        .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:999; justify-content:center; align-items:center; }
+        .modal-box { background: #111; border: 1px solid var(--cyan); padding: 25px; border-radius: 15px; width: 85%; text-align: center; box-shadow: 0 0 20px rgba(0,229,255,0.2); }
+        .admin-p { display:none; background: #000; padding: 20px; border: 1px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <audio id="alarm" loop><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
-    <div id="modal" class="modal"><div class="modal-box"><h3 id="mT"></h3><p id="mM"></p><button onclick="document.getElementById('modal').style.display='none'" class="btn btn-cyan" style="padding:10px">OK</button></div></div>
+    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;pointer-events:none;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+
+    <div id="mod" class="modal"><div class="modal-box"><h3 id="mt" style="margin-top:0; color:#fff; font-family:'Orbitron'"></h3><p id="mm" style="color:#aaa"></p><button onclick="document.getElementById('mod').style.display='none'" class="btn btn-cyan" style="padding:10px 20px">OK</button></div></div>
 
     <div class="header"><a href="index.html" class="btn-back">⬅</a><h2>ANTRIAN CHARGING</h2></div>
 
@@ -58,20 +117,28 @@
             <div id="info" class="info"></div>
             <button class="btn btn-cyan" id="btnDaftar">DAFTAR ANTRIAN</button>
         </div>
-        
-        <div style="text-align:center; font-weight:bold; margin-bottom:10px;">STATUS 3 SLOT</div>
-        <div class="grid" id="slots"></div>
-        
+
+        <div style="text-align:center; font-weight:bold; margin-bottom:10px; font-family:'Orbitron'; color:var(--text-muted); letter-spacing:2px;">STATUS 3 SLOT</div>
+        <div class="grid" id="slots"><div style="grid-column:1/-1; text-align:center; padding:30px; color:#555;">Loading...</div></div>
+
         <div class="card">
-            <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>WAITING LIST</span><span id="qCount">0</span></div>
-            <div id="qList" style="margin-top:10px;"></div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                <span class="wait-title">DAFTAR TUNGGU</span><span id="qCount" style="color:var(--cyan)">0</span>
+            </div>
+            <div id="qList"></div>
         </div>
         
-        <div style="text-align:center; color:#999; font-size:10px; margin-top:30px; cursor:pointer;" onclick="adminLog()">🔒 ADMIN</div>
-        <div id="admin" class="admin-panel">
-            <h4 style="color:red; text-align:center; margin:0 0 10px;">MASTER CONTROL</h4>
+        <div style="text-align:center; color:#555; font-size:10px; margin-top:30px; cursor:pointer; letter-spacing:1px;" onclick="adm()">🔒 ADMIN CONTROL</div>
+        
+        <div id="admPan" class="admin-p">
+            <h4 style="color:var(--soft-red); text-align:center; margin:0 0 15px; font-family:'Orbitron'">MASTER CONTROL</h4>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <select id="mSlot" style="padding:10px; width:70%; border-radius:8px; background:#222; color:#fff; border:1px solid #444;"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
+                <button onclick="clrSlot()" class="btn btn-cyan" style="background:#444; color:#fff; width:30%; padding:10px;">HAPUS</button>
+            </div>
             <button onclick="fillQ()" class="btn btn-cyan">NAIKKAN ANTRIAN</button>
-            <button onclick="resAll()" class="btn btn-cyan" style="background:red; margin-top:10px;">RESET TOTAL</button>
+            <button onclick="startAll()" class="btn btn-cyan" style="background:#222; color:#fff; border:1px solid #444; margin-top:10px;">⚡ MULAI SEMUA</button>
+            <button onclick="resAll()" class="btn btn-cyan" style="background:transparent; border:1px solid var(--soft-red); color:var(--soft-red); margin-top:10px;">RESET TOTAL</button>
         </div>
     </div>
 
@@ -81,41 +148,64 @@
 
         const FONNTE = ["Fc8dWb7jiKr7CXuEZXBx"];
         const FB = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
-        const db = getFirestore(initializeApp(FB)); const ref = doc(db, "antrian", "utama");
-        let isAdmin = false; let triggered = new Set(); const aud = document.getElementById('alarm');
-
-        // CORE LOGIC (V69)
-        function prime() { if(aud.paused) aud.play().then(()=>{setTimeout(()=>{aud.pause();aud.currentTime=0},100)}).catch(()=>{}); }
-        document.body.addEventListener('click', prime);
         
+        const app = initializeApp(FB);
+        const db = getFirestore(app); 
+        const ref = doc(db, "antrian", "utama");
+        
+        let isAdmin = false; let triggered = new Set(); 
+        const aud = document.getElementById('alarm'); const vid = document.getElementById('fakeVideo');
+
+        // EXPOSE ADMIN FUNCTIONS
+        window.adm = () => { if(prompt("PIN")==='1131') document.getElementById('admPan').style.display='block'; };
+        window.resAll = () => { if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
+        window.clrSlot = () => { const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})}); };
+        window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0){const e=s.indexOf(null);if(e>-1){s[e]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} }); };
+        window.startAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); }); };
+        window.alertBox = (t,m) => { document.getElementById('mt').innerText=t; document.getElementById('mm').innerText=m; document.getElementById('mod').style.display='flex'; };
+
+        // AUDIO PRIMER
+        function prime() { 
+            if(aud.paused) aud.play().then(()=>{setTimeout(()=>{aud.pause();aud.currentTime=0},100)}).catch(()=>{}); 
+            if(vid.paused) vid.play().catch(()=>{});
+        }
+        document.body.addEventListener('click', prime);
+        document.body.addEventListener('touchstart', prime);
+        
+        // WA HELPERS
         function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
         function fmt(p) { p=p.replace(/\D/g,''); if(p.startsWith('0'))p='62'+p.substring(1); return p; }
 
         async function wa(tgt, txt, sch=null) {
             const fd = new FormData(); fd.append("target", fmt(tgt)); fd.append("message", txt); fd.append("countryCode", "62");
             if(sch) fd.append("schedule", Math.floor(new Date(sch).getTime()/1000)); else fd.append("schedule", "0");
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE[0] }, body: fd }); } catch(e){}
+            const rnd = FONNTE[Math.floor(Math.random()*FONNTE.length)];
+            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": rnd }, body: fd }); } catch(e){}
         }
 
+        // DAFTAR
         document.getElementById('btnDaftar').onclick = async () => {
             prime();
-            const p=document.getElementById('uPlat').value.toUpperCase(); const w=document.getElementById('uWa').value; const b=parseInt(document.getElementById('uBat').value);
-            if(!p||!w||isNaN(b)) return alert("Data Kurang");
+            const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
+            if(!p || !w || isNaN(b)) return window.alertBox('ERROR','Isi Semua Data');
             
             await runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
                 
-                let dur=0; for(let i=b;i<100;i++) dur+=(i>=90?2.2:(i>=80?1.5:0.8)); dur=Math.ceil(dur); if(dur<2)dur=2;
-                const item={name:p, phone:w, startBattery:b, durationMinutes:dur, startTime:null, targetLimit:100};
+                let limit=100; if(q.length>2) limit=q.length>5?(q.length>9?85:90):95;
+                let dur=0; for(let i=b;i<limit;i++) dur+=(i>=90?2.2:(i>=80?1.5:0.8)); dur=Math.ceil(dur); if(dur<2) dur=2;
+                
+                const item={name:p, phone:w, startBattery:b, durationMinutes:dur, targetLimit:limit, startTime:null};
                 const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
                 
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                 if(w) wa(w, msg("Motor", p, "masuk antrian"));
             });
-            alert("Berhasil"); document.getElementById('uPlat').value='';
+            window.alertBox('SUKSES','Masuk Antrian'); document.getElementById('uPlat').value='';
         };
 
+        // ACTION START/STOP
         window.act = (i, type) => {
             prime();
             runTransaction(db, async(t)=>{
@@ -133,33 +223,29 @@
             });
         };
 
+        // RENDER LOOP
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
-            document.getElementById('qList').innerHTML = q.map(x=>`<div>${x.name}</div>`).join('');
+            document.getElementById('qList').innerHTML = q.map(x=>`<div class="wait-item"><b>${x.name}</b> <span>${x.startBattery}%</span></div>`).join('');
             
             const inf = document.getElementById('info');
-            if(q.length>0) { inf.style.display='block'; inf.innerText=`ANTRIAN: ${q.length}`; } else inf.style.display='none';
+            if(q.length>0) { inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} <br> MAX CHARGE: ${q.length>2?(q.length>5?90:95):100}%`; } else inf.style.display='none';
 
             document.getElementById('slots').innerHTML = s.map((x,i)=>{
-                if(!x) return `<div class="slot"><div class="icon-bat"></div><small>KOSONG</small></div>`;
+                if(!x) return `<div class="slot"><div class="icon-bat"></div><small style="color:#666">KOSONG</small></div>`;
                 const isRun=!!x.startTime;
-                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-go" onclick="act(${i},'start')">MULAI</button>`;
                 let txt="Tap Mulai"; let h=x.startBattery;
                 if(isRun) {
                     const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
                     const diff = end - Date.now();
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc}`; h=100; }
-                    else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); alert("SELESAI!"); } }
+                    else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); window.alertBox('ALARM', 'Selesai!'); } }
                 }
-                return `<div class="slot ${isRun?'active':''}"><div class="icon-bat"><div class="fill" style="height:${h}%"></div></div><b>${x.name}</b><div style="color:${txt==='SELESAI'?'red':'#00bcd4'}">${txt}</div>${btn}</div>`;
+                return `<div class="slot ${isRun?'active':''}"><div class="icon-bat"><div class="fill" style="height:${h}%"></div></div><b style="color:#fff">${x.name}</b><div style="color:${txt==='SELESAI'?'red':'#00bcd4'};font-weight:bold;margin:5px 0;font-size:20px;">${txt}</div>${btn}</div>`;
             }).join('');
         });
-        
-        setInterval(()=>{onSnapshot(ref,()=>{})},1000);
-        window.adminLog=()=>{if(prompt("PIN")==='1131')document.getElementById('admin').style.display='block'};
-        window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0&&s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}})};
-        window.resAll=()=>{if(confirm('Reset?'))setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]})};
     </script>
 </body>
 </html>
