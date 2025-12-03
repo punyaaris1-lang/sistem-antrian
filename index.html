@@ -3,42 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V67 (Final Stable)</title>
+    <title>Fast Charging V68 (Restore & Fix)</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- TEMA PUTIH (V64) --- */
+        /* --- TEMA PUTIH (LOGO FIX) --- */
         :root {
-            --bg-overlay: rgba(255, 255, 255, 0.85);
+            --bg-overlay: rgba(255, 255, 255, 0.80); /* Transparansi pas */
             --glass: rgba(255, 255, 255, 0.95);
             --text: #1a1a1a; --text-muted: #555;
             --cyan: #00bcd4; --soft-red: #ff3b3b;
-            --neon-yellow: #fff200;
-            --border: #ddd; --card-bg: #fff;
-            --shadow: 0 5px 20px rgba(0,0,0,0.08);
+            --neon-yellow: #fff200; 
+            --border: #ddd;
+            --shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            margin: 0; font-family: 'Rajdhani', sans-serif; color: var(--text); min-height: 100vh; padding: 20px; padding-bottom: 120px;
+            margin: 0; font-family: 'Rajdhani', sans-serif; color: var(--text); 
+            min-height: 100vh; padding: 20px; padding-bottom: 120px;
+            /* BACKGROUND LOGO */
+            background-color: #f4f4f4;
             background-image: url('1000240467.jpg'); 
-            background-size: cover; background-position: center; background-attachment: fixed; position: relative;
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            position: relative;
         }
+        /* Layer putih di atas gambar agar teks terbaca */
         body::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: -1; }
 
         .container { max-width: 480px; margin: 0 auto; position: relative; }
         .header-row { display: flex; justify-content: center; margin-top: 20px; margin-bottom: 5px; }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 26px; margin: 0; color: #000; letter-spacing: 2px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 11px; letter-spacing: 3px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; display: inline-block; width: 100%; }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 28px; margin: 0; color: #000; letter-spacing: 2px; text-shadow: 1px 1px 0px #fff; }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 11px; letter-spacing: 3px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; border-bottom: 3px solid var(--cyan); padding-bottom: 10px; display: inline-block; width: 100%; }
 
         .glass-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 25px; }
         label { display: block; font-family: 'Orbitron'; font-size: 11px; color: #000; margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; }
-        input.field { width: 100%; background: #f8f9fa; border: 2px solid #eee; color: #333; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
-        input.field:focus { border-color: var(--cyan); background: #fff; }
+        input.field { width: 100%; background: #fff; border: 2px solid #ccc; color: #000; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
+        input.field:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,188,212,0.2); }
         
-        .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3); margin-top: 5px; transition: 0.2s; }
+        .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4); margin-top: 5px; transition: 0.2s; }
         .btn-cyan:active { transform: scale(0.98); }
 
         .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
@@ -60,22 +67,25 @@
             100% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
         }
         .rule-info { 
-            font-size: 14px; color: #333; text-align: center; 
+            font-size: 14px; color: #000; text-align: center; 
             margin-top: 15px; font-family: 'Orbitron'; font-weight: 900;
-            padding: 12px; border-radius: 12px; 
-            background: #fff; 
-            border: 3px solid var(--neon-yellow); 
-            animation: blinkBorder 1.5s infinite; 
+            padding: 15px; border-radius: 12px; 
+            background: var(--neon-yellow); 
+            border: 3px solid #000; 
+            box-shadow: 0 5px 15px rgba(255, 242, 0, 0.4);
+            animation: blinkBorder 2s infinite; 
             display: none;
-            line-height: 1.5;
+            line-height: 1.5; text-transform: uppercase;
         }
 
-        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #999; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
+        /* ADMIN PANEL */
+        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #555; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
         .admin-panel { display: none; background: #fff; padding: 25px; border-radius: 20px; border: 2px solid var(--soft-red); margin-top: 20px; box-shadow: var(--shadow); }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; }
         .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
         .adm-input { background: #f9f9f9; border: 1px solid #ddd; color: #333; padding: 10px; width: 100%; border-radius: 8px; }
 
+        /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; }
         .modal-box { background: #fff; border-top: 5px solid var(--cyan); padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; animation: pop 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
@@ -89,7 +99,7 @@
 </head>
 <body>
 
-    <audio id="alarmSound" loop preload="auto">
+    <audio id="alarmSound" preload="auto" loop>
         <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3">
     </audio>
 
@@ -166,8 +176,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // TOKEN FONNTE 
-        const FONNTE_TOKENS = ["Fc8dWb7jiKr7CXuEZXBx"];
+        // TOKEN FONNTE
+        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; 
         
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
@@ -176,9 +186,26 @@
 
         let isAdminLoggedIn = false;
         let triggeredAlarms = new Set();
+        let wakeLock = null;
         const alarmAudio = document.getElementById('alarmSound');
 
-        // --- SISTEM PEMILIKAN (MULTI-PLAT) ---
+        // --- PANCINGAN AUDIO (GLOBAL CLICK) ---
+        // Ini yang membuat alarm bisa bunyi. Setiap klik di layar akan "renew" izin audio
+        document.body.addEventListener('click', () => {
+            if(alarmAudio.paused) {
+                alarmAudio.volume = 0.1; // Volume kecil utk pancingan
+                alarmAudio.play().then(() => {
+                    setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime=0; alarmAudio.volume=1.0; }, 100);
+                }).catch(e=>{});
+                
+                // Aktifkan WakeLock (Agar layar tidak mati)
+                if ('wakeLock' in navigator) {
+                    navigator.wakeLock.request('screen').then(w => wakeLock = w).catch(e=>{});
+                }
+            }
+        }, { once: true }); // Cukup sekali pancing
+
+        // --- SISTEM PEMILIKAN ---
         function addMyPlat(plat) {
             let plats = JSON.parse(localStorage.getItem('myPlats') || '[]');
             if(!plats.includes(plat)) plats.push(plat);
@@ -198,48 +225,44 @@
             return p;
         }
 
-        // --- PESAN FORMAT BARU (SERAGAM) ---
-        function createMsg(type, plat, extra = "") {
-            return `Halo Sahabat MLU!
+        // --- WA SENDER (DOUBLE SHOT) ---
+        function createMsg(type, plat, extra) {
+            return `*Halo Sahabat MLU!*
 
 ${type} *${plat}* ${extra}.
 
-Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.
+*Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU .*
 
 > _Sent via fonnte.com_`;
         }
 
-        // --- WA SENDER (SCHEDULED) ---
-        async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
+        async function sendFonnte(target, message, scheduleTime = null) {
             const p = formatPhone(target);
-            const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
-
-            const now = new Date();
-            const sendTime = new Date(now.getTime() + (durationMinutes * 60000));
-            const y = sendTime.getFullYear(); const m = String(sendTime.getMonth()+1).padStart(2,'0'); const d = String(sendTime.getDate()).padStart(2,'0'); const h = String(sendTime.getHours()).padStart(2,'0'); const min = String(sendTime.getMinutes()).padStart(2,'0'); const s = String(sendTime.getSeconds()).padStart(2,'0');
-            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
-
-            const msg = createMsg("Pengecasan motor", plat, `telah selesai (Target ${targetPersen}%)`);
-
             const formData = new FormData();
-            formData.append("target", p); formData.append("message", msg); formData.append("schedule", scheduleTime); formData.append("countryCode", "62"); 
+            formData.append("target", p);
+            formData.append("message", message);
+            formData.append("countryCode", "62"); 
+            
+            if(scheduleTime) {
+                // SCHEDULED MESSAGE (UNIX TIMESTAMP - LEBIH STABIL)
+                // Fonnte terima Unix Timestamp dalam detik
+                const unixTime = Math.floor(new Date(scheduleTime).getTime() / 1000);
+                formData.append("schedule", unixTime);
+            } else {
+                formData.append("schedule", "0"); // INSTANT
+            }
 
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
+            try {
+                fetch("https://api.fonnte.com/send", {
+                    method: "POST",
+                    headers: { "Authorization": FONNTE_TOKEN },
+                    body: formData
+                });
+            } catch(e) {}
         }
 
-        // --- WA INSTANT (DAFTAR / MULAI) ---
-        async function sendWA(target, message) {
-            const p = formatPhone(target);
-            const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
-            const formData = new FormData();
-            formData.append("target", p); formData.append("message", message); formData.append("countryCode", "62"); formData.append("schedule", "0");
-            try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
-        }
-
-        // --- DAFTAR ANTRIAN ---
+        // --- DAFTAR ---
         window.daftarAntrian = async () => {
-            try { alarmAudio.play().then(()=>{ setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;},100); }).catch(()=>{}); } catch(e){}
-
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
             const wa = document.getElementById('userWa').value.trim();
@@ -274,18 +297,18 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     if(empty!==-1) s[empty] = item; else q.push(item);
                     t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                     
-                    // WA INSTAN SAAT DAFTAR
-                    if(wa) sendWA(wa, createMsg("Motor", plat, "berhasil terdaftar di antrian"));
+                    // WA 1: MASUK ANTRIAN (INSTAN)
+                    if(wa) sendFonnte(wa, createMsg("Motor", plat, "berhasil terdaftar di antrian. Mohon tunggu giliran"));
                 });
 
-                showPopup('success','BERHASIL','Masuk Antrian.');
+                showPopup('success','BERHASIL','Masuk Antrian. Cek WA Anda!');
                 document.getElementById('userPlat').value=''; document.getElementById('userBattery').value=''; document.getElementById('userWa').value='';
                 document.getElementById('ruleInfo').style.display='none';
             } catch(e) { showPopup('error','GAGAL', e); }
             btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
         };
 
-        // --- RENDER UI ---
+        // --- RENDER ---
         onSnapshot(ref, (snap) => {
             const d = snap.data() || {};
             const slots = d.chargingSlots || [null,null,null];
@@ -311,7 +334,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                 let startMs = isRun ? (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) : 0;
                 let endMs = isRun ? startMs + (x.durationMinutes*60000) : 0;
                 let h = x.startBattery;
-                let targetInfo = `<div style="font-size:11px; color:var(--text-muted); font-weight:bold;">Target: ${x.targetLimit}%</div>`;
+                let targetInfo = `<div style="font-size:11px; color:#ff9800; font-weight:bold;">Target: ${x.targetLimit}%</div>`;
 
                 return `
                     <div class="slot-box active">
@@ -334,7 +357,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
             `).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
         });
 
-        // --- TIMER LOOP ---
+        // --- TIMER & ALARM ---
         setInterval(() => {
             document.querySelectorAll('.timer-display').forEach(el => {
                 const isRun = el.getAttribute('data-run') === 'true';
@@ -351,10 +374,11 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     const key = name + end;
                     if(!triggeredAlarms.has(key)) {
                         triggeredAlarms.add(key);
-                        // ALARM BUNYI LOKAL
+                        // ALARM BUNYI (WA SUDAH DIJADWAL DULUAN SAAT START)
                         if(isAdminLoggedIn || isMyPlat(name)) {
                             alarmAudio.currentTime = 0;
-                            alarmAudio.play().catch(e => {});
+                            let playPromise = alarmAudio.play();
+                            if (playPromise !== undefined) playPromise.catch(e => {});
                             showPopup('alarm', 'SELESAI', `Motor ${name}`);
                         }
                     }
@@ -363,7 +387,7 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
         }, 1000);
 
         // ACTIONS
-        window.act = async (i, type, platName) => {
+        window.act = (i, type, platName) => {
             if(type === 'stop') {
                 if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
                 showPopup('confirm', 'STOP', 'Stop Slot?', () => {
@@ -373,23 +397,21 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
                     }); alarmAudio.pause(); alarmAudio.currentTime=0;
                 });
             } else if (type === 'start') {
-                // START: 1. Update DB, 2. Kirim WA
-                let waData = null;
-                
-                await runTransaction(db, async(t)=>{
+                runTransaction(db, async(t)=>{
                     const d = (await t.get(ref)).data(); const s = d.chargingSlots;
                     if(s[i]) {
-                        if(s[i].phone) waData = s[i]; // Simpan data dulu
+                        // WA 2 & 3: MULAI (INSTAN) + SELESAI (JADWAL)
+                        if(s[i].phone) {
+                            sendFonnte(s[i].phone, createMsg("Motor", s[i].name, `mulai dicas. Estimasi ${s[i].durationMinutes} menit`));
+                            
+                            const now = new Date();
+                            const sendTime = new Date(now.getTime() + (s[i].durationMinutes * 60000));
+                            sendFonnte(s[i].phone, createMsg("Pengecasan motor", s[i].name, `telah selesai (Target ${s[i].targetLimit}%)`), sendTime);
+                        }
                         s[i].startTime = new Date();
                         t.update(ref, {chargingSlots:s});
                     }
                 });
-
-                // Kirim WA di luar transaction agar tidak memblokir tombol
-                if(waData) {
-                    sendWA(waData.phone, createMsg("Motor", waData.name, `mulai dicas. Estimasi ${waData.durationMinutes} menit`));
-                    scheduleWhatsapp(waData.phone, waData.name, waData.durationMinutes, waData.targetLimit);
-                }
             }
         };
 
@@ -406,7 +428,19 @@ Pesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Teri
         
         window.startAllSlots = () => { 
             showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => { 
-                runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; s.forEach((slot) => { if(slot && !slot.startTime) { if(slot.phone) { sendWA(slot.phone, createMsg("Motor", slot.name, "mulai dicas")); scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit); } slot.startTime = new Date(); startedCount++; } }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); }); 
+                runTransaction(db, async(t)=>{ 
+                    const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; 
+                    s.forEach((slot) => { 
+                        if(slot && !slot.startTime) { 
+                            if(slot.phone) {
+                                sendFonnte(slot.phone, createMsg("Motor", slot.name, `mulai dicas`));
+                                const now = new Date(); const sendTime = new Date(now.getTime() + (slot.durationMinutes * 60000));
+                                sendFonnte(slot.phone, createMsg("Pengecasan motor", slot.name, `telah selesai`), sendTime);
+                            } 
+                            slot.startTime = new Date(); startedCount++; 
+                        } 
+                    }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); 
+                }); 
             }); 
         };
         
