@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLU SUPER APP V87</title>
+    <title>MLU SUPER APP V88</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -11,7 +11,6 @@
            GLOBAL STYLE
            ========================================= */
         :root {
-            /* Overlay 0.6: Logo lebih kelihatan dari versi sebelumnya */
             --bg-overlay: rgba(0, 0, 0, 0.6); 
             --text: #fff;
             --cyan: #00bcd4;
@@ -26,25 +25,24 @@
             margin: 0; font-family: 'Rajdhani', sans-serif; 
             color: var(--text); height: 100vh; overflow: hidden;
             background-color: #0b101a;
-            /* Menggunakan nama file logo terbaru */
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-position: center; 
             background-attachment: fixed; position: relative;
         }
         
-        /* Layer Overlay Global */
         body::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: -1; }
 
         /* =========================================
            HALAMAN (PAGE SECTIONS)
            ========================================= */
         .page-section {
-            position: absolute; inset: 0; display: none; /* Hidden by default */
+            position: absolute; inset: 0; display: none; 
             flex-direction: column; overflow-y: auto; padding: 20px;
             padding-bottom: 100px; animation: fadeIn 0.3s;
+            z-index: 10; /* Layer Konten */
         }
         
-        #page-home { display: flex; justify-content: center; align-items: center; text-align: center; }
+        #page-home { display: flex; justify-content: center; align-items: center; text-align: center; z-index: 20; }
 
         /* =========================================
            MENU UTAMA (HOME)
@@ -103,26 +101,14 @@
         .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 18px; color: #333; }
 
         /* =========================================
-           LOKASI PAGE (STYLE BARU)
+           LOKASI PAGE (IFRAME ASLI)
            ========================================= */
-        .loc-card {
-            background: #fff; border-radius: 20px; overflow: hidden;
-            box-shadow: var(--shadow); margin-bottom: 20px;
-            color: #333;
-        }
-        .loc-img {
-            width: 100%; height: 150px; background: #ddd;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Orbitron'; color: #888; font-size: 20px;
-            background-image: url('https://maps.googleapis.com/maps/api/staticmap?center=-6.1686,106.9004&zoom=15&size=600x300&maptype=roadmap&key=YOUR_API_KEY'); 
-            background-size: cover;
-        }
-        .loc-content { padding: 20px; }
-        .loc-title { font-family: 'Orbitron'; font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-        .loc-addr { font-size: 13px; color: #666; margin-bottom: 15px; line-height: 1.4; }
+        #page-lokasi { padding: 0; overflow: hidden; background: #fff; }
+        /* Iframe memenuhi layar dikurangi header */
+        .map-frame { width: 100%; height: calc(100% - 80px); border: none; }
         
         /* =========================================
-           SOS PAGE (NATIVE)
+           SOS PAGE
            ========================================= */
         .sos-container { display: grid; gap: 15px; margin-top: 20px; }
         .btn-sos {
@@ -145,6 +131,7 @@
             background: #f4f4f4; 
             background-image: url('1763947427555.jpg');
             background-size: cover; background-attachment: fixed;
+            z-index: 50; /* Pastikan di atas */
         }
         #page-antrian::before {
             content:''; position:fixed; inset:0; background: rgba(255,255,255,0.92); z-index:-1;
@@ -155,6 +142,7 @@
         
         .field { width: 100%; background: #f8f9fa; border: 2px solid #ccc; color: #000; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; text-align: center; outline: none; margin-bottom: 15px; }
         .field:focus { border-color: var(--cyan); background: #fff; }
+        
         .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3); }
         
         .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
@@ -168,7 +156,7 @@
         
         .btn-act { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: bold; font-family: 'Orbitron'; font-size: 10px; margin-top: auto; cursor: pointer; }
         .btn-start { background: var(--cyan); color: #fff; }
-        .btn-stop { background: #fff; border: 2px solid var(--soft-red); color: var(--soft-red); }
+        .btn-stop { background: #fff; border: 1px solid var(--soft-red); color: var(--soft-red); }
 
         @keyframes neonPulse { 0% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); } 50% { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; } 100% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); } }
         .rule-info { font-size: 14px; color: #000; text-align: center; margin-top: 15px; font-family: 'Orbitron'; font-weight: 900; padding: 12px; border-radius: 12px; background: #fff; border: 3px solid var(--neon-yellow); animation: neonPulse 1.5s infinite; display: none; }
@@ -180,9 +168,9 @@
         .btn-modal.primary { background: var(--cyan); color: #fff; }
         .btn-modal.danger { background: var(--soft-red); color: #fff; }
         
-        /* ADMIN */
-        .admin-trigger { text-align: center; margin-top: 30px; padding: 10px; border: 1px dashed #333; color: #555; font-size: 10px; cursor: pointer; border-radius: 8px; }
-        .admin-panel { display: none; background: #fff; padding: 20px; border: 2px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
+        /* ADMIN - Z-INDEX FIX */
+        .admin-trigger { position: relative; z-index: 101; text-align: center; margin-top: 30px; padding: 15px; border: 1px dashed #ccc; color: #999; font-size: 12px; cursor: pointer; border-radius: 8px; background: #fff; }
+        .admin-panel { display: none; position: relative; z-index: 102; background: #fff; padding: 20px; border: 2px solid var(--soft-red); border-radius: 15px; margin-top: 20px; margin-bottom: 50px; }
         
         @keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
     </style>
@@ -223,21 +211,16 @@
                 <div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
             </div>
         </div>
-        <div style="margin-top:40px; font-size:10px; color:#555;">v8.7 | MLU Squad</div>
+        <div style="margin-top:40px; font-size:10px; color:#555;">v8.8 | MLU Squad</div>
     </div>
 
-    <div id="page-lokasi" class="page-section" style="background:#f4f4f4;">
-        <div class="nav-header"><button class="btn-back" onclick="goToPage('page-home')">⬅</button><span class="nav-title">LOKASI CHARGING</span></div>
-        
-        <div class="loc-card">
-            <div class="loc-img" style="background-color:#ccc;">MAP VIEW</div>
-            <div class="loc-content">
-                <div class="loc-title">SHOWROOM KELAPA GADING</div>
-                <div class="loc-addr">Jl. Boulevard Raya, Kelapa Gading, Jakarta Utara.<br>Home of MLU Squad.</div>
-                <button class="btn-cyan" style="width:100%;" onclick="window.open('https://www.google.com/maps/search/?api=1&query=Kelapa+Gading', '_blank')">📍 NAVIGASI GOOGLE MAPS</button>
-            </div>
+    <div id="page-lokasi" class="page-section">
+        <div class="nav-header">
+            <button class="btn-back" onclick="goToPage('page-home')">⬅</button>
+            <span class="nav-title">PETA LOKASI</span>
         </div>
-        </div>
+        <iframe class="map-frame" src="https://punyaaris1-lang.github.io/LokasiFC/"></iframe>
+    </div>
 
     <div id="page-sos" class="page-section" style="background:#f4f4f4;">
         <div class="nav-header"><button class="btn-back" onclick="goToPage('page-home')">⬅</button><span class="nav-title">BANTUAN DARURAT</span></div>
@@ -279,7 +262,7 @@
                 <div id="queueList"></div>
             </div>
 
-            <div style="text-align:center; margin-top:30px; color:#999; font-size:10px; cursor:pointer;" onclick="window.openAdminLogin()">🔒 ADMIN CONTROL</div>
+            <div class="admin-trigger" onclick="window.openAdminLogin()">🔒 ADMIN CONTROL</div>
             
             <div id="adminPanel" class="admin-panel">
                 <h4 style="color:var(--soft-red); text-align:center; margin-top:0; font-family:'Orbitron'">MASTER CONTROL</h4>
@@ -308,27 +291,18 @@
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
         let isAdminLoggedIn = false; let triggeredAlarms = new Set(); const alarmAudio = document.getElementById('alarmSound'); const fakeVideo = document.getElementById('fakeVideo');
 
+        // --- NAVIGATION ---
         window.goToPage = (id) => { document.querySelectorAll('.page-section').forEach(e=>e.style.display='none'); document.getElementById(id).style.display='flex'; if(id==='page-antrian') document.getElementById(id).style.display='block'; };
         
-        window.openFrame = (url, title) => { 
-            // Logic baru: Buka di Page Lokasi
-            if(title.includes("LOKASI")) window.goToPage('page-lokasi');
-            else {
-                document.getElementById('frameTitle').innerText=title; document.getElementById('contentFrame').src=url; document.getElementById('page-frame').style.display='flex'; 
-            }
-        };
-        window.closeFrame = () => { document.getElementById('page-frame').style.display='none'; document.getElementById('contentFrame').src=''; };
-        window.openAntrian = () => document.getElementById('page-antrian').style.display='block';
-        window.closeAntrian = () => document.getElementById('page-antrian').style.display='none';
-
+        // --- SYSTEM PRIMER ---
         function primeSystem() { if(alarmAudio.paused) alarmAudio.play().then(()=>{setTimeout(()=>{alarmAudio.pause();alarmAudio.currentTime=0;alarmAudio.volume=1.0;},100);}).catch(()=>{}); if(fakeVideo.paused) fakeVideo.play().catch(()=>{}); }
         document.body.addEventListener('click', primeSystem); document.body.addEventListener('touchstart', primeSystem);
         
+        // --- LOGIC ---
         function addMyPlat(plat) { let p=JSON.parse(localStorage.getItem('myPlats')||'[]'); if(!p.includes(plat)) p.push(plat); localStorage.setItem('myPlats', JSON.stringify(p)); }
         function isMyPlat(plat) { return JSON.parse(localStorage.getItem('myPlats')||'[]').includes(plat); }
         window.closeModal = () => document.getElementById('masterModal').style.display = 'none';
         function formatPhone(p) { p = p.replace(/\D/g,''); if(p.startsWith('0')) p = '62' + p.substring(1); if(!p.startsWith('62')) p = '62' + p; return p; }
-        
         function createMsg(type, plat, extra="") { return `*Halo Sahabat MLU!*\n\n${type} *${plat}* ${extra}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`; }
 
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
@@ -381,7 +355,7 @@
                 let endMs=isRun ? startMs+(x.durationMinutes*60000) : 0;
                 let h=x.startBattery;
                 let targetInfo=`<div style="font-size:11px; color:var(--text-muted); font-weight:bold;">Target: ${x.targetLimit}%</div>`;
-                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:x.startBattery}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div><div style="font-weight:bold; font-size:18px; color:#333;">${x.name}</div>${targetInfo}<div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" data-phone="${x.phone}" data-target="${x.targetLimit}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">${isRun ? "..." : "Tap MULAI"}</div>${btn}</div>`;
+                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:x.startBattery}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div><div style="font-weight:bold; font-size:18px; color:#333;">${x.name}</div>${targetInfo}<div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">${isRun ? "..." : "Tap MULAI"}</div>${btn}</div>`;
             }).join('');
             document.getElementById('qCount').innerText = q.length;
             document.getElementById('queueList').innerHTML = q.length ? q.map((x,i)=>`<div style="display:flex; justify-content:space-between; padding:12px; background:#f9f9f9; margin-bottom:8px; border-radius:10px; border:1px solid #eee;"><div><b style="color:#333;">${x.name}</b> <span style="font-size:11px; color:#777;">(${x.startBattery}% -> ${x.targetLimit}%)</span></div><button onclick="window.delQ(${i}, '${x.name}')" style="background:none; border:none; color:var(--soft-red); font-weight:bold;">✕</button></div>`).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
