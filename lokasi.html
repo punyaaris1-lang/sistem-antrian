@@ -3,305 +3,297 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>LOKASI FC</title>
+    <title>PETA LOKASI</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Syne:wght@700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
+    
     <style>
-        /* STYLE DARI SCRIPT ASLI (Disesuaikan untuk Standalone Page) */
         :root {
-            --bg: #ffffff; /* Ganti ke Putih sesuai request tema clean */
-            --text: #1a1a1a;
-            --accent: #CCFF00;
+            --accent: #CCFF00; /* KUNING STABILO */
             --cyan: #00bcd4;
-            --card-border: #eee;
-            --card-bg: #fff;
+            --dark: #0b101a;
+            --glass-dark: rgba(11, 16, 26, 0.85);
+            --glass-item: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        body { margin: 0; padding: 0; background: var(--dark); color: var(--text); font-family: 'Inter', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* HEADER (MODIFIKASI: ADA TOMBOL BACK) */
-        .header { 
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; 
-            background: #fff; border-bottom: 1px solid #eee; z-index: 50;
+        /* HEADER TRANSPARAN */
+        .header {
+            position: absolute; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            pointer-events: none; /* Supaya peta di bawahnya bisa digeser */
         }
-        .header-left { display: flex; align-items: center; gap: 15px; }
+        
         .btn-back { 
-            text-decoration: none; font-size: 24px; color: #333; 
-            border: 1px solid #ccc; width: 40px; height: 40px; 
+            pointer-events: auto; text-decoration: none; font-size: 24px; color: var(--cyan); 
+            border: 1px solid var(--cyan); width: 45px; height: 45px; background: rgba(0,0,0,0.5);
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            backdrop-filter: blur(5px); transition: 0.2s;
         }
-        .header-title h1 { font-family: 'Orbitron'; font-size: 18px; margin: 0; color: #000; letter-spacing: 1px; }
-        .header-title span { font-size: 10px; color: #666; font-weight: bold; letter-spacing: 2px; }
+        .btn-back:active { transform: scale(0.9); background: var(--cyan); color: #000; }
 
-        /* TOGGLE VIEW */
-        .toggle-mode { background: #f0f0f0; border: 1px solid #ddd; border-radius: 20px; display: flex; padding: 2px; }
-        .t-btn { padding: 6px 12px; font-size: 10px; font-weight: 800; color: #888; cursor: pointer; border-radius: 18px; transition: 0.2s; }
-        .t-btn.active { background: #333; color: #fff; }
-
-        /* CONTAINER */
-        #view-list { display: flex; flex-direction: column; flex: 1; overflow-y: auto; padding-bottom: 20px; }
-        #view-map { display: none; flex: 1; width: 100%; height: 100%; position: relative; }
-        #fullMap { width: 100%; height: 100%; }
-
-        /* HERO SECTION (TERDEKAT) */
-        .hero-section { padding: 20px; flex-shrink: 0; }
-        .hero-card { 
-            background: #fff; border: 1px solid #eee; border-radius: 20px; padding: 20px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; 
-            transition: 0.3s;
+        /* ICON PETIR GLOWING */
+        .lightning-box {
+            pointer-events: auto; cursor: pointer;
+            font-size: 32px; color: var(--accent);
+            filter: drop-shadow(0 0 10px var(--accent));
+            transition: transform 0.1s;
         }
-        .hero-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .radar-status { 
-            background: rgba(204,255,0,0.2); color: #88aa00; font-size: 10px; 
-            padding: 4px 8px; border-radius: 8px; font-weight: 800; display: flex; align-items: center; gap: 5px;
+        /* Animasi Kedip saat diklik */
+        .lightning-box.blink { animation: flash 0.1s infinite; }
+        @keyframes flash { 0% {opacity:1; transform:scale(1.2);} 50% {opacity:0.2; transform:scale(0.8);} 100% {opacity:1; transform:scale(1.2);} }
+
+        /* MAP CONTAINER */
+        #map { flex: 1; width: 100%; height: 100%; z-index: 1; background: #111; }
+
+        /* LIST OVERLAY (GLASS STYLE) */
+        .list-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 999;
+            background: var(--glass-dark); /* Gelap Transparan */
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top: 2px solid var(--cyan);
+            border-top-left-radius: 24px; border-top-right-radius: 24px;
+            display: flex; flex-direction: column;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            height: 50vh; transition: 0.3s;
         }
-        .gps-dot { width: 6px; height: 6px; background: #88aa00; border-radius: 50%; animation: pulse 1s infinite; }
-        @keyframes pulse { 0% {opacity:1} 50% {opacity:0.3} 100% {opacity:1} }
         
-        .hero-dist { font-family: 'Syne'; font-weight: 700; font-size: 14px; color: var(--cyan); }
-        .hero-name { font-family: 'Inter'; font-size: 22px; font-weight: 800; color: #000; margin: 0 0 5px 0; line-height: 1.2; }
-        .hero-info { font-size: 12px; color: #666; margin-bottom: 15px; border-left: 3px solid var(--cyan); padding-left: 10px; }
-        .btn-nav-hero { 
-            width: 100%; padding: 12px; background: #333; color: #fff; border: none; 
-            border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 12px;
+        .list-header { padding: 15px 20px; text-align: center; flex-shrink: 0; }
+        .drag-handle { width: 50px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 5px; margin: 0 auto 10px; }
+        .list-title { font-family: 'Orbitron'; font-weight: 800; font-size: 14px; color: #fff; letter-spacing: 2px; margin: 0; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .gps-status { font-size: 10px; color: var(--cyan); margin-top: 5px; font-weight: bold; }
+
+        .scroll-area { overflow-y: auto; padding: 0 20px 20px; flex: 1; }
+
+        /* HERO CARD (GLASS) */
+        .hero-section { padding: 0 20px; margin-bottom: 15px; }
+        .hero-card {
+            background: rgba(204, 255, 0, 0.05); /* Tint Kuning Tipis */
+            border: 1px solid var(--accent); border-radius: 16px; padding: 15px;
+            display: flex; flex-direction: column; gap: 8px; position: relative;
+            box-shadow: 0 0 20px rgba(204, 255, 0, 0.1);
+        }
+        .hero-badge { 
+            background: var(--accent); color: #000; font-size: 10px; 
+            padding: 4px 8px; border-radius: 4px; font-weight: 900; width: fit-content;
+            font-family: 'Orbitron';
+        }
+        .hero-title { font-family: 'Orbitron'; font-weight: 800; font-size: 18px; color: #fff; margin: 5px 0; }
+        .hero-info { font-size: 11px; color: #ccc; margin: 0; display: flex; gap: 10px; }
+        .btn-nav {
+            background: var(--cyan); color: #000; text-align: center; padding: 10px;
+            border-radius: 8px; font-weight: 800; text-decoration: none; font-size: 12px; font-family: 'Orbitron';
+            display: block; margin-top: 10px; box-shadow: 0 0 10px var(--cyan); border: none;
         }
 
-        /* LIST STYLE */
-        .city-group { margin-bottom: 20px; }
-        .city-header { padding: 0 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .city-title { font-family: 'Syne'; font-weight: 700; font-size: 12px; text-transform: uppercase; color: #888; }
-        .city-line { height: 1px; background: #eee; flex-grow: 1; }
+        /* ITEM LIST (GLASS) */
+        .list-item {
+            background: var(--glass-item); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 15px; margin-bottom: 10px; 
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            transition: 0.2s;
+        }
+        .list-item:active { background: rgba(0, 188, 212, 0.2); border-color: var(--cyan); }
         
-        .h-scroll { 
-            display: flex; gap: 12px; overflow-x: auto; padding: 0 20px; 
-            scrollbar-width: none; padding-bottom: 10px;
+        .item-left { display: flex; flex-direction: column; gap: 4px; }
+        .item-name { font-weight: 700; font-size: 14px; color: #fff; font-family: 'Orbitron'; letter-spacing: 0.5px; }
+        .item-info { font-size: 10px; color: #aaa; display: flex; align-items: center; gap: 5px; }
+        .badge { background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 9px; color: var(--accent); border: 1px solid rgba(255,255,255,0.1); }
+        
+        .item-right { text-align: right; }
+        .item-dist { font-family: 'Syne'; font-weight: 800; font-size: 16px; color: var(--cyan); text-shadow: 0 0 5px rgba(0, 188, 212, 0.5); }
+        .btn-go { 
+            background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 4px 10px; 
+            border-radius: 4px; font-weight: bold; font-size: 9px; margin-top: 4px; font-family: 'Orbitron';
         }
-        .mini-card { 
-            min-width: 150px; height: 160px; border-radius: 16px; padding: 15px; 
-            display: flex; flex-direction: column; justify-content: space-between; 
-            background: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            position: relative; overflow: hidden; cursor: pointer;
-        }
-        .mini-top h3 { margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #000; line-height: 1.3; }
-        .mini-info { font-size: 10px; color: #666; line-height: 1.4; }
-        .mini-dist { font-size: 14px; font-family: 'Syne'; font-weight: 800; color: var(--cyan); text-align: right; }
 
-        /* MAP OVERLAY */
-        .map-overlay { position: fixed; inset: 0; background: #fff; z-index: 2000; transform: translateY(100%); transition: 0.3s; display: flex; flex-direction: column; }
-        .map-overlay.active { transform: translateY(0); }
-        .map-container { flex: 1; width: 100%; background: #eee; }
-        .map-controls { padding: 20px; background: #fff; border-top: 1px solid #eee; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); }
-        .btn-close-map { position: absolute; top: 20px; left: 20px; width: 40px; height: 40px; background: #fff; border: 1px solid #ccc; border-radius: 50%; z-index: 3000; font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .btn-gmaps-start { width: 100%; padding: 14px; background: var(--cyan); color: #fff; border: none; border-radius: 12px; font-weight: 800; text-align: center; text-decoration: none; display: block; }
+        /* LOADING */
+        #loading { 
+            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); 
+            color: var(--cyan); font-family: 'Orbitron'; font-size: 12px; letter-spacing: 2px;
+            z-index: 2000; pointer-events: none; text-shadow: 0 0 10px var(--cyan);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0%{opacity:1} 50%{opacity:0.5} 100%{opacity:1} }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="header-left">
-            <a href="index.html" class="btn-back">⬅</a>
-            <div class="header-title">
-                <h1>FAST CHARGING</h1>
-                <span>PETA LOKASI</span>
-            </div>
-        </div>
-        <div class="toggle-mode">
-            <div id="btnList" class="t-btn active" onclick="switchView('list')">☰ LIST</div>
-            <div id="btnMap" class="t-btn" onclick="switchView('map')">🗺️ PETA</div>
-        </div>
+        <a href="index.html" class="btn-back">⬅</a>
+        <div class="lightning-box" id="btnFlash" onclick="flashIcon()">⚡</div>
     </div>
 
-    <div id="view-list">
-        <div class="hero-section">
-            <div id="scanState" class="hero-card" style="align-items:center; text-align:center; min-height:120px;">
-                <div class="gps-dot" style="width:15px; height:15px; margin-bottom:10px;"></div>
-                <h3 style="margin:0; color:#888; font-size:14px;">Mencari Lokasi Terdekat...</h3>
-                <p style="margin:5px 0 0; font-size:10px; color:#aaa;">Pastikan GPS Aktif</p>
-            </div>
+    <div id="map"></div>
+    <div id="loading">MEMUAT PETA...</div>
 
-            <div id="foundState" class="hero-card" style="display:none;">
-                <div class="hero-header">
-                    <div class="radar-status"><div class="gps-dot"></div> TERDEKAT</div>
-                    <div class="hero-dist" id="heroDist">-- KM</div>
+    <div class="list-overlay">
+        <div class="list-header">
+            <div class="drag-handle"></div>
+            <h3 class="list-title">LOKASI CHARGING</h3>
+            <div id="gpsStat" class="gps-status">Mencari satelit...</div>
+        </div>
+        
+        <div class="scroll-area">
+            <div class="hero-section" id="heroSection" style="display:none;">
+                <div class="hero-card">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span class="hero-badge">REKOMENDASI</span>
+                        <span class="item-dist" id="heroDist">-- KM</span>
+                    </div>
+                    <h2 class="hero-title" id="heroName">Nama Lokasi</h2>
+                    <p class="hero-info" id="heroDesc">Info</p>
+                    <a href="#" id="heroLink" target="_blank" class="btn-nav">NAVIGASI GOOGLE MAPS</a>
                 </div>
-                <h2 class="hero-name" id="heroName">Nama Lokasi</h2>
-                <div class="hero-info" id="heroInfo">Info...</div>
-                <button class="btn-nav-hero" onclick="openMapModal()">LIHAT DI PETA 📍</button>
             </div>
-        </div>
-
-        <div id="mainListContainer"></div>
-    </div>
-
-    <div id="view-map">
-        <div id="fullMap"></div>
-    </div>
-
-    <div id="mapOverlay" class="map-overlay">
-        <button class="btn-close-map" onclick="closeMapModal()">✕</button>
-        <div id="mapCanvas" class="map-container"></div>
-        <div class="map-controls">
-            <div><h3 id="mapTitle" style="margin:0; font-family:'Orbitron';">Nama Lokasi</h3><p id="mapSub" style="margin:5px 0 15px; color:#666; font-size:12px;">-- KM</p></div>
-            <a href="#" id="btnGmaps" target="_blank" class="btn-gmaps-start">NAVIGASI GOOGLE MAPS ↗</a>
+            
+            <div id="listContainer"></div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script>
-        // --- SCRIPT ASLI DARI BAPAK (DIBERSIHKAN BAGIAN INTRO-NYA) ---
+        // CONFIG
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
         
-        const JAWG_API = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
-        const URL_LOKASI = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv"; 
+        let map = L.map('map', {zoomControl: false}).setView([-6.200000, 106.816666], 11);
+        let userMarker = null;
+        let locations = [];
 
-        let chargers = [];
-        let userLat = null; let userLng = null;
-        let map = null; let mapFull = null; let currentMapTarget = null;
+        // TILE LAYER (Dark Mode - Jawg Matrix agar serasi dengan tema)
+        L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {
+            attribution: '', maxZoom: 18
+        }).addTo(map);
 
-        // Langsung jalan saat load
-        loadData();
+        // Custom Icon
+        const pinIcon = L.divIcon({
+            className: 'custom-pin',
+            html: `<div style="background:#00bcd4; width:14px; height:14px; border:2px solid #fff; border-radius:50%; box-shadow:0 0 10px #00bcd4;"></div>`,
+            iconSize: [14, 14], iconAnchor: [7, 7]
+        });
+
+        // Efek Kedip Icon Petir
+        function flashIcon() {
+            const el = document.getElementById('btnFlash');
+            el.classList.add('blink');
+            setTimeout(() => el.classList.remove('blink'), 1000); // Kedip selama 1 detik
+        }
 
         async function loadData() {
             try {
-                const res = await fetch(URL_LOKASI);
-                const txt = await res.text();
-                
-                chargers = txt.split('\n').slice(1).map((r, i) => {
-                    const c = r.split(',');
-                    let latVal = parseFloat(c[4]);
-                    let lngVal = parseFloat(c[5]);
-                    if(c.length < 5 || isNaN(latVal) || isNaN(lngVal)) return null;
-                    return { 
-                        id: i, name:c[0], city:c[1], type:c[2], status:c[3], 
-                        lat:latVal, lng:lngVal, link:c[6]||'',
-                        nozzle: c[7] || '-', cost: c[8] || '-'
-                    };
-                }).filter(i=>i);
+                const response = await fetch(SHEET_URL);
+                const text = await response.text();
+                const rows = text.split('\n').slice(1);
 
-                renderList(); 
+                locations = rows.map((row, index) => {
+                    const cols = row.split(',');
+                    if (cols.length < 6) return null;
+                    return {
+                        id: index,
+                        name: cols[0].replace(/"/g, ''),
+                        type: cols[2] || 'Fast Charging',
+                        lat: parseFloat(cols[4]),
+                        lng: parseFloat(cols[5]),
+                        link: cols[6],
+                        nozzle: cols[7] || '-',
+                        dist: 9999
+                    };
+                }).filter(item => item && !isNaN(item.lat));
+
+                locations.forEach(loc => {
+                    L.marker([loc.lat, loc.lng], {icon: pinIcon}).addTo(map)
+                     .bindPopup(`<b style="color:#333">${loc.name}</b>`);
+                });
 
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(p => { 
-                        userLat=p.coords.latitude; userLng=p.coords.longitude; 
-                        processData(); 
-                    });
+                    navigator.geolocation.getCurrentPosition(successGPS, errorGPS);
+                } else {
+                    renderList();
                 }
-            } catch(e) {}
+
+            } catch (err) { document.getElementById('loading').innerText = "Gagal memuat data."; }
         }
 
-        function switchView(mode) {
-            if(mode === 'list') {
-                document.getElementById('btnList').classList.add('active'); document.getElementById('btnMap').classList.remove('active');
-                document.getElementById('view-list').style.display = 'flex'; document.getElementById('view-map').style.display = 'none';
-            } else {
-                document.getElementById('btnMap').classList.add('active'); document.getElementById('btnList').classList.remove('active');
-                document.getElementById('view-list').style.display = 'none'; document.getElementById('view-map').style.display = 'block';
-                initFullMap();
-            }
-        }
+        function successGPS(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            if (userMarker) map.removeLayer(userMarker);
+            userMarker = L.circleMarker([lat, lng], {
+                color: '#ccff00', fillColor: '#ccff00', fillOpacity: 0.8, radius: 6
+            }).addTo(map);
+            
+            map.setView([lat, lng], 12);
+            document.getElementById('gpsStat').innerText = "GPS Aktif • Diurutkan dari terdekat";
+            document.getElementById('gpsStat').style.color = "var(--neon-yellow)";
 
-        function initFullMap() {
-            if(!mapFull) {
-                mapFull = L.map('fullMap', {zoomControl:false}).setView([-6.200000, 106.816666], 11);
-                L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(mapFull);
-            }
-            setTimeout(() => { mapFull.invalidateSize(); }, 200);
-            
-            if(userLat) {
-                const userIcon = L.divIcon({className: 'gps-dot', html:'<div style="width:10px;height:10px;background:blue;border-radius:50%;border:2px solid white;"></div>'});
-                L.marker([userLat, userLng], {icon: userIcon}).addTo(mapFull);
-            }
-            
-            chargers.forEach(item => {
-                L.marker([item.lat, item.lng]).addTo(mapFull)
-                 .bindPopup(`<b>${item.name}</b><br><button onclick="openMapModalFromCluster(${item.id})" style="margin-top:5px;">Lihat Detail</button>`);
+            locations.forEach(loc => {
+                loc.dist = getDistance(lat, lng, loc.lat, loc.lng);
             });
-        }
-        
-        // Expose ke window agar bisa dipanggil dari string popup
-        window.openMapModalFromCluster = (id) => {
-            const item = chargers.find(c => c.id === id);
-            if(item) openMapModal(item);
-        };
 
-        function openMapModal(item) {
-            if (!item) item = currentMapTarget;
-            currentMapTarget = item;
-
-            document.getElementById('mapOverlay').classList.add('active');
-            document.getElementById('mapTitle').innerText = item.name;
-            document.getElementById('mapSub').innerText = `Jarak: ${item.dist ? item.dist.toFixed(1) : '--'} KM`;
-            
-            const realLink = (item.link && item.link.length > 10) ? item.link : `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lng}`;
-            document.getElementById('btnGmaps').href = realLink;
-
-            setTimeout(() => {
-                if(map) { map.remove(); map = null; }
-                map = L.map('mapCanvas', {zoomControl: false}).setView([item.lat, item.lng], 15);
-                L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${JAWG_API}`, {}).addTo(map);
-                L.marker([item.lat, item.lng]).addTo(map).bindPopup(item.name).openPopup();
-                
-                if(userLat) {
-                   L.marker([userLat, userLng]).addTo(map).bindPopup("Anda");
-                }
-            }, 300);
+            locations.sort((a, b) => a.dist - b.dist);
+            renderList();
         }
 
-        window.closeMapModal = () => document.getElementById('mapOverlay').classList.remove('active');
-
-        function getDist(lat1, lon1, lat2, lon2) {
-            const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180;
-            const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
-            return (R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
-        }
-
-        function processData() {
-            if(userLat) { 
-                chargers.forEach(c => c.dist=parseFloat(getDist(userLat,userLng,c.lat,c.lng))); 
-                chargers.sort((a,b)=> { if(isNaN(a.dist)) return 1; if(isNaN(b.dist)) return -1; return a.dist-b.dist; });
-            }
-            
-            if(chargers.length > 0) {
-                const n = chargers[0];
-                currentMapTarget = n;
-                document.getElementById('scanState').style.display = 'none';
-                document.getElementById('foundState').style.display = 'flex';
-                document.getElementById('heroName').innerText = n.name;
-                document.getElementById('heroDist').innerText = n.dist.toFixed(1) + ' KM';
-                document.getElementById('heroInfo').innerText = `${n.city} • ${n.type}`;
-                renderList();
-            }
+        function errorGPS() {
+            document.getElementById('gpsStat').innerText = "GPS Mati • Urutan default";
+            renderList();
         }
 
         function renderList() {
-            const listCont = document.getElementById('mainListContainer');
-            listCont.innerHTML = ''; 
-            let grouped = {};
-            for(let i=0; i<chargers.length; i++) {
-                let item = chargers[i];
-                let city = item.city || 'Lainnya';
-                if(!grouped[city]) grouped[city] = [];
-                grouped[city].push(item);
+            document.getElementById('loading').style.display = 'none';
+            const container = document.getElementById('listContainer');
+            container.innerHTML = "";
+
+            if(locations.length > 0) {
+                const top = locations[0];
+                document.getElementById('heroSection').style.display = 'block';
+                document.getElementById('heroName').innerText = top.name;
+                document.getElementById('heroDesc').innerText = `${top.nozzle} • ${top.type}`;
+                document.getElementById('heroDist').innerText = top.dist.toFixed(1) + " KM";
+                const gLink = top.link && top.link.includes('http') ? top.link : `https://www.google.com/maps/dir/?api=1&destination=${top.lat},${top.lng}&travelmode=two_wheeler`;
+                document.getElementById('heroLink').href = gLink;
             }
-            
-            Object.keys(grouped).forEach(city => {
-                let groupHTML = `<div class="city-group"><div class="city-header"><div class="city-title">${city}</div><div class="city-line"></div></div><div class="h-scroll">`;
-                grouped[city].forEach(item => {
-                    // Passing JSON object safely
-                    // Solusi sederhana: simpan ID di onclick, lalu cari objectnya
-                    groupHTML += `
-                    <div onclick="openMapModalFromCluster(${item.id})" class="mini-card">
-                        <div class="mini-top"><h3>${item.name}</h3><div class="mini-info">${item.type}<br>${item.nozzle}</div></div>
-                        <div class="mini-dist">${item.dist ? item.dist.toFixed(1)+' KM' : ''}</div>
-                    </div>`;
-                });
-                groupHTML += `</div></div>`;
-                listCont.innerHTML += groupHTML;
+
+            locations.forEach(loc => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.onclick = () => { map.flyTo([loc.lat, loc.lng], 16); };
+                const gLink = loc.link && loc.link.includes('http') ? loc.link : `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}&travelmode=two_wheeler`;
+
+                item.innerHTML = `
+                    <div class="item-left">
+                        <div class="item-name">${loc.name}</div>
+                        <div class="item-info">
+                            <span class="badge">${loc.nozzle}</span>
+                            <span style="color:#ccc">${loc.type}</span>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="item-dist">${loc.dist.toFixed(1)} KM</div>
+                        <button class="btn-go" onclick="window.open('${gLink}', '_blank')">GO</button>
+                    </div>
+                `;
+                container.appendChild(item);
             });
         }
+
+        function getDistance(lat1,lon1,lat2,lon2) {
+            var R = 6371; 
+            var dLat = (lat2-lat1) * (Math.PI/180);  
+            var dLon = (lon2-lon1) * (Math.PI/180); 
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1*(Math.PI/180)) * Math.cos(lat2*(Math.PI/180)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            return R * c; 
+        }
+
+        loadData();
     </script>
 </body>
 </html>
