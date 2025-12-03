@@ -3,153 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Fast Charging V75 (Unix Stable)</title>
-
+    <title>MLU SUPER APP (Dark)</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-
+    
     <style>
-        /* --- TEMA PUTIH (LOGO BACKGROUND) --- */
+        /* =========================================
+           1. GLOBAL STYLE (DARK MODE)
+           ========================================= */
         :root {
-            --bg-overlay: rgba(255, 255, 255, 0.85);
-            --glass: rgba(255, 255, 255, 0.95);
-            --text: #1a1a1a; --text-muted: #555;
-            --cyan: #00bcd4; --soft-red: #ff3b3b;
+            --bg-dark: #0b101a;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+            --text-muted: #8899a6;
+            --cyan: #00bcd4;
+            --soft-red: #ff3b3b;
             --neon-yellow: #ccff00;
-            --border: #ddd; --card-bg: #fff;
-            --shadow: 0 5px 20px rgba(0,0,0,0.08);
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            margin: 0; font-family: 'Rajdhani', sans-serif; color: var(--text); min-height: 100vh; padding: 20px; padding-bottom: 120px;
-            background-image: url('1763947427555.jpg'); 
-            background-size: cover; background-position: center; background-attachment: fixed; position: relative;
+            margin: 0; font-family: 'Rajdhani', sans-serif; 
+            background-color: var(--bg-dark); color: var(--text);
+            height: 100vh; overflow: hidden; /* Kunci scroll di menu utama */
         }
-        body::before { content: ''; position: absolute; inset: 0; background: var(--bg-overlay); z-index: -1; }
 
-        .container { max-width: 480px; margin: 0 auto; position: relative; }
-        .header-row { display: flex; justify-content: center; margin-top: 20px; margin-bottom: 5px; }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 26px; margin: 0; color: #000; letter-spacing: 2px; text-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        .subtitle { text-align: center; color: var(--text-muted); font-size: 11px; letter-spacing: 3px; margin-bottom: 25px; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid var(--cyan); padding-bottom: 10px; display: inline-block; width: 100%; }
+        /* BACKGROUND UTAMA (MENU) */
+        #page-home {
+            height: 100%; width: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            /* Background Image (Logo) redup */
+            background: linear-gradient(rgba(11,16,26,0.9), rgba(11,16,26,0.9)), url('1000240467.jpg');
+            background-size: cover; background-position: center;
+            position: absolute; inset: 0; z-index: 1;
+            transition: transform 0.3s ease;
+        }
 
-        .glass-card { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 25px; }
-        label { display: block; font-family: 'Orbitron'; font-size: 11px; color: #000; margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; }
-        input.field { width: 100%; background: #f8f9fa; border: 2px solid #ccc; color: #000; padding: 15px; border-radius: 12px; font-family: 'Rajdhani'; font-size: 22px; font-weight: 700; outline: none; transition: 0.3s; margin-bottom: 15px; text-align: center; }
-        input.field:focus { border-color: var(--cyan); background: #fff; }
+        /* =========================================
+           2. HOME MENU DESIGN
+           ========================================= */
+        .logo-area { margin-bottom: 40px; text-align: center; }
+        .logo-area h1 { 
+            font-family: 'Orbitron'; font-size: 36px; margin: 0; 
+            background: linear-gradient(to right, #fff, var(--cyan)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 3px; 
+        }
+        .logo-area p { 
+            font-size: 12px; color: var(--text-muted); letter-spacing: 5px; 
+            border-bottom: 2px solid var(--cyan); display: inline-block; padding-bottom: 5px;
+        }
+
+        .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; }
         
-        .btn-cyan { width: 100%; background: var(--cyan); border: none; padding: 18px; border-radius: 12px; color: #fff; font-family: 'Orbitron'; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3); margin-top: 5px; transition: 0.2s; }
+        .menu-btn {
+            background: var(--bg-card); border: 1px solid var(--border);
+            padding: 20px; border-radius: 15px; cursor: pointer;
+            display: flex; align-items: center; gap: 20px;
+            transition: 0.2s; text-decoration: none; color: #fff;
+            backdrop-filter: blur(10px);
+        }
+        .menu-btn:active { transform: scale(0.96); background: rgba(0, 188, 212, 0.1); }
+        
+        .menu-icon { 
+            font-size: 28px; width: 50px; height: 50px; 
+            background: rgba(0, 188, 212, 0.1); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--cyan); border: 1px solid var(--cyan);
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.2);
+        }
+        
+        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; letter-spacing: 1px; }
+        .menu-text span { font-size: 12px; color: var(--text-muted); }
+
+        /* =========================================
+           3. APP CONTAINERS (PAGES)
+           ========================================= */
+        
+        /* Container untuk IFRAME (Lokasi & SOS) */
+        #page-frame {
+            position: fixed; inset: 0; z-index: 100; 
+            background: var(--bg-dark); display: none; flex-direction: column;
+        }
+        #contentFrame { flex: 1; border: none; width: 100%; height: 100%; }
+
+        /* Container untuk ANTRIAN (Internal App) */
+        #page-antrian {
+            position: fixed; inset: 0; z-index: 100;
+            background: var(--bg-dark); 
+            display: none; /* Hidden by default */
+            overflow-y: auto; /* Scrollable */
+            padding-bottom: 100px;
+        }
+
+        /* Header Navigasi (Tombol Back) */
+        .nav-header {
+            background: rgba(11, 16, 26, 0.95); padding: 15px 20px;
+            display: flex; align-items: center; gap: 15px;
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+        .btn-back {
+            background: none; border: 1px solid var(--border); color: var(--cyan);
+            font-size: 18px; width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .nav-title { font-family: 'Orbitron'; font-weight: bold; font-size: 16px; letter-spacing: 1px; }
+
+        /* =========================================
+           4. STYLE HALAMAN ANTRIAN (V69 DARK)
+           ========================================= */
+        .antrian-container { padding: 20px; max-width: 480px; margin: 0 auto; }
+        
+        .glass-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+        
+        .field { 
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            color: #fff; padding: 15px; border-radius: 10px; 
+            font-family: 'Rajdhani'; font-size: 20px; font-weight: bold; text-align: center;
+            margin-bottom: 15px; outline: none;
+        }
+        .field:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
+        
+        .btn-cyan { 
+            width: 100%; background: linear-gradient(90deg, var(--cyan), #008ba3); 
+            border: none; padding: 15px; border-radius: 10px; 
+            color: #000; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+        }
         .btn-cyan:active { transform: scale(0.98); }
 
-        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 30px; }
-        .slot-box { background: #fff; border: 2px solid #eee; border-radius: 15px; padding: 15px 5px; text-align: center; min-height: 170px; display: flex; flex-direction: column; justify-content: center; position: relative; box-shadow: var(--shadow); transition: 0.3s; }
-        .slot-box.active { border-color: var(--cyan); background: #e0f7fa; transform: translateY(-3px); }
+        .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .slot-box { 
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 15px; 
+            padding: 10px 5px; text-align: center; min-height: 160px; 
+            display: flex; flex-direction: column; justify-content: center; 
+        }
+        .slot-box.active { border-color: var(--cyan); background: rgba(0, 188, 212, 0.1); }
 
-        .bat-icon { width: 40px; height: 70px; border: 3px solid #333; border-radius: 8px; position: relative; margin: 0 auto 15px; display: flex; align-items: flex-end; padding: 3px; background: #fff; }
-        .bat-icon::before { content: ''; position: absolute; top: -6px; left: 12px; width: 12px; height: 4px; background: #333; }
-        .bat-fill { width: 100%; background: var(--cyan); border-radius: 3px; transition: height 0.5s; }
-        .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; color: #333; z-index: 2; }
+        .bat-icon { 
+            width: 36px; height: 60px; border: 2px solid var(--text-muted); border-radius: 6px; 
+            position: relative; margin: 0 auto 10px; display: flex; align-items: flex-end; padding: 2px; 
+        }
+        .bat-icon::before { content: ''; position: absolute; top: -5px; left: 10px; width: 12px; height: 3px; background: var(--text-muted); }
+        .bat-fill { width: 100%; background: var(--cyan); border-radius: 3px; transition: height 0.5s; box-shadow: 0 0 10px var(--cyan); }
+        .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 20px; color: #fff; text-shadow: 0 0 5px #000; z-index: 2; }
         
-        .btn-act { width: 100%; padding: 10px; border-radius: 8px; border: none; font-weight: bold; font-family: 'Orbitron'; font-size: 11px; margin-top: auto; cursor: pointer; }
-        .btn-start { background: var(--cyan); color: #fff; }
-        .btn-stop { background: #fff; border: 2px solid var(--soft-red); color: var(--soft-red); }
+        .slot-box.active .bat-icon { border-color: var(--cyan); }
+        .slot-box.active .bat-icon::before { background: var(--cyan); }
 
-        @keyframes blinkBorder {
+        .btn-act { width: 100%; padding: 8px; border-radius: 6px; border: none; font-weight: bold; font-family: 'Orbitron'; font-size: 10px; margin-top: auto; cursor: pointer; }
+        .btn-start { background: var(--cyan); color: #000; }
+        .btn-stop { background: rgba(255, 59, 59, 0.1); border: 1px solid var(--soft-red); color: var(--soft-red); }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; }
+        .modal-box { background: #111; border: 1px solid var(--cyan); padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
+        .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; margin: 5px; }
+        .btn-modal.primary { background: var(--cyan); color: #000; }
+        .btn-modal.danger { background: var(--soft-red); color: #fff; }
+
+        /* INFO RULE NEON */
+        @keyframes neonPulse {
             0% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
-            50% { border-color: #ffd700; box-shadow: 0 0 15px #ffd700; }
+            50% { border-color: #fff; box-shadow: 0 0 15px var(--neon-yellow); }
             100% { border-color: var(--neon-yellow); box-shadow: 0 0 5px var(--neon-yellow); }
         }
         .rule-info { 
-            font-size: 14px; color: #333; text-align: center; 
-            margin-top: 15px; font-family: 'Orbitron'; font-weight: 900;
-            padding: 12px; border-radius: 12px; 
-            background: #fff; border: 3px solid var(--neon-yellow); 
-            animation: blinkBorder 1.5s infinite; display: none;
-            line-height: 1.5; text-transform: uppercase;
+            font-size: 14px; color: var(--neon-yellow); text-align: center; 
+            margin-top: 15px; font-family: 'Orbitron'; font-weight: bold;
+            padding: 12px; border-radius: 10px; background: rgba(0,0,0,0.3);
+            border: 2px solid var(--neon-yellow); animation: neonPulse 1.5s infinite; 
+            display: none;
         }
 
-        .admin-trigger { text-align: center; margin-top: 40px; padding: 12px; font-size: 12px; letter-spacing: 2px; color: #999; cursor: pointer; font-weight: bold; border-radius: 8px; border: 1px dashed #ccc; background: rgba(255,255,255,0.6); }
-        .admin-panel { display: none; background: #fff; padding: 25px; border-radius: 20px; border: 2px solid var(--soft-red); margin-top: 20px; box-shadow: var(--shadow); }
-        .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; margin-bottom: 8px; font-size: 12px; }
+        /* ADMIN */
+        .admin-trigger { text-align: center; margin-top: 30px; padding: 10px; border: 1px dashed #333; color: #555; font-size: 10px; cursor: pointer; border-radius: 8px; }
+        .admin-panel { display: none; background: #000; padding: 20px; border: 1px solid var(--soft-red); border-radius: 15px; margin-top: 20px; }
         .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .adm-input { background: #f9f9f9; border: 1px solid #ddd; color: #333; padding: 10px; width: 100%; border-radius: 8px; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; align-items: center; justify-content: center; }
-        .modal-box { background: #fff; border-top: 5px solid var(--cyan); padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; animation: pop 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-modal { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; background: #f0f0f0; color: #333; }
-        .btn-modal.primary { background: var(--cyan); color: #fff; }
-        .btn-modal.danger { background: var(--soft-red); color: #fff; }
-
-        .footer { text-align: center; margin-top: 50px; font-family: 'Orbitron'; font-size: 12px; color: #888; font-weight: 900; letter-spacing: 2px; }
-        @keyframes pop { from{transform:scale(0.8); opacity:0} to{transform:scale(1); opacity:1} }
     </style>
 </head>
 <body>
 
     <audio id="alarmSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mp3"></audio>
-    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;pointer-events:none;position:fixed;"><source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAs9tZGF0AAACrQYF//+63AgXgAAAAJBlLmZmZ2xpYnZkcy5zb2Z0IHZvMC4xMC4xMjkxAAAAAAABAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" type="video/mp4"></video>
+    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
 
     <div id="masterModal" class="modal">
         <div id="modalBox" class="modal-box">
-            <span id="mIcon" style="font-size:50px; display:block; margin-bottom:15px;">✅</span>
-            <h3 id="mTitle" style="font-family:'Orbitron'; margin:0 0 10px; color:#333">TITLE</h3>
-            <p id="mMsg" style="color:#666; font-size:15px; margin-bottom:20px;">Message</p>
-            <input type="password" id="mInput" style="display:none; width:100%; padding:12px; text-align:center; margin-bottom:15px; border-radius:8px; border:1px solid #ccc; font-size:18px;" placeholder="PIN">
-            <div class="modal-btns">
-                <button id="mBtnCancel" class="btn-modal" onclick="closeModal()" style="display:none;">BATAL</button>
+            <h3 id="mTitle" style="font-family:'Orbitron'; margin:0 0 10px; color:#fff">TITLE</h3>
+            <p id="mMsg" style="color:#aaa; font-size:14px; margin-bottom:20px;">Message</p>
+            <input type="password" id="mInput" class="field" style="display:none; font-size:18px;" placeholder="PIN">
+            <div style="display:flex;">
+                <button id="mBtnCancel" class="btn-modal" onclick="closeModal()" style="display:none; background:#333; color:#fff;">BATAL</button>
                 <button id="mBtnOk" class="btn-modal primary" onclick="closeModal()">OK</button>
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="header-row"><h1>FAST CHARGING</h1></div>
-        <div class="subtitle">KELAPA GADING | HOME OF MLU</div>
+    <div id="page-home">
+        <div class="logo-area">
+            <h1>MLU APPS</h1>
+            <p>ONE STOP SOLUTION</p>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-btn" onclick="openFrame('https://punyaaris1-lang.github.io/LokasiFC/', 'LOKASI FC')">
+                <div class="menu-icon">📍</div>
+                <div class="menu-text">
+                    <h3>LOKASI FC</h3>
+                    <span>Cari charging station</span>
+                </div>
+            </div>
+            <div class="menu-btn" onclick="openFrame('https://punyaaris1-lang.github.io/LokasiFC/#sos', 'DARURAT / SOS')">
+                <div class="menu-icon">🆘</div>
+                <div class="menu-text">
+                    <h3>BANTUAN SOS</h3>
+                    <span>Layanan darurat 24 jam</span>
+                </div>
+            </div>
+            <div class="menu-btn" onclick="openAntrian()">
+                <div class="menu-icon">⚡</div>
+                <div class="menu-text">
+                    <h3>ANTRIAN ONLINE</h3>
+                    <span>Daftar & Pantau Charging</span>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:40px; font-size:10px; color:#555;">v8.1 | MLU Squad</div>
+    </div>
 
-        <div class="glass-card">
-            <label>PLAT NOMOR</label>
-            <input id="userPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-            <label>NOMOR WHATSAPP</label>
-            <input id="userWa" class="field" type="number" placeholder="08xxxxxxxxxx">
-            <label>BATERAI (%)</label>
-            <input id="userBattery" type="number" class="field" placeholder="0 - 99">
+    <div id="page-frame">
+        <div class="nav-header">
+            <button class="btn-back" onclick="closeFrame()">⬅</button>
+            <span class="nav-title" id="frameTitle" style="color:#fff;">JUDUL</span>
+        </div>
+        <iframe id="contentFrame" src=""></iframe>
+    </div>
+
+    <div id="page-antrian">
+        <div class="nav-header">
+            <button class="btn-back" onclick="closeAntrian()">⬅</button>
+            <span class="nav-title" style="color:#fff;">ANTRIAN CHARGING</span>
+        </div>
+
+        <div class="antrian-container">
+            <div class="glass-card">
+                <label style="color:#aaa; font-size:10px;">PLAT NOMOR</label>
+                <input id="userPlat" class="field" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                
+                <label style="color:#aaa; font-size:10px;">NOMOR WHATSAPP</label>
+                <input id="userWa" class="field" type="number" placeholder="08xxxxxxxxxx">
+
+                <label style="color:#aaa; font-size:10px;">BATERAI (%)</label>
+                <input id="userBattery" type="number" class="field" placeholder="0 - 99">
+                
+                <div id="ruleInfo" class="rule-info"></div>
+
+                <button id="btnDaftar" class="btn-cyan" onclick="window.daftarAntrian()">DAFTAR ANTRIAN</button>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <div style="width:10px; height:10px; background:var(--cyan); border-radius:50%; box-shadow:0 0 10px var(--cyan);"></div>
+                <span style="font-family:'Orbitron'; font-size:12px; color:#fff;">STATUS 3 SLOT</span>
+            </div>
+
+            <div class="slots-grid" id="slotsContainer">
+                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#555;">Loading System...</div>
+            </div>
+
+            <div class="glass-card" style="padding:15px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                    <span style="font-family:'Orbitron'; font-size:12px; color:#fff;">DAFTAR TUNGGU</span>
+                    <span id="qCount" style="font-size:12px; color:var(--cyan);">0</span>
+                </div>
+                <div id="queueList"></div>
+            </div>
+
+            <div class="admin-trigger" onclick="window.openAdminLogin()">🔒 ADMIN CONTROL PANEL</div>
             
-            <div id="ruleInfo" class="rule-info"></div>
-            <button id="btnDaftar" class="btn-cyan" onclick="window.daftarAntrian()">DAFTAR ANTRIAN</button>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-            <div style="width:10px; height:10px; background:var(--cyan); border-radius:50%;"></div>
-            <span style="font-family:'Orbitron'; font-size:12px; color:#333; font-weight:bold;">STATUS 3 SLOT</span>
-        </div>
-        <div class="slots-grid" id="slotsContainer"><div style="grid-column:1/-1; text-align:center; padding:40px; color:#999;">Loading System...</div></div>
-        
-        <div class="glass-card" style="padding:20px; min-height:100px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:2px solid #f0f0f0; padding-bottom:10px;">
-                <span style="font-family:'Orbitron'; font-size:12px; color:#333; font-weight:bold;">DAFTAR TUNGGU</span>
-                <span id="qCount" style="font-size:12px; color:var(--cyan); font-weight:bold;">0</span>
+            <div id="adminPanel" class="admin-panel">
+                <h4 style="color:var(--soft-red); text-align:center; margin-top:0; font-family:'Orbitron'">MASTER CONTROL</h4>
+                <div class="adm-row">
+                    <select id="manSlot" class="field" style="width:70%; font-size:14px; padding:10px;"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
+                    <button onclick="window.clearSlotManual()" class="btn-modal danger" style="width:30%;">HAPUS</button>
+                </div>
+                <button onclick="window.fillFromQueue()" class="btn-cyan" style="width:100%; margin-bottom:10px;">⬆️ NAIKKAN ANTRIAN</button>
+                <button onclick="window.startAllSlots()" class="btn-cyan" style="width:100%; background:#fff; color:#000;">⚡ MULAI SEMUA & KIRIM WA</button>
+                <div class="adm-row" style="margin-top:10px;">
+                    <input id="blockPlatInput" class="field" placeholder="Blokir Plat" style="font-size:14px; padding:10px; margin:0;">
+                    <button onclick="window.blockUser()" class="btn-modal danger" style="width:30%; margin:0;">BLOK</button>
+                </div>
+                <button onclick="window.resetAll()" class="btn-modal danger" style="width:100%; margin-top:10px; background:none; border:1px solid var(--soft-red);">RESET TOTAL</button>
+                <div onclick="document.getElementById('adminPanel').style.display='none'" style="text-align:center; margin-top:15px; font-size:10px; color:#555; cursor:pointer;">Tutup Panel</div>
             </div>
-            <div id="queueList"></div>
         </div>
-
-        <div class="admin-trigger" onclick="window.openAdminLogin()">🔒 ADMIN CONTROL PANEL</div>
-        <div id="adminPanel" class="admin-panel">
-            <h4 style="color:var(--soft-red); text-align:center; margin-top:0;">MASTER CONTROL</h4>
-            <div class="adm-row">
-                <select id="manSlot" class="adm-input" style="width:70%"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
-                <button onclick="window.clearSlotManual()" class="adm-btn" style="background:#666; color:#fff; width:30%;">HAPUS</button>
-            </div>
-            <button onclick="window.fillFromQueue()" class="adm-btn" style="background:var(--cyan); color:#fff;">⬆️ NAIKKAN ANTRIAN (AUTO)</button>
-            <button onclick="window.startAllSlots()" class="adm-btn" style="background:#333; color:#fff;">⚡ MULAI SEMUA & KIRIM WA</button>
-            <div class="adm-row">
-                <input id="blockPlatInput" placeholder="Plat Blokir" class="adm-input">
-                <button onclick="window.blockUser()" class="adm-btn" style="width:30%; background:var(--soft-red); color:#fff;">BLOK</button>
-            </div>
-            <button onclick="window.resetAll()" class="adm-btn" style="border:2px solid var(--soft-red); background:none; color:var(--soft-red);">RESET DATA TOTAL</button>
-            <div onclick="document.getElementById('adminPanel').style.display='none'" style="text-align:center; margin-top:15px; font-size:10px; color:#999; cursor:pointer;">Tutup Panel</div>
-        </div>
-        <div class="footer">Created by : MLU SQUAD</div>
     </div>
 
     <script type="module">
@@ -157,6 +308,7 @@
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const FONNTE_TOKENS = ["Fc8dWb7jiKr7CXuEZXBx"];
+        
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -167,20 +319,31 @@
         const alarmAudio = document.getElementById('alarmSound');
         const fakeVideo = document.getElementById('fakeVideo');
 
-        // --- KEEP AWAKE SYSTEM (AUDIO & VIDEO) ---
-        function keepAwake() {
+        // --- UI NAVIGATION ---
+        window.openFrame = (url, title) => {
+            document.getElementById('frameTitle').innerText = title;
+            document.getElementById('contentFrame').src = url;
+            document.getElementById('page-frame').style.display = 'flex';
+        };
+        window.closeFrame = () => {
+            document.getElementById('page-frame').style.display = 'none';
+            document.getElementById('contentFrame').src = '';
+        };
+        window.openAntrian = () => { document.getElementById('page-antrian').style.display = 'block'; };
+        window.closeAntrian = () => { document.getElementById('page-antrian').style.display = 'none'; };
+
+        // --- SYSTEM PRIMER ---
+        function primeSystem() {
             if(alarmAudio.paused) {
                 alarmAudio.volume = 0.01;
-                alarmAudio.play().then(() => { 
-                    setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime = 0; alarmAudio.volume = 1.0; }, 100); 
-                }).catch(() => {});
-                // Play fake video to keep screen on
-                fakeVideo.play().catch(()=>{});
+                alarmAudio.play().then(() => { setTimeout(() => { alarmAudio.pause(); alarmAudio.currentTime=0; alarmAudio.volume=1.0; }, 100); }).catch(()=>{});
             }
+            if(fakeVideo.paused) fakeVideo.play().catch(()=>{});
         }
-        document.body.addEventListener('click', keepAwake);
-        document.body.addEventListener('touchstart', keepAwake);
+        document.body.addEventListener('click', primeSystem);
+        document.body.addEventListener('touchstart', primeSystem);
 
+        // --- HELPER ---
         function addMyPlat(plat) {
             let plats = JSON.parse(localStorage.getItem('myPlats') || '[]');
             if(!plats.includes(plat)) plats.push(plat);
@@ -190,34 +353,24 @@
             let plats = JSON.parse(localStorage.getItem('myPlats') || '[]');
             return plats.includes(plat);
         }
-
         window.closeModal = () => document.getElementById('masterModal').style.display = 'none';
         function formatPhone(p) { p = p.replace(/\D/g,''); if(p.startsWith('0')) p = '62' + p.substring(1); if(!p.startsWith('62')) p = '62' + p; return p; }
+        function createMsg(type, plat, extra="") { return `*Halo Sahabat MLU!*\n\n${type} *${plat}* ${extra}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`; }
 
-        function createMsg(type, plat, extra = "") {
-            return `*Halo Sahabat MLU!*\n\n${type} *${plat}* ${extra}.\n\nPesan ini dikirim otomatis oleh Admin melalui aplikasi charging pintar MLU. Terima kasih sudah singgah di Rumah MLU.`;
-        }
-
-        // --- SMART WA SCHEDULING (UNIX TIMESTAMP) ---
+        // --- WA LOGIC ---
         async function scheduleWhatsapp(target, plat, durationMinutes, targetPersen) {
             const p = formatPhone(target);
             const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
-            
-            // Hitung Waktu Selesai (UNIX TIMESTAMP DETIK)
-            const nowUnix = Math.floor(Date.now() / 1000);
-            const scheduleUnix = nowUnix + (durationMinutes * 60); // Detik sekarang + Durasi detik
-            
+            const now = new Date();
+            const sendTime = new Date(now.getTime() + (durationMinutes * 60000));
+            const y = sendTime.getFullYear(); const m = String(sendTime.getMonth()+1).padStart(2,'0'); const d = String(sendTime.getDate()).padStart(2,'0'); const h = String(sendTime.getHours()).padStart(2,'0'); const min = String(sendTime.getMinutes()).padStart(2,'0'); const s = String(sendTime.getSeconds()).padStart(2,'0');
+            const scheduleTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
             const msg = createMsg("Pengecasan motor", plat, `telah selesai (Target ${targetPersen}%)`);
             const formData = new FormData();
-            formData.append("target", p); 
-            formData.append("message", msg); 
-            formData.append("schedule", scheduleUnix); // KIRIM FORMAT UNIX
-            formData.append("countryCode", "62"); 
-            
+            formData.append("target", p); formData.append("message", msg); formData.append("schedule", scheduleTime); formData.append("countryCode", "62"); 
             try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
         }
 
-        // --- WA INSTANT ---
         async function sendWA(target, message) {
             const p = formatPhone(target);
             const randomToken = FONNTE_TOKENS[Math.floor(Math.random() * FONNTE_TOKENS.length)];
@@ -226,18 +379,16 @@
             try { fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": randomToken }, body: formData }); } catch(e) {}
         }
 
-        // --- DAFTAR ---
+        // --- APP LOGIC ---
         window.daftarAntrian = async () => {
-            keepAwake();
+            primeSystem();
             const btn = document.getElementById('btnDaftar');
             const plat = document.getElementById('userPlat').value.toUpperCase().trim();
             const wa = document.getElementById('userWa').value.trim();
             const bat = parseInt(document.getElementById('userBattery').value);
-
             if(!plat || !wa || isNaN(bat)) { showPopup('error','DATA KURANG','Isi semua data!'); return; }
             btn.disabled=true; btn.innerText="PROSES...";
             addMyPlat(plat); 
-
             try {
                 await runTransaction(db, async(t)=>{
                     const d = (await t.get(ref)).data() || {};
@@ -256,7 +407,6 @@
                     const empty = s.findIndex(x=>x===null);
                     if(empty!==-1) s[empty] = item; else q.push(item);
                     t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-                    
                     if(wa) sendWA(wa, createMsg("Motor", plat, "berhasil terdaftar di antrian"));
                 });
                 showPopup('success','BERHASIL','Masuk Antrian.');
@@ -266,7 +416,6 @@
             btn.disabled=false; btn.innerText="DAFTAR ANTRIAN";
         };
 
-        // --- RENDER ---
         onSnapshot(ref, (snap) => {
             const d = snap.data() || {};
             const slots = d.chargingSlots || [null,null,null];
@@ -280,21 +429,17 @@
             } else { infoBox.style.display = 'none'; }
 
             document.getElementById('slotsContainer').innerHTML = slots.map((x,i)=>{
-                if(!x) return `<div class="slot-box" style="opacity:0.6; border:2px dashed #ccc;"><div class="bat-icon" style="border-color:#ccc; background:none;"></div><div style="font-size:12px; color:#999; font-weight:bold;">KOSONG</div></div>`;
+                if(!x) return `<div class="slot-box" style="opacity:0.6; border:2px dashed #444;"><div class="bat-icon" style="border-color:#444; background:none;"></div><div style="font-size:12px; color:#888;">KOSONG</div></div>`;
                 const isRun = !!x.startTime; 
                 let btn = isRun ? `<button class="btn-act btn-stop" onclick="window.act(${i},'stop', '${x.name}')">STOP</button>` : `<button class="btn-act btn-start" onclick="window.act(${i},'start', '${x.name}')">MULAI</button>`;
                 let startMs = isRun ? (x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime()) : 0;
                 let endMs = isRun ? startMs + (x.durationMinutes*60000) : 0;
                 let h = x.startBattery;
-                let targetInfo = `<div style="font-size:11px; color:var(--text-muted); font-weight:bold;">Target: ${x.targetLimit}%</div>`;
-                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:h}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div><div style="font-weight:bold; font-size:18px; color:#333;">${x.name}</div>${targetInfo}<div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">${isRun ? "..." : "Tap MULAI"}</div>${btn}</div>`;
+                let targetInfo = `<div style="font-size:11px; color:#fff; font-weight:bold;">Target: ${x.targetLimit}%</div>`;
+                return `<div class="slot-box active"><div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:h}%"></div><div class="bat-bolt" style="color:var(--text)">⚡</div></div><div style="font-weight:bold; font-size:18px; color:#fff;">${x.name}</div>${targetInfo}<div id="timerDisplay-${i}" class="timer-display" data-run="${isRun}" data-end="${endMs}" data-name="${x.name}" data-phone="${x.phone}" data-target="${x.targetLimit}" style="font-size:22px; font-weight:bold; color:var(--cyan); margin:10px 0;">${isRun ? "..." : "Tap MULAI"}</div>${btn}</div>`;
             }).join('');
             document.getElementById('qCount').innerText = q.length;
-            document.getElementById('queueList').innerHTML = q.length ? q.map((x,i)=>`
-                <div style="display:flex; justify-content:space-between; padding:12px; background:#f9f9f9; margin-bottom:8px; border-radius:10px; border:1px solid #eee;">
-                    <div><b style="color:#333;">${x.name}</b> <span style="font-size:11px; color:#777;">(${x.startBattery}% -> ${x.targetLimit}%)</span></div>
-                    <button onclick="window.delQ(${i}, '${x.name}')" style="background:none; border:none; color:var(--soft-red); font-weight:bold;">✕</button>
-                </div>`).join('') : '<div style="text-align:center; color:#999; font-size:12px;">Antrian Kosong</div>';
+            document.getElementById('queueList').innerHTML = q.length ? q.map((x,i)=>`<div style="display:flex; justify-content:space-between; padding:12px; background:rgba(255,255,255,0.1); margin-bottom:8px; border-radius:10px; border:1px solid #444; color:#fff;"><div><b>${x.name}</b> <span style="font-size:11px;">(${x.startBattery}% -> ${x.targetLimit}%)</span></div><button onclick="window.delQ(${i}, '${x.name}')" style="background:none; border:none; color:var(--soft-red); font-weight:bold;">✕</button></div>`).join('') : '<div style="text-align:center; color:#555; font-size:12px;">Antrian Kosong</div>';
         });
 
         setInterval(() => {
@@ -322,7 +467,7 @@
         }, 1000);
 
         window.act = (i, type, platName) => {
-            keepAwake();
+            primeSystem();
             if(type === 'stop') {
                 if(!isAdminLoggedIn && !isMyPlat(platName)) return showPopup('error', 'AKSES DITOLAK', 'Bukan kendaraan Anda!');
                 showPopup('confirm', 'STOP', 'Stop Slot?', () => {
@@ -336,7 +481,7 @@
                     const d = (await t.get(ref)).data(); const s = d.chargingSlots;
                     if(s[i]) {
                         if(s[i].phone) {
-                            sendWA(s[i].phone, createMsg("Motor", s[i].name, `mulai dicas. Estimasi ${s[i].durationMinutes} menit`));
+                            sendFonnte(s[i].phone, createMsg("Motor", s[i].name, `mulai dicas. Estimasi ${s[i].durationMinutes} menit`));
                             scheduleWhatsapp(s[i].phone, s[i].name, s[i].durationMinutes, s[i].targetLimit);
                         }
                         s[i].startTime = new Date();
@@ -350,7 +495,7 @@
         window.openAdminLogin = () => showPopup('admin', 'ADMIN LOGIN', 'Masukkan PIN');
         window.clearSlotManual = () => { const i = document.getElementById('manSlot').value; showPopup('confirm', 'HAPUS', 'Kosongkan Slot?', () => { runTransaction(db, async(t)=>{ const s = (await t.get(ref)).data().chargingSlots; s[i] = null; t.update(ref, {chargingSlots:s}); }); }); };
         window.fillFromQueue = () => { runTransaction(db, async(t) => { const d = (await t.get(ref)).data(); let s = d.chargingSlots; let q = d.waitingQueue; if(q.length === 0) throw "Antrian Kosong!"; const emptyIdx = s.findIndex(x => x === null); if(emptyIdx === -1) throw "Semua Slot Penuh!"; s[emptyIdx] = q.shift(); t.update(ref, {chargingSlots:s, waitingQueue:q}); }).catch(e => showPopup('error', 'GAGAL', e)); };
-        window.startAllSlots = () => { showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => { runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; s.forEach((slot) => { if(slot && !slot.startTime) { if(slot.phone) { sendWA(slot.phone, createMsg("Motor", slot.name, "mulai dicas")); scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit); } slot.startTime = new Date(); startedCount++; } }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); }); }); };
+        window.startAllSlots = () => { showPopup('confirm', 'MULAI SEMUA', 'Start semua & kirim WA?', () => { runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); let s = d.chargingSlots; let startedCount = 0; s.forEach((slot) => { if(slot && !slot.startTime) { if(slot.phone) { sendFonnte(slot.phone, createMsg("Motor", slot.name, "mulai dicas")); scheduleWhatsapp(slot.phone, slot.name, slot.durationMinutes, slot.targetLimit); } slot.startTime = new Date(); startedCount++; } }); if(startedCount > 0) t.update(ref, {chargingSlots:s}); }); }); };
         window.blockUser = async () => { const p = document.getElementById('blockPlatInput').value.toUpperCase().trim(); if(!p) return; await runTransaction(db, async (t) => { const d = (await t.get(ref)).data(); const l = d.blockedList || []; if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l}); }); showPopup('success', 'BLOKIR', `Plat ${p} diblokir.`); };
         window.resetAll = () => { showPopup('confirm', 'RESET', 'Reset Semua?', () => { setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); }); };
 
