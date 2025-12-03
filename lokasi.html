@@ -13,7 +13,7 @@
             --accent: #CCFF00; /* KUNING STABILO */
             --cyan: #00bcd4;
             --dark: #0b101a;
-            --glass-dark: rgba(11, 16, 26, 0.85);
+            --glass-dark: rgba(11, 16, 26, 0.85); /* Warna Kaca Gelap */
             --glass-item: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
             --text: #ffffff;
@@ -37,7 +37,7 @@
         }
         .btn-back:active { transform: scale(0.9); background: var(--cyan); color: #000; }
 
-        /* ICON PETIR GLOWING */
+        /* ICON PETIR GLOWING (PENGGANTI JUDUL) */
         .lightning-box {
             pointer-events: auto; cursor: pointer;
             font-size: 32px; color: var(--accent);
@@ -45,8 +45,8 @@
             transition: transform 0.1s;
         }
         /* Animasi Kedip saat diklik */
-        .lightning-box.blink { animation: flash 0.1s infinite; }
-        @keyframes flash { 0% {opacity:1; transform:scale(1.2);} 50% {opacity:0.2; transform:scale(0.8);} 100% {opacity:1; transform:scale(1.2);} }
+        .lightning-box.blink { animation: flash 0.2s ease-in-out; }
+        @keyframes flash { 0% {opacity:1; transform:scale(1);} 50% {opacity:0.2; transform:scale(1.3);} 100% {opacity:1; transform:scale(1);} }
 
         /* MAP CONTAINER */
         #map { flex: 1; width: 100%; height: 100%; z-index: 1; background: #111; }
@@ -135,15 +135,15 @@
     <div class="list-overlay">
         <div class="list-header">
             <div class="drag-handle"></div>
-            <h3 class="list-title">LOKASI CHARGING</h3>
-            <div id="gpsStat" class="gps-status">Mencari satelit...</div>
+            <h3 class="list-title">DAFTAR LOKASI</h3>
+            <div id="gpsStat" class="gps-status">Mencari lokasi Anda...</div>
         </div>
         
         <div class="scroll-area">
             <div class="hero-section" id="heroSection" style="display:none;">
                 <div class="hero-card">
                     <div style="display:flex; justify-content:space-between;">
-                        <span class="hero-badge">REKOMENDASI</span>
+                        <span class="hero-badge">TERDEKAT</span>
                         <span class="item-dist" id="heroDist">-- KM</span>
                     </div>
                     <h2 class="hero-title" id="heroName">Nama Lokasi</h2>
@@ -160,29 +160,30 @@
     <script>
         // CONFIG
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+        // TOKEN PETA JAWG MATRIX (DARK THEME)
         const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
         
         let map = L.map('map', {zoomControl: false}).setView([-6.200000, 106.816666], 11);
         let userMarker = null;
         let locations = [];
 
-        // TILE LAYER (Dark Mode - Jawg Matrix agar serasi dengan tema)
+        // TILE LAYER (Jawg Matrix - Dark Mode)
         L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {
             attribution: '', maxZoom: 18
         }).addTo(map);
 
-        // Custom Icon
+        // Custom Icon Pin (Cyan)
         const pinIcon = L.divIcon({
             className: 'custom-pin',
             html: `<div style="background:#00bcd4; width:14px; height:14px; border:2px solid #fff; border-radius:50%; box-shadow:0 0 10px #00bcd4;"></div>`,
             iconSize: [14, 14], iconAnchor: [7, 7]
         });
 
-        // Efek Kedip Icon Petir
+        // Efek Kedip Icon Petir Header
         function flashIcon() {
             const el = document.getElementById('btnFlash');
             el.classList.add('blink');
-            setTimeout(() => el.classList.remove('blink'), 1000); // Kedip selama 1 detik
+            setTimeout(() => el.classList.remove('blink'), 200); 
         }
 
         async function loadData() {
@@ -206,6 +207,7 @@
                     };
                 }).filter(item => item && !isNaN(item.lat));
 
+                // Render Marker di Peta
                 locations.forEach(loc => {
                     L.marker([loc.lat, loc.lng], {icon: pinIcon}).addTo(map)
                      .bindPopup(`<b style="color:#333">${loc.name}</b>`);
@@ -225,6 +227,7 @@
             const lng = position.coords.longitude;
             
             if (userMarker) map.removeLayer(userMarker);
+            // Marker User (Kuning)
             userMarker = L.circleMarker([lat, lng], {
                 color: '#ccff00', fillColor: '#ccff00', fillOpacity: 0.8, radius: 6
             }).addTo(map);
@@ -251,6 +254,7 @@
             const container = document.getElementById('listContainer');
             container.innerHTML = "";
 
+            // Update Hero Section (Yang Paling Dekat)
             if(locations.length > 0) {
                 const top = locations[0];
                 document.getElementById('heroSection').style.display = 'block';
@@ -261,6 +265,7 @@
                 document.getElementById('heroLink').href = gLink;
             }
 
+            // Render List
             locations.forEach(loc => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
