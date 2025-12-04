@@ -62,89 +62,61 @@
         .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 15px; color: #00bcd4; font-size: 12px; letter-spacing: 2px; }
         .status-head::before { content:'●'; margin-right:5px; }
 
-        /* GRID SLOT - FIX ALIGNMENT */
+        /* GRID SLOT */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
-        
         .slot { 
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 15px; padding: 10px 5px; text-align: center; 
-            /* KUNCI TINGGI AGAR SEJAJAR */
-            height: 240px; 
-            display: flex; flex-direction: column; justify-content: flex-start; 
-            position: relative; overflow: hidden;
+            border-radius: 15px; padding: 15px 5px; text-align: center; min-height: 180px; 
+            display: flex; flex-direction: column; justify-content: space-between; position: relative;
         }
         .slot.active { border-color: #00bcd4; background: rgba(0, 188, 212, 0.05); }
 
-        /* AREA ATAS (BATERAI) - FIX HEIGHT */
-        .slot-top {
-            height: 90px; /* Tinggi tetap untuk area ikon */
-            display: flex; align-items: center; justify-content: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 10px;
+        /* ICON BATERAI (FIXED CENTER) */
+        .bat-wrap {
+            flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 5px;
         }
-
-        /* AREA BAWAH (TEKS & TOMBOL) - FILL SPACE */
-        .slot-content {
-            flex: 1; display: flex; flex-direction: column; justify-content: space-between;
-            width: 100%;
-        }
-
-        /* ICON BATERAI */
         .bat-icon { 
-            width: 40px; height: 70px; border: 3px solid #555; border-radius: 6px; 
-            position: relative; display: flex; align-items: flex-end; padding: 3px;
+            width: 45px; height: 80px; border: 3px solid #555; border-radius: 8px; 
+            position: relative; display: flex; align-items: flex-end; padding: 3px; margin-top: 5px;
         }
         .bat-icon::before { 
-            content: ''; position: absolute; top: -6px; 
+            content: ''; position: absolute; top: -7px; 
             left: 50%; transform: translateX(-50%);
-            width: 14px; height: 4px; background: #555; 
+            width: 16px; height: 4px; background: #555; 
             border-radius: 2px 2px 0 0;
         }
         .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; }
         .bat-bolt { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-size: 28px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000;
+            font-size: 32px; color: #fff; z-index: 2; text-shadow: 0 0 10px #000;
         }
 
-        /* TEXT STYLES */
-        .plat-text { font-weight: 800; font-size: 14px; color: #fff; margin: 0; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .target-text { font-size: 9px; color: #888; margin: 2px 0; }
-        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; margin: 5px 0; }
-        .kosong-text { font-size: 12px; color: #555; font-weight: bold; margin-top: 20px; }
+        .plat-text { font-weight: 800; font-size: 16px; color: #fff; margin: 5px 0; text-transform: uppercase; }
+        /* TIMER (CLASS KHUSUS UNTUK UPDATE) */
+        .timer-display { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; }
 
         .btn-act { 
-            width: 100%; padding: 8px; border-radius: 8px; border: none; 
+            width: 100%; padding: 10px; border-radius: 8px; border: none; 
             font-weight: 800; cursor: pointer; font-size: 11px; font-family: 'Orbitron';
-            border: 1px solid; background: transparent; margin-top: auto;
+            border: 1px solid; background: transparent; margin-top: 5px;
         }
         .btn-start { border-color: #00bcd4; color: #00bcd4; }
         .btn-stop { border-color: #ff3b3b; color: #ff3b3b; background: rgba(255, 59, 59, 0.1); }
 
         /* QUEUE LIST */
-        .wait-row { 
-            display: flex; justify-content: space-between; padding: 15px; 
-            border-bottom: 1px solid rgba(255,255,255,0.1); color: #ccc; font-size: 14px; align-items: center;
-        }
+        .wait-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ccc; font-size: 14px; align-items: center; }
         
         /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-box { 
-            background: #0b101a; border: 2px solid #00bcd4; padding: 30px; 
-            border-radius: 20px; width: 85%; max-width: 320px; text-align: center; 
-            box-shadow: 0 0 30px rgba(0, 188, 212, 0.2); position: relative;
-        }
+        .modal-box { background: #0b101a; border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 0 30px rgba(0, 188, 212, 0.2); position: relative; }
         .modal-title { font-family: 'Orbitron'; font-size: 20px; color: #fff; margin: 0 0 10px; letter-spacing: 1px; }
         .modal-msg { color: #8899a6; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
-        .modal-btn { 
-            width: 100%; padding: 15px; background: #00bcd4; color: #000; 
-            border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-        }
+        .modal-btn { width: 100%; padding: 15px; background: #00bcd4; color: #000; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
         .btn-close-modal { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #555; font-size: 20px; cursor: pointer; }
 
         /* ADMIN */
         .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Orbitron'; margin-top: 8px; font-weight: bold; font-size: 12px; }
-        .adm-row { display: flex; gap: 10px; margin-top: 8px; }
         .btn-blue { background: #00bcd4; color: #000; }
         .btn-red { background: #ff3b3b; color: #fff; }
         .btn-yellow { background: #ff9800; color: #000; }
@@ -177,15 +149,11 @@
         <div class="card">
             <label>PLAT NOMOR</label>
             <input id="uPlat" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-            
-            <label>NOMOR WHATSAPP</label>
+            <label>WHATSAPP</label>
             <input id="uWa" type="number" placeholder="08xxxxxxxxxx">
-            
             <label>BATERAI (%)</label>
             <input id="uBat" type="number" placeholder="0 - 99">
-            
             <div id="info" class="info-box"></div>
-            
             <button class="btn-daftar" id="btnDaftar">DAFTAR ANTRIAN</button>
         </div>
 
@@ -234,6 +202,7 @@
         let isAdmin = false; let triggered = new Set(); 
         const aud = document.getElementById('alarm'); const vid = document.getElementById('fakeVideo');
 
+        // UI Helpers
         function showModal(title, msg, action=null, showInput=false) {
             const mod = document.getElementById('mod');
             document.getElementById('mt').innerText = title;
@@ -246,25 +215,15 @@
             mod.style.display = 'flex';
         }
         window.showAdminLogin = () => {
-            showModal("ADMIN LOGIN", "Masukkan PIN Keamanan:", () => {
-                const pin = document.getElementById('adminPinInput').value;
-                if(pin === '1131') {
-                    document.getElementById('mod').style.display = 'none';
-                    document.getElementById('admPan').style.display = 'block';
-                    isAdmin = true;
-                } else {
-                    alert("PIN SALAH!");
-                }
+            showModal("ADMIN LOGIN", "Masukkan PIN:", () => {
+                if(document.getElementById('adminPinInput').value === '1131') {
+                    document.getElementById('mod').style.display = 'none'; document.getElementById('admPan').style.display = 'block'; isAdmin = true;
+                } else alert("PIN SALAH!");
             }, true);
         };
 
         function prime() { 
-            if(aud.paused) {
-                aud.volume = 0.01; 
-                aud.play().then(()=>{ 
-                    setTimeout(()=>{ aud.pause(); aud.currentTime=0; aud.volume=1.0; }, 100); 
-                }).catch(()=>{});
-            }
+            if(aud.paused) aud.play().then(()=>{setTimeout(()=>{aud.pause();aud.currentTime=0;aud.volume=1.0;},100)}).catch(()=>{}); 
             if(vid.paused) vid.play().catch(()=>{});
         }
         document.body.addEventListener('click', prime);
@@ -294,17 +253,13 @@
             await runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
-                
                 const antri = q.length;
                 let limit = 100;
                 if(antri >= 10) limit = 85; else if(antri >= 6) limit = 90; else if(antri >= 3) limit = 95;
-                
                 if(b >= limit) throw "Baterai Cukup";
                 let dur = calculateDuration(b, limit); if(dur<2) dur=2;
-                
                 const item={name:p, phone:w, startBattery:b, durationMinutes:dur, targetLimit:limit, startTime:null};
                 const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
-                
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                 if(w) sendWA(w, msg("Motor", p, "masuk antrian"));
             });
@@ -339,37 +294,72 @@
             });
         };
 
-        window.clrSlot = () => { const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
-        window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} ); };
-        window.startAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); }); };
-        window.stopAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); }); };
-        window.resAll = () => { if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
-        window.blockUser = async () => { const p = document.getElementById('blockPlatInput').value.toUpperCase().trim(); if(!p) return; await runTransaction(db, async (t) => { const d = (await t.get(ref)).data(); const l = d.blockedList || []; if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l}); }); showModal('BLOKIR', `Plat ${p} diblokir.`); };
-        window.delQ = (i, name) => { if(isAdmin || localStorage.getItem('myPlat') === name) { runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); }); } else { showModal('AKSES DITOLAK', 'Bukan antrian Anda!'); } };
+        window.clrSlot=()=>{const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
+        window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} );};
+        window.startAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); });};
+        window.stopAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); });};
+        window.resAll=()=>{if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]});};
+        window.resetQueue=()=>{runTransaction(db,async(t)=>{t.update(ref,{waitingQueue:[]})});};
+        window.blockUser=async()=>{const p=document.getElementById('blockPlatInput').value.toUpperCase().trim();if(!p)return;await runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();const l=d.blockedList||[];if(!l.includes(p))l.push(p);t.update(ref,{blockedList:l});});showModal('BLOKIR',`Plat ${p} diblokir.`);};
+        window.delQ=(i,name)=>{if(isAdmin||localStorage.getItem('myPlat')===name) runTransaction(db,async(t)=>{const q=(await t.get(ref)).data().waitingQueue;q.splice(i,1);t.update(ref,{waitingQueue:q});}); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');};
+        window.moveQueueTop=()=>{const p=prompt("Plat?");if(!p)return;runTransaction(db,async(t)=>{const q=(await t.get(ref)).data().waitingQueue;const i=q.findIndex(x=>x.name===p.toUpperCase());if(i>0){const it=q.splice(i,1)[0];q.unshift(it);t.update(ref,{waitingQueue:q});}});};
 
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
-            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div class="wait-row"><div><b>${x.name}</b> (${x.startBattery}%)</div><div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div></div>`).join('');
+            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div class="wait-row"><div><b>${x.name}</b> (${x.startBattery}%)</div><div style="color:${isAdmin?'#ff3b3b':'#888'};cursor:pointer;" onclick="delQ(${i},'${x.name}')">✕</div></div>`).join('');
+            
             const inf = document.getElementById('info');
-            if(q.length>0) { let l=100; const total = q.length; if(total>=10) l=85; else if(total>=6) l=90; else if(total>=3) l=95; inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${total} UNIT<br>MAX CHARGING: ${l}%`; } else inf.style.display='none';
+            if(q.length>0) { 
+                let l=100; const total = q.length + s.filter(x=>x!==null).length;
+                if(total>=10) l=85; else if(total>=6) l=90; else if(total>=3) l=95;
+                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} UNIT<br>MAX CHARGING: ${l}%`; 
+            } else inf.style.display='none';
 
             document.getElementById('slots').innerHTML = s.map((x,i)=>{
-                if(!x) return `<div class="slot"><div class="slot-top"><div class="bat-icon"></div></div><div class="slot-content"><div class="kosong-text">KOSONG</div></div></div>`;
+                if(!x) return `<div class="slot"><div class="bat-wrap"><div class="bat-icon"></div></div><small style="color:#888">KOSONG</small></div>`;
                 const isRun=!!x.startTime;
                 let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
+                
                 let txt="Tap Mulai"; let h=x.startBattery;
+                // LOGIKA TIMER MANDIRI (UPDATE TIAP DETIK)
+                let timerHtml = `<div class="timer-display" id="timer-${i}" data-end="${isRun ? ((x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000)) : 0}">Tap Mulai</div>`;
+                
                 if(isRun) {
-                    const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
-                    const diff = end - Date.now();
-                    if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; }
-                    else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } }
+                    h=100; 
+                    // Kita render placeholder, nanti script interval di bawah yg update angkanya
+                    timerHtml = `<div class="timer-display" id="timer-${i}" data-end="${(x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000)}" data-name="${x.name}">...</div>`;
                 }
-                return `<div class="slot ${isRun?'active':''}"><div class="slot-top"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="slot-content"><div class="plat-text">${x.name}</div><div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div></div>`;
+
+                return `<div class="slot ${isRun?'active':''}"><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div style="font-size:10px;color:#888">Target: ${x.targetLimit}%</div>${timerHtml}${btn}</div>`;
             }).join('');
         });
-        
-        setInterval(()=>{ const s=document.getElementById('slots'); if(s) s.style.opacity=s.style.opacity==='0.99'?'1':'0.99'; }, 1000);
+
+        // MESIN WAKTU (UPDATE DETIKAN TANPA REFRESH DB)
+        setInterval(() => {
+            document.querySelectorAll('.timer-display').forEach(el => {
+                const end = parseInt(el.getAttribute('data-end'));
+                if(!end || end === 0) return;
+                
+                const name = el.getAttribute('data-name');
+                const diff = end - Date.now();
+
+                if(diff > 0) {
+                    const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); 
+                    el.innerText = `${m}:${sc<10?'0'+sc:sc}`; 
+                    el.style.color = '#00bcd4';
+                } else {
+                    el.innerText = "SELESAI"; 
+                    el.style.color = '#ff3b3b';
+                    const key = name + end; 
+                    if(!triggered.has(key)){ 
+                        triggered.add(key); 
+                        aud.play().catch(()=>{}); 
+                        showModal('ALARM', `Motor ${name} Selesai!`); 
+                    }
+                }
+            });
+        }, 1000);
     </script>
 </body>
 </html>
