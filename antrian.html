@@ -6,7 +6,7 @@
     <title>ANTRIAN CHARGING</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* GLOBAL DARK THEME (Cyberpunk) */
+        /* GLOBAL DARK THEME */
         body { 
             margin: 0; font-family: 'Rajdhani', sans-serif; 
             background-color: #0b101a; color: #fff; padding-bottom: 100px; 
@@ -62,44 +62,60 @@
         .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 15px; color: #00bcd4; font-size: 12px; letter-spacing: 2px; }
         .status-head::before { content:'●'; margin-right:5px; }
 
-        /* GRID SLOT */
+        /* GRID SLOT - FIX ALIGNMENT */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
+        
         .slot { 
             background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 15px; padding: 15px 5px; text-align: center; min-height: 180px; 
-            display: flex; flex-direction: column; justify-content: space-between; position: relative;
+            border-radius: 15px; padding: 10px 5px; text-align: center; 
+            /* KUNCI TINGGI AGAR SEJAJAR */
+            height: 240px; 
+            display: flex; flex-direction: column; justify-content: flex-start; 
+            position: relative; overflow: hidden;
         }
         .slot.active { border-color: #00bcd4; background: rgba(0, 188, 212, 0.05); }
 
-        /* ICON BATERAI (FIXED CENTER) */
-        .bat-wrap {
-            flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 5px;
+        /* AREA ATAS (BATERAI) - FIX HEIGHT */
+        .slot-top {
+            height: 90px; /* Tinggi tetap untuk area ikon */
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 10px;
         }
+
+        /* AREA BAWAH (TEKS & TOMBOL) - FILL SPACE */
+        .slot-content {
+            flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+            width: 100%;
+        }
+
+        /* ICON BATERAI */
         .bat-icon { 
-            width: 45px; height: 80px; border: 3px solid #555; border-radius: 8px; 
-            position: relative; display: flex; align-items: flex-end; padding: 3px; margin-top: 5px;
+            width: 40px; height: 70px; border: 3px solid #555; border-radius: 6px; 
+            position: relative; display: flex; align-items: flex-end; padding: 3px;
         }
-        /* NUB BATERAI DI TENGAH (FIXED CSS) */
         .bat-icon::before { 
-            content: ''; position: absolute; 
-            top: -7px; left: 50%; transform: translateX(-50%); /* Center Absolute */
-            width: 16px; height: 5px; background: #555; 
+            content: ''; position: absolute; top: -6px; 
+            left: 50%; transform: translateX(-50%);
+            width: 14px; height: 4px; background: #555; 
             border-radius: 2px 2px 0 0;
         }
-        
         .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; }
         .bat-bolt { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-size: 32px; color: #fff; z-index: 2; text-shadow: 0 0 10px #000;
+            font-size: 28px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000;
         }
 
-        .plat-text { font-weight: 800; font-size: 16px; color: #fff; margin: 5px 0; text-transform: uppercase; }
-        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; }
+        /* TEXT STYLES */
+        .plat-text { font-weight: 800; font-size: 14px; color: #fff; margin: 0; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .target-text { font-size: 9px; color: #888; margin: 2px 0; }
+        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; margin: 5px 0; }
+        .kosong-text { font-size: 12px; color: #555; font-weight: bold; margin-top: 20px; }
 
         .btn-act { 
-            width: 100%; padding: 10px; border-radius: 8px; border: none; 
+            width: 100%; padding: 8px; border-radius: 8px; border: none; 
             font-weight: 800; cursor: pointer; font-size: 11px; font-family: 'Orbitron';
-            border: 1px solid; background: transparent; margin-top: 5px;
+            border: 1px solid; background: transparent; margin-top: auto;
         }
         .btn-start { border-color: #00bcd4; color: #00bcd4; }
         .btn-stop { border-color: #ff3b3b; color: #ff3b3b; background: rgba(255, 59, 59, 0.1); }
@@ -128,7 +144,7 @@
         /* ADMIN */
         .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Orbitron'; margin-top: 8px; font-weight: bold; font-size: 12px; }
-        
+        .adm-row { display: flex; gap: 10px; margin-top: 8px; }
         .btn-blue { background: #00bcd4; color: #000; }
         .btn-red { background: #ff3b3b; color: #fff; }
         .btn-yellow { background: #ff9800; color: #000; }
@@ -138,6 +154,7 @@
 <body>
 
     <audio id="alarm" loop><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;pointer-events:none;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
 
     <div id="mod" class="modal">
         <div class="modal-box">
@@ -194,12 +211,12 @@
                 </div>
             </div>
             <button onclick="fillQ()" class="adm-btn btn-blue">NAIKKAN ANTRIAN (AUTO)</button>
-            <div style="display:flex; gap:10px; margin-top:8px;">
+            <div class="adm-row">
                 <button onclick="startAll()" class="adm-btn btn-yellow" style="flex:1;">⚡ START ALL</button>
                 <button onclick="stopAll()" class="adm-btn btn-red" style="flex:1;">🛑 STOP ALL</button>
             </div>
-            <div style="margin-top:15px; display:flex; gap:10px;">
-                <input id="blockPlatInput" placeholder="Plat Blokir" style="font-size:14px; padding:10px; margin:0; background:#000; width:60%;">
+            <div class="adm-row" style="margin-top:15px;">
+                <input id="blockPlatInput" placeholder="Plat Blokir" style="font-size:14px; padding:10px; margin:0; background:#000;">
                 <button onclick="blockUser()" class="adm-btn btn-red" style="width:40%; margin:0;">BLOK</button>
             </div>
             <button onclick="resAll()" class="adm-btn" style="background:transparent; border:1px solid #ff3b3b; color:#ff3b3b; margin-top:15px;">RESET DATA TOTAL</button>
@@ -215,9 +232,8 @@
         
         const app = initializeApp(FB); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
         let isAdmin = false; let triggered = new Set(); 
-        const aud = document.getElementById('alarm');
+        const aud = document.getElementById('alarm'); const vid = document.getElementById('fakeVideo');
 
-        // UI HELPERS
         function showModal(title, msg, action=null, showInput=false) {
             const mod = document.getElementById('mod');
             document.getElementById('mt').innerText = title;
@@ -230,17 +246,26 @@
             mod.style.display = 'flex';
         }
         window.showAdminLogin = () => {
-            showModal("ADMIN LOGIN", "Masukkan PIN:", () => {
-                if(document.getElementById('adminPinInput').value === '1131') {
+            showModal("ADMIN LOGIN", "Masukkan PIN Keamanan:", () => {
+                const pin = document.getElementById('adminPinInput').value;
+                if(pin === '1131') {
                     document.getElementById('mod').style.display = 'none';
                     document.getElementById('admPan').style.display = 'block';
                     isAdmin = true;
-                } else alert("PIN SALAH!");
+                } else {
+                    alert("PIN SALAH!");
+                }
             }, true);
         };
 
         function prime() { 
-            if(aud.paused) { aud.play().then(()=>{ setTimeout(()=>{ aud.pause(); aud.currentTime=0; },100); }).catch(()=>{}); }
+            if(aud.paused) {
+                aud.volume = 0.01; 
+                aud.play().then(()=>{ 
+                    setTimeout(()=>{ aud.pause(); aud.currentTime=0; aud.volume=1.0; }, 100); 
+                }).catch(()=>{});
+            }
+            if(vid.paused) vid.play().catch(()=>{});
         }
         document.body.addEventListener('click', prime);
 
@@ -253,14 +278,10 @@
         
         function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
-        // NEW CALCULATION
         function calculateDuration(bat, target) {
             let min = 0;
             for (let i = bat; i < target; i++) {
-                if (i < 50) min += 1.0; 
-                else if (i < 80) min += 1.2; 
-                else if (i < 90) min += 1.5; 
-                else min += 2.0; 
+                if (i < 50) min += 1.0; else if (i < 80) min += 1.2; else if (i < 90) min += 1.5; else min += 2.0; 
             }
             return Math.ceil(min);
         }
@@ -274,8 +295,7 @@
                 const d=(await t.get(ref)).data()||{}; let s=d.chargingSlots||[null,null,null]; let q=d.waitingQueue||[];
                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
                 
-                // LOGIC ANTRIAN BARU
-                const antri = q.length; // Hanya hitung yg di waiting list
+                const antri = q.length;
                 let limit = 100;
                 if(antri >= 10) limit = 85; else if(antri >= 6) limit = 90; else if(antri >= 3) limit = 95;
                 
@@ -295,23 +315,16 @@
             prime();
             runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue;
-                
                 if(type==='stop') { 
                     s[i]=null; 
                     if(q.length > 0) {
-                        // AUTO FILL: Ambil user, hitung ulang durasi & target based on kondisi sekarang
                         let nextUser = q.shift();
-                        // Cek antrian baru utk tentukan limit
                         const newAntri = q.length;
                         let newLimit = 100;
                         if(newAntri >= 10) newLimit = 85; else if(newAntri >= 6) newLimit = 90; else if(newAntri >= 3) newLimit = 95;
-                        
-                        // Recalculate duration
                         let newDur = calculateDuration(nextUser.startBattery, newLimit);
                         if(newDur < 2) newDur = 2;
-                        
-                        nextUser.targetLimit = newLimit;
-                        nextUser.durationMinutes = newDur;
+                        nextUser.targetLimit = newLimit; nextUser.durationMinutes = newDur;
                         s[i] = nextUser;
                     }
                 } else {
@@ -326,65 +339,37 @@
             });
         };
 
-        // ADMIN
-        window.clrSlot=()=>{const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
-        window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} );};
-        window.startAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); });};
-        window.stopAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); });};
-        window.resAll=()=>{if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]});};
-        window.blockUser=async()=>{const p=document.getElementById('blockPlatInput').value.toUpperCase().trim();if(!p)return;await runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();const l=d.blockedList||[];if(!l.includes(p))l.push(p);t.update(ref,{blockedList:l});});showModal('BLOKIR',`Plat ${p} diblokir.`);};
-        window.delQ=(i,name)=>{if(isAdmin||localStorage.getItem('myPlat')===name) runTransaction(db,async(t)=>{const q=(await t.get(ref)).data().waitingQueue;q.splice(i,1);t.update(ref,{waitingQueue:q});}); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');};
+        window.clrSlot = () => { const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
+        window.fillQ = () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue; if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} ); };
+        window.startAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); }); };
+        window.stopAll = () => { runTransaction(db, async(t)=>{ const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); }); };
+        window.resAll = () => { if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); };
+        window.blockUser = async () => { const p = document.getElementById('blockPlatInput').value.toUpperCase().trim(); if(!p) return; await runTransaction(db, async (t) => { const d = (await t.get(ref)).data(); const l = d.blockedList || []; if (!l.includes(p)) l.push(p); t.update(ref, {blockedList: l}); }); showModal('BLOKIR', `Plat ${p} diblokir.`); };
+        window.delQ = (i, name) => { if(isAdmin || localStorage.getItem('myPlat') === name) { runTransaction(db, async(t)=>{ const q=(await t.get(ref)).data().waitingQueue; q.splice(i,1); t.update(ref, {waitingQueue:q}); }); } else { showModal('AKSES DITOLAK', 'Bukan antrian Anda!'); } };
 
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
-            
-            document.getElementById('qList').innerHTML = q.map((x,i)=>`
-                <div class="wait-row">
-                    <div><b>${x.name}</b> (${x.startBattery}%)</div>
-                    <div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div>
-                </div>
-            `).join('');
-            
+            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div class="wait-row"><div><b>${x.name}</b> (${x.startBattery}%)</div><div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div></div>`).join('');
             const inf = document.getElementById('info');
-            if(q.length>0) { 
-                let l=100; if(q.length>=10) l=85; else if(q.length>=6) l=90; else if(q.length>=3) l=95;
-                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} UNIT<br>MAX CHARGE: ${l}%`; 
-            } else inf.style.display='none';
+            if(q.length>0) { let l=100; const total = q.length; if(total>=10) l=85; else if(total>=6) l=90; else if(total>=3) l=95; inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${total} UNIT<br>MAX CHARGING: ${l}%`; } else inf.style.display='none';
 
             document.getElementById('slots').innerHTML = s.map((x,i)=>{
-                if(!x) return `<div class="slot"><div class="bat-wrap"><div class="bat-icon"></div></div><small style="color:#888">KOSONG</small></div>`;
+                if(!x) return `<div class="slot"><div class="slot-top"><div class="bat-icon"></div></div><div class="slot-content"><div class="kosong-text">KOSONG</div></div></div>`;
                 const isRun=!!x.startTime;
                 let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
                 let txt="Tap Mulai"; let h=x.startBattery;
                 if(isRun) {
-                    // TIMER LOGIC: SELF CORRECTING (DATE DELTA)
                     const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
                     const diff = end - Date.now();
-                    if(diff>0) { 
-                        const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); 
-                        txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; 
-                    } else { 
-                        txt="SELESAI"; 
-                        const k=x.name+end; 
-                        if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } 
-                    }
+                    if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; }
+                    else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } }
                 }
-                return `<div class="slot ${isRun?'active':''}">
-                    <div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div>
-                    <div class="plat-text">${x.name}</div>
-                    <div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div>
-                    <div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>
-                    ${btn}
-                </div>`;
+                return `<div class="slot ${isRun?'active':''}"><div class="slot-top"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="slot-content"><div class="plat-text">${x.name}</div><div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div></div>`;
             }).join('');
         });
-
-        // FORCE UI REFRESH (Untuk Timer berjalan mulus)
-        setInterval(() => {
-            const s = document.getElementById('slots');
-            if(s) s.style.opacity = s.style.opacity === '0.99' ? '1' : '0.99';
-        }, 1000);
+        
+        setInterval(()=>{ const s=document.getElementById('slots'); if(s) s.style.opacity=s.style.opacity==='0.99'?'1':'0.99'; }, 1000);
     </script>
 </body>
 </html>
