@@ -246,4 +246,68 @@
 
         window.act = (i, type) => {
             prime();
-            runTransaction(db, async(t
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue;
+                if(type==='stop') { 
+                    s[i]=null; 
+                    if(q.length > 0) {
+                        let next = q.shift();
+                        const antri = q.length; let limit = 100; if(antri >= 10) limit = 85; else if(antri >= 6) limit = 90; else if(antri >= 3) limit = 95;
+                        let dur = calcDur(next.startBattery, limit); if(dur < 2) dur = 2;
+                        next.targetLimit = limit; next.durationMinutes = dur;
+                        s[i] = next;
+                    }
+                } else {
+                    s[i].startTime = new Date();
+                    if(s[i].phone) {
+                        sendWA(s[i].phone, msg("Motor", s[i].name, "mulai dicas"));
+                        const end = new Date(Date.now() + s[i].durationMinutes*60000);
+                        sendWA(s[i].phone, msg("Motor", s[i].name, "selesai"), end);
+                    }
+                }
+                t.update(ref, {chargingSlots:s, waitingQueue:q});
+            });
+        };
+
+        window.clrSlot=()=>{const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
+        window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} );};
+        window.startAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); });};
+        window.stopAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x) window.act(i,'stop') }); });};
+        window.resAll=()=>{if(confirm('RESET?')) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]});};
+        window.blockUser=async()=>{const p=document.getElementById('blockPlatInput').value.toUpperCase().trim();if(!p)return;await runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();const l=d.blockedList||[];if(!l.includes(p))l.push(p);t.update(ref,{blockedList:l});});showModal('BLOKIR',`Plat ${p} diblokir.`);};
+        window.delQ=(i,name)=>{if(isAdmin||localStorage.getItem('myPlat')===name) runTransaction(db,async(t)=>{const q=(await t.get(ref)).data().waitingQueue;q.splice(i,1);t.update(ref,{waitingQueue:q});}); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');};
+
+        onSnapshot(ref, (snap) => {
+            const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
+            document.getElementById('qCount').innerText = q.length;
+            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div class="wait-row"><div><b>${x.name}</b> (${x.startBattery}%)</div><div style="color:${isAdmin?'#ff3b3b':'#888'}; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div></div>`).join('');
+            
+            const inf = document.getElementById('info');
+            if(q.length>0) { 
+                let l=100; if(q.length>=10) l=85; else if(q.length>=6) l=90; else if(q.length>=3) l=95;
+                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} UNIT<br>MAX CHARGING: ${l}%`; 
+            } else inf.style.display='none';
+
+            document.getElementById('slots').innerHTML = s.map((x,i)=>{
+                if(!x) return `<div class="slot"><div class="bat-wrap"><div class="bat-icon"></div></div><small style="color:#888">KOSONG</small></div>`;
+                const isRun=!!x.startTime;
+                let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
+                let txt="Tap Mulai"; let h=x.startBattery;
+                if(isRun) {
+                    const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
+                    const diff = end - Date.now();
+                    if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; }
+                    else { txt="SELESAI"; const k=x.name+end; if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } }
+                }
+                return `<div class="slot ${isRun?'active':''}"><div class="bat-percent">${isRun?100:x.startBattery}%</div><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div><div class="timer-text" style="color:${txt==='SELESAI'?'#ff3b3b':'#00bcd4'}">${txt}</div>${btn}</div>`;
+            }).join('');
+        });
+
+        // SELF-CORRECTING TIMER LOOP
+        setInterval(() => {
+            const s = document.getElementById('slots');
+            if(s) s.style.opacity = s.style.opacity === '0.99' ? '1' : '0.99';
+        }, 1000);
+    </script>
+</body>
+</html>
