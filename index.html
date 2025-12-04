@@ -21,21 +21,61 @@
             display: flex; flex-direction: column; align-items: center; 
         }
 
-        /* OVERLAY */
+        /* OVERLAY GELAP BACKGROUND */
         body::before {
             content: ''; position: absolute; inset: 0;
             background: rgba(0, 0, 0, 0.75); z-index: -1;
         }
 
-        /* LOGO AREA */
-        .logo-area { 
-            text-align: center; margin-top: 60px; margin-bottom: 30px; z-index: 10;
+        /* === WELCOME SCREEN (SLIDE DARI ATAS) === */
+        #installScreen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(11, 16, 26, 0.98); /* Hampir solid */
+            display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(-100%); /* Sembunyi di atas */
         }
         
-        h1 { 
-            font-family: 'Orbitron', sans-serif; font-size: 42px; margin: 0; 
-            color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px #00bcd4;
+        #installScreen.show { transform: translateY(0); /* Muncul */ }
+
+        .welcome-logo {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: url('1763947427555.jpg') center/cover;
+            box-shadow: 0 0 30px #00bcd4;
+            margin-bottom: 30px; border: 3px solid #fff;
+            animation: pulseLogo 2s infinite;
         }
+        @keyframes pulseLogo { 0%{box-shadow:0 0 30px #00bcd4} 50%{box-shadow:0 0 60px #00bcd4} 100%{box-shadow:0 0 30px #00bcd4} }
+
+        .welcome-title {
+            font-family: 'Orbitron'; font-size: 24px; color: #fff;
+            text-align: center; margin-bottom: 10px; letter-spacing: 2px;
+        }
+        .welcome-desc {
+            color: #aaa; text-align: center; font-size: 14px;
+            max-width: 80%; margin-bottom: 40px; line-height: 1.5;
+        }
+
+        .btn-install-big {
+            background: #ccff00; color: #000; border: none;
+            padding: 18px 40px; border-radius: 30px;
+            font-family: 'Orbitron'; font-weight: 900; font-size: 16px;
+            box-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
+            cursor: pointer; transition: 0.2s; text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .btn-install-big:active { transform: scale(0.95); }
+
+        .btn-skip {
+            margin-top: 20px; background: none; border: none;
+            color: #666; font-size: 12px; text-decoration: underline;
+            cursor: pointer; padding: 10px;
+        }
+
+        /* === HALAMAN UTAMA (TETAP SAMA) === */
+        .logo-area { text-align: center; margin-top: 60px; margin-bottom: 30px; z-index: 10; }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 42px; margin: 0; color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px #00bcd4; }
         
         .squad-text {
             font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; 
@@ -45,10 +85,7 @@
         }
         @keyframes blink { 50% { opacity: 0.6; } }
 
-        /* MENU GRID (KEMBALI KE 3 TOMBOL UTAMA) */
-        .menu-grid { 
-            display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10;
-        }
+        .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10; }
         
         .menu-btn {
             background: rgba(255, 255, 255, 0.1); border: 1px solid #00bcd4; 
@@ -57,7 +94,6 @@
             backdrop-filter: blur(10px); transition: 0.2s; 
             box-shadow: 0 0 15px rgba(0, 188, 212, 0.1);
         }
-        
         .menu-btn:active { transform: scale(0.96); background: #00bcd4; }
         .menu-btn:active h3, .menu-btn:active span { color: #000; }
         
@@ -73,42 +109,21 @@
         .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; }
 
         .footer { position: absolute; bottom: 20px; font-size: 10px; color: #00bcd4; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-
-        /* POPUP INSTALL SPESIAL */
-        #installModal {
-            display: none; /* Muncul via script */
-            position: fixed; inset: 0; z-index: 9999;
-            background: rgba(0,0,0,0.9);
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .install-box {
-            background: #111; border: 2px solid #ccff00;
-            padding: 30px; border-radius: 20px; width: 85%; max-width: 300px;
-            text-align: center; box-shadow: 0 0 30px rgba(204, 255, 0, 0.2);
-        }
-        .install-icon { font-size: 50px; margin-bottom: 15px; }
-        .install-title { font-family: 'Orbitron'; font-size: 18px; color: #fff; margin-bottom: 10px; }
-        .install-desc { font-size: 13px; color: #aaa; margin-bottom: 25px; line-height: 1.5; }
-        .btn-install-now {
-            width: 100%; padding: 15px; background: #ccff00; color: #000;
-            border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-        }
-        .btn-later {
-            background: none; border: none; color: #666; font-size: 12px; margin-top: 15px; cursor: pointer; text-decoration: underline;
-        }
     </style>
 </head>
 <body>
 
-    <div id="installModal">
-        <div class="install-box">
-            <div class="install-icon">📲</div>
-            <div class="install-title">INSTALL APLIKASI</div>
-            <div class="install-desc">Pasang <b>MLU APP</b> di layar utama HP Anda agar akses lebih cepat & stabil.</div>
-            <button id="btnConfirmInstall" class="btn-install-now">YA, INSTALL SEKARANG</button>
-            <button onclick="document.getElementById('installModal').style.display='none'" class="btn-later">Nanti Saja</button>
+    <div id="installScreen">
+        <div class="welcome-logo"></div>
+        <div class="welcome-title">SELAMAT DATANG</div>
+        <div class="welcome-desc">
+            Install Aplikasi <b>MLU FAST CHARGING</b><br>
+            untuk akses lebih cepat & notifikasi realtime.
         </div>
+        <button id="btnInstallHero" class="btn-install-big">
+            📲 INSTALL SEKARANG
+        </button>
+        <button onclick="closeInstall()" class="btn-skip">Lanjutkan di Browser >></button>
     </div>
 
     <div class="logo-area">
@@ -133,39 +148,52 @@
         </a>
     </div>
 
-    <div class="footer">v10.6 Final | MLU Squad</div>
+    <div class="footer">v10.7 Final | MLU Squad</div>
 
     <script>
         if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
         let deferredPrompt;
-        const modal = document.getElementById('installModal');
-        const btnConfirm = document.getElementById('btnConfirmInstall');
+        const screen = document.getElementById('installScreen');
+        const btn = document.getElementById('btnInstallHero');
 
-        // Cek apakah sudah terinstall
-        const isApp = window.matchMedia('(display-mode: standalone)').matches;
+        // FUNGSI TUTUP WELCOME SCREEN
+        window.closeInstall = () => {
+            screen.classList.remove('show'); // Slide Naik
+        };
 
-        if (!isApp) {
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                // LANGSUNG MUNCULKAN POPUP KITA SENDIRI
-                modal.style.display = 'flex';
-            });
-        }
-
-        btnConfirm.addEventListener('click', () => {
-            if (deferredPrompt) {
-                modal.style.display = 'none';
-                deferredPrompt.prompt(); // Panggil prompt asli browser
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User installed');
-                    }
-                    deferredPrompt = null;
-                });
+        // DETEKSI BROWSER SIAP INSTALL
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Cek apakah sudah diinstall?
+            const isApp = window.matchMedia('(display-mode: standalone)').matches;
+            if (!isApp) {
+                // Kalau belum install, Munculkan Slide Turun
+                screen.classList.add('show');
             }
         });
+
+        // AKSI KLIK INSTALL
+        btn.addEventListener('click', (e) => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((res) => {
+                    if (res.outcome === 'accepted') closeInstall();
+                    deferredPrompt = null;
+                });
+            } else {
+                // Fallback jika browser tidak support auto-prompt
+                alert("⚠️ CARA INSTALL:\n1. Klik menu titik tiga (⋮)\n2. Pilih 'Install App' / 'Add to Home Screen'");
+                closeInstall();
+            }
+        });
+        
+        // Jika dibuka dari aplikasi (bukan browser), langsung tutup screen install
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            screen.style.display = 'none';
+        }
     </script>
 </body>
 </html>
