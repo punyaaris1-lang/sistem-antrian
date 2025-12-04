@@ -16,21 +16,12 @@
 
         /* HEADER */
         .header { 
-            padding: 15px; display: flex; align-items: center; justify-content: space-between;
+            padding: 15px; display: flex; align-items: center; gap: 15px; 
             background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
             position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
         }
-        .header-left { display: flex; align-items: center; gap: 15px; }
         .btn-back { text-decoration: none; font-size: 24px; color: #00bcd4; width: 40px; height: 40px; border: 1px solid #00bcd4; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; letter-spacing: 1px; }
-        
-        /* TOMBOL TES SUARA */
-        .btn-test-sound {
-            background: #333; color: #fff; border: 1px solid #fff;
-            padding: 5px 10px; border-radius: 20px; font-size: 10px;
-            cursor: pointer; font-family: 'Orbitron';
-        }
-        .btn-test-sound:active { background: #fff; color: #000; }
 
         /* CONTAINER */
         .container { padding: 20px; max-width: 480px; margin: 0 auto; }
@@ -75,39 +66,53 @@
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
         .slot { 
             background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); 
-            border-radius: 15px; padding: 10px 5px; text-align: center; height: 260px;
+            border-radius: 15px; padding: 15px 5px; text-align: center; height: 280px;
             display: flex; flex-direction: column; justify-content: flex-start; position: relative;
             overflow: hidden;
         }
         .slot.active { background: rgba(0, 210, 255, 0.2); border-color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.2); }
 
+        /* BATTERY PERCENTAGE (TOP) */
         .bat-percent {
             font-family: 'Orbitron'; font-size: 18px; font-weight: bold; color: #fff;
-            margin-bottom: 10px; height: 30px; display: flex; align-items: center; justify-content: center;
-        }
-        .bat-wrap {
-            flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 5px;
-        }
-        .bat-icon { 
-            width: 40px; height: 70px; border: 3px solid #fff; border-radius: 6px; 
-            position: relative; display: flex; align-items: flex-end; padding: 3px;
-        }
-        .bat-icon::before { 
-            content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
-            width: 14px; height: 4px; background: #fff; border-radius: 2px 2px 0 0;
-        }
-        .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; box-shadow: 0 0 10px #00bcd4; }
-        .bat-bolt { 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            font-size: 28px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000;
+            margin-bottom: 5px; height: 25px; display: flex; align-items: center; justify-content: center;
         }
 
-        .plat-text { font-weight: 800; font-size: 14px; color: #fff; margin: 5px 0; text-transform: uppercase; }
+        /* BATTERY ICON CONTAINER */
+        .bat-wrap {
+            flex: 1; display: flex; align-items: center; justify-content: center; 
+            padding: 10px 0; position: relative;
+        }
         
-        /* TIMER TEXT */
-        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; margin-top: 5px; }
-        /* TULISAN SELESAI KECIL */
-        .timer-text.done { font-size: 14px; color: #ff3b3b; animation: blink 0.5s infinite; }
+        /* BATTERY BODY */
+        .bat-icon { 
+            width: 46px; height: 80px; 
+            border: 3px solid #fff; border-radius: 6px; 
+            position: relative; display: flex; align-items: flex-end; padding: 3px;
+            box-sizing: border-box;
+        }
+        /* BATTERY NUB (PERFECT CENTER) */
+        .bat-icon::before { 
+            content: ''; position: absolute; 
+            top: -7px; left: 50%; margin-left: -8px; /* Half of width (16px) */
+            width: 16px; height: 4px; background: #fff; 
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; box-shadow: 0 0 10px #00bcd4; }
+        
+        .bat-bolt { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            font-size: 32px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000;
+        }
+
+        /* INFO TEXTS */
+        .plat-text { font-weight: 800; font-size: 14px; color: #fff; margin: 5px 0; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* TIMER TEXT - ADJUSTED SIZE */
+        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; margin-top: 2px; }
+        .timer-text.done { font-size: 14px; color: #ff3b3b; animation: blink 0.5s infinite; } /* Smaller for SELESAI */
+        @keyframes blink { 50% { opacity: 0.5; } }
 
         .btn-act { 
             width: 100%; padding: 10px; border-radius: 8px; border: none; 
@@ -120,15 +125,14 @@
         /* QUEUE LIST */
         .wait-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #ccc; font-size: 14px; align-items: center; }
         
-        /* MODAL RED BLINK */
-        @keyframes redFlash { 0%{background:rgba(0,0,0,0.9)} 50%{background:rgba(255,0,0,0.3)} 100%{background:rgba(0,0,0,0.9)} }
+        /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal.alarm-active { animation: redFlash 0.5s infinite; } /* LAYAR KEDIP MERAH SAAT ALARM */
-        
-        .modal-box { background: #0b101a; border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
+        .modal-box { background: #0b101a; border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 0 30px rgba(0, 188, 212, 0.2); position: relative; }
+        .modal-title { font-family: 'Orbitron'; font-size: 20px; color: #fff; margin: 0 0 10px; letter-spacing: 1px; }
+        .modal-msg { color: #8899a6; font-size: 14px; margin-bottom: 25px; line-height: 1.5; }
         .modal-btn { width: 100%; padding: 15px; background: #00bcd4; color: #000; border: none; border-radius: 10px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .btn-close-modal { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #555; font-size: 20px; cursor: pointer; }
-
+        
         /* ADMIN */
         .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Orbitron'; margin-top: 8px; font-weight: bold; font-size: 12px; }
@@ -136,7 +140,8 @@
         .btn-red { background: #ff3b3b; color: #fff; }
         .btn-dark { background: #333; color: #fff; border: 1px solid #555; }
         
-        @keyframes blink { 50% { opacity: 0.5; } }
+        /* TOMBOL TEST AUDIO */
+        .btn-test { position: absolute; top: 20px; right: 20px; background: none; border: 1px solid #555; color: #555; font-size: 9px; padding: 5px 10px; border-radius: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -144,7 +149,6 @@
     <audio id="alarm" loop>
         <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
     </audio>
-    <video id="fakeVideo" loop muted playsinline style="width:1px;height:1px;opacity:0;position:fixed;pointer-events:none;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
 
     <div id="mod" class="modal">
         <div class="modal-box">
@@ -154,16 +158,14 @@
             <div id="modalInputArea" style="display:none; margin-bottom:15px;">
                 <input type="password" id="adminPinInput" placeholder="PIN" style="margin-bottom:0;">
             </div>
-            <button id="modalActionBtn" class="modal-btn" onclick="stopAlarm()">OK</button>
+            <button id="modalActionBtn" class="modal-btn">OK</button>
         </div>
     </div>
 
     <div class="header">
-        <div class="header-left">
-            <a href="index.html" class="btn-back">⬅</a>
-            <h2>ANTRIAN CHARGING</h2>
-        </div>
-        <button onclick="testAudio()" class="btn-test-sound">🔔 TES SUARA</button>
+        <a href="index.html" class="btn-back">⬅</a>
+        <h2>ANTRIAN CHARGING</h2>
+        <button class="btn-test" onclick="testAudio()">🔊 TES</button>
     </div>
 
     <div class="container">
@@ -186,7 +188,7 @@
         <div class="grid" id="slots"><div style="grid-column:1/-1; text-align:center; padding:30px; color:#555;">Loading...</div></div>
 
         <div class="card" style="padding:15px;">
-            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px; color:#fff; font-size:12px; font-family:'Orbitron'">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px; color:#fff; font-family:'Orbitron'; font-size:12px;">
                 <span>DAFTAR TUNGGU</span><span id="qCount" style="color:#00bcd4">0</span>
             </div>
             <div id="qList"></div>
@@ -222,7 +224,7 @@
         
         const app = initializeApp(FB); const db = getFirestore(app); const ref = doc(db, "antrian", "utama");
         let isAdmin = false; let triggered = new Set(); 
-        const aud = document.getElementById('alarm'); const vid = document.getElementById('fakeVideo');
+        const aud = document.getElementById('alarm');
 
         // UI HELPERS
         function showModal(title, msg, action=null, showInput=false) {
@@ -233,13 +235,13 @@
             const btn = document.getElementById('modalActionBtn');
             inp.style.display = showInput ? 'block' : 'none';
             if(showInput) document.getElementById('adminPinInput').value = '';
+
             btn.onclick = () => { if(action) action(); else stopAlarm(); };
             mod.style.display = 'flex';
         }
         
         window.stopAlarm = () => {
             aud.pause(); aud.currentTime = 0;
-            document.getElementById('mod').classList.remove('alarm-active');
             document.getElementById('mod').style.display = 'none';
         };
         
@@ -253,23 +255,17 @@
             }, true);
         };
 
-        window.testAudio = () => {
-            aud.volume = 1.0;
-            aud.play().then(()=>alert("Audio Berjalan!")).catch(e=>alert("Gagal: " + e));
-        };
-
-        // AUDIO UNLOCKER
+        // AUDIO FORCE
+        window.testAudio = () => { aud.volume = 1.0; aud.play().then(()=>{ setTimeout(()=>{aud.pause();aud.currentTime=0;},2000); alert("Audio Normal"); }).catch(e=>alert("Audio Error: "+e)); };
+        
         function prime() { 
             if(aud.paused) {
                 aud.volume = 0.1; 
                 aud.play().then(()=>{ setTimeout(()=>{ aud.pause(); aud.currentTime=0; aud.volume=1.0; }, 100); }).catch(()=>{});
             }
-            if(vid.paused) vid.play().catch(()=>{});
         }
         document.body.addEventListener('click', prime);
-        document.body.addEventListener('touchstart', prime);
 
-        // WA SENDER
         function sendWA(target, msg, sch=null) {
             let p = target.replace(/\D/g,''); if(p.startsWith('0')) p='62'+p.substring(1);
             const fd = new FormData(); fd.append("target", p); fd.append("message", msg); fd.append("countryCode", "62");
@@ -279,14 +275,13 @@
         function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
         function calculateDuration(bat, target) {
-            let m = 0;
+            let min = 0;
             for (let i = bat; i < target; i++) {
-                if (i < 50) m += 1.0; else if (i < 80) m += 1.2; else if (i < 90) m += 1.5; else m += 2.0; 
+                if (i < 50) min += 1.0; else if (i < 80) min += 1.2; else if (i < 90) min += 1.5; else min += 2.0; 
             }
-            return Math.ceil(m);
+            return Math.ceil(min);
         }
 
-        // LOGIC BUTTONS
         document.getElementById('btnDaftar').onclick = async () => {
             prime();
             const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
@@ -318,11 +313,11 @@
                 if(type==='stop') { 
                     s[i]=null; 
                     if(q.length > 0) {
-                        let next = q.shift();
+                        let nextUser = q.shift();
                         const antri = q.length; let limit = 100; if(antri >= 10) limit = 85; else if(antri >= 6) limit = 90; else if(antri >= 3) limit = 95;
-                        let dur = calculateDuration(next.startBattery, limit); if(dur<2) dur=2;
-                        next.targetLimit = limit; next.durationMinutes = dur;
-                        s[i] = next;
+                        let dur = calculateDuration(nextUser.startBattery, limit); if(dur<2) dur=2;
+                        nextUser.targetLimit = limit; nextUser.durationMinutes = dur;
+                        s[i] = nextUser;
                     }
                 } else {
                     s[i].startTime = new Date();
@@ -336,7 +331,7 @@
             });
         };
 
-        // ADMIN FUNCTIONS
+        // ADMIN
         window.clrSlot=()=>{const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null;t.update(ref,{chargingSlots:s})});};
         window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} );};
         window.startAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); });};
@@ -345,52 +340,34 @@
         window.blockUser=async()=>{const p=document.getElementById('blockPlatInput').value.toUpperCase().trim();if(!p)return;await runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();const l=d.blockedList||[];if(!l.includes(p))l.push(p);t.update(ref,{blockedList:l});});showModal('BLOKIR',`Plat ${p} diblokir.`);};
         window.delQ=(i,name)=>{if(isAdmin||localStorage.getItem('myPlat')===name) runTransaction(db,async(t)=>{const q=(await t.get(ref)).data().waitingQueue;q.splice(i,1);t.update(ref,{waitingQueue:q});}); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');};
 
-        // RENDER UI
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
-            
-            document.getElementById('qList').innerHTML = q.map((x,i)=>`
-                <div class="wait-row">
-                    <div><b>${x.name}</b> (${x.startBattery}%)</div>
-                    <div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div>
-                </div>
-            `).join('');
-            
+            document.getElementById('qList').innerHTML = q.map((x,i)=>`<div class="wait-row"><div><b>${x.name}</b> (${x.startBattery}%)</div><div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div></div>`).join('');
             const inf = document.getElementById('info');
-            if(q.length>0) { 
-                let l=100; if(q.length>=10) l=85; else if(q.length>=6) l=90; else if(q.length>=3) l=95;
-                inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} UNIT<br>MAX CHARGE: ${l}%`; 
-            } else inf.style.display='none';
+            if(q.length>0) { let l=100; const total = q.length + s.filter(x=>x!==null).length; if(total>=10) l=85; else if(total>=6) l=90; else if(total>=3) l=95; inf.style.display='block'; inf.innerHTML=`ANTRIAN: ${q.length} UNIT<br>MAX CHARGE: ${l}%`; } else inf.style.display='none';
 
             document.getElementById('slots').innerHTML = s.map((x,i)=>{
                 if(!x) return `<div class="slot"><div class="bat-wrap"><div class="bat-icon"></div></div><small style="color:#888">KOSONG</small></div>`;
-                
                 const isRun=!!x.startTime;
                 let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
+                let txt="Tap Mulai"; let h=x.startBattery; let cssClass="";
                 
-                let txt="Tap Mulai"; let h=x.startBattery;
-                let endTime = 0;
-
                 if(isRun) {
-                    const start = x.startTime.seconds ? x.startTime.seconds*1000 : new Date(x.startTime).getTime();
-                    endTime = start + (x.durationMinutes * 60000);
-                    txt = "..."; // Placeholder sebelum timer update
+                    const end = (x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + (x.durationMinutes*60000);
+                    const diff = end - Date.now();
+                    if(diff>0) { 
+                        const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; 
+                    } else { 
+                        txt="SELESAI"; cssClass="done"; 
+                        const k=x.name+end; 
+                        if(!triggered.has(k)){ triggered.add(k); aud.play().catch(()=>{}); showModal('ALARM', `Motor ${x.name} Selesai!`); } 
+                    }
                 }
-
-                return `
-                <div class="slot ${isRun?'active':''}">
-                    <div class="bat-percent">${isRun?100:x.startBattery}%</div>
-                    <div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div>
-                    <div class="plat-text">${x.name}</div>
-                    <div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div>
-                    <div class="timer-text" data-end="${endTime}" data-name="${x.name}">${txt}</div>
-                    ${btn}
-                </div>`;
+                return `<div class="slot ${isRun?'active':''}"><div class="bat-percent">${isRun?100:x.startBattery}%</div><div class="bat-wrap"><div class="bat-icon"><div class="bat-fill" style="height:${h}%"></div><div class="bat-bolt">⚡</div></div></div><div class="plat-text">${x.name}</div><div style="font-size:10px; color:#888;">Target: ${x.targetLimit}%</div><div class="timer-text ${cssClass}" data-end="${isRun?((x.startTime.seconds?x.startTime.seconds*1000:new Date(x.startTime).getTime()) + x.durationMinutes*60000):0}" data-name="${x.name}">${txt}</div>${btn}</div>`;
             }).join('');
         });
 
-        // TIMER INTERVAL (MESIN WAKTU MANDIRI)
         setInterval(() => {
             document.querySelectorAll('.timer-text').forEach(el => {
                 const end = parseInt(el.getAttribute('data-end'));
@@ -401,17 +378,16 @@
                         el.innerText = `${m}:${sc<10?'0'+sc:sc}`;
                         el.classList.remove('done');
                     } else {
-                        el.innerText = "SELESAI";
-                        el.classList.add('done'); // Huruf kecil & kedip
-                        
-                        // ALARM TRIGGER
-                        const name = el.getAttribute('data-name');
-                        const key = name + end;
-                        if(!triggered.has(key)) {
-                            triggered.add(key);
-                            aud.play().catch(()=>{}); // Bunyikan Audio
-                            document.getElementById('mod').classList.add('alarm-active'); // Visual Kedip Merah
-                            showModal('ALARM', `Motor ${name} Selesai!`);
+                        if(el.innerText !== "SELESAI") {
+                            el.innerText = "SELESAI";
+                            el.classList.add('done'); 
+                            const name = el.getAttribute('data-name');
+                            const key = name + end;
+                            if(!triggered.has(key)) {
+                                triggered.add(key);
+                                aud.play().catch(()=>{});
+                                showModal('ALARM', `Motor ${name} Selesai!`);
+                            }
                         }
                     }
                 }
