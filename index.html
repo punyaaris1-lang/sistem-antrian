@@ -5,41 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MLU SUPER APP</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="manifest" href="manifest.json">
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* GLOBAL RESET */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
-            margin: 0; 
-            height: 100vh; 
-            overflow: hidden;
+            margin: 0; height: 100vh; overflow: hidden;
             background-color: #0b101a;
             background-image: url('1763947427555.jpg'); 
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed;
+            background-size: cover; background-position: center; background-attachment: fixed;
             font-family: 'Rajdhani', sans-serif;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+            display: flex; flex-direction: column; align-items: center; 
         }
 
-        /* OVERLAY GELAP */
         body::before {
             content: ''; position: absolute; inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            z-index: -1;
+            background: rgba(0, 0, 0, 0.75); z-index: -1;
         }
 
-        /* LOGO AREA */
         .logo-area { 
-            text-align: center; 
-            margin-top: 60px; 
-            margin-bottom: 30px; 
+            text-align: center; margin-top: 60px; margin-bottom: 30px; z-index: 10;
         }
         
         h1 { 
@@ -55,17 +43,16 @@
         }
         @keyframes blink { 50% { opacity: 0.6; } }
 
-        /* MENU GRID */
         .menu-grid { 
-            display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 20px;
+            display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10;
         }
         
-        /* TOMBOL MENU */
         .menu-btn {
             background: rgba(255, 255, 255, 0.1); border: 1px solid #00bcd4; 
-            padding: 25px; border-radius: 20px; cursor: pointer;
+            padding: 20px; border-radius: 20px; cursor: pointer;
             display: flex; align-items: center; gap: 20px; text-decoration: none; 
-            backdrop-filter: blur(10px); transition: 0.2s; box-shadow: 0 0 15px rgba(0, 188, 212, 0.1);
+            backdrop-filter: blur(10px); transition: 0.2s; 
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.1);
         }
         
         .menu-btn:active { transform: scale(0.96); background: #00bcd4; }
@@ -79,25 +66,21 @@
         }
         
         .menu-text { text-align: left; }
-        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 18px; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
-        .menu-text span { font-size: 12px; color: #aaa; font-weight: bold; }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; letter-spacing: 1px; }
+        .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; }
 
-        /* TOMBOL INSTALL (SPESIAL) */
-        #btnInstallApp {
-            display: flex; /* PAKSA MUNCUL */
-            border-color: #ccff00;
-            background: rgba(204, 255, 0, 0.05);
+        .footer { position: absolute; bottom: 20px; font-size: 10px; color: #00bcd4; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        
+        /* LAYAR TRANSPARAN JEBAKAN KLIK */
+        #installTrap {
+            position: fixed; inset: 0; z-index: 9999;
+            display: none; /* Muncul kalau PWA siap */
         }
-        #btnInstallApp .menu-icon {
-            color: #ccff00; border-color: #ccff00;
-            background: rgba(204, 255, 0, 0.1);
-            box-shadow: 0 0 10px rgba(204, 255, 0, 0.3);
-        }
-
-        .footer { position: absolute; bottom: 30px; font-size: 10px; color: #00bcd4; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
     </style>
 </head>
 <body>
+
+    <div id="installTrap"></div>
 
     <div class="logo-area">
         <h1>MLU APPS</h1>
@@ -112,58 +95,46 @@
 
         <a href="sos.html" class="menu-btn">
             <div class="menu-icon">🆘</div>
-            <div class="menu-text"><h3>MAKA SOS</h3><span>Layanan Darurat CS Maka</span></div>
+            <div class="menu-text"><h3>BANTUAN SOS</h3><span>Layanan Darurat</span></div>
         </a>
 
         <a href="antrian.html" class="menu-btn">
             <div class="menu-icon">⚡</div>
-            <div class="menu-text"><h3>FC KLP GADING</h3><span>Daftar & Pantau</span></div>
+            <div class="menu-text"><h3>ANTRIAN ONLINE</h3><span>Daftar & Pantau</span></div>
         </a>
-
-        <div id="btnInstallApp" class="menu-btn">
-            <div class="menu-icon">📲</div>
-            <div class="menu-text"><h3>INSTALL APP</h3><span>Pasang di HP</span></div>
-        </div>
     </div>
 
-    <div class="footer">v10.2 Final | MLU Squad</div>
+    <div class="footer">v10.4 Final | MLU Squad</div>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        // 1. Service Worker
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
 
+        // 2. Logic Install "Stealth Mode"
         let deferredPrompt;
-        const installBtn = document.getElementById('btnInstallApp');
+        const trap = document.getElementById('installTrap');
 
-        // Cek jika sudah diinstall (Standalone Mode) -> Sembunyikan Tombol
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            installBtn.style.display = 'none';
-        }
-
-        // Tangkap Event Browser
+        // Saat browser siap install, aktifkan jebakan layar
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            // Munculkan layar transparan di paling atas
+            trap.style.display = 'block';
         });
 
-        // Logic Saat Tombol Diklik
-        installBtn.addEventListener('click', (e) => {
+        // Saat user klik DIMANAPUN (kena jebakan)
+        trap.addEventListener('click', async () => {
             if (deferredPrompt) {
-                // Jika browser support install otomatis
+                // Hapus jebakan agar user bisa klik menu asli
+                trap.style.display = 'none';
+                // Munculkan Pop-up Install
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        installBtn.style.display = 'none'; // Sembunyikan jika sukses
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                // Jika tidak support otomatis (atau di iPhone/Browser non-Chrome)
-                alert("ℹ️ CARA INSTALL MANUAL:\n\n1. Klik titik tiga (⋮) di pojok kanan atas browser.\n2. Pilih 'Tambahkan ke Layar Utama' atau 'Install App'.\n\n(Di iPhone: Klik Share -> Add to Home Screen)");
+                // Tunggu hasil (Install/Tolak)
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response: ${outcome}`);
+                deferredPrompt = null;
             }
         });
-    </script>
 
-</body>
-</html>
+        // Jika sudah diinstall, matikan jebakan selamanya
+        if (window.matchMedia('(display-mode: standalone)').
