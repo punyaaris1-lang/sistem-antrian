@@ -28,7 +28,6 @@
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-attachment: fixed; background-position: center;
         }
-        /* Overlay Gelap */
         body::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: -1; }
 
         /* HEADER */
@@ -55,10 +54,36 @@
             border-radius: 15px; overflow: hidden; margin-bottom: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s;
         }
-        .news-img {
-            width: 100%; height: 200px; object-fit: cover; display: block;
-            background: #222; border-bottom: 1px solid var(--border);
+        
+        /* SLIDER CONTAINER (UNTUK BANYAK GAMBAR) */
+        .slider-wrapper {
+            width: 100%; height: 220px; position: relative; overflow: hidden;
+            border-bottom: 1px solid var(--border); background: #111;
         }
+        .slider-track {
+            display: flex; height: 100%; width: 100%;
+            overflow-x: auto; scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Hide Scrollbar Firefox */
+        }
+        .slider-track::-webkit-scrollbar { display: none; /* Hide Scrollbar Chrome */ }
+        
+        .slide-item {
+            min-width: 100%; height: 100%; flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+        .slide-item img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+        
+        /* INDIKATOR JUMLAH FOTO */
+        .slide-badge {
+            position: absolute; bottom: 10px; right: 10px;
+            background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px;
+            border-radius: 10px; font-size: 10px; font-weight: bold;
+            pointer-events: none; border: 1px solid rgba(255,255,255,0.2);
+        }
+
         .news-content { padding: 20px; }
         .news-title { 
             font-family: 'Orbitron'; font-size: 18px; color: var(--neon-yellow); 
@@ -71,7 +96,7 @@
         }
         .news-desc { 
             font-size: 15px; color: #ddd; line-height: 1.6; margin: 0; 
-            white-space: pre-wrap; /* Agar enter di excel terbaca */
+            white-space: pre-wrap;
         }
 
         /* LOADING */
@@ -107,49 +132,60 @@
     </div>
 
     <script>
-        // URL GOOGLE SHEET BERITA (Diambil dari script bapak sebelumnya)
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1qh_aKEQQvN0B1E6ONO0LGIpuQ6phzc-ALc4SduClMyY/export?format=csv";
 
         async function loadNews() {
             try {
                 const response = await fetch(SHEET_URL);
                 const text = await response.text();
-                const rows = text.split('\n').slice(1); // Skip header baris 1
+                const rows = text.split('\n').slice(1); // Skip Header
                 
                 const container = document.getElementById('newsContainer');
-                container.innerHTML = ''; // Hapus loading
+                container.innerHTML = ''; 
 
                 let hasData = false;
 
-                rows.forEach(row => {
-                    // Split CSV tapi hati-hati dengan koma dalam tanda kutip (jika ada)
-                    // Disini kita pakai split sederhana dulu, asumsi format rapi
+                rows.forEach((row, idx) => {
                     const cols = row.split(',');
 
-                    // Kolom 0: Judul | Kolom 1: Tanggal | Kolom 2: Deskripsi | Kolom 3: URL Gambar (Opsional)
                     if (cols.length >= 3) {
                         const title = cols[0].replace(/"/g, '');
                         const date = cols[1].replace(/"/g, '');
-                        // Deskripsi sering mengandung koma, jadi kita gabung sisa kolom jika terpisah
-                        // Atau asumsi kolom 2 adalah deskripsi.
-                        // Untuk keamanan: Kita ambil sisa string sebagai deskripsi jika gambar tidak ada di kolom fix
                         
-                        // Cari URL Gambar di semua kolom (deteksi http/jpg/png)
-                        let imgUrl = '1763947427555.jpg'; // Default Gambar (Logo)
-                        let desc = cols[2].replace(/"/g, '');
-                        
-                        // Cek kalau ada link gambar di kolom manapun
+                        // --- LOGIKA PENGAMBILAN GAMBAR (MULTI IMAGE) ---
+                        let images = [];
+                        // Cek semua kolom, ambil yg isinya link gambar
                         cols.forEach(c => {
-                            if(c.includes('http') && (c.includes('jpg') || c.includes('png') || c.includes('jpeg') || c.includes('ibb'))) {
-                                imgUrl = c.replace(/"/g, '');
+                            let cleanC = c.replace(/"/g, '').trim();
+                            if(cleanC.includes('http') && (cleanC.includes('jpg') || cleanC.includes('png') || cleanC.includes('jpeg') || cleanC.includes('ibb'))) {
+                                images.push(cleanC);
                             }
                         });
+                        
+                        // Jika tidak ada gambar, pakai default
+                        if (images.length === 0) images.push('1763947427555.jpg');
+
+                        // --- GENERATE HTML SLIDER ---
+                        let sliderHTML = `<div class="slider-track" id="track-${idx}">`;
+                        images.forEach(img => {
+                            sliderHTML += `<div class="slide-item"><img src="${img}" onerror="this.src='1763947427555.jpg'"></div>`;
+                        });
+                        sliderHTML += `</div>`;
+
+                        // Badge jumlah foto (jika lebih dari 1)
+                        let badgeHTML = images.length > 1 ? `<div class="slide-badge">${images.length} FOTO</div>` : '';
+
+                        // Ambil deskripsi (Sisa teks yg bukan gambar)
+                        let desc = cols[2].replace(/"/g, ''); 
 
                         if (title.trim() !== "") {
                             hasData = true;
                             const html = `
                             <div class="news-card">
-                                <img src="${imgUrl}" class="news-img" onerror="this.src='1763947427555.jpg'">
+                                <div class="slider-wrapper">
+                                    ${sliderHTML}
+                                    ${badgeHTML}
+                                </div>
                                 <div class="news-content">
                                     <h2 class="news-title">${title}</h2>
                                     <span class="news-date">${date}</span>
@@ -170,7 +206,25 @@
             }
         }
 
-        // Jalankan saat loading
+        // --- FUNGSI AUTO PLAY SLIDER ---
+        // Berjalan setiap 3 detik
+        setInterval(() => {
+            document.querySelectorAll('.slider-track').forEach(track => {
+                // Cek apakah track punya lebih dari 1 anak (slide)
+                if (track.children.length > 1) {
+                    const w = track.offsetWidth; // Lebar container
+                    const maxScroll = track.scrollWidth - w; // Batas scroll kanan
+                    
+                    // Jika sudah mentok kanan, balik ke 0. Jika belum, geser ke kanan.
+                    if (track.scrollLeft >= maxScroll - 10) { // -10 toleransi
+                        track.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        track.scrollBy({ left: w, behavior: 'smooth' });
+                    }
+                }
+            });
+        }, 3000); // 3000ms = 3 Detik
+
         loadNews();
     </script>
 
