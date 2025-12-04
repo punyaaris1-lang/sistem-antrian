@@ -3,182 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLU SUPER APP</title>
+    <title>MLU SUPER APP V100</title>
+
     <link rel="manifest" href="manifest.json">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => console.log('PWA Siap:', reg.scope))
-        .catch(err => console.log('PWA Gagal:', err));
-    });
-  }
-</script>
     
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* RESET */
+        /* ================= GLOBAL VARS ================= */
+        :root {
+            --bg-dark: #0b101a;
+            --text-light: #ffffff;
+            --cyan: #00bcd4;
+            --neon-yellow: #ccff00;
+            --card-bg: rgba(255,255,255,0.1);
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        /* BODY SETTING (DARK MODE) */
-        body {
-            margin: 0; 
-            height: 100vh; 
-            overflow: hidden;
-            background-color: #0b101a; /* Warna Dasar Gelap */
-            background-image: url('1763947427555.jpg'); /* FOTO LOGO BAPAK */
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed;
-            font-family: 'Rajdhani', sans-serif;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-        }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; background: #000; }
 
-        /* LAPISAN GELAP DI ATAS GAMBAR (AGAR TEKS TERBACA) */
-        body::before {
-            content: ''; position: absolute; inset: 0;
-            background: rgba(0, 0, 0, 0.75); /* Gelap 75% */
-            z-index: -1;
+        /* ================= HALAMAN UTAMA ================= */
+        #page-home {
+            position: absolute; inset: 0; z-index: 50; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            background: url('1763947427555.jpg') no-repeat center center/cover;
         }
+        #page-home::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: -1; }
 
-        /* LOGO & JUDUL */
-        .logo-area { text-align: center; margin-bottom: 40px; }
+        .logo-area h1 { font-family: 'Orbitron'; font-size: 38px; color: #fff; margin: 0; letter-spacing: 3px; text-shadow: 0 0 20px var(--cyan); }
         
-        h1 { 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 42px; 
-            margin: 0; 
-            color: #fff; 
-            letter-spacing: 3px; 
-            text-shadow: 0 0 20px #00bcd4; /* Efek Neon Cyan */
-        }
-        
-        /* TEKS KUNING BERKEDIP */
         .squad-text {
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 14px; 
-            font-weight: bold; 
-            color: #000; 
-            background: #ccff00; /* Kuning Stabilo */
-            padding: 5px 15px; 
-            border-radius: 5px; 
-            margin-top: 10px; 
-            display: inline-block; 
-            border: 2px solid #fff;
-            animation: blink 1.5s infinite;
+            font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #000;
+            background: var(--neon-yellow); padding: 5px 15px; border-radius: 4px;
+            margin-top: 10px; animation: blink 1.5s infinite; border: 2px solid #fff;
         }
-        @keyframes blink { 50% { opacity: 0.6; } }
+        @keyframes blink { 50% { opacity: 0.7; } }
 
-        /* GRID MENU */
-        .menu-grid { 
-            display: grid; 
-            gap: 20px; 
-            width: 85%; 
-            max-width: 400px; 
-        }
+        .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 350px; margin-top: 40px; position: relative; z-index: 10; }
         
-        /* TOMBOL MENU BESAR */
         .menu-btn {
-            background: rgba(255, 255, 255, 0.1); /* Transparan */
-            border: 1px solid #00bcd4; /* Garis Cyan */
-            padding: 20px; 
-            border-radius: 20px; 
-            cursor: pointer;
-            display: flex; 
-            align-items: center; 
-            gap: 20px; 
-            text-decoration: none; /* Hilangkan garis bawah link */
-            backdrop-filter: blur(10px); /* Efek Kaca Buram */
-            transition: 0.2s;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--cyan);
+            padding: 20px; border-radius: 15px; cursor: pointer;
+            display: flex; align-items: center; gap: 20px; backdrop-filter: blur(5px);
+            transition: 0.2s; text-decoration: none; color: white;
+        }
+        .menu-btn:active { background: var(--cyan); transform: scale(0.95); }
+        
+        /* Tombol Install Spesial */
+        #btnInstallApp {
+            display: none; /* Default Sembunyi */
+            border-color: var(--neon-yellow);
+            background: rgba(204, 255, 0, 0.1);
         }
         
-        /* EFEK PENCET TOMBOL */
-        .menu-btn:active { 
-            transform: scale(0.95); 
-            background: #00bcd4; 
-        }
-        .menu-btn:active h3, .menu-btn:active span { color: #000; }
-        
-        /* IKON TOMBOL */
-        .menu-icon { 
-            font-size: 32px; 
-            width: 60px; 
-            text-align: center; 
-        }
-        
-        /* TEKS TOMBOL */
-        .menu-text { text-align: left; }
-        .menu-text h3 { 
-            margin: 0; 
-            font-family: 'Orbitron', sans-serif; 
-            font-size: 18px; 
-            color: #fff; 
-            letter-spacing: 1px; 
-        }
-        .menu-text span { 
-            font-size: 12px; 
-            color: #ccc; 
-            font-weight: bold; 
-        }
+        .menu-icon { font-size: 28px; width: 50px; text-align: center; }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; color: #fff; }
+        .menu-text span { font-size: 11px; color: #aaa; }
 
-        /* FOOTER */
-        .footer {
-            position: absolute; 
-            bottom: 30px; 
-            font-size: 10px; 
-            color: #666; 
-            font-family: 'Orbitron', sans-serif;
-        }
+        .footer { position: absolute; bottom: 20px; font-size: 10px; color: #666; font-family: 'Orbitron'; }
     </style>
-    <link rel="manifest" href="manifest.json">
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
-    
 </head>
 <body>
 
-    <div class="logo-area">
-        <h1>MLU APPS</h1>
-        <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
+    <div id="page-home">
+        <div class="logo-area">
+            <h1>MLU APPS</h1>
+            <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
+        </div>
+
+        <div class="menu-grid">
+            <a href="lokasi.html" class="menu-btn">
+                <div class="menu-icon">📍</div>
+                <div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
+            </a>
+
+            <a href="sos.html" class="menu-btn">
+                <div class="menu-icon">🆘</div>
+                <div class="menu-text"><h3>MAKA SOS</h3><span>Layanan Darurat CS Maka </span></div>
+            </a>
+
+            <a href="antrian.html" class="menu-btn">
+                <div class="menu-icon">⚡</div>
+                <div class="menu-text"><h3>FC GADING</h3><span>Daftar & Pantau Charging</span></div>
+            </div>
+            </a>
+
+            <div id="btnInstallApp" class="menu-btn">
+                <div class="menu-icon">📲</div>
+                <div class="menu-text"><h3>INSTALL APLIKASI</h3><span>Pasang di HP Anda</span></div>
+            </div>
+        </div>
+
+        <div class="footer">v10.1 Final | MLU Squad</div>
     </div>
 
-    <div class="menu-grid">
-        
-        <a href="lokasi.html" class="menu-btn">
-            <div class="menu-icon">📍</div>
-            <div class="menu-text">
-                <h3>LOKASI FC</h3>
-                <span>Cari charging station</span>
-            </div>
-        </a>
+    <script>
+        // Registrasi Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
 
-        <a href="sos.html" class="menu-btn">
-            <div class="menu-icon">🆘</div>
-            <div class="menu-text">
-                <h3>BANTUAN SOS</h3>
-                <span>Layanan Darurat</span>
-            </div>
-        </a>
+        // Logic Tombol Install
+        let deferredPrompt;
+        const installBtn = document.getElementById('btnInstallApp');
 
-        <a href="antrian.html" class="menu-btn">
-            <div class="menu-icon">⚡</div>
-            <div class="menu-text">
-                <h3>ANTRIAN ONLINE</h3>
-                <span>Daftar & Pantau</span>
-            </div>
-        </a>
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Mencegah Chrome 67+ otomatis munculin mini-infobar (biar kita handle sendiri)
+            e.preventDefault();
+            // Simpan event untuk dipakai nanti
+            deferredPrompt = e;
+            // Munculkan tombol install kita
+            installBtn.style.display = 'flex';
+        });
 
-    </div>
-
-    <div class="footer">v10.0 Final | MLU Squad</div>
-
+        installBtn.addEventListener('click', (e) => {
+            // Sembunyikan tombol setelah diklik
+            installBtn.style.display = 'none';
+            // Tampilkan prompt asli browser
+            deferredPrompt.prompt();
+            // Tunggu user klik Terima/Tolak
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User menginstall aplikasi');
+                } else {
+                    console.log('User menolak install');
+                }
+                deferredPrompt = null;
+            });
+        });
+    </script>
 </body>
 </html>
