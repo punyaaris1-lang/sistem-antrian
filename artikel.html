@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFO & EVENT</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* GLOBAL DARK THEME */
+        :root {
+            --bg-dark: #0b101a;
+            --text: #ffffff;
+            --cyan: #00bcd4;
+            --soft-red: #ff3b3b;
+            --neon-yellow: #ccff00;
+            --card-bg: rgba(255,255,255,0.05);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            margin: 0; padding-bottom: 50px;
+            background-color: #000; color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            background-image: url('1763947427555.jpg'); 
+            background-size: cover; background-attachment: fixed; background-position: center;
+        }
+        /* Overlay Gelap */
+        body::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: -1; }
+
+        /* HEADER */
+        .header { 
+            padding: 20px; display: flex; align-items: center; gap: 20px; 
+            border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.8);
+            position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+        }
+        .btn-back { 
+            text-decoration: none; font-size: 24px; color: var(--cyan); 
+            border: 1px solid var(--cyan); width: 40px; height: 40px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            transition: 0.2s;
+        }
+        .btn-back:active { background: var(--cyan); color: #000; }
+        h1 { margin: 0; font-family: 'Orbitron'; font-size: 20px; color: #fff; letter-spacing: 2px; }
+
+        /* CONTAINER */
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+        /* NEWS CARD */
+        .news-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 15px; overflow: hidden; margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .news-img {
+            width: 100%; height: 200px; object-fit: cover; display: block;
+            background: #222; border-bottom: 1px solid var(--border);
+        }
+        .news-content { padding: 20px; }
+        .news-title { 
+            font-family: 'Orbitron'; font-size: 18px; color: var(--neon-yellow); 
+            margin: 0 0 5px 0; letter-spacing: 1px;
+        }
+        .news-date { 
+            font-size: 12px; color: var(--cyan); margin-bottom: 15px; 
+            display: inline-block; font-weight: bold; border: 1px solid var(--cyan);
+            padding: 2px 8px; border-radius: 5px;
+        }
+        .news-desc { 
+            font-size: 15px; color: #ddd; line-height: 1.6; margin: 0; 
+            white-space: pre-wrap; /* Agar enter di excel terbaca */
+        }
+
+        /* LOADING */
+        #loading { 
+            text-align: center; margin-top: 50px; color: #888; font-family: 'Orbitron'; 
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0%{opacity:0.5} 50%{opacity:1} 100%{opacity:0.5} }
+
+        /* FOOTER */
+        .footer { text-align: center; margin-top: 30px; }
+        .btn-home { 
+            display: inline-block; padding: 12px 30px; border: 1px solid #555; 
+            color: #aaa; text-decoration: none; border-radius: 20px; font-size: 12px; 
+            font-family: 'Orbitron'; transition: 0.2s;
+        }
+        .btn-home:active { background: #fff; color: #000; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="index.html" class="btn-back">⬅</a>
+        <h1>INFO & EVENT</h1>
+    </div>
+
+    <div class="container" id="newsContainer">
+        <div id="loading">MEMUAT BERITA...</div>
+    </div>
+
+    <div class="footer">
+        <a href="index.html" class="btn-home">KEMBALI KE MENU UTAMA</a>
+    </div>
+
+    <script>
+        // URL GOOGLE SHEET BERITA (Diambil dari script bapak sebelumnya)
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1qh_aKEQQvN0B1E6ONO0LGIpuQ6phzc-ALc4SduClMyY/export?format=csv";
+
+        async function loadNews() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const text = await response.text();
+                const rows = text.split('\n').slice(1); // Skip header baris 1
+                
+                const container = document.getElementById('newsContainer');
+                container.innerHTML = ''; // Hapus loading
+
+                let hasData = false;
+
+                rows.forEach(row => {
+                    // Split CSV tapi hati-hati dengan koma dalam tanda kutip (jika ada)
+                    // Disini kita pakai split sederhana dulu, asumsi format rapi
+                    const cols = row.split(',');
+
+                    // Kolom 0: Judul | Kolom 1: Tanggal | Kolom 2: Deskripsi | Kolom 3: URL Gambar (Opsional)
+                    if (cols.length >= 3) {
+                        const title = cols[0].replace(/"/g, '');
+                        const date = cols[1].replace(/"/g, '');
+                        // Deskripsi sering mengandung koma, jadi kita gabung sisa kolom jika terpisah
+                        // Atau asumsi kolom 2 adalah deskripsi.
+                        // Untuk keamanan: Kita ambil sisa string sebagai deskripsi jika gambar tidak ada di kolom fix
+                        
+                        // Cari URL Gambar di semua kolom (deteksi http/jpg/png)
+                        let imgUrl = '1763947427555.jpg'; // Default Gambar (Logo)
+                        let desc = cols[2].replace(/"/g, '');
+                        
+                        // Cek kalau ada link gambar di kolom manapun
+                        cols.forEach(c => {
+                            if(c.includes('http') && (c.includes('jpg') || c.includes('png') || c.includes('jpeg') || c.includes('ibb'))) {
+                                imgUrl = c.replace(/"/g, '');
+                            }
+                        });
+
+                        if (title.trim() !== "") {
+                            hasData = true;
+                            const html = `
+                            <div class="news-card">
+                                <img src="${imgUrl}" class="news-img" onerror="this.src='1763947427555.jpg'">
+                                <div class="news-content">
+                                    <h2 class="news-title">${title}</h2>
+                                    <span class="news-date">${date}</span>
+                                    <p class="news-desc">${desc}</p>
+                                </div>
+                            </div>`;
+                            container.innerHTML += html;
+                        }
+                    }
+                });
+
+                if (!hasData) {
+                    container.innerHTML = '<div style="text-align:center; color:#666;">Belum ada berita terbaru.</div>';
+                }
+
+            } catch (err) {
+                document.getElementById('newsContainer').innerHTML = '<div style="text-align:center; color:red;">Gagal memuat berita. Periksa koneksi internet.</div>';
+            }
+        }
+
+        // Jalankan saat loading
+        loadNews();
+    </script>
+
+</body>
+</html>
