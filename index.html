@@ -16,45 +16,42 @@
         body {
             margin: 0; height: 100vh; overflow: hidden;
             background-color: #0b101a;
-            /* Pastikan nama file background benar */
+            /* Background Image */
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-position: center; background-attachment: fixed;
             font-family: 'Rajdhani', sans-serif;
             display: flex; flex-direction: column; align-items: center; 
         }
-
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
 
-        /* === INSTALL SCREEN (POPUP FULL) === */
+        /* === INSTALL SCREEN === */
         #installScreen {
             position: fixed; inset: 0; z-index: 9999;
             background: rgba(11, 16, 26, 0.98); 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 0.5s ease-in-out;
-            transform: translateY(0); 
+            transition: transform 0.5s ease;
+            transform: translateY(0);
         }
         #installScreen.hidden { transform: translateY(-100%); }
 
-        /* TEKS ATAS */
+        /* BRANDING TEXT */
         .brand-top {
             font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 800;
-            color: #fff; letter-spacing: 3px; margin-bottom: 25px; text-align: center;
+            color: #fff; letter-spacing: 3px; margin-bottom: 30px; text-align: center;
             text-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
-            border-bottom: 2px solid #00bcd4; padding-bottom: 10px;
+            border-bottom: 2px solid #00bcd4; padding-bottom: 10px; display: inline-block;
         }
 
-        /* LOGO TENGAH */
         .welcome-logo {
             width: 150px; height: 150px; border-radius: 50%;
-            /* Pastikan file mlu-logo.png ada di Github */
+            /* Pastikan file ini ada di GitHub */
             background: url('mlu-logo.png') center/cover;
             box-shadow: 0 0 50px rgba(204, 255, 0, 0.3); border: 4px solid #fff;
-            animation: pulseLogo 3s infinite; margin-bottom: 25px;
-            background-color: #000; /* Cadangan jika transparan */
+            animation: pulseLogo 3s infinite; margin-bottom: 30px;
+            background-color: #000;
         }
         @keyframes pulseLogo { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
 
-        /* TEKS BAWAH */
         .brand-bottom {
             font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900;
             color: #ccff00; letter-spacing: 5px; margin-bottom: 10px; text-align: center;
@@ -68,8 +65,7 @@
             padding: 18px 40px; border-radius: 30px;
             font-family: 'Orbitron'; font-weight: 900; font-size: 16px;
             box-shadow: 0 0 25px rgba(0, 188, 212, 0.6); cursor: pointer; 
-            text-transform: uppercase; display: flex; align-items: center; gap: 10px;
-            animation: bounce 2s infinite;
+            text-transform: uppercase; animation: bounce 2s infinite;
         }
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-2px);} }
 
@@ -78,40 +74,15 @@
         /* === MENU UTAMA === */
         .logo-area { text-align: center; margin-top: 50px; margin-bottom: 20px; z-index: 10; }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 32px; margin: 0; color: #fff; letter-spacing: 2px; text-shadow: 0 0 20px #00bcd4; }
-        
-        .squad-text {
-            font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; 
-            color: #000; background: #ccff00; padding: 5px 15px; border-radius: 5px; 
-            margin-top: 5px; display: inline-block; border: 2px solid #fff;
-        }
+        .squad-text { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; color: #000; background: #ccff00; padding: 5px 15px; border-radius: 5px; margin-top: 5px; display: inline-block; border: 2px solid #fff; }
 
         .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10; }
-        
-        .menu-btn {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid #00bcd4; 
-            padding: 20px; border-radius: 20px; cursor: pointer;
-            display: flex; align-items: center; gap: 20px; text-decoration: none; 
-            backdrop-filter: blur(10px); transition: 0.2s; box-shadow: 0 0 15px rgba(0, 188, 212, 0.1);
-        }
-        .menu-btn:active { transform: scale(0.96); background: #00bcd4; }
-        .menu-btn:active h3, .menu-btn:active span { color: #000; }
-        
-        .menu-icon { 
-            font-size: 28px; width: 55px; height: 55px;
-            background: rgba(0, 229, 255, 0.1); border: 1px solid #00bcd4; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; color: #00bcd4;
-        }
-        
-        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; letter-spacing: 1px; }
+        .menu-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid #00bcd4; padding: 20px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 20px; text-decoration: none; backdrop-filter: blur(10px); }
+        .menu-icon { font-size: 28px; width: 55px; height: 55px; background: rgba(0, 229, 255, 0.1); border: 1px solid #00bcd4; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #00bcd4; }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; }
         .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; }
 
-        .btn-article {
-            width: 85%; max-width: 400px; margin-top: 15px; padding: 15px;
-            background: rgba(255,255,255,0.05); border: 1px solid #aaa; border-radius: 15px;
-            text-decoration: none; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px;
-            font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px);
-        }
-
+        .btn-article { width: 85%; max-width: 400px; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid #aaa; border-radius: 15px; text-decoration: none; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px; }
         .footer { position: absolute; bottom: 20px; font-size: 10px; color: #00bcd4; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
     </style>
 </head>
@@ -119,16 +90,10 @@
 
     <!-- SCREEN INSTALLER -->
     <div id="installScreen">
-        <!-- HEADER TEKS -->
         <div class="brand-top">MAKA LINTAS UTARA</div>
-        
-        <!-- LOGO PNG -->
         <div class="welcome-logo"></div>
-        
-        <!-- FOOTER TEKS -->
         <div class="brand-bottom">SUPER APP</div>
-
-        <div class="welcome-desc">Akses cepat charging station, antrian realtime, dan layanan darurat dalam satu aplikasi.</div>
+        <div class="welcome-desc">Akses cepat charging station & layanan darurat dalam satu aplikasi.</div>
         
         <button id="btnInstallHero" class="btn-install-big">📲 INSTALL APLIKASI</button>
         <button onclick="closeInstall()" class="btn-skip">Lanjutkan di Browser >></button>
@@ -141,32 +106,20 @@
     </div>
 
     <div class="menu-grid">
-        <a href="lokasi.html" class="menu-btn">
-            <div class="menu-icon">📍</div>
-            <div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
-        </a>
-
-        <a href="sos.html" class="menu-btn">
-            <div class="menu-icon">🆘</div>
-            <div class="menu-text"><h3>MAKA SOS</h3><span>Layanan MAKA Customer Care</span></div>
-        </a>
-
-        <a href="antrian.html" class="menu-btn">
-            <div class="menu-icon">⚡</div>
-            <div class="menu-text"><h3>FC KLP GADING</h3><span>Daftar & Pantau Motormu</span></div>
-        </a>
+        <a href="lokasi.html" class="menu-btn"><div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div></a>
+        <a href="sos.html" class="menu-btn"><div class="menu-icon">🆘</div><div class="menu-text"><h3>MAKA SOS</h3><span>Layanan Customer Care</span></div></a>
+        <a href="antrian.html" class="menu-btn"><div class="menu-icon">⚡</div><div class="menu-text"><h3>FC KLP GADING</h3><span>Daftar & Pantau Motormu</span></div></a>
     </div>
 
     <a href="artikel.html" class="btn-article">📰 INFO & EVENT MLU</a>
-
-    <div class="footer">v15.0 Final | MLU Squad</div>
+    <div class="footer">v16.0 Reset | MLU Squad</div>
 
     <script>
-        // 1. REGISTER SERVICE WORKER
+        // DAFTAR SW (PENTING AGAR PWA JALAN)
         if ('serviceWorker' in navigator) { 
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('SW Registered', reg))
-                .catch(err => console.log('SW Failed', err));
+                .then(r => console.log('SW Registered'))
+                .catch(e => console.log('SW Failed', e));
         }
 
         let deferredPrompt;
@@ -175,18 +128,16 @@
 
         window.closeInstall = () => { screen.classList.add('hidden'); };
 
-        // CEK MODE APP
+        // JIKA SUDAH JADI APK, LANGSUNG TUTUP INSTALL SCREEN
         if (window.matchMedia('(display-mode: standalone)').matches) {
             screen.style.display = 'none';
         }
 
-        // TANGKAP PROMPT
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault(); 
             deferredPrompt = e;
         });
 
-        // AKSI TOMBOL
         btn.addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
@@ -195,7 +146,7 @@
                     deferredPrompt = null; 
                 });
             } else {
-                alert("⚠️ CARA INSTALL:\nKlik titik tiga (⋮) di pojok kanan atas -> Pilih 'Install App' atau 'Tambahkan ke Layar Utama'");
+                alert("⚠️ CARA INSTALL MANUAL:\nKlik titik tiga (⋮) di pojok kanan atas -> Pilih 'Install App' atau 'Tambahkan ke Layar Utama'");
                 closeInstall();
             }
         });
