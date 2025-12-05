@@ -1,54 +1,49 @@
-const CACHE_NAME = 'mlu-app-dynamic-v1';
-const FILES_TO_CACHE = [
-  './',
+const CACHE_NAME = 'mlu-app-v2'; // Ganti versi biar HP user update cache
+const urlsToCache = [
+  '/',
   'index.html',
-  'lokasi.html',
-  'sos.html',
   'antrian.html',
+  'sos.html',
+  'lokasi.html',
+  'info.html'
+  'manifest.json',
   '1763947427555.jpg',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600;800&display=swap'
+  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap',
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
 ];
 
-// 1. INSTALL (Hapus cache lama & simpan file penting)
-self.addEventListener('install', (evt) => {
-  self.skipWaiting(); // Paksa update service worker baru segera
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(FILES_TO_CACHE);
-    })
+// Install Service Worker
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
-// 2. ACTIVATE (Bersihkan versi lama jika nama cache berubah)
-self.addEventListener('activate', (evt) => {
-  evt.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(keys.map((key) => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      }));
-    })
+// Fetch Data (Agar bisa jalan offline/stabil)
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        return response || fetch(event.request);
+      })
   );
-  self.clients.claim(); // Ambil alih kontrol halaman segera
 });
 
-// 3. FETCH (STRATEGI: NETWORK FIRST, FALLBACK CACHE)
-// Coba internet dulu, kalau gagal (offline), baru ambil cache
-self.addEventListener('fetch', (evt) => {
-  evt.respondWith(
-    fetch(evt.request)
-      .then((res) => {
-        // Jika berhasil ambil dari internet, simpan copy-nya ke cache (untuk update background)
-        const resClone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(evt.request, resClone);
-        });
-        return res;
-      })
-      .catch(() => {
-        // Jika internet mati/gagal, ambil dari cache
-        return caches.match(evt.request);
-      })
+// Hapus Cache Lama (PENTING: Agar perubahan antrian.html ter-update di HP user)
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
   );
 });
