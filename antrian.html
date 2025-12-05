@@ -162,7 +162,7 @@
         // Ganti dengan koordinat charging station Anda
         const STATION_LAT = -6.171583; 
         const STATION_LNG = 106.899884; 
-        const MAX_DISTANCE_METERS = 25; 
+        const MAX_DISTANCE_METERS = 200; 
 
         function forceOpen() {
             document.getElementById('activation-overlay').style.display = 'none';
@@ -253,10 +253,10 @@
                         async (position) => {
                             const dist = getDistanceFromLatLonInKm(position.coords.latitude, position.coords.longitude, STATION_LAT, STATION_LNG);
                             
-                            // JIKA JARAK > 30 METER & BUKAN ADMIN -> TOLAK
+                            // JIKA JARAK > 200 METER & BUKAN ADMIN -> TOLAK
                             if (dist > MAX_DISTANCE_METERS && !isAdmin) {
                                 btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
-                                statusLoc.innerText = `Terlalu jauh (${dist.toFixed(0)}m). Wajib < 30m.`;
+                                statusLoc.innerText = `Terlalu jauh (${dist.toFixed(0)}m). Wajib < 200m.`;
                                 return showModal("ASUUU CUKK", `LU MASIH ${dist.toFixed(0)}m DARI FC KLO GADING. KESINI DULU BARU DAFTAR BANGSAT.`);
                             }
 
