@@ -72,7 +72,7 @@
         .slot { 
             background: rgba(0, 10, 20, 0.6); border: 1px solid var(--glass-border); 
             border-radius: 12px; padding: 8px 4px; text-align: center; 
-            height: 230px; /* TINGGI DIKURANGI AGAR TIDAK KOSONG */
+            height: 230px; 
             display: flex; flex-direction: column; position: relative; overflow: hidden;
         }
         .slot.active { background: rgba(0, 243, 255, 0.05); border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.15); }
@@ -83,8 +83,7 @@
         /* BATERAI COMPACT */
         .bat-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 5px 0; }
         .bat-icon { 
-            width: 40px; /* Lebar dikurangi */
-            height: 70px; /* Tinggi dikurangi */
+            width: 40px; height: 70px; 
             border: 2px solid #fff; border-radius: 6px; 
             position: relative; display: flex; align-items: flex-end; padding: 3px; box-sizing: border-box;
             background: rgba(255,255,255,0.05);
@@ -147,6 +146,8 @@
         .btn-blue { background: var(--neon-blue); color: #000; } .btn-red { background: var(--danger); color: #fff; } .btn-dark { background: #333; color: #fff; }
         .btn-close-admin { position: absolute; top: 5px; right: 10px; background: none; border: none; color: #888; font-size: 16px; font-weight: bold; }
 
+        .loc-status { text-align:center; font-size:10px; color:var(--neon-blue); margin-top:5px; display:none; font-family: 'Orbitron'; }
+
         #activation-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(5, 10, 20, 0.98); backdrop-filter: blur(10px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
         .btn-activate { background: transparent; color: var(--neon-blue); border: 2px solid var(--neon-blue); padding: 15px 30px; font-family: 'Orbitron'; font-size: 14px; font-weight: bold; border-radius: 50px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); margin-top: 20px; }
     </style>
@@ -156,7 +157,7 @@
     <div class="bg-fixed"></div><div class="bg-overlay"></div>
 
     <audio id="alarm" loop preload="auto">
-        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
+        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
     </audio>
 
     <div id="activation-overlay">
@@ -241,9 +242,9 @@
 
     <script>
         // CONFIG
-        const STATION_LAT = -6.171583; 
-        const STATION_LNG = 106.899884; 
-        const MAX_DISTANCE_METERS = 200; 
+        const STATION_LAT = -6.175392; 
+        const STATION_LNG = 106.827153; 
+        const MAX_DISTANCE_METERS = 500; 
         const SLOT_LABELS = ["Slot 3 (Kiri)", "Slot 2 (Tengah)", "Slot 1 (Kanan)"];
 
         function forceOpen() {
@@ -334,23 +335,49 @@
                             
                             if (dist > MAX_DISTANCE_METERS && !isAdmin) {
                                 btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
-                                statusLoc.innerText = `WOHH JANCUK, MASIH JAUH (${dist.toFixed(0)}m) LAGI DARI FC KELAPA GADING UDAH DAFTAR NGECAS.`;
-                                return showModal("DITOLAK", `LU MASIH ${dist.toFixed(0)}m DARI FC. KESINI DULU BARU DAFTAR BANGSAT.`);
+                                statusLoc.innerText = `Terlalu jauh (${dist.toFixed(0)}m). Wajib < 50m.`;
+                                return showModal("DITOLAK", `Jarak Anda ${dist.toFixed(0)}m. Harap mendekat ke lokasi.`);
                             }
 
                             statusLoc.innerText = "Lokasi Terverifikasi ✅"; btn.innerText = "MEMPROSES...";
                             
+                            // LOGIKA DAFTAR (FIX SLOT OTOMATIS)
                             await db.runTransaction(async (t) => {
                                 const docSnap = await t.get(ref);
                                 const d = docSnap.data() || {};
-                                let s = d.chargingSlots || [null,null,null]; let q = d.waitingQueue || [];
+                                let s = d.chargingSlots || [null,null,null]; 
+                                let q = d.waitingQueue || [];
+                                
                                 if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
-                                const item={name:p, phone:w, startBattery:b, durationMinutes:0, targetLimit:100, startTime:null};
-                                q.push(item);
+                                
+                                // CEK APAKAH ADA SLOT KOSONG (NULL)
+                                let emptyIdx = s.indexOf(null);
+                                
+                                if (emptyIdx !== -1) {
+                                    // JIKA ADA SLOT KOSONG, LANGSUNG MASUK SLOT (TIDAK ANTRI)
+                                    // TAPI STATUSNYA BELUM MULAI (Duration 0, StartTime NULL)
+                                    // Nanti Admin/User tinggal klik MULAI di slot itu
+                                    const limit = getDynamicLimit(q.length);
+                                    const dur = calculateDuration(b, limit);
+                                    
+                                    s[emptyIdx] = {
+                                        name: p, 
+                                        phone: w, 
+                                        startBattery: b, 
+                                        durationMinutes: dur, 
+                                        targetLimit: limit, 
+                                        startTime: null // Belum mulai
+                                    };
+                                } else {
+                                    // JIKA SLOT PENUH, BARU MASUK ANTRIAN
+                                    const item = {name:p, phone:w, startBattery:b, durationMinutes:0, targetLimit:100, startTime:null};
+                                    q.push(item);
+                                }
+
                                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-                                if(w) sendWA(w, msg("Motor", p, "berhasil masuk antrian. Mohon menunggu giliran"));
+                                if(w) sendWA(w, msg("Motor", p, "berhasil didaftarkan."));
                             }).then(() => { 
-                                showModal('SUKSES','Masuk Antrian'); document.getElementById('uPlat').value='';
+                                showModal('SUKSES','Pendaftaran Berhasil'); document.getElementById('uPlat').value='';
                                 btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
                             }).catch((err) => { showModal('GAGAL', "Error / Sudah Ada"); btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false; });
                         },
