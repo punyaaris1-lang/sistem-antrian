@@ -1,34 +1,38 @@
-const CACHE_NAME = 'mlu-fresh-start-v20'; // Versi loncat jauh biar cache lama mati
+const CACHE_NAME = 'mlu-safe-v25'; // Versi saya naikkan jauh biar HP sadar ini baru
 const urlsToCache = [
   '/',
   'index.html',
-  'mlu-logo.png',
-  'manifest.json'
+  'antrian.html',
+  'lokasi.html',
+  'sos.html',
+  'artikel.html',
+  'manifest.json',
+  // Kita HAPUS daftar gambar spesifik dari sini agar tidak bikin error install.
+  // Biarkan gambar di-cache otomatis saat user melihatnya nanti.
 ];
 
-// 1. INSTALL & HAPUS CACHE LAMA SEGERA
+// 1. INSTALL (LANGSUNG JALAN TANPA NUNGGU)
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Paksa SW baru aktif detik ini juga
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('SW: Cache bersih dimulai');
-        // Gunakan 'addAll' dengan catch agar jika 1 file error, aplikasi TIDAK MATI
-        return cache.addAll(urlsToCache).catch(err => console.log('Cache error (diabaikan):', err));
+        console.log('SW: Menyiapkan file inti...');
+        return cache.addAll(urlsToCache);
       })
+      .catch(err => console.log('SW: Ada file gagal download, tapi lanjut aja!', err))
   );
 });
 
-// 2. AKTIVASI & BERSIH-BERSIH MEMORI HP
+// 2. HAPUS CACHE LAMA (PENYEBAB WHITE SCREEN)
 self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          // Hapus semua cache yang bukan versi v20 ini
           if (cacheName !== CACHE_NAME) {
-            console.log('SW: Menghapus cache sampah ->', cacheName);
+            console.log('SW: Membuang cache sampah ->', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -37,13 +41,13 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 3. FETCH (STRATEGI: NETWORK FIRST)
-// Selalu coba ambil dari internet dulu. Kalau offline baru ambil cache.
-// Ini mencegah White Screen gara-gara cache rusak.
+// 3. STRATEGI: NETWORK FIRST (INTERNET DULU, BARU CACHE)
+// Ini adalah KUNCI agar tidak blank. Browser dipaksa ambil yang segar dari internet dulu.
 self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .catch(() => {
+        // Kalau internet mati, baru ambil dari cache
         return caches.match(event.request);
       })
   );
