@@ -8,27 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* GLOBAL DARK THEME */
         :root {
-            --bg-dark: #0b101a;
-            --text: #ffffff;
-            --cyan: #00bcd4;
-            --soft-red: #ff3b3b;
-            --neon-yellow: #ccff00;
-            --card-bg: rgba(255,255,255,0.05);
-            --border: rgba(255,255,255,0.1);
+            --neon-blue: #00f3ff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --border: rgba(0, 243, 255, 0.2);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body { 
             margin: 0; padding-bottom: 50px;
-            background-color: #000; color: var(--text);
+            background-color: #0b101a; color: #fff;
             font-family: 'Rajdhani', sans-serif;
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-attachment: fixed; background-position: center;
         }
-        body::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: -1; }
+        body::before { content: ''; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
 
         /* HEADER */
         .header { 
@@ -37,83 +32,79 @@
             position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
         }
         .btn-back { 
-            text-decoration: none; font-size: 24px; color: var(--cyan); 
-            border: 1px solid var(--cyan); width: 40px; height: 40px; 
+            text-decoration: none; font-size: 24px; color: var(--neon-blue); 
+            border: 1px solid var(--neon-blue); width: 40px; height: 40px; 
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            transition: 0.2s;
+            transition: 0.2s; box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
         }
-        .btn-back:active { background: var(--cyan); color: #000; }
-        h1 { margin: 0; font-family: 'Orbitron'; font-size: 20px; color: #fff; letter-spacing: 2px; }
+        .btn-back:active { background: var(--neon-blue); color: #000; }
+        h1 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-blue); }
 
         /* CONTAINER */
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
 
-        /* NEWS CARD */
+        /* NEWS CARD (GLOSSY) */
         .news-card {
-            background: var(--card-bg); border: 1px solid var(--border);
+            background: var(--glass-bg); border: 1px solid var(--border);
             border-radius: 15px; overflow: hidden; margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s;
+            backdrop-filter: blur(5px);
         }
         
-        /* SLIDER CONTAINER (UNTUK BANYAK GAMBAR) */
+        /* SLIDER */
         .slider-wrapper {
-            width: 100%; height: 220px; position: relative; overflow: hidden;
-            border-bottom: 1px solid var(--border); background: #111;
+            width: 100%; height: 200px; position: relative; overflow: hidden;
+            border-bottom: 1px solid var(--border); background: #000;
         }
         .slider-track {
             display: flex; height: 100%; width: 100%;
             overflow-x: auto; scroll-behavior: smooth;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none; /* Hide Scrollbar Firefox */
+            scroll-snap-type: x mandatory; scrollbar-width: none;
         }
-        .slider-track::-webkit-scrollbar { display: none; /* Hide Scrollbar Chrome */ }
+        .slider-track::-webkit-scrollbar { display: none; }
         
         .slide-item {
-            min-width: 100%; height: 100%; flex-shrink: 0;
-            scroll-snap-align: start;
+            min-width: 100%; height: 100%; flex-shrink: 0; scroll-snap-align: start;
         }
-        .slide-item img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
-        }
+        .slide-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
         
-        /* INDIKATOR JUMLAH FOTO */
+        /* BADGE FOTO */
         .slide-badge {
             position: absolute; bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.6); color: #fff; padding: 2px 8px;
-            border-radius: 10px; font-size: 10px; font-weight: bold;
-            pointer-events: none; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.7); color: var(--neon-blue); padding: 4px 10px;
+            border-radius: 20px; font-size: 10px; font-weight: bold;
+            pointer-events: none; border: 1px solid var(--border); font-family: 'Orbitron';
         }
 
         .news-content { padding: 20px; }
         .news-title { 
-            font-family: 'Orbitron'; font-size: 18px; color: var(--neon-yellow); 
-            margin: 0 0 5px 0; letter-spacing: 1px;
+            font-family: 'Orbitron'; font-size: 16px; color: #fff; 
+            margin: 0 0 8px 0; letter-spacing: 1px;
         }
         .news-date { 
-            font-size: 12px; color: var(--cyan); margin-bottom: 15px; 
-            display: inline-block; font-weight: bold; border: 1px solid var(--cyan);
-            padding: 2px 8px; border-radius: 5px;
+            font-size: 10px; color: var(--neon-blue); margin-bottom: 15px; 
+            display: inline-block; font-weight: bold; border: 1px solid var(--neon-blue);
+            padding: 2px 8px; border-radius: 4px;
         }
         .news-desc { 
-            font-size: 15px; color: #ddd; line-height: 1.6; margin: 0; 
+            font-size: 13px; color: #ccc; line-height: 1.6; margin: 0; 
             white-space: pre-wrap;
         }
 
         /* LOADING */
         #loading { 
-            text-align: center; margin-top: 50px; color: #888; font-family: 'Orbitron'; 
+            text-align: center; margin-top: 50px; color: var(--neon-blue); font-family: 'Orbitron'; 
             animation: pulse 1s infinite;
         }
         @keyframes pulse { 0%{opacity:0.5} 50%{opacity:1} 100%{opacity:0.5} }
 
-        /* FOOTER */
         .footer { text-align: center; margin-top: 30px; }
         .btn-home { 
-            display: inline-block; padding: 12px 30px; border: 1px solid #555; 
-            color: #aaa; text-decoration: none; border-radius: 20px; font-size: 12px; 
-            font-family: 'Orbitron'; transition: 0.2s;
+            display: inline-block; padding: 12px 30px; border: 1px solid var(--neon-blue); 
+            color: var(--neon-blue); text-decoration: none; border-radius: 20px; font-size: 12px; 
+            font-family: 'Orbitron'; transition: 0.2s; box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
         }
-        .btn-home:active { background: #fff; color: #000; }
+        .btn-home:active { background: var(--neon-blue); color: #000; }
     </style>
 </head>
 <body>
@@ -138,7 +129,7 @@
             try {
                 const response = await fetch(SHEET_URL);
                 const text = await response.text();
-                const rows = text.split('\n').slice(1); // Skip Header
+                const rows = text.split('\n').slice(1);
                 
                 const container = document.getElementById('newsContainer');
                 container.innerHTML = ''; 
@@ -152,9 +143,7 @@
                         const title = cols[0].replace(/"/g, '');
                         const date = cols[1].replace(/"/g, '');
                         
-                        // --- LOGIKA PENGAMBILAN GAMBAR (MULTI IMAGE) ---
                         let images = [];
-                        // Cek semua kolom, ambil yg isinya link gambar
                         cols.forEach(c => {
                             let cleanC = c.replace(/"/g, '').trim();
                             if(cleanC.includes('http') && (cleanC.includes('jpg') || cleanC.includes('png') || cleanC.includes('jpeg') || cleanC.includes('ibb'))) {
@@ -162,20 +151,15 @@
                             }
                         });
                         
-                        // Jika tidak ada gambar, pakai default
                         if (images.length === 0) images.push('1763947427555.jpg');
 
-                        // --- GENERATE HTML SLIDER ---
                         let sliderHTML = `<div class="slider-track" id="track-${idx}">`;
                         images.forEach(img => {
                             sliderHTML += `<div class="slide-item"><img src="${img}" onerror="this.src='1763947427555.jpg'"></div>`;
                         });
                         sliderHTML += `</div>`;
 
-                        // Badge jumlah foto (jika lebih dari 1)
                         let badgeHTML = images.length > 1 ? `<div class="slide-badge">${images.length} FOTO</div>` : '';
-
-                        // Ambil deskripsi (Sisa teks yg bukan gambar)
                         let desc = cols[2].replace(/"/g, ''); 
 
                         if (title.trim() !== "") {
@@ -202,31 +186,28 @@
                 }
 
             } catch (err) {
-                document.getElementById('newsContainer').innerHTML = '<div style="text-align:center; color:red;">Gagal memuat berita. Periksa koneksi internet.</div>';
+                document.getElementById('newsContainer').innerHTML = '<div style="text-align:center; color:#ff3b3b;">Gagal memuat berita.</div>';
             }
         }
 
-        // --- FUNGSI AUTO PLAY SLIDER ---
-        // Berjalan setiap 3 detik
         setInterval(() => {
             document.querySelectorAll('.slider-track').forEach(track => {
-                // Cek apakah track punya lebih dari 1 anak (slide)
                 if (track.children.length > 1) {
-                    const w = track.offsetWidth; // Lebar container
-                    const maxScroll = track.scrollWidth - w; // Batas scroll kanan
-                    
-                    // Jika sudah mentok kanan, balik ke 0. Jika belum, geser ke kanan.
-                    if (track.scrollLeft >= maxScroll - 10) { // -10 toleransi
+                    const w = track.offsetWidth; 
+                    const maxScroll = track.scrollWidth - w; 
+                    if (track.scrollLeft >= maxScroll - 10) { 
                         track.scrollTo({ left: 0, behavior: 'smooth' });
                     } else {
                         track.scrollBy({ left: w, behavior: 'smooth' });
                     }
                 }
             });
-        }, 3000); // 3000ms = 3 Detik
+        }, 3000);
 
         loadNews();
     </script>
 
 </body>
 </html>
+
+
