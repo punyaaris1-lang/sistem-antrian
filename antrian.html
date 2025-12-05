@@ -1,9 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ANTRIAN CHARGING</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* GLOBAL DARK THEME */
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background-color: #0b101a; color: #fff; padding-bottom: 100px; -webkit-tap-highlight-color: transparent; }
+        
+        /* BACKGROUND */
+        .bg-fixed { position: fixed; inset: 0; z-index: -1; background-image: url('1763947427555.jpg'); background-size: cover; background-position: center; }
+        .bg-overlay { position: fixed; inset: 0; z-index: -1; background: rgba(11, 16, 26, 0.95); }
+
+        /* OVERLAY AKTIVASI (GERBANG AUDIO) */
+        #activation-overlay {
+            position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
+        }
+        .btn-activate {
+            background: transparent; color: #00bcd4; border: 2px solid #00bcd4; padding: 20px 30px;
+            font-family: 'Orbitron'; font-size: 16px; font-weight: bold; border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); animation: pulse 1.5s infinite; cursor: pointer; margin-top: 20px;
+        }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); } 50% { transform: scale(1.03); box-shadow: 0 0 40px rgba(0, 188, 212, 0.6); } 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); } }
+
+        /* HEADER */
+        .header { 
+            padding: 15px; display: flex; align-items: center; gap: 15px; 
+            background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+        }
+        .btn-back { text-decoration: none; font-size: 24px; color: #00bcd4; width: 40px; height: 40px; border: 1px solid #00bcd4; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; letter-spacing: 1px; }
+
+        /* CONTAINER */
+        .container { padding: 20px; max-width: 480px; margin: 0 auto; }
+        
+        /* CARD & INPUTS */
+        .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        label { display: block; font-family: 'Orbitron'; font-size: 10px; color: #8899a6; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
+        input { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 15px; outline: none; font-family: 'Rajdhani'; box-sizing: border-box; }
+        input:focus { border-color: #00bcd4; }
+        
+        .btn-daftar { width: 100%; padding: 18px; background: #00bcd4; color: #000; border: none; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        
+        /* SLOTS GRID */
+        .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 15px; color: #00bcd4; font-size: 12px; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
+        .slot { background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 15px; padding: 15px 5px; text-align: center; height: 280px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .slot.active { background: rgba(0, 210, 255, 0.2); border-color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.2); }
+
+        /* BATTERY ICON */
+        .bat-percent { font-family: 'Orbitron'; font-size: 18px; font-weight: bold; margin-bottom: 5px; height: 25px; display: flex; align-items: center; justify-content: center; }
+        .bat-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+        .bat-icon { width: 46px; height: 80px; border: 3px solid #fff; border-radius: 6px; position: relative; display: flex; align-items: flex-end; padding: 3px; box-sizing: border-box; }
+        .bat-icon::before { content: ''; position: absolute; top: -7px; left: 50%; margin-left: -8px; width: 16px; height: 4px; background: #fff; border-radius: 3px 3px 0 0; }
+        .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; }
+        .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000; }
+
+        .plat-text { font-weight: 800; font-size: 14px; margin: 5px 0; text-transform: uppercase; }
+        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; margin-top: 2px; }
+        .timer-text.done { font-size: 14px; color: #ff3b3b; animation: blink 0.5s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        .btn-act { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid; font-weight: 800; cursor: pointer; font-size: 11px; font-family: 'Orbitron'; background: transparent; margin-top: auto; }
+        .btn-start { border-color: #00bcd4; color: #00bcd4; }
+        .btn-stop { border-color: #ff3b3b; color: #ff3b3b; background: rgba(255, 59, 59, 0.2); }
+
+        /* MODAL & ADMIN */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: #0b101a; border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
+        .modal-btn { width: 100%; padding: 15px; background: #00bcd4; color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
+        .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; margin-top: 8px; font-weight: bold; font-size: 12px; }
+        .btn-blue { background: #00bcd4; color: #000; } .btn-red { background: #ff3b3b; color: #fff; } .btn-dark { background: #333; color: #fff; }
+
+        /* QUEUE LIST */
+        .wait-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; align-items: center; }
+        
+        /* INFO */
+        .info-box { text-align: center; padding: 12px; border-radius: 12px; background: rgba(204, 255, 0, 0.05); border: 2px solid #ccff00; color: #ccff00; font-family: 'Orbitron'; font-weight: bold; font-size: 12px; margin-bottom: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-fixed"></div><div class="bg-overlay"></div>
+
+    <!-- AUDIO ELEMENT (SIRENE) -->
+    <audio id="alarm" loop preload="auto">
+        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
+    </audio>
+
+    <!-- LAYER AKTIVASI: UNTUK AUDIO PERMISSION & LAYAR ON -->
+    <div id="activation-overlay">
+        <h1 style="font-family:'Orbitron'; color:#fff; margin-bottom:5px;">SYSTEM CONNECTED</h1>
+        <p style="color:#8899a6; font-size:12px; margin-bottom:30px;">Menunggu sinkronisasi audio & notifikasi...</p>
+        <button class="btn-activate" onclick="activateSystem()">AKTIFKAN MONITOR ⚡</button>
+        <p style="color:#555; font-size:10px; margin-top:20px;">*Wajib diketuk setiap kali masuk halaman ini</p>
+    </div>
+
+    <!-- KONTEN APLIKASI UTAMA -->
+    <div id="app-content" style="display:none;">
+        
+        <!-- MODAL POPUP -->
+        <div id="mod" class="modal">
+            <div class="modal-box">
+                <button onclick="stopAlarm()" style="position:absolute; top:10px; right:10px; background:none; border:none; color:#fff; font-size:20px;">✕</button>
+                <h3 id="mt" style="font-family:'Orbitron'; color:#fff; margin:0 0 10px;">JUDUL</h3>
+                <p id="mm" style="color:#8899a6; font-size:14px; margin-bottom:20px;">Pesan...</p>
+                <input type="password" id="adminPinInput" placeholder="PIN" style="display:none; width:100%; margin-bottom:15px; padding:10px; border-radius:8px; border:none;">
+                <button id="modalActionBtn" class="modal-btn">OK</button>
+            </div>
+        </div>
+
+        <div class="header">
+            <a href="index.html" class="btn-back">⬅</a>
+            <h2>ANTRIAN CHARGING</h2>
+        </div>
+
+        <div class="container">
+            <!-- FORM INPUT -->
+            <div class="card">
+                <label>PLAT NOMOR</label><input id="uPlat" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                <label>NOMOR WHATSAPP</label><input id="uWa" type="number" placeholder="08xxxxxxxxxx">
+                <label>BATERAI (%)</label><input id="uBat" type="number" placeholder="0 - 99">
+                <div id="info" class="info-box"></div>
+                <button class="btn-daftar" id="btnDaftar">DAFTAR ANTRIAN</button>
+            </div>
+
+            <!-- SLOT STATUS -->
+            <div class="status-head">STATUS 3 SLOT</div>
+            <div class="grid" id="slots"><div style="grid-column:1/-1; text-align:center; padding:30px; color:#555;">Loading...</div></div>
+
+            <!-- DAFTAR TUNGGU -->
+            <div class="card" style="padding:15px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px; font-family:'Orbitron'; font-size:12px;">
+                    <span>DAFTAR TUNGGU</span><span id="qCount" style="color:#00bcd4">0</span>
+                </div>
+                <div id="qList"></div>
+            </div>
+            
+            <!-- ADMIN BUTTON -->
+            <div style="text-align:center; color:#555; font-size:10px; margin-top:30px; cursor:pointer; letter-spacing:2px;" onclick="showAdminLogin()">🔒 ADMIN CONTROL</div>
+            
+            <!-- PANEL ADMIN -->
+            <div id="admPan" class="admin-p">
+                <h4 style="color:#ff3b3b; text-align:center; margin:0 0 15px; font-family:'Orbitron'">MASTER CONTROL</h4>
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <select id="mSlot" style="padding:10px; width:70%; background:#000; color:#fff; border:1px solid #444; border-radius:8px;"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select>
+                    <button onclick="clrSlot()" class="adm-btn btn-dark" style="width:30%; margin:0;">HAPUS</button>
+                </div>
+                <button onclick="fillQ()" class="adm-btn btn-blue">NAIKKAN ANTRIAN (AUTO)</button>
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                    <button onclick="startAll()" class="adm-btn btn-blue" style="flex:1; background:#fff; color:#000;">⚡ START ALL</button>
+                    <button onclick="stopAll()" class="adm-btn btn-red" style="flex:1;">🛑 STOP ALL</button>
+                </div>
+                <div style="margin-top:15px; display:flex; gap:10px;">
+                    <input id="blockPlatInput" placeholder="Plat Blokir" style="font-size:14px; padding:10px; margin:0; background:#000; width:60%;">
+                    <button onclick="blockUser()" class="adm-btn btn-red" style="width:40%; margin:0;">BLOK</button>
+                </div>
+                <button onclick="resAll()" class="adm-btn" style="background:transparent; border:1px solid #ff3b3b; color:#ff3b3b; margin-top:15px;">RESET DATA TOTAL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT UTAMA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         // --- KONFIGURASI ---
-        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; // Token Anda
+        // Ganti Token ini jika berubah
+        const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; 
+        
         const FB = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         
         const app = initializeApp(FB); 
@@ -15,22 +186,33 @@
         const aud = document.getElementById('alarm');
         let wakeLock = null;
 
-        // --- FUNGSI AKTIVASI AUDIO & WAKELOCK ---
+        // --- 1. FUNGSI AKTIVASI SISTEM (Anti Layar Mati & Audio Unlock) ---
         window.activateSystem = async () => {
+            // A. Pancing Audio Browser
             aud.volume = 1.0;
-            try { await aud.play(); aud.pause(); aud.currentTime = 0; } catch (e) {}
-            try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+            try { await aud.play(); aud.pause(); aud.currentTime = 0; } catch (e) { console.log("Audio Error:", e); }
+
+            // B. Kunci Layar (Screen Wake Lock)
+            try { 
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Wake Lock ON');
+                }
+            } catch (err) { console.log("Wakelock Error:", err); }
+
+            // C. Buka UI
             document.getElementById('activation-overlay').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
         };
 
+        // Re-lock screen jika user sempat keluar app lalu masuk lagi
         document.addEventListener('visibilitychange', async () => {
             if (wakeLock !== null && document.visibilityState === 'visible') {
                 try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
             }
         });
 
-        // --- FUNGSI SEND WA (DENGAN SCHEDULING) ---
+        // --- 2. FUNGSI KIRIM WA (FITUR SCHEDULER BARU) ---
         function sendWA(target, message, scheduleTime = null) {
             let p = target.replace(/\D/g,''); 
             if(p.startsWith('0')) p='62'+p.substring(1);
@@ -40,13 +222,13 @@
             fd.append("message", message); 
             fd.append("countryCode", "62");
             
-            // JIKA ADA SCHEDULE, FONNTE AKAN MENYIMPAN PESAN DAN BARU KIRIM NANTI
+            // JIKA ada parameter waktu, Fonnte akan menjadwalkannya di server
+            // Browser boleh ditutup, WA tetap akan terkirim nanti.
             if (scheduleTime) {
-                // Convert timestamp ms ke unix timestamp (detik) untuk Fonnte
-                // Fonnte butuh format YYYY-MM-DD HH:mm:ss atau Unix Timestamp dalam detik
+                // Convert miliseconds ke Unix Timestamp (detik)
                 const unixTime = Math.floor(scheduleTime / 1000);
                 fd.append("schedule", unixTime);
-                console.log("WA Dijadwalkan untuk:", new Date(scheduleTime));
+                console.log("Jadwal WA diset untuk:", new Date(scheduleTime));
             }
 
             try { 
@@ -55,12 +237,12 @@
                     headers: { "Authorization": FONNTE_TOKEN }, 
                     body: fd 
                 }); 
-            } catch(e){ console.log("WA Error", e); }
+            } catch(e){ console.log("WA Failed", e); }
         }
 
         function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
-        // --- LOGIKA REAL-TIME ---
+        // --- 3. REAL-TIME CALCULATION ---
         const slotState = { 0: {lp:null, lt:null}, 1: {lp:null, lt:null}, 2: {lp:null, lt:null} };
         function updateRealTimeCharging(slotIdx, percentNow, targetLimit) {
             const now = Date.now(); const state = slotState[slotIdx];
@@ -76,7 +258,7 @@
             return null;
         }
 
-        // --- HELPER ---
+        // --- HELPER LAINNYA ---
         function calculateDuration(bat, target) { let min = 0; for (let i = bat; i < target; i++) { if (i < 50) min += 1.0; else if (i < 80) min += 1.2; else if (i < 90) min += 1.5; else min += 2.0; } return Math.ceil(min); }
         function showModal(title, msg, action=null, showInput=false) {
             const mod = document.getElementById('mod'); document.getElementById('mt').innerText = title; document.getElementById('mm').innerText = msg;
@@ -87,7 +269,7 @@
         window.stopAlarm = () => { aud.pause(); aud.currentTime = 0; document.getElementById('mod').style.display = 'none'; };
         window.showAdminLogin = () => { showModal("ADMIN LOGIN", "PIN:", () => { if(document.getElementById('adminPinInput').value === '1131') { document.getElementById('mod').style.display='none'; document.getElementById('admPan').style.display='block'; isAdmin=true; } else alert("PIN SALAH!"); }, true); };
 
-        // --- BUTTON HANDLERS ---
+        // --- 4. LOGIKA TOMBOL DAFTAR ---
         document.getElementById('btnDaftar').onclick = async () => {
             const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
             if(!p || !w || isNaN(b)) return showModal('ERROR','Isi Semua Data');
@@ -101,40 +283,38 @@
                 const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                 
-                // Kirim WA Konfirmasi Masuk Antrian (Langsung)
+                // Kirim WA Konfirmasi (Tanpa Schedule)
                 if(w) sendWA(w, msg("Motor", p, "berhasil masuk antrian. Mohon menunggu giliran"));
             });
             showModal('SUKSES','Masuk Antrian'); document.getElementById('uPlat').value='';
         };
 
-        // --- FUNGSI ACT (MODIFIKASI PENTING) ---
+        // --- 5. LOGIKA MULAI/STOP (INTI SISTEM) ---
         window.act = (i, type) => {
             runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data(); let s=d.chargingSlots; let q=d.waitingQueue;
                 
                 if(type === 'stop') { 
                     s[i]=null; slotState[i] = {lp:null, lt:null};
-                    // Jika ada antrian, masukkan ke slot
+                    // Masukkan antrian berikutnya
                     if(q.length > 0) {
                         let nextUser = q.shift(); const antri = q.length; let limit = 100; if(antri >= 10) limit = 85; else if(antri >= 6) limit = 90; else if(antri >= 3) limit = 95;
                         let dur = calculateDuration(nextUser.startBattery, limit); if(dur<2) dur=2; nextUser.targetLimit = limit; nextUser.durationMinutes = dur; s[i] = nextUser;
                     }
                 } else { 
-                    // SAAT TOMBOL MULAI DITEKAN
+                    // SAAT KLIK START
                     s[i].startTime = new Date(); 
                     slotState[i] = {lp: s[i].startBattery, lt: Date.now()};
                     
                     if(s[i].phone) {
-                        // 1. Kirim WA "Mulai" (Langsung)
+                        // A. Kirim WA "Mulai" (Langsung)
                         sendWA(s[i].phone, msg("Motor", s[i].name, "Mulai Dicas Sekarang"));
                         
-                        // 2. JADWALKAN WA "Selesai" (Langsung kirim request ke Fonnte utk masa depan)
-                        // Hitung waktu selesai dalam miliseconds
+                        // B. JADWALKAN WA "Selesai" (Langsung request ke Fonnte)
+                        // Pesan ini disimpan Fonnte dan dikirim otomatis nanti, aman dari browser close/sleep.
                         const durationMs = s[i].durationMinutes * 60 * 1000;
                         const endTimeMs = Date.now() + durationMs;
                         
-                        // Kirim request ke Fonnte dengan parameter 'schedule'
-                        // Pesan ini akan "disimpan" Fonnte dan dikirim otomatis nanti, meski HP mati.
                         sendWA(s[i].phone, msg("Motor", s[i].name, "SUDAH SELESAI (Penuh/Limit). Silakan dipindahkan"), endTimeMs);
                     }
                 }
@@ -142,6 +322,7 @@
             });
         };
 
+        // --- 6. ADMIN & RESET ---
         window.clrSlot=()=>{const i=document.getElementById('mSlot').value; runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null; slotState[i]={lp:null,lt:null}; t.update(ref,{chargingSlots:s})});};
         window.fillQ=()=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} );};
         window.startAll=()=>{runTransaction(db,async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); });};
@@ -150,6 +331,7 @@
         window.blockUser=async()=>{const p=document.getElementById('blockPlatInput').value.toUpperCase().trim();if(!p)return;await runTransaction(db,async(t)=>{const d=(await t.get(ref)).data();const l=d.blockedList||[];if(!l.includes(p))l.push(p);t.update(ref,{blockedList:l});});showModal('BLOKIR',`Plat ${p} diblokir.`);};
         window.delQ=(i,name)=>{if(isAdmin||localStorage.getItem('myPlat')===name) runTransaction(db,async(t)=>{const q=(await t.get(ref)).data().waitingQueue;q.splice(i,1);t.update(ref,{waitingQueue:q});}); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');};
 
+        // --- 7. LISTENER DATABASE (VISUAL UPDATE) ---
         onSnapshot(ref, (snap) => {
             const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
             document.getElementById('qCount').innerText = q.length;
@@ -170,7 +352,7 @@
                     if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; } 
                     else { 
                         txt="SELESAI"; cssClass="done"; const k=x.name+endTime; 
-                        // Cek triggered hanya agar alarm bunyi SEKALI, tapi tidak mempengaruhi WA karena WA sudah dijadwal di awal
+                        // Alarm bunyi jika browser terbuka. Jika tertutup, WA Scheduled yang ambil alih.
                         if(!triggered.has(k)){ triggered.add(k); aud.volume=1.0; aud.play().catch(e=>console.log(e)); showModal('ALARM', `Motor ${x.name} Selesai!`); } 
                     }
                 }
@@ -178,7 +360,7 @@
             }).join('');
         });
 
-        // Loop UI Update (Visual Only)
+        // Loop Visual Timer (Hanya untuk tampilan, bukan logika utama)
         setInterval(() => {
             document.querySelectorAll('.timer-text').forEach(el => {
                 const end = parseInt(el.getAttribute('data-end'));
@@ -190,3 +372,7 @@
             });
         }, 1000);
     </script>
+</body>
+</html>
+
+
