@@ -1,38 +1,24 @@
-const CACHE_NAME = 'mlu-app-v12-final-png'; // Update versi
+const CACHE_NAME = 'mlu-reset-fix-v15'; // Versi baru wajib beda
 const urlsToCache = [
   '/',
   'index.html',
   'antrian.html',
-  'lokasi.html',
-  'artikel.html',
   'manifest.json',
-  'mlu-logo.png', // <--- Pastikan ini PNG
-  // Background JPG tetap disimpan untuk background halaman
-  '1763947427555.jpg' 
+  // Hanya masukkan file yg PASTI ada. Jika ragu, jangan masukkan gambar ke sini.
+  // Biarkan gambar load lewat internet agar tidak bikin blank.
 ];
 
-// Install
+// 1. INSTALL & PAKSA AKTIF
 self.addEventListener('install', event => {
-  self.skipWaiting();
+  self.skipWaiting(); // Penting: Langsung aktif tanpa nunggu browser tutup
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
-        // Gunakan catch agar aplikasi tetap jalan walau gambar error
-        return cache.addAll(urlsToCache).catch(err => console.log('Cache error ignored:', err));
-      })
+      .then(cache => cache.addAll(urlsToCache))
+      .catch(err => console.log('SW Install Warning:', err))
   );
 });
 
-// Fetch
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
-  );
-});
-
-// Hapus Cache Lama
+// 2. HAPUS CACHE SAMPAH (Penyebab White Screen)
 self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
   event.waitUntil(
@@ -40,10 +26,22 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
+            console.log('Menghapus cache rusak:', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     })
+  );
+});
+
+// 3. STRATEGI: NETWORK FIRST (Internet Dulu, Baru Cache)
+// Ini mencegah aplikasi "nyangkut" di versi lama/rusak
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    fetch(event.request)
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
 });
