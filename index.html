@@ -4,123 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MLU SUPER APP</title>
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0b101a">
+
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            margin: 0; height: 100vh; overflow: hidden; background-color: #0b101a;
-            background-image: url('1763947427555.jpg'); background-size: cover; background-position: center; 
-            font-family: 'Rajdhani', sans-serif; display: flex; flex-direction: column; align-items: center; 
+            margin: 0; height: 100vh; overflow: hidden;
+            background-color: #0b101a;
+            /* Background Tetap Pakai JPG yang Full */
+            background-image: url('1763947427555.jpg'); 
+            background-size: cover; background-position: center; background-attachment: fixed;
+            font-family: 'Rajdhani', sans-serif;
+            display: flex; flex-direction: column; align-items: center; 
         }
+
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
 
-        /* INSTALL SCREEN */
+        /* === INSTALL SCREEN === */
         #installScreen {
-            position: fixed; inset: 0; z-index: 9999; background: rgba(11, 16, 26, 0.98); 
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(11, 16, 26, 0.98); 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 0.5s ease; transform: translateY(0);
+            transition: transform 0.5s ease-in-out;
+            transform: translateY(0); 
         }
         #installScreen.hidden { transform: translateY(-100%); }
 
-        .welcome-title { font-family: 'Orbitron'; font-size: 24px; color: #fff; margin-bottom: 20px; letter-spacing: 2px; }
-        .btn-install {
-            background: #ccff00; color: #000; border: none; padding: 15px 40px; border-radius: 30px;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 16px; cursor: pointer; 
-            box-shadow: 0 0 20px rgba(204, 255, 0, 0.5); margin-bottom: 20px;
+        .brand-top {
+            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
+            color: #fff; letter-spacing: 2px; margin-bottom: 20px; text-align: center;
+            text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
         }
-        .btn-skip { background: none; border: none; color: #666; font-size: 12px; text-decoration: underline; }
 
-        /* MENU */
+        .welcome-logo {
+            width: 140px; height: 140px; border-radius: 50%;
+            /* GANTI KE PNG AGAR BULAT SEMPURNA & TRANSPARAN */
+            background: url('mlu-logo.png') center/cover;
+            /* Tambahkan border/shadow glowing */
+            box-shadow: 0 0 40px #00bcd4; border: 4px solid #fff;
+            animation: pulseLogo 3s infinite; margin-bottom: 20px;
+            background-color: #000; /* Jaga-jaga kalau png transparan, biar dasarnya hitam */
+        }
+        @keyframes pulseLogo { 0%{box-shadow:0 0 30px #00bcd4} 50%{box-shadow:0 0 60px #00bcd4} 100%{box-shadow:0 0 30px #00bcd4} }
+
+        .brand-bottom {
+            font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900;
+            color: #ccff00; letter-spacing: 4px; margin-bottom: 10px; text-align: center;
+            text-shadow: 0 0 15px rgba(204, 255, 0, 0.5);
+        }
+
+        .welcome-desc { color: #aaa; text-align: center; font-size: 13px; max-width: 80%; margin-bottom: 40px; line-height: 1.6; font-family: 'Rajdhani', sans-serif; }
+
+        .btn-install-big {
+            background: linear-gradient(90deg, #00bcd4, #00e5ff); color: #000; border: none;
+            padding: 18px 40px; border-radius: 30px;
+            font-family: 'Orbitron'; font-weight: 900; font-size: 16px;
+            box-shadow: 0 0 25px rgba(0, 188, 212, 0.6); cursor: pointer; 
+            text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+
+        .btn-skip { margin-top: 30px; background: none; border: none; color: #666; font-size: 12px; text-decoration: underline; cursor: pointer; }
+
+        /* === MENU UTAMA === */
         .logo-area { text-align: center; margin-top: 50px; margin-bottom: 20px; z-index: 10; }
-        h1 { font-family: 'Orbitron'; font-size: 42px; margin: 0; color: #fff; text-shadow: 0 0 20px #00bcd4; }
-        .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10; }
-        .menu-btn {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid #00bcd4; padding: 20px; border-radius: 20px; 
-            display: flex; align-items: center; gap: 20px; text-decoration: none; color: #fff;
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 42px; margin: 0; color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px #00bcd4; }
+        
+        .squad-text {
+            font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; 
+            color: #000; background: #ccff00; padding: 5px 15px; border-radius: 5px; 
+            margin-top: 5px; display: inline-block; border: 2px solid #fff;
+            animation: blink 1.5s infinite; letter-spacing: 1px;
         }
-        .menu-icon { font-size: 28px; }
-        .menu-text h3 { margin: 0; font-family: 'Orbitron'; font-size: 16px; }
-        .menu-text span { font-size: 11px; color: #aaa; }
+        @keyframes blink { 50% { opacity: 0.6; } }
 
-        /* DEBUG STATUS */
-        #pwa-status { position: absolute; bottom: 10px; font-size: 10px; color: #555; font-family: monospace; }
+        .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10; }
+        
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid #00bcd4; 
+            padding: 20px; border-radius: 20px; cursor: pointer;
+            display: flex; align-items: center; gap: 20px; text-decoration: none; 
+            backdrop-filter: blur(10px); transition: 0.2s; box-shadow: 0 0 15px rgba(0, 188, 212, 0.1);
+        }
+        .menu-btn:active { transform: scale(0.96); background: #00bcd4; }
+        .menu-btn:active h3, .menu-btn:active span { color: #000; }
+        
+        .menu-icon { 
+            font-size: 28px; width: 55px; height: 55px;
+            background: rgba(0, 229, 255, 0.1); border: 1px solid #00bcd4; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center; color: #00bcd4;
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+        }
+        
+        .menu-text { text-align: left; }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; letter-spacing: 1px; }
+        .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; }
+
+        .btn-article {
+            width: 85%; max-width: 400px; margin-top: 15px; padding: 15px;
+            background: rgba(255,255,255,0.05); border: 1px solid #aaa; border-radius: 15px;
+            text-decoration: none; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px;
+            font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px);
+        }
+
+        .footer { position: absolute; bottom: 20px; font-size: 10px; color: #00bcd4; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <div id="installScreen">
-        <div class="welcome-title">HALO SAHABAT MLU</div>
-        <button id="btnInstall" class="btn-install">📲 INSTALL SEKARANG</button>
-        <button onclick="closeInstall()" class="btn-skip">Lanjut di Browser >></button>
-        <p id="debug-msg" style="color:red; font-size:10px; margin-top:20px;"></p>
+        <div class="brand-top">MAKA LINTAS UTARA</div>
+        <div class="welcome-logo"></div>
+        <div class="brand-bottom">SUPER APPS</div>
+        <div class="welcome-desc">Akses cepat charging station, antrian realtime, dan layanan darurat dalam satu aplikasi.</div>
+        
+        <button id="btnInstallHero" class="btn-install-big">📲 INSTALL APLIKASI</button>
+        <button onclick="closeInstall()" class="btn-skip">Lanjutkan di Browser >></button>
     </div>
 
-    <div class="logo-area"><h1>MLU APPS</h1></div>
+    <div class="logo-area">
+        <h1>MLU APPS</h1>
+        <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
+    </div>
 
     <div class="menu-grid">
-        <a href="lokasi.html" class="menu-btn"><div class="menu-icon">📍</div><div class="menu-text"><h3>LOKASI FC</h3><span>Cari Station</span></div></a>
-        <a href="sos.html" class="menu-btn"><div class="menu-icon">🆘</div><div class="menu-text"><h3>MAKA SOS</h3><span>Bantuan</span></div></a>
-        <a href="antrian.html" class="menu-btn"><div class="menu-icon">⚡</div><div class="menu-text"><h3>FC CHARGING</h3><span>Antrian</span></div></a>
+        <a href="lokasi.html" class="menu-btn">
+            <div class="menu-icon">📍</div>
+            <div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
+        </a>
+
+        <a href="sos.html" class="menu-btn">
+            <div class="menu-icon">🆘</div>
+            <div class="menu-text"><h3>MAKA SOS</h3><span>Layanan MAKA Customer Care</span></div>
+        </a>
+
+        <a href="antrian.html" class="menu-btn">
+            <div class="menu-icon">⚡</div>
+            <div class="menu-text"><h3>FC KLP GADING</h3><span>Daftar & Pantau Motormu</span></div>
+        </a>
     </div>
 
-    <a href="artikel.html" class="menu-btn" style="margin-top:15px; justify-content:center;">📰 INFO & EVENT</a>
+    <a href="artikel.html" class="btn-article">📰 INFO & EVENT MLU</a>
 
-    <div id="pwa-status">System Check...</div>
+    <div class="footer">v15.0 Final | MLU Squad</div>
 
     <script>
-        const statusEl = document.getElementById('pwa-status');
-        const debugEl = document.getElementById('debug-msg');
-        let deferredPrompt;
-
-        function updateStatus(msg) { statusEl.innerText = msg; console.log(msg); }
-
-        // 1. REGISTER SW
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => updateStatus("SW Aktif ✅"))
-                .catch(err => {
-                    updateStatus("SW Gagal ❌");
-                    debugEl.innerText = "Error: " + err.message;
-                });
-        } else {
-            updateStatus("Browser tidak support PWA");
+        if ('serviceWorker' in navigator) { 
+            navigator.serviceWorker.register('sw.js').then(r => console.log('SW OK')).catch(e => console.log('SW Fail'));
         }
 
-        // 2. CEK MODE APLIKASI
-        window.addEventListener('load', () => {
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                document.getElementById('installScreen').style.display = 'none';
-            }
-        });
+        let deferredPrompt;
+        const screen = document.getElementById('installScreen');
+        const btn = document.getElementById('btnInstallHero');
 
-        // 3. TANGKAP EVENT INSTALL
+        window.closeInstall = () => { screen.classList.add('hidden'); };
+
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            screen.style.display = 'none';
+        }
+
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
+            e.preventDefault(); 
             deferredPrompt = e;
-            updateStatus("Install Ready ✅");
-            debugEl.innerText = ""; // Hapus error jika ada
         });
 
-        // 4. TOMBOL CLICK
-        document.getElementById('btnInstall').addEventListener('click', () => {
+        btn.addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((result) => {
-                    if (result.outcome === 'accepted') {
-                        closeInstall();
-                    }
-                    deferredPrompt = null;
+                deferredPrompt.userChoice.then((res) => { 
+                    if (res.outcome === 'accepted') closeInstall(); 
+                    deferredPrompt = null; 
                 });
             } else {
-                alert("⚠️ INSTALL MANUAL:\nKlik titik tiga (⋮) di pojok kanan atas -> 'Install App' / 'Tambahkan ke Layar Utama'");
+                alert("⚠️ CARA INSTALL:\nKlik titik tiga (⋮) di pojok kanan atas -> Pilih 'Install App' atau 'Tambahkan ke Layar Utama'");
                 closeInstall();
             }
         });
-
-        window.closeInstall = () => { document.getElementById('installScreen').classList.add('hidden'); };
     </script>
 </body>
 </html>
