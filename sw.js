@@ -1,13 +1,13 @@
-const CACHE_NAME = 'mlu-app-v3-fix'; // Saya naikkan versinya agar HP mereset cache
+const CACHE_NAME = 'mlu-app-v4-stabil'; // Versi baru
 const urlsToCache = [
   '/',
   'index.html',
   'antrian.html',
-  'sos.html',
   'lokasi.html',
-  'artikel.html'
+  'artikel.html',
+  'sos.html',
   'manifest.json',
-  '1763947427555.jpg',// <--- Pastikan file ini BENAR-BENAR ADA di GitHub Anda
+  // '1763947427555.jpg', <--- SAYA MATIKAN DULU BARIS INI AGAR TIDAK ERROR
   'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap',
   'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
   'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
@@ -19,9 +19,6 @@ self.addEventListener('install', event => {
       .then(cache => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
-      })
-      .catch(err => {
-        console.error('Gagal Cache! Cek nama file:', err);
       })
   );
 });
