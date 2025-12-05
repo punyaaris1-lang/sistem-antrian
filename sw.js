@@ -1,45 +1,37 @@
-const CACHE_NAME = 'mlu-app-v5-complete'; // Versi baru lagi
+const CACHE_NAME = 'mlu-lite-v7'; // Versi baru
 const urlsToCache = [
   '/',
-  'index.html',      // Halaman Utama (Menu)
-  'antrian.html',    // Halaman Antrian
-  'lokasi.html',     // Halaman Peta
-  'sos.html',        // Halaman Darurat
-  'artikel.html',    // Halaman Berita
-  'manifest.json',   // File settingan aplikasi
-  
-  // RESOURCE EKSTERNAL (Font & Firebase)
-  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
-  
-  // CATATAN PENTING:
-  // Jangan masukkan nama file gambar (jpg/png) di sini jika Anda tidak yakin 100% namanya benar.
-  // Salah satu file saja tidak ketemu (404), seluruh aplikasi akan GAGAL INSTALL.
+  'index.html',
+  'lokasi.html'
+  'artikel.html',
+  'antrian.html',
+  'manifest.json',
+  '1763947427555.jpg'
 ];
 
-// Install Service Worker
+// Install: Hanya cache file kritikal (HTML & Gambar Utama)
+// Font & Firebase biarkan load via internet agar tidak bikin error install
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('SW: Caching core files');
         return cache.addAll(urlsToCache);
       })
+      .catch(err => console.error('SW Install Error:', err))
   );
 });
 
-// Fetch Data (Agar bisa jalan offline)
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
+        // Kalau ada di cache, ambil dari cache. Kalau tidak, ambil dari internet.
         return response || fetch(event.request);
       })
   );
 });
 
-// Hapus Cache Lama (Agar update terbaru muncul)
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
