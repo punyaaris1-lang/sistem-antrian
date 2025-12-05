@@ -242,9 +242,9 @@
 
     <script>
         // CONFIG
-        const STATION_LAT = -6.175392; 
-        const STATION_LNG = 106.827153; 
-        const MAX_DISTANCE_METERS = 500; 
+        const STATION_LAT = -6.171583; 
+        const STATION_LNG = 106.899884; 
+        const MAX_DISTANCE_METERS = 50; 
         const SLOT_LABELS = ["Slot 3 (Kiri)", "Slot 2 (Tengah)", "Slot 1 (Kanan)"];
 
         function forceOpen() {
@@ -338,8 +338,8 @@
                             
                             if (dist > MAX_DISTANCE_METERS && !isAdmin) {
                                 btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
-                                statusLoc.innerText = `Terlalu jauh (${dist.toFixed(0)}m). Wajib < 50m.`;
-                                return showModal("DITOLAK", `Jarak Anda ${dist.toFixed(0)}m. Harap mendekat ke lokasi.`);
+                                statusLoc.innerText = `LU MASIH JAUH CUKKK, MASIH (${dist.toFixed(0)}m). GA BISA DAFTAR.`;
+                                return showModal("DITOLAK", `LU MASIH ${dist.toFixed(0)}m. DARI FC KELAPA GADING. KL UDAH DEKET BARU DAFTAR BANGSAT.`);
                             }
 
                             statusLoc.innerText = "Lokasi Terverifikasi ✅"; btn.innerText = "MEMPROSES...";
