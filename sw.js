@@ -1,32 +1,34 @@
-const CACHE_NAME = 'mlu-reset-fix-v15'; // Versi baru wajib beda
+const CACHE_NAME = 'mlu-fresh-start-v20'; // Versi loncat jauh biar cache lama mati
 const urlsToCache = [
   '/',
   'index.html',
-  'antrian.html',
-  'manifest.json',
-  // Hanya masukkan file yg PASTI ada. Jika ragu, jangan masukkan gambar ke sini.
-  // Biarkan gambar load lewat internet agar tidak bikin blank.
+  'mlu-logo.png',
+  'manifest.json'
 ];
 
-// 1. INSTALL & PAKSA AKTIF
+// 1. INSTALL & HAPUS CACHE LAMA SEGERA
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Penting: Langsung aktif tanpa nunggu browser tutup
+  self.skipWaiting(); // Paksa SW baru aktif detik ini juga
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .catch(err => console.log('SW Install Warning:', err))
+      .then(cache => {
+        console.log('SW: Cache bersih dimulai');
+        // Gunakan 'addAll' dengan catch agar jika 1 file error, aplikasi TIDAK MATI
+        return cache.addAll(urlsToCache).catch(err => console.log('Cache error (diabaikan):', err));
+      })
   );
 });
 
-// 2. HAPUS CACHE SAMPAH (Penyebab White Screen)
+// 2. AKTIVASI & BERSIH-BERSIH MEMORI HP
 self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
+          // Hapus semua cache yang bukan versi v20 ini
           if (cacheName !== CACHE_NAME) {
-            console.log('Menghapus cache rusak:', cacheName);
+            console.log('SW: Menghapus cache sampah ->', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -35,8 +37,9 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 3. STRATEGI: NETWORK FIRST (Internet Dulu, Baru Cache)
-// Ini mencegah aplikasi "nyangkut" di versi lama/rusak
+// 3. FETCH (STRATEGI: NETWORK FIRST)
+// Selalu coba ambil dari internet dulu. Kalau offline baru ambil cache.
+// Ini mencegah White Screen gara-gara cache rusak.
 self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
