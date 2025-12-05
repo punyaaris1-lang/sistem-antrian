@@ -10,92 +10,153 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
-        /* CSS GLOBAL */
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background-color: #0b101a; color: #fff; padding-bottom: 100px; -webkit-tap-highlight-color: transparent; }
-        .bg-fixed { position: fixed; inset: 0; z-index: -1; background-image: url('1763947427555.jpg'); background-size: cover; background-position: center; background-color: #0b101a; }
-        .bg-overlay { position: fixed; inset: 0; z-index: -1; background: rgba(11, 16, 26, 0.95); }
-
-        /* HEADER */
-        .header { padding: 15px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
-        .btn-back { text-decoration: none; font-size: 24px; color: #00bcd4; width: 40px; height: 40px; border: 1px solid #00bcd4; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; letter-spacing: 1px; }
-
-        .container { padding: 20px; max-width: 480px; margin: 0 auto; }
-        .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        
-        /* FORM */
-        label { display: block; font-family: 'Orbitron'; font-size: 10px; color: #8899a6; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
-        input { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 15px; outline: none; font-family: 'Rajdhani'; box-sizing: border-box; }
-        input:focus { border-color: #00bcd4; }
-        .btn-daftar { width: 100%; padding: 18px; background: #00bcd4; color: #000; border: none; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 10px; }
-
-        /* DASHBOARD ANTRIAN (BARU) */
-        .queue-dashboard {
-            background: linear-gradient(135deg, rgba(0, 188, 212, 0.1), rgba(0,0,0,0.4));
-            border: 2px solid #00bcd4; border-radius: 15px; padding: 15px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(0, 188, 212, 0.2); position: relative; overflow: hidden;
+        /* === GLOBAL THEME === */
+        :root {
+            --neon-blue: #00f3ff;
+            --deep-blue: #0a192f;
+            --glass-bg: rgba(10, 25, 47, 0.7);
+            --glass-border: rgba(0, 243, 255, 0.3);
+            --danger: #ff2a6d;
         }
-        .qd-title { font-family: 'Orbitron'; font-size: 10px; color: #8899a6; letter-spacing: 2px; margin-bottom: 5px; }
-        .qd-main { font-size: 24px; font-weight: 800; color: #fff; margin: 5px 0; }
-        .qd-info { font-size: 12px; color: #ccff00; font-weight: bold; background: rgba(204, 255, 0, 0.1); padding: 5px 10px; border-radius: 20px; display: inline-block; border: 1px solid #ccff00; }
+
+        body { 
+            margin: 0; font-family: 'Rajdhani', sans-serif; 
+            background-color: #050b14; color: #fff; padding-bottom: 80px; 
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('1763947427555.jpg'); 
+            background-size: cover; background-position: center; background-attachment: fixed;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .header { 
+            padding: 15px; display: flex; align-items: center; gap: 15px; 
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border); 
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+        .btn-back { 
+            text-decoration: none; font-size: 20px; color: var(--neon-blue); 
+            width: 35px; height: 35px; border: 1px solid var(--neon-blue); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+        h2 { margin: 0; font-family: 'Orbitron'; font-size: 16px; color: #fff; letter-spacing: 2px; }
+
+        .container { padding: 15px; max-width: 480px; margin: 0 auto; }
+
+        /* FORM COMPACT */
+        .card { 
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 20px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        label { display: block; font-family: 'Orbitron'; font-size: 10px; color: var(--neon-blue); margin-bottom: 5px; text-transform: uppercase; }
+        input { 
+            width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid #333; border-radius: 8px; 
+            text-align: center; font-size: 16px; font-weight: 700; color: #fff; 
+            margin-bottom: 10px; outline: none; font-family: 'Rajdhani';
+        }
+        input:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
         
-        /* SLOT GRID */
-        .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 15px; color: #00bcd4; font-size: 12px; letter-spacing: 2px; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
-        .slot { background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 15px; padding: 15px 5px; text-align: center; height: 300px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        .slot.active { background: rgba(0, 210, 255, 0.2); border-color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.2); }
+        .btn-daftar { 
+            width: 100%; padding: 12px; background: linear-gradient(90deg, #00c6ff, #0072ff); 
+            color: #fff; border: none; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; font-size: 14px; 
+            cursor: pointer; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.4);
+        }
 
-        .slot-label-top { font-size: 10px; color: #00bcd4; font-weight: bold; margin-bottom: 5px; font-family: 'Orbitron'; border-bottom: 1px solid rgba(0, 188, 212, 0.3); padding-bottom: 3px;}
+        /* SLOT GRID COMPACT */
+        .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 10px; color: #fff; font-size: 12px; letter-spacing: 2px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+        
+        .slot { 
+            background: rgba(0, 10, 20, 0.6); border: 1px solid var(--glass-border); 
+            border-radius: 12px; padding: 8px 4px; text-align: center; 
+            height: 230px; /* TINGGI DIKURANGI AGAR TIDAK KOSONG */
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
+        .slot.active { background: rgba(0, 243, 255, 0.05); border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.15); }
 
-        .bat-percent { font-family: 'Orbitron'; font-size: 18px; font-weight: bold; margin-bottom: 5px; height: 25px; display: flex; align-items: center; justify-content: center; }
-        .bat-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-        .bat-icon { width: 46px; height: 80px; border: 3px solid #fff; border-radius: 6px; position: relative; display: flex; align-items: flex-end; padding: 3px; box-sizing: border-box; }
-        .bat-icon::before { content: ''; position: absolute; top: -7px; left: 50%; margin-left: -8px; width: 16px; height: 4px; background: #fff; border-radius: 3px 3px 0 0; }
-        .bat-fill { width: 100%; background: #00bcd4; border-radius: 2px; transition: height 0.5s; }
-        .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000; }
+        .slot-label-top { font-size: 9px; color: #888; font-weight: bold; margin-bottom: 5px; font-family: 'Orbitron'; border-bottom: 1px solid #333; padding-bottom: 2px; text-transform: uppercase;}
+        .slot.active .slot-label-top { color: var(--neon-blue); border-color: var(--neon-blue); }
 
-        /* TARGET LIMIT KECIL */
-        .target-limit-badge { position: absolute; top: -15px; right: -10px; background: #000; border: 1px solid #ccff00; color: #ccff00; font-size: 9px; padding: 2px 6px; border-radius: 10px; z-index: 5; font-weight: bold; }
+        /* BATERAI COMPACT */
+        .bat-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 5px 0; }
+        .bat-icon { 
+            width: 40px; /* Lebar dikurangi */
+            height: 70px; /* Tinggi dikurangi */
+            border: 2px solid #fff; border-radius: 6px; 
+            position: relative; display: flex; align-items: flex-end; padding: 3px; box-sizing: border-box;
+            background: rgba(255,255,255,0.05);
+        }
+        .bat-icon::before { content: ''; position: absolute; top: -5px; left: 50%; margin-left: -8px; width: 16px; height: 3px; background: #fff; border-radius: 3px 3px 0 0; }
+        
+        .bat-fill { width: 100%; background: #00e5ff; border-radius: 2px; transition: height 0.5s; box-shadow: 0 0 10px var(--neon-blue); }
+        .bat-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000; }
 
-        .plat-text { font-weight: 800; font-size: 14px; margin: 5px 0; text-transform: uppercase; }
-        .timer-text { font-size: 18px; font-weight: 700; color: #00bcd4; font-family: 'Orbitron'; margin-top: 2px; }
-        .timer-text.done { font-size: 14px; color: #ff3b3b; animation: blink 0.5s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+        .bat-percent { font-family: 'Orbitron'; font-size: 16px; font-weight: bold; margin-top: 2px; color: #fff; }
+        .target-limit-badge { 
+            position: absolute; top: -18px; right: -8px; 
+            background: #000; border: 1px solid var(--neon-blue); color: var(--neon-blue); 
+            font-size: 8px; padding: 1px 4px; border-radius: 4px; font-family: 'Orbitron';
+        }
 
-        .btn-act { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid; font-weight: 800; cursor: pointer; font-size: 11px; font-family: 'Orbitron'; background: transparent; margin-top: auto; }
-        .btn-start { border-color: #00bcd4; color: #00bcd4; }
-        .btn-stop { border-color: #ff3b3b; color: #ff3b3b; background: rgba(255, 59, 59, 0.2); }
+        .plat-text { font-weight: 800; font-size: 13px; margin: 3px 0; text-transform: uppercase; color: #fff; }
+        .timer-text { font-size: 16px; font-weight: 700; color: var(--neon-blue); font-family: 'Orbitron'; margin-bottom: 5px; }
+        
+        /* TOMBOL KECIL */
+        .btn-act { 
+            width: 100%; padding: 8px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 10px; font-family: 'Orbitron'; 
+            margin-top: auto; transition: 0.2s; border: none;
+        }
+        .btn-start { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); }
+        .btn-stop { background: rgba(255, 42, 109, 0.1); border: 1px solid var(--danger); color: var(--danger); }
+        
+        /* EMPTY STATE */
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #444; }
+        .empty-icon { font-size: 24px; margin-bottom: 5px; opacity: 0.3; }
+        .empty-text { font-size: 9px; font-family: 'Orbitron'; letter-spacing: 1px; color: #555; }
+
+        /* DASHBOARD INFO */
+        .queue-dashboard {
+            background: rgba(0, 0, 0, 0.6); border-top: 2px solid var(--neon-blue); border-bottom: 2px solid var(--neon-blue); 
+            padding: 10px; text-align: center; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+        .qd-title { font-family: 'Orbitron'; font-size: 9px; color: #aaa; letter-spacing: 2px; margin-bottom: 2px; }
+        .qd-main { font-size: 22px; font-weight: 800; color: #fff; margin: 2px 0; text-shadow: 0 0 10px var(--neon-blue); }
+        .qd-info { font-size: 10px; color: #000; font-weight: bold; background: var(--neon-blue); padding: 3px 10px; border-radius: 4px; display: inline-block; margin-top: 3px; }
+
+        /* WAITING LIST */
+        .wait-card { 
+            background: rgba(255, 255, 255, 0.05); border-left: 3px solid #555; border-radius: 8px; padding: 12px; margin-bottom: 8px; 
+            display: flex; justify-content: space-between; align-items: center; font-size: 12px; backdrop-filter: blur(5px);
+        }
+        .wait-card.active { border-left-color: var(--neon-blue); background: rgba(0, 243, 255, 0.05); }
+        .wait-info h4 { margin: 0; font-family: 'Orbitron'; font-size: 13px; color: #fff; }
+        .wait-info p { margin: 2px 0 0; font-size: 10px; color: #aaa; }
+        .wait-stat { text-align: right; font-weight: bold; color: var(--neon-blue); }
+        .btn-del-q { padding: 5px; color: #666; font-size: 14px; }
 
         /* MODAL & ADMIN */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-box { background: #0b101a; border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
-        .modal-btn { width: 100%; padding: 15px; background: #00bcd4; color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; }
-
-        .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; position: relative; }
-        .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; margin-top: 8px; font-weight: bold; font-size: 12px; }
-        .btn-blue { background: #00bcd4; color: #000; } .btn-red { background: #ff3b3b; color: #fff; } .btn-dark { background: #333; color: #fff; }
-        .btn-close-admin { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #888; font-size: 18px; cursor: pointer; font-weight: bold; }
-
-        .wait-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; align-items: center; }
-        .info-box { text-align: center; padding: 12px; border-radius: 12px; background: rgba(204, 255, 0, 0.05); border: 2px solid #ccff00; color: #ccff00; font-family: 'Orbitron'; font-weight: bold; font-size: 12px; margin-bottom: 15px; display: none; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-box { background: #0b101a; border: 2px solid var(--neon-blue); padding: 25px; border-radius: 15px; width: 80%; max-width: 300px; text-align: center; }
+        .modal-btn { width: 100%; padding: 12px; background: var(--neon-blue); color: #000; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; font-family: 'Orbitron'; }
         
-        #toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 20px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; font-size: 14px; border: 1px solid #00bcd4; }
-        #toast.show { visibility: visible; -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        .admin-p { display: none; background: #111; padding: 15px; border: 1px solid var(--danger); border-radius: 12px; margin-top: 20px; position: relative; }
+        .adm-btn { width: 100%; padding: 10px; border-radius: 6px; border: none; margin-top: 8px; font-weight: bold; font-size: 11px; font-family: 'Orbitron'; }
+        .btn-blue { background: var(--neon-blue); color: #000; } .btn-red { background: var(--danger); color: #fff; } .btn-dark { background: #333; color: #fff; }
+        .btn-close-admin { position: absolute; top: 5px; right: 10px; background: none; border: none; color: #888; font-size: 16px; font-weight: bold; }
 
-        /* ACTIVATION */
-        #activation-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .btn-activate { background: transparent; color: #00bcd4; border: 2px solid #00bcd4; padding: 20px 30px; font-family: 'Orbitron'; font-size: 16px; font-weight: bold; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); animation: pulse 1.5s infinite; cursor: pointer; margin-top: 20px; }
+        #activation-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(5, 10, 20, 0.98); backdrop-filter: blur(10px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .btn-activate { background: transparent; color: var(--neon-blue); border: 2px solid var(--neon-blue); padding: 15px 30px; font-family: 'Orbitron'; font-size: 14px; font-weight: bold; border-radius: 50px; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2); margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="bg-fixed"></div><div class="bg-overlay"></div>
-    <div id="toast">Notifikasi</div>
 
     <audio id="alarm" loop preload="auto">
-        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
+        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
     </audio>
 
     <div id="activation-overlay">
@@ -121,39 +182,41 @@
         </div>
 
         <div class="container">
-            
-            <!-- DASHBOARD ANTRIAN BARU -->
-            <div class="queue-dashboard">
-                <div class="qd-title">STATUS LIVE</div>
-                <div class="qd-main" id="dash-q-count">0 ANTRIAN</div>
-                <div class="qd-info" id="dash-limit">MAX CAS: 100%</div>
-                <div style="font-size:9px; color:#aaa; margin-top:5px;">*Limit otomatis turun jika antrian ramai</div>
-            </div>
-
+            <!-- FORM INPUT -->
             <div class="card">
-                <label>PLAT NOMOR</label><input id="uPlat" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
-                <label>NOMOR WHATSAPP</label><input id="uWa" type="number" placeholder="08xxxxxxxxxx">
-                <label>BATERAI (%)</label><input id="uBat" type="number" placeholder="0 - 99">
-                <div id="info" class="info-box"></div>
+                <label>PLAT NOMOR</label>
+                <input id="uPlat" placeholder="B 1234 XYZ" style="text-transform:uppercase;">
+                
+                <label>NOMOR WHATSAPP</label>
+                <input id="uWa" type="number" placeholder="08xxxxxxxxxx">
+                
+                <label>BATERAI SAAT INI (%)</label>
+                <input id="uBat" type="number" placeholder="0 - 99">
+                
                 <button class="btn-daftar" id="btnDaftar">DAFTAR ANTRIAN</button>
-                <p id="locStatus" style="text-align:center; font-size:10px; color:#555; margin-top:5px; display:none;">Verifikasi GPS...</p>
+                <p class="loc-status" id="locStatus">Verifikasi GPS...</p>
             </div>
 
             <div class="status-head">STATUS 3 SLOT</div>
             <div class="grid" id="slots">
-                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#00bcd4; font-family:'Orbitron'; animation:pulse 1s infinite;">
+                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#00f3ff; font-family:'Orbitron'; animation:pulse 1s infinite;">
                     MENGHUBUNGKAN...
                 </div>
             </div>
 
-            <div class="card" style="padding:15px;">
-                <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px; font-family:'Orbitron'; font-size:12px;">
-                    <span>DAFTAR TUNGGU</span><span id="qCount" style="color:#00bcd4">0</span>
-                </div>
-                <div id="qList"></div>
+            <!-- DASHBOARD INFO -->
+            <div class="queue-dashboard">
+                <div class="qd-title">STATUS LIVE</div>
+                <div class="qd-main" id="dash-q-count">0 ANTRIAN</div>
+                <div class="qd-info" id="dash-limit">MAX CAS: 100%</div>
+            </div>
+
+            <!-- LIST ANTRIAN -->
+            <div id="qListContainer">
+                <div style="text-align:center; color:#555; font-size:12px; margin-top:20px;">- Belum ada antrian -</div>
             </div>
             
-            <div style="text-align:center; color:#555; font-size:10px; margin-top:30px; cursor:pointer; letter-spacing:2px;" onclick="showAdminLogin()">🔒 ADMIN CONTROL</div>
+            <div style="text-align:center; color:#333; font-size:10px; margin-top:30px; cursor:pointer; letter-spacing:2px;" onclick="showAdminLogin()">🔒 ADMIN CONTROL</div>
             
             <div id="admPan" class="admin-p">
                 <button class="btn-close-admin" onclick="document.getElementById('admPan').style.display='none'">✕</button>
@@ -181,11 +244,6 @@
         const STATION_LAT = -6.171583; 
         const STATION_LNG = 106.899884; 
         const MAX_DISTANCE_METERS = 200; 
-        
-        // MAPPING SLOT: Array index 0,1,2 -> Visual
-        // Index 0 (Kiri di array) = Slot 3 (Fisik)
-        // Index 1 (Tengah) = Slot 2
-        // Index 2 (Kanan) = Slot 1
         const SLOT_LABELS = ["Slot 3 (Kiri)", "Slot 2 (Tengah)", "Slot 1 (Kanan)"];
 
         function forceOpen() {
@@ -198,13 +256,6 @@
             }, 100);
         }
 
-        function showToast(text) {
-            const x = document.getElementById("toast");
-            x.innerText = text;
-            x.className = "show";
-            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-        }
-
         function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
             var R = 6371; var dLat = deg2rad(lat2-lat1); var dLon = deg2rad(lon2-lon1); 
             var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
@@ -212,7 +263,6 @@
         }
         function deg2rad(deg) { return deg * (Math.PI/180); }
 
-        // --- HITUNG LIMIT DINAMIS BERDASARKAN ANTRIAN ---
         function getDynamicLimit(queueLength) {
             if (queueLength > 10) return 85;
             if (queueLength >= 6) return 90;
@@ -269,7 +319,6 @@
 
                     if(!p || !w || isNaN(b)) return showModal('ERROR','Isi Semua Data');
 
-                    // Simpan Plat saya sendiri di localStorage untuk validasi stop
                     localStorage.setItem('myPlat', p);
 
                     btn.innerText = "CEK LOKASI..."; btn.disabled = true; statusLoc.style.display = 'block'; statusLoc.innerText = "Meminta izin lokasi...";
@@ -285,9 +334,8 @@
                             
                             if (dist > MAX_DISTANCE_METERS && !isAdmin) {
                                 btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
-                                statusLoc.innerText = `Terlalu jauh (${dist.toFixed(0)}m). Wajib < 200m.`;
-                                return showModal("ASU CUKKK", `LU MASIH ${dist.toFixed(0)}m DARI FC KLP GADING. 
-                                KESINI DULU BARU DAFTAR CUKKK.`);
+                                statusLoc.innerText = `WOHH JANCUK, MASIH JAUH (${dist.toFixed(0)}m) LAGI DARI FC KELAPA GADING UDAH DAFTAR NGECAS.`;
+                                return showModal("DITOLAK", `LU MASIH ${dist.toFixed(0)}m DARI FC. KESINI DULU BARU DAFTAR BANGSAT.`);
                             }
 
                             statusLoc.innerText = "Lokasi Terverifikasi ✅"; btn.innerText = "MEMPROSES...";
@@ -322,19 +370,15 @@
                         let s = d.chargingSlots; let q = d.waitingQueue;
                         const currentSlot = s[i];
 
-                        // --- LOGIKA STOP (SECURITY CHECK) ---
                         if (type === 'stop') {
                             const myPlat = localStorage.getItem('myPlat');
-                            // Jika bukan admin DAN bukan plat saya, tolak!
                             if (!isAdmin && (!currentSlot || currentSlot.name !== myPlat)) {
                                 throw "Bukan Motor Anda"; 
                             }
 
                             s[i] = null; 
                             if(q.length > 0) {
-                                // Masukkan next user dari antrian
                                 let nextUser = q.shift(); 
-                                // Hitung Limit Berdasarkan Sisa Antrian SEKARANG
                                 let limit = getDynamicLimit(q.length);
                                 let dur = calculateDuration(nextUser.startBattery, limit);
                                 nextUser.targetLimit = limit; 
@@ -342,11 +386,8 @@
                                 s[i] = nextUser;
                             }
                         } else { 
-                            // --- LOGIKA START ---
-                            // Hitung limit berdasarkan antrian saat ini
                             let limit = getDynamicLimit(q.length);
                             let dur = calculateDuration(currentSlot.startBattery, limit);
-                            
                             s[i].targetLimit = limit;
                             s[i].durationMinutes = dur;
                             s[i].startTime = new Date(); 
@@ -356,7 +397,7 @@
                     }).then((res) => {
                         if (res.type === 'start' && res.slotItem && res.slotItem.phone) {
                             const item = res.slotItem;
-                            const slotName = SLOT_LABELS[res.slotIndex]; // Ambil nama slot (Kiri/Kanan)
+                            const slotName = SLOT_LABELS[res.slotIndex]; 
                             const limitMsg = `Target Cas: ${item.targetLimit}% (Antrian Ramai)`;
                             
                             sendWA(item.phone, msg("Motor", item.name, `Mulai Dicas di *${slotName}*. ${limitMsg}`));
@@ -364,7 +405,6 @@
                             const durationMs = item.durationMinutes * 60 * 1000;
                             const endTimeMs = Date.now() + durationMs;
                             sendWA(item.phone, msg("Motor", item.name, `SUDAH SELESAI di *${slotName}*. Silakan dipindahkan`), endTimeMs);
-                            showToast("Jadwal WA Tersimpan ✅");
                         }
                     }).catch((err) => {
                         if(err === "Bukan Motor Anda") showModal("AKSES DITOLAK", "Hanya Admin atau Pemilik Motor yang bisa Stop.");
@@ -390,22 +430,42 @@
                 ref.onSnapshot((snap) => {
                     const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
                     
-                    // UPDATE DASHBOARD ATAS
                     const qLen = q.length;
                     document.getElementById('dash-q-count').innerText = `${qLen} ANTRIAN`;
                     const currentLimit = getDynamicLimit(qLen);
                     document.getElementById('dash-limit').innerText = `MAX CAS: ${currentLimit}%`;
                     
-                    // UPDATE LIST TUNGGU
-                    document.getElementById('qCount').innerText = qLen;
-                    document.getElementById('qList').innerHTML = q.map((x,i)=>`<div class="wait-row"><div><b>${x.name}</b> (${x.startBattery}%)</div><div style="color:${isAdmin?'#ff3b3b':'#888'}; font-weight:bold; cursor:pointer;" onclick="delQ(${i}, '${x.name}')">✕</div></div>`).join('');
+                    const listContainer = document.getElementById('qListContainer');
+                    if (qLen === 0) {
+                        listContainer.innerHTML = '<div style="text-align:center; color:#555; font-size:12px; margin-top:20px;">- Belum ada antrian -</div>';
+                    } else {
+                        listContainer.innerHTML = q.map((x,i)=>`
+                            <div class="wait-card ${i===0 ? 'active' : ''}">
+                                <div class="wait-info">
+                                    <h4>${x.name}</h4>
+                                    <p>${x.phone ? x.phone.substring(0,4)+'****'+x.phone.substring(x.phone.length-2) : 'No WA'}</p>
+                                </div>
+                                <div class="wait-stat">
+                                    <div class="bat">${x.startBattery}%</div>
+                                </div>
+                                <div class="btn-del-q" onclick="delQ(${i}, '${x.name}')">✕</div>
+                            </div>
+                        `).join('');
+                    }
 
-                    // RENDER SLOT
                     document.getElementById('slots').innerHTML = s.map((x,i)=>{
                         const slotLabel = SLOT_LABELS[i];
-                        if(!x) { return `<div class="slot"><div class="slot-label-top">${slotLabel}</div><div class="bat-wrap"><div class="bat-icon"></div></div><small style="color:#888">KOSONG</small></div>`; }
+                        if(!x) { 
+                            return `
+                            <div class="slot">
+                                <div class="slot-label-top">${slotLabel}</div>
+                                <div class="empty-state">
+                                    <div class="empty-icon">🔌</div>
+                                    <div class="empty-text">READY</div>
+                                </div>
+                            </div>`; 
+                        }
                         const isRun=!!x.startTime;
-                        
                         let btn = isRun ? `<button class="btn-act btn-stop" onclick="act(${i},'stop')">STOP</button>` : `<button class="btn-act btn-start" onclick="act(${i},'start')">MULAI</button>`;
                         let txt="Tap Mulai"; let h=x.startBattery; let cssClass=""; let endTime = 0;
                         let targetDisplay = x.targetLimit || 100;
