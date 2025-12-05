@@ -16,7 +16,7 @@
         body {
             margin: 0; height: 100vh; overflow: hidden;
             background-color: #0b101a;
-            /* Background Tetap Pakai JPG yang Full */
+            /* Pastikan nama file background benar */
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-position: center; background-attachment: fixed;
             font-family: 'Rajdhani', sans-serif;
@@ -25,7 +25,7 @@
 
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
 
-        /* === INSTALL SCREEN === */
+        /* === INSTALL SCREEN (POPUP FULL) === */
         #installScreen {
             position: fixed; inset: 0; z-index: 9999;
             background: rgba(11, 16, 26, 0.98); 
@@ -35,30 +35,33 @@
         }
         #installScreen.hidden { transform: translateY(-100%); }
 
+        /* TEKS ATAS */
         .brand-top {
-            font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900;
-            color: #fff; letter-spacing: 2px; margin-bottom: 20px; text-align: center;
-            text-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+            font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 800;
+            color: #fff; letter-spacing: 3px; margin-bottom: 25px; text-align: center;
+            text-shadow: 0 0 20px rgba(0, 188, 212, 0.8);
+            border-bottom: 2px solid #00bcd4; padding-bottom: 10px;
         }
 
+        /* LOGO TENGAH */
         .welcome-logo {
-            width: 140px; height: 140px; border-radius: 50%;
-            /* GANTI KE PNG AGAR BULAT SEMPURNA & TRANSPARAN */
+            width: 150px; height: 150px; border-radius: 50%;
+            /* Pastikan file mlu-logo.png ada di Github */
             background: url('mlu-logo.png') center/cover;
-            /* Tambahkan border/shadow glowing */
-            box-shadow: 0 0 40px #00bcd4; border: 4px solid #fff;
-            animation: pulseLogo 3s infinite; margin-bottom: 20px;
-            background-color: #000; /* Jaga-jaga kalau png transparan, biar dasarnya hitam */
+            box-shadow: 0 0 50px rgba(204, 255, 0, 0.3); border: 4px solid #fff;
+            animation: pulseLogo 3s infinite; margin-bottom: 25px;
+            background-color: #000; /* Cadangan jika transparan */
         }
-        @keyframes pulseLogo { 0%{box-shadow:0 0 30px #00bcd4} 50%{box-shadow:0 0 60px #00bcd4} 100%{box-shadow:0 0 30px #00bcd4} }
+        @keyframes pulseLogo { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
 
+        /* TEKS BAWAH */
         .brand-bottom {
             font-family: 'Orbitron', sans-serif; font-size: 28px; font-weight: 900;
-            color: #ccff00; letter-spacing: 4px; margin-bottom: 10px; text-align: center;
+            color: #ccff00; letter-spacing: 5px; margin-bottom: 10px; text-align: center;
             text-shadow: 0 0 15px rgba(204, 255, 0, 0.5);
         }
 
-        .welcome-desc { color: #aaa; text-align: center; font-size: 13px; max-width: 80%; margin-bottom: 40px; line-height: 1.6; font-family: 'Rajdhani', sans-serif; }
+        .welcome-desc { color: #aaa; text-align: center; font-size: 13px; max-width: 80%; margin-bottom: 40px; line-height: 1.6; }
 
         .btn-install-big {
             background: linear-gradient(90deg, #00bcd4, #00e5ff); color: #000; border: none;
@@ -68,21 +71,19 @@
             text-transform: uppercase; display: flex; align-items: center; gap: 10px;
             animation: bounce 2s infinite;
         }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-10px);} 60% {transform: translateY(-5px);} }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-2px);} }
 
         .btn-skip { margin-top: 30px; background: none; border: none; color: #666; font-size: 12px; text-decoration: underline; cursor: pointer; }
 
         /* === MENU UTAMA === */
         .logo-area { text-align: center; margin-top: 50px; margin-bottom: 20px; z-index: 10; }
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 42px; margin: 0; color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px #00bcd4; }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 32px; margin: 0; color: #fff; letter-spacing: 2px; text-shadow: 0 0 20px #00bcd4; }
         
         .squad-text {
             font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; 
             color: #000; background: #ccff00; padding: 5px 15px; border-radius: 5px; 
             margin-top: 5px; display: inline-block; border: 2px solid #fff;
-            animation: blink 1.5s infinite; letter-spacing: 1px;
         }
-        @keyframes blink { 50% { opacity: 0.6; } }
 
         .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10; }
         
@@ -99,10 +100,8 @@
             font-size: 28px; width: 55px; height: 55px;
             background: rgba(0, 229, 255, 0.1); border: 1px solid #00bcd4; border-radius: 15px;
             display: flex; align-items: center; justify-content: center; color: #00bcd4;
-            box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
         }
         
-        .menu-text { text-align: left; }
         .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; letter-spacing: 1px; }
         .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; }
 
@@ -118,16 +117,24 @@
 </head>
 <body>
 
+    <!-- SCREEN INSTALLER -->
     <div id="installScreen">
+        <!-- HEADER TEKS -->
         <div class="brand-top">MAKA LINTAS UTARA</div>
+        
+        <!-- LOGO PNG -->
         <div class="welcome-logo"></div>
-        <div class="brand-bottom">SUPER APPS</div>
+        
+        <!-- FOOTER TEKS -->
+        <div class="brand-bottom">SUPER APP</div>
+
         <div class="welcome-desc">Akses cepat charging station, antrian realtime, dan layanan darurat dalam satu aplikasi.</div>
         
         <button id="btnInstallHero" class="btn-install-big">📲 INSTALL APLIKASI</button>
         <button onclick="closeInstall()" class="btn-skip">Lanjutkan di Browser >></button>
     </div>
 
+    <!-- MENU UTAMA -->
     <div class="logo-area">
         <h1>MLU APPS</h1>
         <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
@@ -155,8 +162,11 @@
     <div class="footer">v15.0 Final | MLU Squad</div>
 
     <script>
+        // 1. REGISTER SERVICE WORKER
         if ('serviceWorker' in navigator) { 
-            navigator.serviceWorker.register('sw.js').then(r => console.log('SW OK')).catch(e => console.log('SW Fail'));
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW Registered', reg))
+                .catch(err => console.log('SW Failed', err));
         }
 
         let deferredPrompt;
@@ -165,15 +175,18 @@
 
         window.closeInstall = () => { screen.classList.add('hidden'); };
 
+        // CEK MODE APP
         if (window.matchMedia('(display-mode: standalone)').matches) {
             screen.style.display = 'none';
         }
 
+        // TANGKAP PROMPT
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault(); 
             deferredPrompt = e;
         });
 
+        // AKSI TOMBOL
         btn.addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
