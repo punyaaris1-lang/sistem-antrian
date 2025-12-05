@@ -1,38 +1,49 @@
-const CACHE_NAME = 'mlu-app-v10-png'; // Versi baru lagi
+const CACHE_NAME = 'mlu-app-v12-final-png'; // Update versi
 const urlsToCache = [
   '/',
   'index.html',
   'antrian.html',
   'lokasi.html',
-  'sos.html',
   'artikel.html',
   'manifest.json',
-  'mlu-logo.png', // <--- GANTI JADI PNG
-  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
+  'mlu-logo.png', // <--- Pastikan ini PNG
+  // Background JPG tetap disimpan untuk background halaman
+  '1763947427555.jpg' 
 ];
 
+// Install
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Caching files...');
-        return cache.addAll(urlsToCache);
+        // Gunakan catch agar aplikasi tetap jalan walau gambar error
+        return cache.addAll(urlsToCache).catch(err => console.log('Cache error ignored:', err));
       })
-      .catch(err => console.log('Gagal Cache (Cek nama file):', err))
   );
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(self.clients.claim());
-});
-
+// Fetch
 self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);
+    })
+  );
+});
+
+// Hapus Cache Lama
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
     })
   );
 });
