@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MLU SUPER APP</title>
     
+    <!-- PWA MANIFEST -->
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b101a">
 
+    <!-- FONT -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -15,6 +18,7 @@
         body {
             margin: 0; height: 100vh; overflow: hidden;
             background-color: #0b101a;
+            /* Pastikan file gambar ini ada di folder yang sama */
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-position: center; background-attachment: fixed;
             font-family: 'Rajdhani', sans-serif;
@@ -26,15 +30,15 @@
             background: rgba(0, 0, 0, 0.75); z-index: -1;
         }
 
-        /* === INSTALL SCREEN === */
+        /* === INSTALL SCREEN (POPUP PROMOSI APK) === */
         #installScreen {
             position: fixed; inset: 0; z-index: 9999;
             background: rgba(11, 16, 26, 0.98); 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-            transform: translateY(-100%);
+            transform: translateY(-100%); /* Default sembunyi di atas */
         }
-        #installScreen.show { transform: translateY(0); }
+        #installScreen.show { transform: translateY(0); } /* Muncul */
 
         .welcome-logo {
             width: 120px; height: 120px; border-radius: 50%;
@@ -56,7 +60,7 @@
         }
         .btn-skip { margin-top: 30px; background: none; border: none; color: #666; font-size: 12px; text-decoration: underline; cursor: pointer; }
 
-        /* === MENU UTAMA === */
+        /* === MENU UTAMA (DASHBOARD) === */
         .logo-area { text-align: center; margin-top: 50px; margin-bottom: 20px; z-index: 10; }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 42px; margin: 0; color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px #00bcd4; }
         
@@ -103,6 +107,7 @@
 </head>
 <body>
 
+    <!-- SCREEN INSTALLER (Hanya Muncul Jika Belum Install) -->
     <div id="installScreen">
         <div class="welcome-logo"></div>
         <div class="welcome-title">HALO SAHABAT MLU</div>
@@ -111,12 +116,14 @@
         <button onclick="closeInstall()" class="btn-skip">Lanjutkan di Browser >></button>
     </div>
 
+    <!-- MENU UTAMA -->
     <div class="logo-area">
         <h1>MLU APPS</h1>
         <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
     </div>
 
     <div class="menu-grid">
+        <!-- Pastikan nama file target sesuai dengan yg ada di github Anda -->
         <a href="lokasi.html" class="menu-btn">
             <div class="menu-icon">📍</div>
             <div class="menu-text"><h3>LOKASI FC</h3><span>Cari charging station</span></div>
@@ -140,32 +147,57 @@
     <div class="footer">v11.0 Final | MLU Squad</div>
 
     <script>
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+        // 1. REGISTER SERVICE WORKER
+        if ('serviceWorker' in navigator) { 
+            navigator.serviceWorker.register('sw.js').then(() => {
+                console.log('SW Registered');
+            });
+        }
 
+        // 2. LOGIKA INSTALL PROMPT
         let deferredPrompt;
         const screen = document.getElementById('installScreen');
         const btn = document.getElementById('btnInstallHero');
 
-        window.closeInstall = () => { screen.classList.remove('show'); };
+        // Fungsi Tutup Layar Install
+        window.closeInstall = () => { 
+            screen.classList.remove('show'); 
+        };
 
+        // Cek apakah dibuka di Browser (Tampilkan Install) atau App (Sembunyikan Install)
         window.addEventListener('load', () => {
             const isApp = window.matchMedia('(display-mode: standalone)').matches;
-            if (!isApp) { setTimeout(() => { screen.classList.add('show'); }, 500); }
+            // Jika BUKAN App, maka munculkan layar install setelah 0.5 detik
+            if (!isApp) { 
+                setTimeout(() => { screen.classList.add('show'); }, 500); 
+            }
         });
 
+        // Tangkap event "Bisa Install" dari Chrome
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); deferredPrompt = e;
+            e.preventDefault(); 
+            deferredPrompt = e;
+            // Layar install sudah muncul by default, jadi kita simpan eventnya saja
         });
 
+        // Aksi Tombol Install
         btn.addEventListener('click', () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((res) => { if (res.outcome === 'accepted') closeInstall(); deferredPrompt = null; });
+                deferredPrompt.userChoice.then((res) => { 
+                    if (res.outcome === 'accepted') {
+                        closeInstall(); 
+                    }
+                    deferredPrompt = null; 
+                });
             } else {
-                alert("⚠️ CARA INSTALL:\n1. Klik titik tiga (⋮) di kanan atas\n2. Pilih 'Install App' / 'Tambahkan ke Layar Utama'");
+                // Fallback jika browser tidak support prompt otomatis
+                alert("⚠️ CARA INSTALL MANUAL:\n1. Klik titik tiga (⋮) di pojok kanan atas browser\n2. Pilih menu 'Install App' atau 'Tambahkan ke Layar Utama'");
                 closeInstall();
             }
         });
     </script>
 </body>
 </html>
+
+
