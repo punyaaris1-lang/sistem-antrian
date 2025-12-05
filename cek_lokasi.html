@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Koordinat Presisi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: #0b101a; color: #fff; font-family: 'Rajdhani', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+        .box { border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; background: rgba(0, 188, 212, 0.1); width: 80%; max-width: 400px; }
+        h1 { color: #00bcd4; margin-bottom: 5px; }
+        p { color: #888; font-size: 14px; margin-bottom: 20px; }
+        
+        .coord-box { background: #000; padding: 15px; border-radius: 10px; border: 1px solid #333; margin-bottom: 10px; }
+        .label { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+        .value { font-size: 24px; font-weight: bold; color: #fff; }
+        
+        .accuracy { font-size: 12px; margin-top: 10px; }
+        .good { color: #00ff00; }
+        .bad { color: #ff3b3b; }
+
+        button { background: #00bcd4; color: #000; border: none; padding: 15px 30px; font-size: 16px; font-weight: bold; border-radius: 50px; margin-top: 20px; cursor: pointer; width: 100%; }
+        button:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>GPS FINDER</h1>
+        <p>Berdirilah tepat di lokasi mesin charging.</p>
+
+        <div class="coord-box">
+            <div class="label">LATITUDE (GARIS LINTANG)</div>
+            <div class="value" id="lat">...</div>
+        </div>
+
+        <div class="coord-box">
+            <div class="label">LONGITUDE (GARIS BUJUR)</div>
+            <div class="value" id="lng">...</div>
+        </div>
+
+        <div class="accuracy" id="acc">Menunggu satelit...</div>
+
+        <button onclick="copyToClipboard()">SALIN HASILNYA</button>
+        <div id="msg" style="color:#00bcd4; margin-top:10px; font-size:12px; opacity:0;">Tersalin!</div>
+    </div>
+
+    <script>
+        if (navigator.geolocation) {
+            // Watch Position: Update terus menerus agar akurasi makin tajam
+            navigator.geolocation.watchPosition(showPosition, showError, {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            });
+        } else {
+            document.getElementById("acc").innerHTML = "Browser tidak support GPS.";
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const acc = position.coords.accuracy;
+
+            document.getElementById("lat").innerText = lat.toFixed(7);
+            document.getElementById("lng").innerText = lng.toFixed(7);
+
+            const accEl = document.getElementById("acc");
+            if (acc <= 15) {
+                accEl.innerHTML = `Akurasi Bagus: <span class="good">±${acc.toFixed(1)} meter</span>`;
+            } else {
+                accEl.innerHTML = `Akurasi Rendah: <span class="bad">±${acc.toFixed(1)} meter</span> (Tunggu sebentar...)`;
+            }
+        }
+
+        function showError(error) {
+            let msg = "";
+            switch(error.code) {
+                case error.PERMISSION_DENIED: msg = "Izin Lokasi Ditolak."; break;
+                case error.POSITION_UNAVAILABLE: msg = "Sinyal GPS Hilang."; break;
+                case error.TIMEOUT: msg = "Waktu Habis."; break;
+                default: msg = "Error Tidak Diketahui."; break;
+            }
+            document.getElementById("acc").innerHTML = `<span class="bad">${msg}</span>`;
+        }
+
+        function copyToClipboard() {
+            const lat = document.getElementById("lat").innerText;
+            const lng = document.getElementById("lng").innerText;
+            if (lat === "...") return alert("Tunggu koordinat muncul!");
+
+            const text = `const STATION_LAT = ${lat};\nconst STATION_LNG = ${lng};`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.getElementById("msg");
+                msg.style.opacity = "1";
+                setTimeout(() => msg.style.opacity = "0", 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>
+
