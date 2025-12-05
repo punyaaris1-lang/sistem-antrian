@@ -8,58 +8,39 @@
     <!-- FONT -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
-    <!-- LOAD FIREBASE DENGAN DEFER (Supaya tidak memblokir tampilan) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
+    <!-- FIREBASE COMPAT (ANTI BLANK PUTIH) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
-        /* GLOBAL DARK THEME */
+        /* GLOBAL STYLE */
         body { margin: 0; font-family: 'Rajdhani', sans-serif; background-color: #0b101a; color: #fff; padding-bottom: 100px; -webkit-tap-highlight-color: transparent; }
-        
-        /* BACKGROUND */
         .bg-fixed { position: fixed; inset: 0; z-index: -1; background-image: url('1763947427555.jpg'); background-size: cover; background-position: center; background-color: #0b101a; }
         .bg-overlay { position: fixed; inset: 0; z-index: -1; background: rgba(11, 16, 26, 0.95); }
 
         /* OVERLAY AKTIVASI */
-        #activation-overlay {
-            position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 20px;
-        }
-        .btn-activate {
-            background: transparent; color: #00bcd4; border: 2px solid #00bcd4; padding: 20px 30px;
-            font-family: 'Orbitron'; font-size: 16px; font-weight: bold; border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); animation: pulse 1.5s infinite; cursor: pointer; margin-top: 20px;
-        }
+        #activation-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.95); backdrop-filter: blur(5px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .btn-activate { background: transparent; color: #00bcd4; border: 2px solid #00bcd4; padding: 20px 30px; font-family: 'Orbitron'; font-size: 16px; font-weight: bold; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); animation: pulse 1.5s infinite; cursor: pointer; margin-top: 20px; }
         @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); } 50% { transform: scale(1.03); box-shadow: 0 0 40px rgba(0, 188, 212, 0.6); } 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 188, 212, 0.3); } }
 
         /* HEADER */
-        .header { 
-            padding: 15px; display: flex; align-items: center; gap: 15px; 
-            background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
-        }
+        .header { padding: 15px; display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
         .btn-back { text-decoration: none; font-size: 24px; color: #00bcd4; width: 40px; height: 40px; border: 1px solid #00bcd4; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; letter-spacing: 1px; }
 
-        /* CONTAINER */
+        /* COMPONENTS */
         .container { padding: 20px; max-width: 480px; margin: 0 auto; }
-        
-        /* CARD & INPUTS */
         .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         label { display: block; font-family: 'Orbitron'; font-size: 10px; color: #8899a6; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
         input { width: 100%; padding: 15px; background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 12px; text-align: center; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 15px; outline: none; font-family: 'Rajdhani'; box-sizing: border-box; }
         input:focus { border-color: #00bcd4; }
-        
         .btn-daftar { width: 100%; padding: 18px; background: #00bcd4; color: #000; border: none; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; font-size: 16px; cursor: pointer; margin-top: 10px; }
         
-        /* SLOTS GRID */
         .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 15px; color: #00bcd4; font-size: 12px; letter-spacing: 2px; }
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 30px; }
         .slot { background: rgba(0, 210, 255, 0.1); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 15px; padding: 15px 5px; text-align: center; height: 280px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .slot.active { background: rgba(0, 210, 255, 0.2); border-color: #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.2); }
 
-        /* BATTERY ICON */
         .bat-percent { font-family: 'Orbitron'; font-size: 18px; font-weight: bold; margin-bottom: 5px; height: 25px; display: flex; align-items: center; justify-content: center; }
         .bat-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
         .bat-icon { width: 46px; height: 80px; border: 3px solid #fff; border-radius: 6px; position: relative; display: flex; align-items: flex-end; padding: 3px; box-sizing: border-box; }
@@ -76,41 +57,40 @@
         .btn-start { border-color: #00bcd4; color: #00bcd4; }
         .btn-stop { border-color: #ff3b3b; color: #ff3b3b; background: rgba(255, 59, 59, 0.2); }
 
-        /* MODAL & ADMIN */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-box { background: #0b101a; border: 2px solid #00bcd4; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; }
         .modal-btn { width: 100%; padding: 15px; background: #00bcd4; color: #000; border: none; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        
         .admin-p { display: none; background: #111; padding: 20px; border: 1px solid #ff3b3b; border-radius: 15px; margin-top: 20px; }
         .adm-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; margin-top: 8px; font-weight: bold; font-size: 12px; }
         .btn-blue { background: #00bcd4; color: #000; } .btn-red { background: #ff3b3b; color: #fff; } .btn-dark { background: #333; color: #fff; }
 
-        /* QUEUE LIST */
         .wait-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; align-items: center; }
-        
-        /* INFO */
         .info-box { text-align: center; padding: 12px; border-radius: 12px; background: rgba(204, 255, 0, 0.05); border: 2px solid #ccff00; color: #ccff00; font-family: 'Orbitron'; font-weight: bold; font-size: 12px; margin-bottom: 15px; display: none; }
+        
+        /* TOAST NOTIFIKASI KECIL */
+        #toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 2px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; font-size: 14px; border: 1px solid #00bcd4; border-radius: 20px; }
+        #toast.show { visibility: visible; -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
 
     <div class="bg-fixed"></div><div class="bg-overlay"></div>
+    <div id="toast">Notifikasi</div>
 
     <audio id="alarm" loop preload="auto">
-        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
+        <source src="data:audio/mp3;base64,//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//uQxAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" type="audio/mp3">
     </audio>
 
-    <!-- LAYER AKTIVASI (DIJAMIN TIDAK MACET LAGI) -->
     <div id="activation-overlay">
         <h1 style="font-family:'Orbitron'; color:#fff; margin-bottom:5px;">SYSTEM CONNECTED</h1>
         <p style="color:#8899a6; font-size:12px; margin-bottom:30px;">Tap tombol di bawah untuk membuka...</p>
-        
-        <!-- Panggil fungsi yang paling aman (forceOpen) -->
         <button class="btn-activate" onclick="forceOpen()">BUKA MONITOR ⚡</button>
-        
         <p style="color:#555; font-size:10px; margin-top:20px;">*Tombol ini akan memaksa layar terbuka</p>
     </div>
 
-    <!-- KONTEN APLIKASI UTAMA -->
     <div id="app-content" style="display:none;">
         <div id="mod" class="modal">
             <div class="modal-box">
@@ -137,7 +117,7 @@
             </div>
 
             <div class="status-head">STATUS 3 SLOT</div>
-            <div class="grid" id="slots"><div style="grid-column:1/-1; text-align:center; padding:30px; color:#555;">Menghubungkan Database...<br><small>(Jika lama, cek koneksi internet)</small></div></div>
+            <div class="grid" id="slots"><div style="grid-column:1/-1; text-align:center; padding:30px; color:#555;">Menghubungkan Database...<br><small>(Tunggu sebentar)</small></div></div>
 
             <div class="card" style="padding:15px;">
                 <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:10px; font-family:'Orbitron'; font-size:12px;">
@@ -168,54 +148,39 @@
         </div>
     </div>
 
-    <!-- LOGIKA TOMBOL ANTI-MACET (DITARUH PALING ATAS SCRIPT) -->
     <script>
-        // Fungsi ini DIJAMIN jalan karena tidak tergantung Firebase
         function forceOpen() {
-            // 1. Buka layar LANGSUNG
             document.getElementById('activation-overlay').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
-
-            // 2. Coba aktifkan audio & wakelock di background (kalau gagal ya sudah, yang penting layar kebuka)
             setTimeout(async () => {
                 const aud = document.getElementById('alarm');
-                try { aud.volume = 1.0; await aud.play(); aud.pause(); aud.currentTime = 0; } catch (e) { console.log('Audio skip'); }
-                try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) { console.log('Wakelock skip'); }
+                try { aud.volume = 1.0; await aud.play(); aud.pause(); aud.currentTime = 0; } catch (e) {}
+                try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch (e) {}
             }, 100);
         }
-    </script>
 
-    <!-- LOGIKA FIREBASE (DITARUH DI BAWAH) -->
-    <script>
+        function showToast(text) {
+            const x = document.getElementById("toast");
+            x.innerText = text;
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             const FONNTE_TOKEN = "Fc8dWb7jiKr7CXuEZXBx"; 
             
-            // Konfigurasi Firebase
-            const firebaseConfig = {
-                apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go",
-                authDomain: "sistem-antrian-b1c39.firebaseapp.com",
-                projectId: "sistem-antrian-b1c39",
-                storageBucket: "sistem-antrian-b1c39.firebasestorage.app",
-                messagingSenderId: "454124587608",
-                appId: "1:454124587608:web:34fbb0f5211067a67f982d"
-            };
+            const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
 
-            // Cek apakah Firebase sudah terload
-            if (typeof firebase === 'undefined') {
-                document.getElementById('slots').innerHTML = "<div style='grid-column:1/-1; padding:20px; color:#ff3b3b;'>ERROR: Gagal memuat Database.<br>Coba Refresh Halaman.</div>";
-                return;
-            }
+            if (typeof firebase === 'undefined') { document.getElementById('slots').innerHTML = "<div style='color:red; padding:20px;'>Gagal Load Database. Refresh!</div>"; return; }
 
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
             const ref = db.collection("antrian").doc("utama");
 
-            // Variabel Global
             let isAdmin = false; 
             let triggered = new Set(); 
             const aud = document.getElementById('alarm');
 
-            // --- FUNGSI KIRIM WA ---
             function sendWA(target, message, scheduleTime = null) {
                 let p = target.replace(/\D/g,''); 
                 if(p.startsWith('0')) p='62'+p.substring(1);
@@ -228,20 +193,16 @@
                 if (scheduleTime) {
                     const unixTime = Math.floor(scheduleTime / 1000);
                     fd.append("schedule", unixTime);
+                    console.log("Jadwal WA diset: ", unixTime);
                 }
 
                 try { 
-                    fetch("https://api.fonnte.com/send", { 
-                        method: "POST", 
-                        headers: { "Authorization": FONNTE_TOKEN }, 
-                        body: fd 
-                    }); 
+                    fetch("https://api.fonnte.com/send", { method: "POST", headers: { "Authorization": FONNTE_TOKEN }, body: fd }); 
                 } catch(e){ console.log("WA Error"); }
             }
 
             function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
-            // --- REAL-TIME CALCULATION ---
             const slotState = { 0: {lp:null, lt:null}, 1: {lp:null, lt:null}, 2: {lp:null, lt:null} };
             function updateRealTimeCharging(slotIdx, percentNow, targetLimit) {
                 const now = Date.now(); const state = slotState[slotIdx];
@@ -257,7 +218,6 @@
                 return null;
             }
 
-            // --- HELPER LAINNYA ---
             function calculateDuration(bat, target) { let min = 0; for (let i = bat; i < target; i++) { if (i < 50) min += 1.0; else if (i < 80) min += 1.2; else if (i < 90) min += 1.5; else min += 2.0; } return Math.ceil(min); }
             
             function showModal(title, msg, action=null, showInput=false) {
@@ -270,7 +230,6 @@
             window.stopAlarm = () => { aud.pause(); aud.currentTime = 0; document.getElementById('mod').style.display = 'none'; };
             window.showAdminLogin = () => { showModal("ADMIN LOGIN", "PIN:", () => { if(document.getElementById('adminPinInput').value === '1131') { document.getElementById('mod').style.display='none'; document.getElementById('admPan').style.display='block'; isAdmin=true; } else alert("PIN SALAH!"); }, true); };
 
-            // --- LOGIKA TOMBOL DAFTAR ---
             document.getElementById('btnDaftar').onclick = async () => {
                 const p = document.getElementById('uPlat').value.toUpperCase(); const w = document.getElementById('uWa').value; const b = parseInt(document.getElementById('uBat').value);
                 if(!p || !w || isNaN(b)) return showModal('ERROR','Isi Semua Data');
@@ -278,32 +237,24 @@
                 db.runTransaction(async (t) => {
                     const docSnap = await t.get(ref);
                     const d = docSnap.data() || {};
-                    let s = d.chargingSlots || [null,null,null]; 
-                    let q = d.waitingQueue || [];
-                    
+                    let s = d.chargingSlots || [null,null,null]; let q = d.waitingQueue || [];
                     if(s.some(x=>x?.name===p)||q.some(x=>x?.name===p)) throw "Sudah Ada";
                     const antri = q.length; let limit = 100; if(antri >= 10) limit = 85; else if(antri >= 6) limit = 90; else if(antri >= 3) limit = 95;
                     if(b >= limit) throw "Baterai Cukup";
                     let dur = calculateDuration(b, limit); if(dur<2) dur=2;
                     const item={name:p, phone:w, startBattery:b, durationMinutes:dur, targetLimit:limit, startTime:null};
                     const idx=s.indexOf(null); if(idx!==-1) s[idx]=item; else q.push(item);
-                    
                     t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
                     if(w) sendWA(w, msg("Motor", p, "berhasil masuk antrian. Mohon menunggu giliran"));
-                }).then(() => {
-                    showModal('SUKSES','Masuk Antrian'); document.getElementById('uPlat').value='';
-                }).catch((err) => {
-                    showModal('GAGAL', err === "Sudah Ada" ? "Plat Nomor Sudah Terdaftar" : "Error koneksi");
-                });
+                }).then(() => { showModal('SUKSES','Masuk Antrian'); document.getElementById('uPlat').value=''; }).catch((err) => { showModal('GAGAL', "Error / Sudah Ada"); });
             };
 
-            // --- LOGIKA MULAI/STOP ---
+            // --- FUNGSI AKTIVASI (START) ---
             window.act = (i, type) => {
                 db.runTransaction(async (t) => {
                     const docSnap = await t.get(ref);
                     const d = docSnap.data();
-                    let s = d.chargingSlots; 
-                    let q = d.waitingQueue;
+                    let s = d.chargingSlots; let q = d.waitingQueue;
                     
                     if(type === 'stop') { 
                         s[i]=null; slotState[i] = {lp:null, lt:null};
@@ -312,21 +263,34 @@
                             let dur = calculateDuration(nextUser.startBattery, limit); if(dur<2) dur=2; nextUser.targetLimit = limit; nextUser.durationMinutes = dur; s[i] = nextUser;
                         }
                     } else { 
+                        // MULAI
                         s[i].startTime = new Date(); 
                         slotState[i] = {lp: s[i].startBattery, lt: Date.now()};
-                        
-                        if(s[i].phone) {
-                            sendWA(s[i].phone, msg("Motor", s[i].name, "Mulai Dicas Sekarang"));
-                            const durationMs = s[i].durationMinutes * 60 * 1000;
-                            const endTimeMs = Date.now() + durationMs;
-                            sendWA(s[i].phone, msg("Motor", s[i].name, "SUDAH SELESAI. Silakan dipindahkan"), endTimeMs);
-                        }
                     }
                     t.update(ref, {chargingSlots:s, waitingQueue:q});
+                    
+                    // KITA RETURN DATA PENTING UNTUK DIPAKAI DI .then()
+                    return { type, slotItem: s[i] }; 
+                }).then((res) => {
+                    // --- KIRIM WA DILAKUKAN DISINI (SETELAH SUKSES KE DB) ---
+                    // Logika ini DIJAMIN JALAN SAAT TOMBOL DITEKAN, BUKAN SAAT SELESAI
+                    if (res.type === 'start' && res.slotItem && res.slotItem.phone) {
+                        const item = res.slotItem;
+                        
+                        // 1. Kirim WA Mulai (Sekarang)
+                        sendWA(item.phone, msg("Motor", item.name, "Mulai Dicas Sekarang"));
+                        
+                        // 2. Jadwalkan WA Selesai (Nanti)
+                        const durationMs = item.durationMinutes * 60 * 1000;
+                        const endTimeMs = Date.now() + durationMs;
+                        
+                        sendWA(item.phone, msg("Motor", item.name, "SUDAH SELESAI. Silakan dipindahkan"), endTimeMs);
+                        
+                        showToast("Jadwal WA Tersimpan ✅"); // Notifikasi Visual bahwa WA sudah dijadwalkan
+                    }
                 });
             };
 
-            // --- ADMIN & RESET ---
             window.clrSlot=()=>{const i=document.getElementById('mSlot').value; db.runTransaction(async(t)=>{const s=(await t.get(ref)).data().chargingSlots;s[i]=null; slotState[i]={lp:null,lt:null}; t.update(ref,{chargingSlots:s})});};
             window.fillQ=()=>{db.runTransaction(async(t)=>{const d=(await t.get(ref)).data();let s=d.chargingSlots;let q=d.waitingQueue;if(q.length>0 && s.includes(null)){s[s.indexOf(null)]=q.shift();t.update(ref,{chargingSlots:s,waitingQueue:q})}} );};
             window.startAll=()=>{db.runTransaction(async(t)=>{const s=(await t.get(ref)).data().chargingSlots; s.forEach((x,i)=>{if(x&&!x.startTime) window.act(i,'start') }); });};
@@ -335,7 +299,6 @@
             window.blockUser=async()=>{const p=document.getElementById('blockPlatInput').value.toUpperCase().trim();if(!p)return;await db.runTransaction(async(t)=>{const d=(await t.get(ref)).data();const l=d.blockedList||[];if(!l.includes(p))l.push(p);t.update(ref,{blockedList:l});});showModal('BLOKIR',`Plat ${p} diblokir.`);};
             window.delQ=(i,name)=>{if(isAdmin||localStorage.getItem('myPlat')===name) db.runTransaction(async(t)=>{const q=(await t.get(ref)).data().waitingQueue;q.splice(i,1);t.update(ref,{waitingQueue:q});}); else showModal('AKSES DITOLAK', 'Bukan antrian Anda!');};
 
-            // --- LISTENER DATABASE ---
             ref.onSnapshot((snap) => {
                 const d=snap.data()||{}; const s=d.chargingSlots||[null,null,null]; const q=d.waitingQueue||[];
                 document.getElementById('qCount').innerText = q.length;
@@ -353,17 +316,16 @@
                     
                     if(isRun) {
                         let startMs = 0;
-                        if(x.startTime && typeof x.startTime.toMillis === 'function') {
-                             startMs = x.startTime.toMillis();
-                        } else if (x.startTime) {
-                             startMs = new Date(x.startTime).getTime();
-                        }
+                        if(x.startTime && typeof x.startTime.toMillis === 'function') { startMs = x.startTime.toMillis(); } 
+                        else if (x.startTime) { startMs = new Date(x.startTime).getTime(); }
                         
                         endTime = startMs + (x.durationMinutes*60000);
                         const diff = endTime - Date.now();
                         if(diff>0) { const m=Math.floor(diff/60000); const sc=Math.floor((diff%60000)/1000); txt=`${m}:${sc<10?'0'+sc:sc}`; h=100; } 
                         else { 
                             txt="SELESAI"; cssClass="done"; const k=x.name+endTime; 
+                            // ALARM HANYA BUNYI JIKA BROWSER TERBUKA.
+                            // KITA HAPUS sendWA DARI SINI AGAR TIDAK DOUBLE/TELAT.
                             if(!triggered.has(k)){ triggered.add(k); aud.volume=1.0; aud.play().catch(e=>console.log(e)); showModal('ALARM', `Motor ${x.name} Selesai!`); } 
                         }
                     }
@@ -371,7 +333,6 @@
                 }).join('');
             });
 
-            // Loop Visual Timer
             setInterval(() => {
                 document.querySelectorAll('.timer-text').forEach(el => {
                     const end = parseInt(el.getAttribute('data-end'));
