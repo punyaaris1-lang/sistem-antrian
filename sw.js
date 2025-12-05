@@ -5,7 +5,7 @@ const urlsToCache = [
   'antrian.html',
   'sos.html',
   'lokasi.html',
-  'info.html'
+  'artikel.html'
   'manifest.json',
   '1763947427555.jpg',
   'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap',
