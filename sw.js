@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mlu-logo-v9-final'; // Versi baru
+const CACHE_NAME = 'mlu-app-v10-png'; // Versi baru lagi
 const urlsToCache = [
   '/',
   'index.html',
@@ -7,7 +7,10 @@ const urlsToCache = [
   'sos.html',
   'artikel.html',
   'manifest.json',
-  '1763947427555.jpg' // Logo Asli
+  'mlu-logo.png', // <--- GANTI JADI PNG
+  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap',
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
 ];
 
 self.addEventListener('install', event => {
@@ -16,14 +19,9 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Caching files...');
-        // Gunakan return agar install tuntas
         return cache.addAll(urlsToCache);
       })
-      .catch(err => {
-        // JIKA ADA ERROR (Misal gambar tidak ketemu), 
-        // Aplikasi TETAP AKAN TERINSTALL (Tidak Stuck)
-        console.log('Ada file gagal cache, tapi lanjut install:', err);
-      })
+      .catch(err => console.log('Gagal Cache (Cek nama file):', err))
   );
 });
 
