@@ -1,7 +1,7 @@
 const CACHE_NAME = 'mlu-app-v3-fix'; // Saya naikkan versinya agar HP mereset cache
 const urlsToCache = [
   '/',
-    'index.html',
+  'index.html',
   'antrian.html',
   'sos.html',
   'lokasi.html',
