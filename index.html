@@ -11,12 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* RESET & BASE */
+        /* === RESET & BASE === */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; height: 100vh; overflow: hidden;
-            background-color: #0b101a;
-            /* Background dimuat lewat CSS tapi kita kasih warna dasar dulu biar ga putih */
+            background-color: #0b101a; /* Warna dasar (backup jika gambar gagal) */
             background-image: url('1763947427555.jpg'); 
             background-size: cover; background-position: center; background-attachment: fixed;
             font-family: 'Rajdhani', sans-serif;
@@ -25,7 +24,6 @@
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: -1; }
 
         /* === PRE-LOADER (ANTI WHITE SCREEN) === */
-        /* Ini akan muncul duluan sebelum aplikasi siap */
         #preloader {
             position: fixed; inset: 0; z-index: 10000;
             background: #0b101a;
@@ -47,7 +45,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes blink { 50% { opacity: 0.5; } }
 
-        /* === ELEMENT LAIN (SAMA SEPERTI SEBELUMNYA) === */
+        /* === INSTALL SCREEN === */
         #installScreen {
             position: fixed; inset: 0; z-index: 9999;
             background: rgba(5, 10, 20, 0.98); 
@@ -62,7 +60,6 @@
             text-shadow: 0 0 20px rgba(41, 121, 255, 0.8);
             border-bottom: 2px solid #2979ff; padding-bottom: 10px; display: inline-block;
         }
-
         .welcome-logo {
             width: 150px; height: 150px; border-radius: 50%;
             background: url('mlu-logo.png') center/cover;
@@ -78,7 +75,6 @@
             color: #00e5ff; letter-spacing: 5px; margin-bottom: 10px; text-align: center;
             text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
         }
-
         .welcome-desc { color: #aaa; text-align: center; font-size: 13px; max-width: 80%; margin-bottom: 40px; line-height: 1.6; }
 
         .btn-install-big {
@@ -89,34 +85,62 @@
             text-transform: uppercase; animation: bounce 2s infinite;
         }
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} 60% {transform: translateY(-2px);} }
-
         .btn-skip { margin-top: 30px; background: none; border: none; color: #666; font-size: 12px; text-decoration: underline; cursor: pointer; }
 
-        .logo-area { text-align: center; margin-top: 50px; margin-bottom: 20px; z-index: 10; }
+        /* === HEADER AREA === */
+        .logo-area { text-align: center; margin-top: 40px; margin-bottom: 20px; z-index: 10; }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 32px; margin: 0; color: #fff; letter-spacing: 2px; text-shadow: 0 0 20px #2979ff; }
         .squad-text { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; color: #fff; background: #2962ff; padding: 5px 15px; border-radius: 5px; margin-top: 5px; display: inline-block; border: 1px solid #00b0ff; box-shadow: 0 0 10px rgba(41, 98, 255, 0.5); }
 
+        /* === MENU GRID UTAMA === */
         .menu-grid { display: grid; gap: 15px; width: 85%; max-width: 400px; margin-top: 10px; z-index: 10; }
-        .menu-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid #2979ff; padding: 20px; border-radius: 20px; cursor: pointer; display: flex; align-items: center; gap: 20px; text-decoration: none; backdrop-filter: blur(10px); transition: 0.2s; box-shadow: 0 0 15px rgba(41, 121, 255, 0.1); }
+        .menu-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid #2979ff; padding: 15px; border-radius: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; text-decoration: none; backdrop-filter: blur(10px); transition: 0.2s; box-shadow: 0 0 15px rgba(41, 121, 255, 0.1); }
         .menu-btn:active { transform: scale(0.96); background: #2979ff; }
         .menu-btn:active h3, .menu-btn:active span { color: #fff; }
-        .menu-icon { font-size: 28px; width: 55px; height: 55px; background: rgba(41, 121, 255, 0.1); border: 1px solid #00e5ff; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: #00e5ff; box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
-        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 16px; color: #fff; letter-spacing: 1px; }
-        .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; }
+        .menu-icon { font-size: 24px; width: 45px; height: 45px; background: rgba(41, 121, 255, 0.1); border: 1px solid #00e5ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #00e5ff; box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
+        .menu-text h3 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 15px; color: #fff; letter-spacing: 1px; }
+        .menu-text span { font-size: 11px; color: #aaa; font-weight: bold; display: block; margin-top: 3px; }
 
-        .btn-article { width: 85%; max-width: 400px; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid #555; border-radius: 15px; text-decoration: none; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px); }
-        .footer { position: absolute; bottom: 20px; font-size: 10px; color: #2979ff; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        /* === AREA EXTERNAL APP (BARU) === */
+        .external-app-area { width: 85%; max-width: 400px; margin-top: 25px; text-align: center; z-index: 10; }
+        .section-title { 
+            font-family: 'Orbitron'; font-size: 12px; color: #2979ff; letter-spacing: 2px; 
+            margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 10px rgba(41, 121, 255, 0.5);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .section-title::before, .section-title::after { content: ''; height: 1px; background: #2979ff; flex: 1; opacity: 0.5; }
+        
+        .external-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .ext-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px; border-radius: 15px; text-decoration: none;
+            transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(5px);
+        }
+        
+        /* Tombol Casan.id */
+        .ext-btn.casan:hover { border-color: #ff3d00; background: rgba(255, 61, 0, 0.15); transform: translateY(-3px); }
+        .ext-btn.casan .ext-icon { text-shadow: 0 0 15px rgba(255, 61, 0, 0.8); }
+        
+        /* Tombol Starvo */
+        .ext-btn.starvo:hover { border-color: #00e676; background: rgba(0, 230, 118, 0.15); transform: translateY(-3px); }
+        .ext-btn.starvo .ext-icon { text-shadow: 0 0 15px rgba(0, 230, 118, 0.8); }
+
+        .ext-icon { font-size: 28px; margin-bottom: 5px; }
+        .ext-label { font-family: 'Orbitron'; font-size: 12px; font-weight: bold; color: #fff; letter-spacing: 1px; }
+
+        /* === INFO & FOOTER === */
+        .btn-article { width: 85%; max-width: 400px; margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid #555; border-radius: 15px; text-decoration: none; color: #fff; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: 'Orbitron'; font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px); z-index: 10; }
+        .footer { position: relative; margin-top: 30px; margin-bottom: 20px; font-size: 10px; color: #2979ff; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; z-index: 10; }
     </style>
 </head>
 <body>
 
-    <!-- PRE-LOADER (LANGSUNG MUNCUL) -->
     <div id="preloader">
         <div class="loader-spinner"></div>
         <div class="loader-text">MEMUAT SYSTEM...</div>
     </div>
 
-    <!-- SCREEN INSTALLER -->
     <div id="installScreen">
         <div class="brand-top">MAKA LINTAS UTARA</div>
         <div class="welcome-logo"></div>
@@ -126,7 +150,6 @@
         <button onclick="closeInstall()" class="btn-skip">Lanjutkan di Browser >></button>
     </div>
 
-    <!-- MENU UTAMA -->
     <div class="logo-area">
         <h1>MLU APPS</h1>
         <div class="squad-text">MAKA LINTAS UTARA SQUAD</div>
@@ -138,38 +161,70 @@
         <a href="antrian.html" class="menu-btn"><div class="menu-icon">⚡</div><div class="menu-text"><h3>FC KLP GADING</h3><span>Daftar & Pantau Motormu</span></div></a>
     </div>
 
+    <div class="external-app-area">
+        <div class="section-title">MITRA CHARGING</div>
+        <div class="external-grid">
+            <a href="https://casan.id" target="_blank" class="ext-btn casan">
+                <span class="ext-icon">🔌</span>
+                <span class="ext-label">CASAN.ID</span>
+            </a>
+
+            <a href="https://play.google.com/store/apps/details?id=com.starvo" target="_blank" class="ext-btn starvo">
+                <span class="ext-icon">📱</span>
+                <span class="ext-label">STARVO</span>
+            </a>
+        </div>
+    </div>
+
     <a href="artikel.html" class="btn-article">📰 INFO & EVENT MLU</a>
-    <div class="footer">v19.0 Final Stable</div>
+    <div class="footer">v20.0 Super App Edition</div>
 
     <script>
-        // HILANGKAN PRELOADER SAAT HALAMAN SELESAI DIMUAT
+        // === 1. LOGIKA PRELOADER (SAFETY NET) ===
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
-            preloader.style.opacity = '0';
-            setTimeout(() => { preloader.style.display = 'none'; }, 500);
+            if(preloader) {
+                preloader.style.opacity = '0';
+                setTimeout(() => { preloader.style.display = 'none'; }, 500);
+            }
         });
 
-        // SAFETY NET: Kalau loading macet > 3 detik, paksa buka
+        // Paksa buka jika macet loading (Anti White Screen)
         setTimeout(() => {
             const preloader = document.getElementById('preloader');
-            if(preloader.style.display !== 'none') {
+            if(preloader && preloader.style.display !== 'none') {
                 preloader.style.opacity = '0';
                 setTimeout(() => { preloader.style.display = 'none'; }, 500);
             }
         }, 3000);
 
+        // === 2. SERVICE WORKER REGISTRATION (AUTO UPDATE) ===
         if ('serviceWorker' in navigator) { 
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                // Cek update
+                reg.onupdatefound = () => {
+                    const installingWorker = reg.installing;
+                    installingWorker.onstatechange = () => {
+                        if (installingWorker.state === 'installed') {
+                            if (navigator.serviceWorker.controller) {
+                                console.log('Update tersedia, mereload...');
+                                window.location.reload();
+                            }
+                        }
+                    };
+                };
+            }).catch(err => console.log('SW Gagal:', err));
         }
 
+        // === 3. INSTALL PROMPT LOGIC ===
         let deferredPrompt;
         const screen = document.getElementById('installScreen');
         const btn = document.getElementById('btnInstallHero');
 
-        window.closeInstall = () => { screen.classList.add('hidden'); };
+        window.closeInstall = () => { if(screen) screen.classList.add('hidden'); };
 
         if (window.matchMedia('(display-mode: standalone)').matches) {
-            screen.style.display = 'none';
+            if(screen) screen.style.display = 'none';
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -177,20 +232,20 @@
             deferredPrompt = e;
         });
 
-        btn.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((res) => { 
-                    if (res.outcome === 'accepted') closeInstall(); 
-                    deferredPrompt = null; 
-                });
-            } else {
-                alert("⚠️ CARA INSTALL MANUAL:\nKlik titik tiga (⋮) di pojok kanan atas -> Pilih 'Install App' atau 'Tambahkan ke Layar Utama'");
-                closeInstall();
-            }
-        });
+        if(btn) {
+            btn.addEventListener('click', () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((res) => { 
+                        if (res.outcome === 'accepted') closeInstall(); 
+                        deferredPrompt = null; 
+                    });
+                } else {
+                    alert("⚠️ CARA INSTALL:\nKlik menu browser (⋮) -> 'Install App' / 'Tambahkan ke Layar Utama'");
+                    closeInstall();
+                }
+            });
+        }
     </script>
 </body>
 </html>
-
-
