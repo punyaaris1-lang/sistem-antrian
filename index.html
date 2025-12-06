@@ -200,7 +200,7 @@
 
         // === 2. SERVICE WORKER REGISTRATION (AUTO UPDATE) ===
         if ('serviceWorker' in navigator) { 
-            navigator.serviceWorker.register('sw.js').then(reg => {
+            navigator.serviceWorker.register('sw-baru.js').then(reg => {
                 // Cek update
                 reg.onupdatefound = () => {
                     const installingWorker = reg.installing;
