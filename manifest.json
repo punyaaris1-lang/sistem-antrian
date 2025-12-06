@@ -1,10 +1,10 @@
 {
   "name": "MLU Super App",
   "short_name": "MLU App",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b101a",
-  "theme_color": "#2979ff",
+  "theme_color": "#0b101a",
   "orientation": "portrait",
   "icons": [
     {
