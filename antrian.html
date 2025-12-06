@@ -42,7 +42,6 @@
 
         .container { padding: 15px; max-width: 480px; margin: 0 auto; }
 
-        /* FORM COMPACT */
         .card { 
             background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 20px; 
@@ -64,7 +63,6 @@
             box-shadow: 0 0 15px rgba(0, 114, 255, 0.4);
         }
 
-        /* SLOT GRID COMPACT */
         .status-head { text-align: center; font-family: 'Orbitron'; font-weight: bold; margin-bottom: 10px; color: #fff; font-size: 12px; letter-spacing: 2px; }
         
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
@@ -80,7 +78,6 @@
         .slot-label-top { font-size: 9px; color: #888; font-weight: bold; margin-bottom: 5px; font-family: 'Orbitron'; border-bottom: 1px solid #333; padding-bottom: 2px; text-transform: uppercase;}
         .slot.active .slot-label-top { color: var(--neon-blue); border-color: var(--neon-blue); }
 
-        /* BATERAI COMPACT */
         .bat-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 5px 0; }
         .bat-icon { 
             width: 40px; height: 70px; 
@@ -103,7 +100,6 @@
         .plat-text { font-weight: 800; font-size: 13px; margin: 3px 0; text-transform: uppercase; color: #fff; }
         .timer-text { font-size: 16px; font-weight: 700; color: var(--neon-blue); font-family: 'Orbitron'; margin-bottom: 5px; }
         
-        /* TOMBOL KECIL */
         .btn-act { 
             width: 100%; padding: 8px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 10px; font-family: 'Orbitron'; 
             margin-top: auto; transition: 0.2s; border: none;
@@ -111,12 +107,10 @@
         .btn-start { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); }
         .btn-stop { background: rgba(255, 42, 109, 0.1); border: 1px solid var(--danger); color: var(--danger); }
         
-        /* EMPTY STATE */
         .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #444; }
         .empty-icon { font-size: 24px; margin-bottom: 5px; opacity: 0.3; }
         .empty-text { font-size: 9px; font-family: 'Orbitron'; letter-spacing: 1px; color: #555; }
 
-        /* DASHBOARD INFO */
         .queue-dashboard {
             background: rgba(0, 0, 0, 0.6); border-top: 2px solid var(--neon-blue); border-bottom: 2px solid var(--neon-blue); 
             padding: 10px; text-align: center; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
@@ -125,7 +119,6 @@
         .qd-main { font-size: 22px; font-weight: 800; color: #fff; margin: 2px 0; text-shadow: 0 0 10px var(--neon-blue); }
         .qd-info { font-size: 10px; color: #000; font-weight: bold; background: var(--neon-blue); padding: 3px 10px; border-radius: 4px; display: inline-block; margin-top: 3px; }
 
-        /* WAITING LIST */
         .wait-card { 
             background: rgba(255, 255, 255, 0.05); border-left: 3px solid #555; border-radius: 8px; padding: 12px; margin-bottom: 8px; 
             display: flex; justify-content: space-between; align-items: center; font-size: 12px; backdrop-filter: blur(5px);
@@ -136,7 +129,6 @@
         .wait-stat { text-align: right; font-weight: bold; color: var(--neon-blue); }
         .btn-del-q { padding: 5px; color: #666; font-size: 14px; }
 
-        /* MODAL & ADMIN */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
         .modal-box { background: #0b101a; border: 2px solid var(--neon-blue); padding: 25px; border-radius: 15px; width: 80%; max-width: 300px; text-align: center; }
         .modal-btn { width: 100%; padding: 12px; background: var(--neon-blue); color: #000; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; font-family: 'Orbitron'; }
@@ -235,6 +227,7 @@
                     <input id="blockPlatInput" placeholder="Plat Blokir" style="font-size:14px; padding:10px; margin:0; background:#000; width:60%;">
                     <button onclick="blockUser()" class="adm-btn btn-red" style="width:40%; margin:0;">BLOK</button>
                 </div>
+                <button onclick="fixSlots()" class="adm-btn" style="background:#ccff00; color:#000; margin-top:15px;">🔧 FIX SLOT ERROR</button>
                 <button onclick="resAll()" class="adm-btn" style="background:transparent; border:1px solid #ff3b3b; color:#ff3b3b; margin-top:15px;">RESET DATA TOTAL</button>
             </div>
         </div>
@@ -242,9 +235,9 @@
 
     <script>
         // CONFIG
-        const STATION_LAT = -6.171583; 
-        const STATION_LNG = 106.899884; 
-        const MAX_DISTANCE_METERS = 200; 
+        const STATION_LAT = -6.175392; 
+        const STATION_LNG = 106.827153; 
+        const MAX_DISTANCE_METERS = 500; 
         const SLOT_LABELS = ["Slot 3 (Kiri)", "Slot 2 (Tengah)", "Slot 1 (Kanan)"];
 
         function forceOpen() {
@@ -294,13 +287,14 @@
                 }
                 function msg(t,p,e="") { return `*Halo Sahabat MLU!*\n\n${t} *${p}* ${e}.\n\nPesan ini dikirim otomatis oleh Admin MLU.`; }
 
-                // --- KALIBRASI RUMUS MESIN ASLI ---
+                // --- KALIBRASI RUMUS MESIN ASLI (PRESISI TINGGI) ---
                 function calculateDuration(bat, target) {
                     let min = 0;
                     for (let i = bat; i < target; i++) {
-                        if (i < 60) min += 0.6;       // 0-60%: Super Cepat (0.6 m/%)
-                        else if (i < 85) min += 1.0;  // 60-85%: Normal (1.0 m/%)
-                        else min += 1.5;              // 85-100%: Lambat (1.5 m/%)
+                        if (i < 55) min += 1.0;        // 0-55%: 1 menit/%
+                        else if (i < 85) min += 1.2;   // 55-85%: 1.2 menit/%
+                        else if (i < 92) min += 1.5;   // 85-92%: 1.5 menit/%
+                        else min += 2.5;               // 92-100%: 2.5 menit/%
                     }
                     return Math.ceil(min);
                 }
@@ -336,11 +330,15 @@
                         async (position) => {
                             const dist = getDistanceFromLatLonInKm(position.coords.latitude, position.coords.longitude, STATION_LAT, STATION_LNG);
                             
+                            if (position.coords.accuracy > 1000) {
+                                btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
+                                return showModal("DITOLAK", "Sinyal GPS tidak valid/Fake GPS.");
+                            }
+
                             if (dist > MAX_DISTANCE_METERS && !isAdmin) {
                                 btn.innerText = "DAFTAR ANTRIAN"; btn.disabled = false;
-                                statusLoc.innerText = `DI TOLAK, MASIH (${dist.toFixed(0)}m) DARI FC. GA BISA DAFTAR.`;
-                                return showModal("JANGAN CURANG CUKK", `LU MASIH JAUH BANGSAT, GW UDAH TAU AKAL2AN LU. LU MASIH ${dist.toFixed(0)}m LAGI DARI FC KELAPA GADING. 
-                                KL UDAH DEKET BARU DAFTAR JANCUKK.`);
+                                statusLoc.innerText = `Terlalu jauh (${dist.toFixed(0)}m). Wajib < 500m.`;
+                                return showModal("DITOLAK", `Jarak Anda ${dist.toFixed(0)}m. Harap mendekat ke lokasi.`);
                             }
 
                             statusLoc.innerText = "Lokasi Terverifikasi ✅"; btn.innerText = "MEMPROSES...";
@@ -358,6 +356,7 @@
                                 if (emptyIdx !== -1) {
                                     const limit = getDynamicLimit(q.length);
                                     const dur = calculateDuration(b, limit);
+                                    
                                     s[emptyIdx] = {
                                         name: p, phone: w, startBattery: b, 
                                         durationMinutes: dur, targetLimit: limit, startTime: null
