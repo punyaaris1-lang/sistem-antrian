@@ -1,39 +1,40 @@
-const CACHE_NAME = 'mlu-turbo-v31'; // Saya naikkan versinya biar refresh
+const CACHE_NAME = 'mlu-safe-v35'; // Ganti versi biar reset
+const OFFLINE_URL = './index.html';
+
+// HANYA cache file yang 100% PASTI ADA. 
+// Jangan masukkan gambar background yg namanya aneh-aneh disini.
 const urlsToCache = [
   './',
   './index.html',
-  './antrian.html',
-  './lokasi.html',
-  './sos.html',
-  './artikel.html',
   './manifest.json',
-  './mlu-logo.png',
-  './1763947427555.jpg',
-  'https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap'
+  './mlu-logo.png' 
 ];
 
-// 1. INSTALL
+// 1. INSTALL (Dibuat sangat aman)
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Paksa SW baru langsung aktif
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('SW: Caching file penting...');
-        return cache.addAll(urlsToCache);
+        // Force add index.html dulu
+        return cache.add(OFFLINE_URL).then(() => {
+            // Baru coba add sisanya, kalau gagal biarin aja (catch)
+            // Biar SW tetap terinstall meski ada file hilang
+            return cache.addAll(urlsToCache).catch(err => console.log('Ada file missing, tapi lanjut aja:', err));
+        });
       })
-      .catch(err => console.error('Gagal cache:', err))
   );
 });
 
-// 2. ACTIVATE (HAPUS CACHE LAMA)
+// 2. ACTIVATE (Bersihkan sampah lama)
 self.addEventListener('activate', event => {
-  event.waitUntil(self.clients.claim()); // Paksa kontrol semua tab yg terbuka
+  event.waitUntil(self.clients.claim());
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('SW: Hapus cache lama', cacheName);
+            console.log('Clearing old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -42,44 +43,35 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 3. FETCH STRATEGY (ANTI WHITE SCREEN)
+// 3. FETCH (Anti White Screen Logic)
 self.addEventListener('fetch', event => {
   const req = event.request;
 
-  // Cek apakah request ke Firebase/Google Font (Strategy: Stale While Revalidate)
-  if (req.url.includes('firebase') || req.url.includes('googleapis') || req.url.includes('gstatic')) {
-    event.respondWith(
-        caches.match(req).then(cachedResponse => {
-            return cachedResponse || fetch(req);
-        })
-    );
-    return;
-  }
-
-  // Cek apakah ini navigasi halaman (HTML)?
+  // A. Jika Navigasi Halaman (Buka Aplikasi)
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req)
         .catch(() => {
-          // JIKA OFFLINE/GAGAL: Ambil dari cache
-          return caches.match(req)
-            .then(cachedResponse => {
-              if (cachedResponse) {
-                return cachedResponse;
-              }
-              // FINAL FALLBACK: Jika halaman yg diminta ga ada di cache,
-              // kasih 'index.html' utama biar ga White Screen.
-              return caches.match('./index.html');
-            });
+          // Kalau internet mati / fetch gagal, buka cache
+          return caches.match(OFFLINE_URL); 
         })
     );
     return;
   }
 
-  // Untuk file aset (Gambar, JS, CSS) -> Cache First
+  // B. Jika Asset Lain (Gambar/CSS/JS)
   event.respondWith(
     caches.match(req).then(cachedResponse => {
-      return cachedResponse || fetch(req);
+      // 1. Cek Cache
+      if (cachedResponse) return cachedResponse;
+      
+      // 2. Jika tidak ada, ambil Network
+      return fetch(req).then(networkResponse => {
+          return networkResponse;
+      }).catch(err => {
+          // Jika gambar gagal load (offline), biarkan kosong (jangan error)
+          return new Response('', { status: 408, headers: { 'Content-Type': 'text/plain' } });
+      });
     })
   );
 });
