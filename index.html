@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP - FINAL GOLD</title>
+    <title>MLU SUPER APP - MATH ENGINE</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -34,7 +34,7 @@
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
         
         /* FORCE FONT */
-        h1, h2, h3, h4, h5, button, .menu-txt h3, .inp-label, .drawer-title, .modal-title { font-family: var(--font-head) !important; letter-spacing: 1px; }
+        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label, .drawer-title, .modal-title { font-family: var(--font-head) !important; letter-spacing: 1px; }
         p, span, input, .news-content, .home-sub { font-family: var(--font-body) !important; }
 
         /* View Manager */
@@ -141,13 +141,11 @@
         .prog-line-bg { width: 80%; height: 4px; background: #333; border-radius: 2px; margin-top: 10px; overflow: hidden; }
         .prog-line-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.5s; }
 
-        /* Status Text Dot & Font Adjustment */
+        /* Status Text - FONT REVISI (Rajdhani) */
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; margin-right: 5px; }
-        
-        /* FONT REVISI: Timer dan Status pakai Rajdhani (Body Font) */
         .status-text { 
             font-size: 11px; color: #aaa; 
-            font-family: var(--font-body) !important; /* Pakai font biasa */
+            font-family: var(--font-body) !important; /* REVISI: Font Normal */
             font-weight: bold;
             display: flex; align-items: center; justify-content: center; margin-top: 5px; 
         }
@@ -158,7 +156,8 @@
         .btn-act-slot { 
             margin-top: 5px; background: transparent; border: 1px solid var(--neon-blue); 
             color: var(--neon-blue); font-size: 10px; padding: 3px 10px; border-radius: 4px; cursor: pointer; 
-            font-family: var(--font-body) !important; font-weight: bold;
+            font-family: var(--font-body) !important; /* REVISI: Font Normal */
+            font-weight: bold;
         }
 
         /* CUSTOM MODAL CSS */
@@ -432,15 +431,22 @@
         const FC_LAT = -6.171583; 
         const FC_LNG = 106.899884; 
 
-        // RUMUS TIMER BARU (REALISTIS KALIBRASI MESIN)
+        // RUMUS TIMER (User Formula / Calibrated)
+        function hitungSisaWaktu(persen) {
+            const A = 198.4;
+            const B = 0.02855;
+            const C = 9.7;
+            const koreksi = 1.065;
+            let waktu = (A * Math.exp(-B * persen) + C) * koreksi;
+            return waktu;
+        }
+
         function calcDuration(start, target) {
-            let m = 0;
-            for(let i=start; i<target; i++) {
-                if(i < 80) m += 1.3;        // Fase Cepat
-                else if(i < 95) m += 1.8;   // Fase Lambat
-                else m += 2.0;              // Fase Balancing
-            }
-            return Math.ceil(m);
+            // Durasi = Sisa waktu di Start - Sisa waktu di Target
+            let sisaStart = hitungSisaWaktu(start);
+            let sisaTarget = hitungSisaWaktu(target);
+            let durasi = sisaStart - sisaTarget;
+            return Math.max(1, Math.ceil(durasi)); // Minimal 1 menit
         }
 
         function initAntrian() {
