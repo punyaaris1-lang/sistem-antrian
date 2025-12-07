@@ -119,8 +119,9 @@
         
         .timer-text { font-size: 14px; color: var(--neon-blue); font-family: var(--font-head); font-weight: bold; margin: 5px 0; }
         .btn-slot-action { width: 100%; padding: 5px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; border: none; margin-top: 5px; font-family: var(--font-head); }
-        .btn-start { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(0,243,255,0.3); }
+        .btn-start { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(0,243,255,0.3); animation: pulseBtn 1s infinite; }
         .btn-stop { background: rgba(255,0,0,0.2); border: 1px solid var(--neon-red); color: var(--neon-red); }
+        @keyframes pulseBtn { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
         /* CUSTOM MODAL CSS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -310,7 +311,11 @@
             inp.value = '';
 
             const btn = document.getElementById('modBtn');
-            btn.onclick = () => {
+            // Clone button to remove old listeners
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            
+            newBtn.onclick = () => {
                 if(isInput && onConfirm) onConfirm(inp.value);
                 else if(onConfirm) onConfirm();
                 m.style.display = 'none';
@@ -386,8 +391,20 @@
         // --- ANTRIAN LOGIC ---
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         let db;
-        const FC_LAT = -6.171583; // GANTI DENGAN KOORDINAT ASLI FC KELAPA GADING
-        const FC_LNG = 106.899884; // GANTI DENGAN KOORDINAT ASLI FC KELAPA GADING
+        const FC_LAT = -6.171583; 
+        const FC_LNG = 106.899884; 
+
+        // CALCULATE DURATION (CALIBRATED)
+        function calcDuration(start, target) {
+            let m = 0;
+            for(let i=start; i<target; i++) {
+                if(i<55) m+=0.6;
+                else if(i<85) m+=1.0;
+                else if(i<92) m+=1.5;
+                else m+=1.0;
+            }
+            return Math.ceil(m);
+        }
 
         function initAntrian() {
             if(!firebase.apps.length) { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); }
@@ -398,11 +415,10 @@
             });
 
             document.getElementById('btnDaftar').onclick = () => {
-                // 1. GPS LOCK CHECK
+                // 1. GPS LOCK CHECK (200M RADIUS)
                 if(!navigator.geolocation) return showModal("ERROR", "GPS Diperlukan", "error");
                 navigator.geolocation.getCurrentPosition(async pos => {
-                    const dist = Math.sqrt(Math.pow(pos.coords.latitude - FC_LAT, 2) + Math.pow(pos.coords.longitude - FC_LNG, 2)) * 111320; // dalam meter
-                    // ANTI FAKE GPS (Basic) & Radius 200m
+                    const dist = Math.sqrt(Math.pow(pos.coords.latitude - FC_LAT, 2) + Math.pow(pos.coords.longitude - FC_LNG, 2)) * 111320; 
                     if(dist > 200) return showModal("DITOLAK", `Jarak Anda ${dist.toFixed(0)}m. Wajib < 200m dari Station.`, "error");
                     if(pos.coords.accuracy > 100) return showModal("GPS LEMAH", "Akurasi GPS rendah. Pastikan diluar ruangan.", "error");
 
@@ -457,9 +473,7 @@
                 if(hasData) {
                     let timerHTML = `<button class="btn-slot-action btn-start" onclick="userStart(${i})">MULAI CAS</button>`;
                     if(isRun) {
-                        // Calc Time Remaining (Simulasi: 1% = 1.5 menit)
-                        const needed = s.target - s.startBattery;
-                        const durMs = needed * 1.5 * 60 * 1000;
+                        const durMs = calcDuration(s.startBattery, s.target) * 60 * 1000;
                         const startMs = s.startTime.toMillis ? s.startTime.toMillis() : new Date(s.startTime).getTime();
                         const endMs = startMs + durMs;
                         timerHTML = `<div class="timer-text" id="timer-${i}" data-end="${endMs}">Memuat...</div><button class="btn-slot-action btn-stop" onclick="userStop(${i})">STOP</button>`;
@@ -490,25 +504,21 @@
             });
         }
 
-        // AUTO QUEUE LOGIC inside Stop
         function userStop(idx) {
             const ref = db.collection("antrian").doc("utama");
             db.runTransaction(async t => {
                 const d = (await t.get(ref)).data();
                 let s = d.chargingSlots; let q = d.waitingQueue;
                 
-                // Kosongkan Slot
-                s[idx] = null;
+                s[idx] = null; // Clear Slot
 
-                // Masukkan Antrian Teratas (Jika Ada)
+                // Auto Queue
                 if(q.length > 0) {
                     const next = q.shift();
-                    // Hitung limit baru untuk user ini
                     let qLen = q.length;
                     let maxLimit = 100;
                     if(qLen >= 10) maxLimit = 85; else if(qLen >= 6) maxLimit = 90; else if(qLen >= 3) maxLimit = 95;
-                    
-                    s[idx] = { ...next, target:maxLimit, startTime:null }; // Masuk tapi belum start
+                    s[idx] = { ...next, target:maxLimit, startTime:null };
                 }
                 t.update(ref, {chargingSlots:s, waitingQueue:q});
             });
@@ -522,10 +532,10 @@
         // Admin
         function openAdminLogin() { showModal("ADMIN LOGIN", "Masukkan PIN", "lock", (val)=>{ if(val==="1131") document.getElementById('adminModal').style.display="flex"; else showModal("ERROR","PIN Salah","error"); }, true); }
         async function runAdm(fn) { const ref = db.collection("antrian").doc("utama"); try{ await db.runTransaction(async t=>{ const d=(await t.get(ref)).data(); t.update(ref, fn(d)); }); showModal("SUKSES","Data Updated"); }catch(e){ showModal("ERROR",e,"error"); }}
-        function admClear(idx) { userStop(idx); } // Reuse userStop logic for auto-fill
+        function admClear(idx) { userStop(idx); } 
         function admStart(idx) { userStart(idx); }
         function admStartAll() { runAdm(d=>{ d.chargingSlots.forEach(s=>{if(s)s.startTime=new Date()}); return {chargingSlots:d.chargingSlots}; }); }
-        function admReset() { if(confirm("Reset Total?")) db.collection("antrian").doc("utama").set({chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); }
+        function admReset() { showModal("RESET?", "Yakin hapus semua?", "error", () => { db.collection("antrian").doc("utama").set({chargingSlots:[null,null,null],waitingQueue:[],blockedList:[]}); }); }
         function admForceFill() { runAdm(d=>{ let s=d.chargingSlots; let q=d.waitingQueue; if(q.length==0) throw "Antrian Kosong"; let e=s.indexOf(null); if(e==-1) throw "Slot Penuh"; s[e]=q.shift(); return {chargingSlots:s,waitingQueue:q}; }); }
         function admBlock() { const p=document.getElementById('admBlockPlat').value.toUpperCase(); if(p) runAdm(d=>{ let b=d.blockedList||[]; if(!b.includes(p))b.push(p); return {blockedList:b}; }); }
 
