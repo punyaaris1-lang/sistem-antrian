@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP - MATH ENGINE</title>
+    <title>MLU SUPER APP</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -34,7 +34,7 @@
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
         
         /* FORCE FONT */
-        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label, .drawer-title, .modal-title { font-family: var(--font-head) !important; letter-spacing: 1px; }
+        h1, h2, h3, h4, h5, button, .menu-txt h3, .inp-label, .drawer-title, .modal-title { font-family: var(--font-head) !important; letter-spacing: 1px; }
         p, span, input, .news-content, .home-sub { font-family: var(--font-body) !important; }
 
         /* View Manager */
@@ -102,7 +102,7 @@
         .nav-btn { display: block; background: var(--neon-blue); color: #000; text-align: center; padding: 6px; border-radius: 5px; margin-top: 8px; text-decoration: none; font-weight: bold; font-family: var(--font-head); font-size: 11px; }
 
         /* ========================================= */
-        /* [SEKAT 3] ANTRIAN (REPLIKA GAMBAR 1)      */
+        /* [SEKAT 3] ANTRIAN (PREMIUM ELEGANT)       */
         /* ========================================= */
         .antrian-container { padding: 20px; max-width: 480px; margin: 0 auto; padding-top: 60px; padding-bottom: 50px;}
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -113,52 +113,88 @@
         
         .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
         
-        /* DESIGN SLOT */
+        /* DESIGN SLOT ELEGANT (HD) */
         .slot-box { 
-            background: rgba(30, 40, 50, 0.6); 
+            background: rgba(20, 30, 40, 0.7); 
             border: 1px solid rgba(255,255,255,0.1); 
             border-radius: 15px; 
-            height: 160px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
-            padding: 15px 5px; 
+            height: 170px; /* Sedikit lebih tinggi agar lega */
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end; 
+            padding: 10px; 
             position: relative;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
-        .slot-box.active { border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0,243,255,0.2); }
-
-        /* Icon Baterai Besar */
-        .batt-main { 
-            width: 40px; height: 60px; 
-            border: 2px solid #fff; border-radius: 5px; 
-            position: relative; 
-            display: flex; align-items: flex-end; padding: 2px;
+        .slot-box.active { 
+            border: 1px solid var(--neon-blue); 
+            background: rgba(0, 243, 255, 0.05);
+            box-shadow: 0 0 25px rgba(0,243,255,0.15); 
         }
-        .batt-main::before { content: ''; position: absolute; top: -5px; left: 10px; width: 16px; height: 3px; background: #fff; }
-        .batt-fill { width: 100%; background: linear-gradient(to top, #00f3ff, #0072ff); border-radius: 2px; transition: height 0.5s; }
-        .batt-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000; }
 
-        /* Progress Line Bawah */
-        .prog-line-bg { width: 80%; height: 4px; background: #333; border-radius: 2px; margin-top: 10px; overflow: hidden; }
-        .prog-line-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.5s; }
-
-        /* Status Text - FONT REVISI (Rajdhani) */
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; margin-right: 5px; }
-        .status-text { 
-            font-size: 11px; color: #aaa; 
-            font-family: var(--font-body) !important; /* REVISI: Font Normal */
-            font-weight: bold;
-            display: flex; align-items: center; justify-content: center; margin-top: 5px; 
+        /* Batere HD (CSS Drawing) */
+        .batt-container {
+            position: absolute; top: 15px;
+            width: 46px; height: 75px;
+            border: 3px solid #fff; border-radius: 6px;
+            padding: 3px;
+            display: flex; align-items: flex-end;
         }
-        
-        .slot-box.active .status-dot { background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
-        .slot-box.active .status-text { color: #fff; }
-
-        .btn-act-slot { 
-            margin-top: 5px; background: transparent; border: 1px solid var(--neon-blue); 
-            color: var(--neon-blue); font-size: 10px; padding: 3px 10px; border-radius: 4px; cursor: pointer; 
-            font-family: var(--font-body) !important; /* REVISI: Font Normal */
-            font-weight: bold;
+        .batt-container::before {
+            content: ''; position: absolute; top: -7px; left: 12px;
+            width: 16px; height: 4px; background: #fff; border-radius: 2px 2px 0 0;
         }
+        .batt-inner {
+            width: 100%; 
+            background: linear-gradient(180deg, #00f3ff 0%, #0061ff 100%);
+            border-radius: 2px;
+            transition: height 0.5s ease;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        /* Animasi Charging (Breathing) */
+        .slot-box.charging .batt-inner {
+            animation: breathe 2s infinite alternate;
+        }
+        @keyframes breathe {
+            0% { filter: brightness(1); opacity: 0.8; }
+            100% { filter: brightness(1.3); opacity: 1; box-shadow: 0 0 20px var(--neon-blue); }
+        }
+
+        .batt-bolt {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 32px; color: #fff; z-index: 5; text-shadow: 0 0 5px #000;
+            display: none;
+        }
+        .slot-box.charging .batt-bolt { display: block; animation: flash 1s infinite; }
+        @keyframes flash { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        /* Progress Line */
+        .prog-track { width: 85%; height: 4px; background: #333; border-radius: 2px; margin-bottom: 35px; overflow: hidden; }
+        .prog-bar { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.5s; }
+
+        /* Status & Text */
+        .batt-text-val {
+            position: absolute; top: 95px; width: 100%; text-align: center;
+            font-family: var(--font-head); font-weight: bold; font-size: 16px; color: #fff;
+            text-shadow: 0 0 10px #000;
+        }
+        .status-pill {
+            position: absolute; bottom: 10px;
+            display: flex; align-items: center; gap: 5px;
+            font-size: 10px; color: #aaa; font-weight: bold;
+            font-family: var(--font-body);
+        }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #555; }
+        .slot-box.active .dot { background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
+        .slot-box.active .status-pill { color: #fff; }
+
+        .btn-act-slot {
+            position: absolute; bottom: 40px;
+            font-size: 9px; padding: 4px 12px; border-radius: 4px; cursor: pointer; border: none;
+            font-family: var(--font-head); font-weight: bold; z-index: 10;
+        }
+        .btn-start { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(0,243,255,0.4); animation: pulseBtn 1s infinite; }
+        .btn-stop { background: rgba(255,0,0,0.3); border: 1px solid var(--neon-red); color: var(--neon-red); }
+        @keyframes pulseBtn { 0%{transform:scale(1)} 50%{transform:scale(1.05)} 100%{transform:scale(1)} }
 
         /* CUSTOM MODAL CSS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -209,6 +245,8 @@
         </div>
     </div>
 
+    /* [VIEW] HOME                               */
+    /* ========================================= -->
     <div id="view-home" class="view-section active">
         <div class="home-wrap">
             <div class="home-header">
@@ -246,6 +284,8 @@
         </div>
     </div>
 
+    /* [VIEW] LOKASI (PETA)                      */
+    /* ========================================= -->
     <div id="view-lokasi" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
         <div id="map"></div>
@@ -260,6 +300,8 @@
         </div>
     </div>
 
+    /* [VIEW] ANTRIAN                            */
+    /* ========================================= -->
     <div id="view-antrian" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
         <div class="antrian-container">
@@ -320,6 +362,8 @@
         </div>
     </div>
 
+    /* [VIEW] ARTIKEL & SOS                      */
+    /* ========================================= -->
     <div id="view-artikel" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
         <div class="news-container" id="news-content"><div style="text-align:center;">Memuat Berita...</div></div>
@@ -334,7 +378,26 @@
         </div>
     </div>
 
+    /* JAVASCRIPT LOGIC                          */
+    /* ========================================= */
     <script>
+        // --- NOTIFIKASI ---
+        function checkNotifPermission() {
+            if (!("Notification" in window)) return;
+            if (Notification.permission !== "denied" && Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+        }
+        document.addEventListener("DOMContentLoaded", checkNotifPermission);
+
+        function sendNotif(title, body) {
+            if (Notification.permission === "granted") {
+                new Notification(title, { body: body, icon: 'https://i.ibb.co/5xX0gWb/icon.png' });
+                // Vibrate HP
+                if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+            }
+        }
+
         // --- UTILS: CUSTOM MODAL ---
         function showModal(title, msg, type='success', onConfirm=null, isInput=false) {
             const m = document.getElementById('customModal');
@@ -442,7 +505,6 @@
         }
 
         function calcDuration(start, target) {
-            // Durasi = Sisa waktu di Start - Sisa waktu di Target
             let sisaStart = hitungSisaWaktu(start);
             let sisaTarget = hitungSisaWaktu(target);
             let durasi = sisaStart - sisaTarget;
@@ -509,57 +571,75 @@
             const container = document.getElementById('slots-area');
             container.innerHTML = "";
             const labels = ["Slot 3", "Slot 2", "Slot 1"];
+            let notified = JSON.parse(localStorage.getItem('notified') || '[]');
+
             slots.forEach((s, i) => {
                 const hasData = s && s.name;
                 const isRun = s && s.startTime;
                 
                 let content = `
-                    <div class="batt-main"><div class="batt-fill" style="height:0%"></div><div class="batt-bolt" style="color:#555">⚡</div></div>
-                    <div class="prog-line-bg"><div class="prog-line-fill" style="width:0%"></div></div>
-                    <div class="status-text"><span class="status-dot"></span>KOSONG</div>
+                    <div class="batt-container"><div class="batt-inner" style="height:0%"></div><div class="batt-bolt" style="color:#555">⚡</div></div>
+                    <div class="batt-text-val" style="color:#555">0%</div>
+                    <div class="prog-track"><div class="prog-bar" style="width:0%"></div></div>
+                    <div class="status-pill"><div class="dot"></div>KOSONG</div>
                 `;
                 
                 if(hasData) {
-                    // Logic Display
-                    let percent = isRun ? 100 : s.startBattery; // Animasi penuh jika jalan
-                    let statusTxt = isRun ? "CHARGING" : "TERISI";
-                    let dotColor = isRun ? "var(--neon-blue)" : "yellow";
                     let actionBtn = "";
+                    let timerDisplay = "";
+                    let dotColor = "yellow";
+                    let statusTxt = "MENUNGGU";
 
                     if(isRun) {
                         const durMs = calcDuration(s.startBattery, s.target) * 60 * 1000;
                         const startMs = s.startTime.toMillis ? s.startTime.toMillis() : new Date(s.startTime).getTime();
                         const endMs = startMs + durMs;
-                        // REVISI FONT TIMER: Menggunakan font body (Rajdhani) agar tidak kegedean
-                        actionBtn = `<div class="timer-text" data-end="${endMs}" style="font-family:var(--font-body)!important; font-size:14px; color:var(--neon-blue); font-weight:bold; margin-bottom:2px;">...</div><button class="btn-act-slot" onclick="userStop(${i})" style="border-color:red; color:red;">STOP</button>`;
+                        
+                        // Timer logic inside HTML string is messy, handled by Live Timer Loop
+                        actionBtn = `<button class="btn-act-slot btn-stop" onclick="userStop(${i})">STOP</button>`;
+                        timerDisplay = `<div class="timer-text" data-end="${endMs}" data-plat="${s.name}" style="position:absolute; bottom:65px; width:100%; text-align:center; font-size:12px; color:var(--neon-blue); font-weight:bold;">...</div>`;
+                        dotColor = "var(--neon-blue)";
+                        statusTxt = "CHARGING";
                     } else {
-                        actionBtn = `<button class="btn-act-slot" onclick="userStart(${i})">MULAI</button>`;
+                        actionBtn = `<button class="btn-act-slot btn-start" onclick="userStart(${i})">MULAI</button>`;
                     }
 
                     content = `
-                        <div class="batt-main"><div class="batt-fill" style="height:${s.startBattery}%"></div><div class="batt-bolt">⚡</div></div>
-                        <div style="font-size:16px; font-weight:bold; margin-top:5px; font-family:var(--font-head);">${s.startBattery}%</div>
-                        <div class="prog-line-bg"><div class="prog-line-fill" style="width:${s.startBattery}%"></div></div>
-                        <div class="status-text" style="color:#fff; font-family:var(--font-body)!important; font-size:11px;"><span class="status-dot" style="background:${dotColor}; box-shadow:0 0 5px ${dotColor}"></span>${statusTxt}</div>
+                        <div class="batt-container"><div class="batt-inner" style="height:${s.startBattery}%"></div><div class="batt-bolt">⚡</div></div>
+                        <div class="batt-text-val">${s.startBattery}%</div>
+                        ${timerDisplay}
+                        <div class="prog-track"><div class="prog-bar" style="width:${s.startBattery}%"></div></div>
+                        <div class="status-pill"><div class="dot" style="background:${dotColor};box-shadow:0 0 5px ${dotColor}"></div>${statusTxt}</div>
                         ${actionBtn}
-                        <div style="font-size:10px; color:#aaa; margin-top:2px;">${s.name}</div>
+                        <div style="position:absolute; top:5px; left:10px; font-size:10px; color:#fff; font-weight:bold;">${s.name}</div>
                     `;
                 }
                 
-                container.innerHTML += `<div class="slot-box ${hasData?'active':''}">${content}<div style="position:absolute; top:5px; right:5px; font-size:9px; color:#555;">${labels[i]}</div></div>`;
+                container.innerHTML += `<div class="slot-box ${hasData?'active':''} ${isRun?'charging':''}">${content}<div style="position:absolute; top:5px; right:10px; font-size:9px; color:#aaa;">${labels[i]}</div></div>`;
             });
         }
 
-        // Live Timer Logic
+        // Live Timer Logic & Notification
         setInterval(() => {
+            let notified = JSON.parse(localStorage.getItem('notified') || '[]');
+            
             document.querySelectorAll('.timer-text').forEach(el => {
                 const end = parseInt(el.getAttribute('data-end'));
+                const plat = el.getAttribute('data-plat');
                 const diff = end - Date.now();
+                
                 if(diff > 0) {
                     const m = Math.floor(diff/60000);
                     const s = Math.floor((diff%60000)/1000);
                     el.innerText = `${m}m ${s}d`;
-                } else el.innerText = "SELESAI";
+                } else {
+                    el.innerText = "SELESAI";
+                    if(!notified.includes(plat + end)) {
+                        sendNotif("SELESAI!", `Motor ${plat} telah selesai charging.`);
+                        notified.push(plat + end);
+                        localStorage.setItem('notified', JSON.stringify(notified));
+                    }
+                }
             });
         }, 1000);
 
