@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP - MODULAR</title>
+    <title>MLU SUPER APP - FINAL</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -14,23 +14,29 @@
 
     <style>
         /* ========================================= */
-        /* [GLOBAL] CSS UMUM (JANGAN DIUBAH)         */
+        /* [GLOBAL] CSS UTAMA (FONT FIX)             */
         /* ========================================= */
         :root {
             --neon-blue: #00f3ff;
-            --bg-dark: #050b14;
-            --glass: rgba(10, 20, 30, 0.85);
-            --font-tech: 'Orbitron', sans-serif;
-            --font-body: 'Rajdhani', sans-serif;
+            --neon-red: #ff003c;
+            --bg-dark: #000000;
+            --glass: rgba(10, 20, 30, 0.9);
+            --font-head: 'Orbitron', sans-serif; /* FONT JUDUL */
+            --font-body: 'Rajdhani', sans-serif; /* FONT ISI */
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body { 
             margin: 0; padding: 0; background: #000; color: #fff; 
             font-family: var(--font-body); height: 100vh; overflow: hidden; 
             background-image: url('1763947427555.jpg'); background-size: cover; background-position: center;
         }
-        body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: -1; }
+        body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
         
+        /* FORCE FONT TO ALL ELEMENTS */
+        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label { font-family: var(--font-head) !important; letter-spacing: 1px; }
+        p, span, input, .news-content { font-family: var(--font-body) !important; }
+
         /* View Manager */
         .view-section { display: none; height: 100%; width: 100%; overflow-y: auto; position: relative; animation: fadeIn 0.3s; }
         .view-section.active { display: block; }
@@ -38,148 +44,168 @@
         
         .btn-back-float {
             position: absolute; top: 15px; left: 15px; z-index: 1000;
-            width: 35px; height: 35px; border-radius: 50%;
-            background: rgba(0,0,0,0.6); border: 1px solid var(--neon-blue);
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue);
             color: var(--neon-blue); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 18px; backdrop-filter: blur(5px);
+            cursor: pointer; font-size: 20px; backdrop-filter: blur(5px);
         }
 
         /* ========================================= */
-        /* [SEKAT 1] CSS HOME                        */
+        /* [SEKAT 1] HOME (LAYOUT RAPI)              */
         /* ========================================= */
-        .home-wrap { padding: 20px; height: 100%; display: flex; flex-direction: column; align-items: center; }
-        .home-logo { width: 80px; height: 80px; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 20px var(--neon-blue); background: #000; margin-bottom: 10px; }
-        .home-title { font-family: var(--font-tech); font-size: 24px; color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); margin-bottom: 5px; }
-        .home-sub { font-size: 10px; background: #0072ff; padding: 3px 10px; border-radius: 4px; letter-spacing: 2px; margin-bottom: 20px; }
+        .home-wrap { padding: 40px 20px; height: 100%; display: flex; flex-direction: column; align-items: center; }
         
-        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
+        .home-title { font-size: 32px; color: var(--neon-blue); text-shadow: 0 0 20px var(--neon-blue); margin-bottom: 5px; text-align: center; }
+        .home-sub { font-size: 10px; background: #0072ff; padding: 4px 12px; border-radius: 4px; font-weight: bold; margin-bottom: 40px; letter-spacing: 2px; }
+        
+        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
+        
         .menu-btn {
-            background: rgba(0, 20, 40, 0.7); border: 1px solid var(--neon-blue);
-            padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;
-            backdrop-filter: blur(5px); transition: 0.2s; cursor: pointer;
+            position: relative; overflow: hidden;
+            background: rgba(0, 15, 30, 0.8); 
+            border: 1px solid var(--neon-blue);
+            border-radius: 15px; padding: 15px 20px;
+            display: flex; align-items: center; gap: 20px;
+            cursor: pointer; transition: 0.2s;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
         }
-        .menu-btn:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.2); }
-        .menu-ico { font-size: 20px; width: 40px; height: 40px; background: rgba(0,0,0,0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); }
-        .menu-txt h3 { margin: 0; font-family: var(--font-tech); font-size: 14px; color: #fff; }
-        .menu-txt p { margin: 2px 0 0; font-size: 10px; color: #aaa; }
-
-        .mitra-wrap { margin-top: 15px; width: 100%; max-width: 400px; }
-        .mitra-head { font-size: 10px; color: var(--neon-blue); font-family: var(--font-tech); border-bottom: 1px solid rgba(0,243,255,0.3); margin-bottom: 10px; padding-bottom: 5px; }
-        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .m-btn { background: rgba(255,255,255,0.05); border: 1px solid #555; padding: 10px; border-radius: 10px; text-align: center; text-decoration: none; color: #fff; }
+        .menu-btn:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.1); }
         
-        .footer-btn { margin-top: auto; padding: 12px; width: 100%; max-width: 400px; border: 1px solid #fff; border-radius: 30px; text-align: center; font-size: 12px; backdrop-filter: blur(5px); margin-bottom: 10px;}
+        /* Warna Khusus Tombol */
+        .btn-loc { border-color: #2979ff; }
+        .btn-loc .menu-ico { border-color: #2979ff; color: #2979ff; }
+        
+        .btn-sos { border-color: var(--neon-red); }
+        .btn-sos .menu-ico { border-color: var(--neon-red); color: #fff; background: var(--neon-red); }
+        
+        .btn-antrian { border-color: var(--neon-blue); }
+        .btn-antrian .menu-ico { border-color: var(--neon-blue); color: var(--neon-blue); }
+
+        .menu-ico { 
+            width: 50px; height: 50px; border-radius: 12px; border: 1px solid #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            background: rgba(0,0,0,0.3); flex-shrink: 0;
+        }
+        .menu-txt h3 { margin: 0; font-size: 16px; color: #fff; }
+        .menu-txt p { margin: 3px 0 0; font-size: 11px; color: #aaa; }
+
+        .mitra-wrap { margin-top: 30px; width: 100%; max-width: 400px; border-top: 1px solid #333; padding-top: 20px; }
+        .mitra-head { font-size: 12px; color: var(--neon-blue); margin-bottom: 10px; font-family: var(--font-head); letter-spacing: 1px; }
+        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .m-btn { 
+            background: rgba(0,0,0,0.6); border: 1px solid #2979ff; padding: 15px; 
+            border-radius: 12px; text-align: center; text-decoration: none; color: #fff;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .m-icon { font-size: 24px; margin-bottom: 5px; }
+        .m-text { font-family: var(--font-head); font-size: 12px; text-decoration: underline; }
+
+        .footer-info { margin-top: auto; padding: 15px; border: 1px solid #fff; border-radius: 30px; width: 100%; max-width: 400px; text-align: center; font-family: var(--font-head); font-size: 12px; cursor: pointer; background: rgba(0,0,0,0.5); }
 
         /* ========================================= */
-        /* [SEKAT 2] CSS PETA (PREMIUM POPUP)        */
+        /* [SEKAT 2] PETA (BLINKING FIX)             */
         /* ========================================= */
         #map { width: 100%; height: 100%; z-index: 1; }
-        .map-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, #000 80%, transparent); padding: 20px; z-index: 999; pointer-events: none; }
-        .map-card { pointer-events: auto; background: rgba(5,10,20,0.9); border: 1px solid var(--neon-blue); padding: 15px; border-radius: 15px; margin-bottom: 10px; }
+        .map-overlay { 
+            position: absolute; bottom: 0; left: 0; right: 0; z-index: 999;
+            background: linear-gradient(to top, #000 90%, transparent); padding: 20px; 
+            border-top: 2px solid var(--neon-blue); border-radius: 20px 20px 0 0;
+        }
         
-        /* Marker Blinking Logic */
-        .blink-marker { animation: markerPulse 1s infinite alternate; filter: drop-shadow(0 0 10px var(--neon-blue)); }
-        @keyframes markerPulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.8; } }
+        /* Marker Animation */
+        .blink-marker { animation: pulseMarker 1s infinite alternate; z-index: 1000 !important; }
+        @keyframes pulseMarker { from { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,243,255,0)); } to { transform: scale(1.3); filter: drop-shadow(0 0 15px var(--neon-blue)); } }
 
-        /* Premium Popup Style */
-        .leaflet-popup-content-wrapper { background: rgba(5, 10, 20, 0.95); color: #fff; border: 1px solid var(--neon-blue); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 243, 255, 0.3); }
+        /* Premium Popup */
+        .leaflet-popup-content-wrapper { background: rgba(5, 10, 20, 0.95); border: 1px solid var(--neon-blue); color: #fff; border-radius: 10px; }
         .leaflet-popup-tip { background: var(--neon-blue); }
-        .leaflet-popup-content b { color: var(--neon-blue); font-family: var(--font-tech); font-size: 14px; text-transform: uppercase; }
-        .nav-btn { display: inline-block; background: var(--neon-blue); color: #000; padding: 5px 10px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 10px; margin-top: 5px; }
+        .popup-title { font-family: var(--font-head); color: var(--neon-blue); font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #333; padding-bottom: 3px; }
+        .nav-btn { display: block; background: var(--neon-blue); color: #000; text-align: center; padding: 5px; border-radius: 5px; margin-top: 8px; text-decoration: none; font-weight: bold; font-family: var(--font-head); font-size: 10px; }
 
         /* ========================================= */
-        /* [SEKAT 3] CSS ANTRIAN (GLASS DESIGN)      */
+        /* [SEKAT 3] ANTRIAN (ADMIN LENGKAP)         */
         /* ========================================= */
-        /* Mengembalikan desain ke Gambar 6 */
-        .antrian-container { padding: 20px; max-width: 450px; margin: 50px auto 0; }
+        .antrian-container { padding: 20px; max-width: 480px; margin: 0 auto; padding-top: 60px; }
         
-        /* Glass Card Input */
-        .glass-form {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px;
+            padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .inp-label { color: var(--neon-blue); font-size: 10px; margin-bottom: 5px; display: block; }
+        .inp-field { 
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333; 
+            color: #fff; padding: 12px; border-radius: 8px; text-align: center; 
+            margin-bottom: 15px; outline: none; font-size: 16px; font-weight: bold;
+        }
+        .inp-field:focus { border-color: var(--neon-blue); box-shadow: 0 0 10px var(--neon-blue); }
+        
+        .btn-main { 
+            width: 100%; background: linear-gradient(90deg, #00c6ff, #0072ff); 
+            border: none; padding: 14px; border-radius: 8px; color: #fff; 
+            font-weight: 900; cursor: pointer; font-size: 14px; 
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
         }
 
-        .inp-label { font-family: var(--font-tech); font-size: 10px; color: var(--neon-blue); margin-bottom: 5px; letter-spacing: 1px; }
-        .inp-field {
-            width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
-            border: 1px solid #333; border-radius: 8px;
-            color: #fff; text-align: center; font-family: var(--font-tech); font-size: 14px;
-            margin-bottom: 15px; outline: none; transition: 0.3s;
-        }
-        .inp-field:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
-        
-        .btn-submit {
-            width: 100%; padding: 14px;
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-            border: none; border-radius: 8px;
-            color: #fff; font-family: var(--font-tech); font-weight: 900; letter-spacing: 1px;
-            cursor: pointer; box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
-        }
-
-        /* Slots Grid - Vertical Style like Image 6 */
-        .slots-area { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 25px; }
+        .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
         .slot-box {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; height: 160px;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 12px;
+            height: 150px; display: flex; flex-direction: column; justify-content: flex-end;
             padding: 10px; position: relative;
         }
-        .slot-box.active { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.05); }
+        .slot-box.active { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.1); box-shadow: 0 0 15px rgba(0, 243, 255, 0.1); }
+        .slot-label { border-top: 1px solid #555; font-size: 10px; color: #aaa; text-align: center; padding-top: 5px; margin-top: auto; }
+        .slot-content { text-align: center; margin-bottom: 10px; }
         
-        .slot-name { font-family: var(--font-body); font-size: 10px; color: #aaa; margin-bottom: 5px; border-top: 1px solid #555; width: 100%; text-align: center; padding-top: 5px; }
-        .slot-status { font-family: var(--font-tech); font-size: 16px; color: #555; font-weight: bold; margin-bottom: 20px; }
-        .slot-box.active .slot-status { color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
-
-        .list-tunggu { margin-top: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border: 1px solid #333; }
-        .list-item { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 8px 0; font-size: 12px; }
+        /* ADMIN PANEL CSS */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; }
+        .admin-panel { background: #111; border: 1px solid var(--neon-red); padding: 20px; width: 90%; max-width: 400px; border-radius: 15px; max-height: 80vh; overflow-y: auto; }
+        .adm-grp { margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .adm-btn { width: 100%; padding: 10px; margin-bottom: 5px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; font-size: 11px; }
+        .btn-red { background: var(--neon-red); color: #fff; }
+        .btn-green { background: #00e676; color: #000; }
+        .btn-dark { background: #333; color: #fff; border: 1px solid #555; }
 
         /* ========================================= */
-        /* [SEKAT 4] CSS ARTIKEL (SLIDER)            */
+        /* [SEKAT 4] ARTIKEL (SLIDER)                */
         /* ========================================= */
-        .news-wrap { padding: 60px 20px 20px; }
-        .news-card { background: rgba(20, 20, 25, 0.9); border-radius: 15px; overflow: hidden; margin-bottom: 25px; border: 1px solid #333; }
+        .news-container { padding: 60px 20px; }
+        .news-card { background: rgba(20,20,20,0.8); border: 1px solid #333; border-radius: 15px; overflow: hidden; margin-bottom: 25px; }
+        .news-head { padding: 15px; border-bottom: 1px solid #333; }
+        .news-title { font-size: 16px; color: var(--neon-blue); margin: 0; }
+        .news-date { font-size: 10px; color: #777; }
         
-        .news-slider { width: 100%; height: 200px; position: relative; overflow: hidden; background: #000; }
-        .slide-img { width: 100%; height: 100%; object-fit: cover; display: none; animation: fadeImg 1s; }
+        .slider-box { width: 100%; height: 200px; background: #000; position: relative; overflow: hidden; }
+        .slide-img { width: 100%; height: 100%; object-fit: cover; display: none; animation: fade 1s; }
         .slide-img.active { display: block; }
-        @keyframes fadeImg { from{opacity:0.5} to{opacity:1} }
+        @keyframes fade { from{opacity:0.5} to{opacity:1} }
+        
+        .news-body { padding: 15px; font-size: 13px; color: #ccc; line-height: 1.5; }
 
-        .news-body { padding: 15px; }
-        .news-title { font-family: var(--font-tech); font-size: 16px; color: var(--neon-blue); margin: 0 0 5px 0; }
-        .news-date { font-size: 10px; color: #777; margin-bottom: 10px; display: block; }
-        .news-content { font-size: 12px; color: #ccc; line-height: 1.5; }
-
-        /* SOS CSS */
-        .sos-wrap { padding: 60px 20px; display: flex; flex-direction: column; gap: 15px; }
-        .sos-btn { padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 20px; text-decoration: none; color: #fff; background: rgba(20,20,20,0.9); border: 1px solid #333; }
-        .sos-btn.red { border-left: 5px solid #ff003c; }
-        .sos-btn.blue { border-left: 5px solid #00f3ff; }
-
+        /* SOS BUTTONS */
+        .sos-container { padding: 80px 20px; display: flex; flex-direction: column; gap: 20px; }
+        .sos-card { background: #111; padding: 25px; border-radius: 15px; display: flex; align-items: center; gap: 20px; text-decoration: none; color: #fff; border: 1px solid #333; }
     </style>
 </head>
 <body>
 
     <div id="view-home" class="view-section active">
         <div class="home-wrap">
-            <div class="home-logo">⚡</div>
-            <div class="home-title">MLU APPS</div>
+            <h1 class="home-title">MLU APPS</h1>
             <div class="home-sub">MAKA LINTAS UTARA SQUAD</div>
 
             <div class="menu-grid">
-                <div class="menu-btn" onclick="navTo('view-lokasi')">
-                    <div class="menu-ico" style="border-color:#2979ff; color:#2979ff;">📍</div>
+                <div class="menu-btn btn-loc" onclick="navTo('view-lokasi')">
+                    <div class="menu-ico">📍</div>
                     <div class="menu-txt"><h3>LOKASI FC</h3><p>Cari charging station</p></div>
                 </div>
-                <div class="menu-btn" onclick="navTo('view-sos')">
-                    <div class="menu-ico" style="border-color:#ff003c; color:#ff003c;">🆘</div>
+                <div class="menu-btn btn-sos" onclick="navTo('view-sos')">
+                    <div class="menu-ico">🆘</div>
                     <div class="menu-txt"><h3>MAKA SOS</h3><p>Layanan Darurat</p></div>
                 </div>
-                <div class="menu-btn" onclick="navTo('view-antrian')">
-                    <div class="menu-ico" style="border-color:var(--neon-blue); color:var(--neon-blue);">⚡</div>
+                <div class="menu-btn btn-antrian" onclick="navTo('view-antrian')">
+                    <div class="menu-ico">⚡</div>
                     <div class="menu-txt"><h3>ANTRIAN</h3><p>Daftar & Pantau</p></div>
                 </div>
             </div>
@@ -187,12 +213,12 @@
             <div class="mitra-wrap">
                 <div class="mitra-head">MITRA CHARGING</div>
                 <div class="mitra-box">
-                    <a href="https://casan.id" class="m-btn">🔌 CASAN.ID</a>
-                    <a href="#" class="m-btn">📱 STARVO</a>
+                    <a href="https://casan.id" class="m-btn"><div class="m-icon">🔌</div><div class="m-text">CASAN.ID</div></a>
+                    <a href="#" class="m-btn"><div class="m-icon">📱</div><div class="m-text">STARVO</div></a>
                 </div>
             </div>
 
-            <div class="footer-btn" onclick="navTo('view-artikel')">📰 INFO & EVENT MLU</div>
+            <div class="footer-info" onclick="navTo('view-artikel')">📰 INFO & EVENT MLU</div>
         </div>
     </div>
 
@@ -200,101 +226,122 @@
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
         <div id="map"></div>
         <div class="map-overlay">
-            <div class="map-card">
-                <h3 style="margin:0 0 5px 0; font-family:var(--font-tech); color:var(--neon-blue)">LOKASI TERDEKAT</h3>
-                <div id="nearest-status" style="font-size:12px; color:#ccc;">Mencari GPS...</div>
-            </div>
+            <div style="width:50px; height:4px; background:var(--neon-blue); margin:0 auto 10px; border-radius:2px;"></div>
+            <h3 style="margin:0; color:#fff; font-size:16px;">LOKASI TERDEKAT</h3>
+            <div id="loc-status" style="font-size:12px; color:var(--neon-blue); margin-top:5px;">Mencari User & Station...</div>
         </div>
     </div>
 
     <div id="view-antrian" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
-        
         <div class="antrian-container">
-            <h2 style="text-align:center; font-family:var(--font-tech); color:var(--neon-blue); margin-bottom:20px;">SMART CHARGING</h2>
+            <h2 style="text-align:center; color:var(--neon-blue); margin-bottom:20px; font-size:24px;">SMART CHARGING</h2>
             
-            <div class="glass-form">
-                <div class="inp-label">PLAT NOMOR</div>
-                <input id="uPlat" class="inp-field" placeholder="CONTOH: B 1234 XYZ">
+            <div class="glass-card">
+                <span class="inp-label">PLAT NOMOR</span>
+                <input id="uPlat" class="inp-field" placeholder="CONTOH: B 1234 XYZ" style="text-transform:uppercase;">
                 
-                <div class="inp-label">WHATSAPP</div>
+                <span class="inp-label">WHATSAPP</span>
                 <input id="uWa" type="number" class="inp-field" placeholder="08xxx">
                 
-                <div class="inp-label">BATERAI %</div>
+                <span class="inp-label">BATERAI %</span>
                 <input id="uBat" type="number" class="inp-field" placeholder="0 - 99">
                 
-                <button class="btn-submit" id="btnDaftar">DAFTAR ANTRIAN</button>
+                <button class="btn-main" id="btnDaftar">DAFTAR ANTRIAN</button>
             </div>
 
-            <div class="slots-area" id="slots-container">
-                <div class="slot-box">
-                    <div class="slot-status">...</div>
-                    <div class="slot-name">Slot 3</div>
-                </div>
-                <div class="slot-box">
-                    <div class="slot-status">...</div>
-                    <div class="slot-name">Slot 2</div>
-                </div>
-                <div class="slot-box">
-                    <div class="slot-status">...</div>
-                    <div class="slot-name">Slot 1</div>
+            <div class="slot-grid" id="slots-area">
+                <div style="text-align:center; grid-column:1/-1; color:#777;">Memuat Slot...</div>
+            </div>
+
+            <div style="margin-top:20px; background:rgba(0,0,0,0.5); padding:15px; border-radius:10px;">
+                <h4 style="margin:0 0 10px 0; color:#aaa; font-size:12px;">DAFTAR TUNGGU</h4>
+                <div id="queue-list" style="font-size:12px;">Kosong</div>
+            </div>
+
+            <div style="text-align:center; margin-top:30px; font-size:10px; color:#555; cursor:pointer;" onclick="openAdminLogin()">🔒 ADMIN PANEL</div>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal">
+        <div class="admin-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; color:var(--neon-red);">ADMIN CONTROL</h3>
+                <button onclick="document.getElementById('adminModal').style.display='none'" style="background:none; border:none; color:#fff; font-size:20px;">✕</button>
+            </div>
+
+            <div class="adm-grp">
+                <label style="font-size:10px; color:#aaa;">BLOKIR USER</label>
+                <div style="display:flex; gap:5px;">
+                    <input id="admBlockPlat" placeholder="Plat No" style="width:70%; padding:8px; background:#000; border:1px solid #333; color:#fff;">
+                    <button class="btn-red" style="width:30%; padding:8px; border:none; border-radius:4px;" onclick="admBlock()">BLOK</button>
                 </div>
             </div>
 
-            <div class="list-tunggu">
-                <div style="font-family:var(--font-tech); font-size:12px; margin-bottom:10px; color:#aaa;">DAFTAR TUNGGU</div>
-                <div id="queue-list-container">
-                    <div style="text-align:center; font-size:10px;">Kosong</div>
+            <div class="adm-grp">
+                <label style="font-size:10px; color:#aaa;">KELOLA SLOT</label>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+                    <button class="adm-btn btn-dark" onclick="admClear(2)">Hapus Slot 3</button>
+                    <button class="adm-btn btn-green" onclick="admStart(2)">Start Slot 3</button>
+                    
+                    <button class="adm-btn btn-dark" onclick="admClear(1)">Hapus Slot 2</button>
+                    <button class="adm-btn btn-green" onclick="admStart(1)">Start Slot 2</button>
+                    
+                    <button class="adm-btn btn-dark" onclick="admClear(0)">Hapus Slot 1</button>
+                    <button class="adm-btn btn-green" onclick="admStart(0)">Start Slot 1</button>
                 </div>
             </div>
-            
-            <div style="text-align:center; margin-top:20px; font-size:10px; opacity:0.5; cursor:pointer;" onclick="alert('Fitur Admin belum aktif di demo ini')">🔒 ADMIN LOGIN</div>
+
+            <div class="adm-grp">
+                <label style="font-size:10px; color:#aaa;">ANTRIAN & GLOBAL</label>
+                <button class="adm-btn btn-green" onclick="admForceFill()">NAIKKAN SLOT (PAKSA)</button>
+                <button class="adm-btn btn-green" style="margin-top:5px;" onclick="admStartAll()">MULAI SEMUA</button>
+                <button class="adm-btn btn-red" onclick="admReset()">⚠ RESET SEMUA DATA</button>
+            </div>
         </div>
     </div>
 
     <div id="view-artikel" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
-        <div class="news-wrap" id="news-container">
-            <div style="text-align:center">Memuat Berita...</div>
+        <div class="news-container" id="news-content">
+            <div style="text-align:center;">Memuat Berita...</div>
         </div>
     </div>
 
     <div id="view-sos" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
-        <div class="sos-wrap">
-            <h2 style="font-family:var(--font-tech); margin-left:10px;">EMERGENCY</h2>
-            <a href="https://wa.me/6287722285445" class="sos-btn blue">
-                <div style="font-size:30px">🚑</div>
-                <div><h3 style="margin:0">MAKA HELP</h3><p style="margin:0; font-size:12px; color:#aaa">Layanan Towing</p></div>
+        <div class="sos-container">
+            <h2 style="margin-left:10px; color:var(--neon-red);">EMERGENCY</h2>
+            <a href="https://wa.me/6287722285445" class="sos-card" style="border-left:4px solid yellow;">
+                <div style="font-size:32px;">🚑</div>
+                <div><h3 style="margin:0">MAKA HELP</h3><p style="margin:0; font-size:12px; color:#aaa;">Bantuan Towing / Mogok</p></div>
             </a>
-            <a href="https://wa.me/628123456789" class="sos-btn red">
-                <div style="font-size:30px">🚨</div>
-                <div><h3 style="margin:0">URC EMERGENCY</h3><p style="margin:0; font-size:12px; color:#aaa">Layanan Medis</p></div>
+            <a href="https://wa.me/628123456789" class="sos-card" style="border-left:4px solid var(--neon-red);">
+                <div style="font-size:32px;">🚨</div>
+                <div><h3 style="margin:0; color:var(--neon-red);">URC EMERGENCY</h3><p style="margin:0; font-size:12px; color:#aaa;">Laporan Kecelakaan</p></div>
             </a>
         </div>
     </div>
 
     <script>
-        // 1. NAVIGASI SYSTEM
+        // --- 1. NAVIGASI ---
         function navTo(id) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
             if(id === 'view-lokasi') setTimeout(initMap, 300);
             if(id === 'view-antrian') initAntrian();
             if(id === 'view-artikel') loadNews();
         }
 
-        // 2. LOGIKA PETA (BLINKING MARKER)
+        // --- 2. PETA (BLINKING LOGIC FIXED) ---
         let map;
-        const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA"; 
-        
+        const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
+        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+
         function initMap() {
             if(map) { map.invalidateSize(); locateUser(); return; }
-            
             map = L.map('map', {zoomControl: false}).setView([-6.2, 106.8], 11);
-            L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {maxZoom:18}).addTo(map);
-            
+            L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {maxZoom: 18}).addTo(map);
             locateUser();
         }
 
@@ -305,151 +352,275 @@
                 const uLng = pos.coords.longitude;
                 
                 // Marker User
-                L.circleMarker([uLat, uLng], {radius: 8, color: '#fff', fillColor: '#2979ff', fillOpacity: 1}).addTo(map);
-                map.setView([uLat, uLng], 13);
+                if(window.userMarker) map.removeLayer(window.userMarker);
+                window.userMarker = L.circleMarker([uLat, uLng], {radius: 8, color: '#fff', fillColor: '#2979ff', fillOpacity: 1}).addTo(map);
                 
-                loadStations(uLat, uLng); // Cari station terdekat setelah dapat lokasi user
+                // Centering map to User first
+                map.setView([uLat, uLng], 14);
+                
+                // Load & Find Nearest
+                findNearestStation(uLat, uLng);
             });
         }
 
-        function loadStations(uLat, uLng) {
-            const url = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
-            fetch(url).then(r=>r.text()).then(t => {
+        function findNearestStation(uLat, uLng) {
+            fetch(SHEET_URL).then(r=>r.text()).then(t => {
                 const rows = t.split('\n').slice(1);
-                let nearestDist = Infinity;
-                let nearestMarker = null;
-                let nearestName = "";
-
+                let stations = [];
+                
                 rows.forEach(r => {
                     const c = r.split(',');
                     if(c.length > 5) {
                         const lat = parseFloat(c[4]);
                         const lng = parseFloat(c[5]);
                         if(!isNaN(lat)) {
-                            // Hitung jarak
                             const dist = Math.sqrt(Math.pow(lat-uLat, 2) + Math.pow(lng-uLng, 2));
-                            
-                            // Custom Icon Default
-                            let iconClass = 'custom-pin';
-                            if(dist < nearestDist) {
-                                nearestDist = dist;
-                                nearestName = c[0].replace(/"/g,'');
-                            }
-
-                            // Render Marker
-                            const m = L.marker([lat, lng], {
-                                icon: L.divIcon({
-                                    className: 'custom-pin', 
-                                    html: '<div style="font-size:30px;">⚡</div>',
-                                    iconSize: [30,30]
-                                })
-                            }).addTo(map);
-                            
-                            // Premium Popup
-                            m.bindPopup(`<b>${c[0].replace(/"/g,'')}</b><br><div style="font-size:10px; margin-bottom:5px;">${c[2]}</div><a href="${c[6]}" class="nav-btn">NAVIGASI GO</a>`);
-
-                            // Simpan referensi marker terdekat untuk dikasih efek BLINK
-                            if(dist === nearestDist) nearestMarker = m;
+                            stations.push({ lat, lng, name: c[0].replace(/"/g,''), type: c[2], link: c[6], dist: dist });
                         }
                     }
                 });
 
-                // Terapkan efek BLINK pada marker terdekat
-                if(nearestMarker) {
-                    const el = nearestMarker.getElement();
-                    if(el) el.classList.add('blink-marker');
-                    document.getElementById('nearest-status').innerHTML = `Terdekat: <span style="color:var(--neon-blue); font-weight:bold;">${nearestName}</span> (Blinking)`;
-                }
+                // Find Min Distance
+                stations.sort((a,b) => a.dist - b.dist);
+                const nearest = stations[0];
+
+                // Render Markers
+                stations.forEach(s => {
+                    const isNearest = (s === nearest);
+                    const iconHTML = isNearest ? '<div style="font-size:40px; color:#fff; text-shadow:0 0 20px var(--neon-blue);">⚡</div>' : '<div style="font-size:24px; opacity:0.7;">⚡</div>';
+                    
+                    const m = L.marker([s.lat, s.lng], {
+                        icon: L.divIcon({ className: isNearest ? 'blink-marker' : '', html: iconHTML, iconSize: [40,40], iconAnchor: [20,20] }),
+                        zIndexOffset: isNearest ? 1000 : 0
+                    }).addTo(map);
+
+                    m.bindPopup(`
+                        <div class="popup-title">${s.name}</div>
+                        <div style="font-size:10px; margin-bottom:5px;">${s.type}</div>
+                        <a href="${s.link}" class="nav-btn">NAVIGASI GO</a>
+                    `);
+
+                    if(isNearest) m.openPopup();
+                });
+
+                document.getElementById('loc-status').innerHTML = `Terdekat: <b style="color:#fff">${nearest.name}</b>`;
             });
         }
 
-        // 3. LOGIKA ANTRIAN (FIREBASE & DISPLAY)
+        // --- 3. ANTRIAN & ADMIN (FIREBASE) ---
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         let db;
 
         function initAntrian() {
             if(!firebase.apps.length) { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); }
             
+            // Listener Utama
             db.collection("antrian").doc("utama").onSnapshot(snap => {
                 const d = snap.data() || {chargingSlots:[null,null,null], waitingQueue:[]};
-                const slots = d.chargingSlots;
-                
-                // Render Slots (Urutan 3, 2, 1 dari Kiri ke Kanan)
-                const slotContainer = document.getElementById('slots-container');
-                slotContainer.innerHTML = "";
-                
-                // Kita loop manual agar urutannya Slot 3, Slot 2, Slot 1
-                const mapIdx = [0, 1, 2]; // Slot index di DB [0=slot3, 1=slot2, 2=slot1] sesuaikan mapping DB anda
-                // Asumsi di DB index 0 = Slot 3 (Kiri), index 1 = Slot 2, index 2 = Slot 1
-                
-                // Render 3 Slot
-                const labels = ["Slot 3", "Slot 2", "Slot 1"];
-                slots.forEach((s, i) => {
-                    const isFilled = s && s.name;
-                    const html = `
-                    <div class="slot-box ${isFilled ? 'active' : ''}">
-                        <div class="slot-status">
-                             ${isFilled ? `<div style="font-size:12px; color:#fff">${s.name}</div><div style="font-size:20px; color:var(--neon-blue); margin-top:5px;">${s.startBattery}%</div>` : 'KOSONG'}
-                        </div>
-                        <div class="slot-name">${labels[i]}</div>
-                    </div>`;
-                    slotContainer.innerHTML += html;
-                });
+                renderSlots(d.chargingSlots);
+                renderQueue(d.waitingQueue);
+            });
 
-                // Render Queue List
-                const qList = document.getElementById('queue-list-container');
-                if(d.waitingQueue && d.waitingQueue.length > 0) {
-                    qList.innerHTML = d.waitingQueue.map(q => `
-                        <div class="list-item">
-                            <span style="font-weight:bold; color:#fff">${q.name}</span>
-                            <span style="color:var(--neon-blue)">${q.startBattery}%</span>
-                        </div>
-                    `).join('');
-                } else {
-                    qList.innerHTML = '<div style="text-align:center; font-size:10px;">Tidak ada antrian</div>';
+            // Logic Daftar
+            document.getElementById('btnDaftar').onclick = async () => {
+                const p = document.getElementById('uPlat').value.toUpperCase().trim();
+                const w = document.getElementById('uWa').value;
+                const b = document.getElementById('uBat').value;
+                
+                if(!p || !w || !b) return alert("Lengkapi Data!");
+                
+                // Cek Blokir
+                const doc = await db.collection("antrian").doc("utama").get();
+                const blocked = doc.data().blockedList || [];
+                if(blocked.includes(p)) return alert("PLAT INI DIBLOKIR!");
+
+                // Proses Masuk
+                const ref = db.collection("antrian").doc("utama");
+                db.runTransaction(async t => {
+                    const current = (await t.get(ref)).data();
+                    let s = current.chargingSlots;
+                    let q = current.waitingQueue;
+                    
+                    // Cek Duplikat
+                    if(s.some(x => x?.name === p) || q.some(x => x?.name === p)) throw "Sudah Terdaftar";
+
+                    // Masuk Slot Kosong atau Antrian
+                    const emptyIdx = s.indexOf(null); // Cari slot null (Urutan DB biasanya 0,1,2)
+                    /* Mapping Visual: Slot 3(0), Slot 2(1), Slot 1(2) - Kita isi urut index array */
+                    
+                    // Logic Cerdas: Isi slot kosong dulu
+                    let filled = false;
+                    for(let i=0; i<3; i++) {
+                        if(s[i] === null) {
+                            s[i] = { name:p, phone:w, startBattery:b, startTime:null };
+                            filled = true;
+                            break;
+                        }
+                    }
+
+                    if(!filled) q.push({ name:p, phone:w, startBattery:b });
+
+                    t.update(ref, { chargingSlots: s, waitingQueue: q });
+                }).then(() => {
+                    alert("Berhasil Daftar!");
+                    document.getElementById('uPlat').value = '';
+                }).catch(e => alert(e));
+            };
+        }
+
+        function renderSlots(slots) {
+            const container = document.getElementById('slots-area');
+            container.innerHTML = "";
+            // Mapping: Array Index 0 = Slot 3 (Kiri), Index 1 = Slot 2 (Tengah), Index 2 = Slot 1 (Kanan)
+            // Sesuai request admin control
+            
+            const labels = ["Slot 3", "Slot 2", "Slot 1"];
+            // Kita loop array slots apa adanya
+            
+            slots.forEach((s, i) => {
+                const isActive = s && s.name;
+                const isRun = s && s.startTime;
+                
+                let statusHTML = `<div style="color:#555; font-size:16px;">KOSONG</div>`;
+                if(isActive) {
+                    statusHTML = `
+                        <div style="font-size:14px; font-weight:bold; color:#fff">${s.name}</div>
+                        <div style="font-size:20px; color:${isRun ? 'var(--neon-blue)' : '#aaa'}">${s.startBattery}%</div>
+                        <div style="font-size:10px; color:${isRun ? 'var(--neon-blue)' : 'yellow'}">${isRun ? 'CHARGING...' : 'MENUNGGU'}</div>
+                    `;
                 }
+
+                container.innerHTML += `
+                    <div class="slot-box ${isActive ? 'active' : ''}">
+                        <div class="slot-content">${statusHTML}</div>
+                        <div class="slot-label">${labels[i]}</div>
+                    </div>
+                `;
             });
         }
 
-        // 4. LOGIKA ARTIKEL (AUTO SLIDER)
+        function renderQueue(q) {
+            const div = document.getElementById('queue-list');
+            if(!q || q.length === 0) div.innerHTML = "Antrian Kosong";
+            else {
+                div.innerHTML = q.map((x,i) => `
+                    <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333;">
+                        <span>${i+1}. ${x.name}</span>
+                        <span style="color:var(--neon-blue)">${x.startBattery}%</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // --- 4. ADMIN FUNCTIONS (LENGKAP) ---
+        function openAdminLogin() {
+            const p = prompt("Masukkan PIN Admin:");
+            if(p === "1131") document.getElementById('adminModal').style.display = "flex";
+            else alert("PIN Salah");
+        }
+
+        // Action Helper
+        async function runAdm(fn) {
+            const ref = db.collection("antrian").doc("utama");
+            try {
+                await db.runTransaction(async t => {
+                    const doc = (await t.get(ref)).data();
+                    const newData = fn(doc);
+                    t.update(ref, newData);
+                });
+                alert("Sukses");
+            } catch(e) { alert("Error: " + e); }
+        }
+
+        function admClear(idx) {
+            runAdm(d => {
+                d.chargingSlots[idx] = null;
+                return { chargingSlots: d.chargingSlots };
+            });
+        }
+
+        function admStart(idx) {
+            runAdm(d => {
+                if(d.chargingSlots[idx]) d.chargingSlots[idx].startTime = new Date();
+                return { chargingSlots: d.chargingSlots };
+            });
+        }
+
+        function admStartAll() {
+            runAdm(d => {
+                d.chargingSlots.forEach(s => { if(s) s.startTime = new Date(); });
+                return { chargingSlots: d.chargingSlots };
+            });
+        }
+
+        function admReset() {
+            if(confirm("Yakin hapus semua data?")) {
+                db.collection("antrian").doc("utama").set({ chargingSlots:[null,null,null], waitingQueue:[], blockedList:[] });
+                alert("Data Direset");
+            }
+        }
+
+        function admForceFill() {
+            runAdm(d => {
+                let s = d.chargingSlots;
+                let q = d.waitingQueue;
+                if(q.length === 0) throw "Antrian Kosong";
+                
+                // Cari slot kosong
+                let emptyIdx = s.indexOf(null);
+                if(emptyIdx === -1) throw "Slot Penuh, Hapus dulu satu!";
+                
+                // Pindahkan antrian pertama ke slot kosong
+                s[emptyIdx] = q.shift();
+                return { chargingSlots: s, waitingQueue: q };
+            });
+        }
+
+        function admBlock() {
+            const p = document.getElementById('admBlockPlat').value.toUpperCase();
+            if(!p) return;
+            runAdm(d => {
+                let b = d.blockedList || [];
+                if(!b.includes(p)) b.push(p);
+                return { blockedList: b };
+            });
+        }
+
+        // --- 5. ARTIKEL (SLIDER) ---
         function loadNews() {
             const url = "https://docs.google.com/spreadsheets/d/1qh_aKEQQvN0B1E6ONO0LGIpuQ6phzc-ALc4SduClMyY/export?format=csv";
             fetch(url).then(r=>r.text()).then(t => {
                 const rows = t.split('\n').slice(1);
-                const container = document.getElementById('news-container');
-                container.innerHTML = "";
+                const con = document.getElementById('news-content');
+                con.innerHTML = "";
 
                 rows.forEach((r, idx) => {
                     const c = r.split(',');
                     if(c.length > 3) {
-                        // Slider Logic
-                        // Asumsi kolom 3 berisi link gambar dipisah koma jika banyak
-                        // Untuk demo ini saya pakai 1 gambar saja, tapi dibungkus struktur slider
+                        const title = c[0].replace(/"/g,'');
+                        const date = c[1].replace(/"/g,'');
+                        const content = c[2].replace(/"/g,'');
+                        
+                        // Handle Multiple Images separated by space or logic
+                        // For simplicity in this structure: One image per slide or assume 1 image link
                         let img = c[3].replace(/"/g,'').trim();
                         if(!img.includes('http')) img = '1763947427555.jpg';
 
-                        container.innerHTML += `
+                        con.innerHTML += `
                         <div class="news-card">
-                            <div class="news-body">
-                                <h3 class="news-title">${c[0].replace(/"/g,'')}</h3>
-                                <span class="news-date">${c[1].replace(/"/g,'')}</span>
+                            <div class="news-head">
+                                <h3 class="news-title">${title}</h3>
+                                <span class="news-date">${date}</span>
                             </div>
-                            <div class="news-slider" id="slider-${idx}">
+                            <div class="slider-box" id="slider-${idx}">
                                 <img src="${img}" class="slide-img active">
-                                </div>
-                            <div class="news-body">
-                                <p class="news-content">${c[2].replace(/"/g,'')}</p>
                             </div>
+                            <div class="news-body">${content}</div>
                         </div>`;
                     }
                 });
             });
         }
-
-        // Init Antrian Listener on Load (Background)
-        document.addEventListener("DOMContentLoaded", () => {
-             // Optional: Preload logic
-        });
 
     </script>
 </body>
