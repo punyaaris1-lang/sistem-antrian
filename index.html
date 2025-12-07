@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP</title>
+    <title>MLU SUPER APP - FIXED</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -14,15 +14,14 @@
 
     <style>
         /* ========================================= */
-        /* [GLOBAL] CSS UTAMA (FONT FIX)             */
+        /* [GLOBAL] CSS UTAMA                        */
         /* ========================================= */
         :root {
             --neon-blue: #00f3ff;
             --neon-red: #ff003c;
             --bg-dark: #000000;
-            --glass: rgba(10, 20, 30, 0.9);
-            --font-head: 'Orbitron', sans-serif; /* FONT JUDUL */
-            --font-body: 'Rajdhani', sans-serif; /* FONT ISI */
+            --font-head: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
@@ -33,9 +32,9 @@
         }
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
         
-        /* FORCE FONT TO ALL ELEMENTS */
-        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label, .home-title, .mitra-head { font-family: var(--font-head) !important; letter-spacing: 1px; }
-        p, span, input, .news-content, .home-sub, .menu-txt p { font-family: var(--font-body) !important; }
+        /* FORCE FONT */
+        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label { font-family: var(--font-head) !important; letter-spacing: 1px; }
+        p, span, input, .news-content, .home-sub { font-family: var(--font-body) !important; }
 
         /* View Manager */
         .view-section { display: none; height: 100%; width: 100%; overflow-y: auto; position: relative; animation: fadeIn 0.3s; }
@@ -43,15 +42,15 @@
         @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
         
         .btn-back-float {
-            position: absolute; top: 15px; left: 15px; z-index: 1000;
-            width: 40px; height: 40px; border-radius: 50%;
+            position: absolute; top: 20px; left: 20px; z-index: 1000;
+            width: 45px; height: 45px; border-radius: 50%;
             background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue);
             color: var(--neon-blue); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 20px; backdrop-filter: blur(5px);
+            cursor: pointer; font-size: 22px; backdrop-filter: blur(5px);
         }
 
         /* ========================================= */
-        /* [SEKAT 1] HOME (LAYOUT FIXED PROPORSIONAL)*/
+        /* [SEKAT 1] HOME (LAYOUT FIXED)             */
         /* ========================================= */
         .home-wrap { 
             padding: 20px; 
@@ -59,80 +58,89 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; /* Konten di tengah vertikal */
-            gap: 20px; /* Jarak antar blok elemen */
+            justify-content: flex-start; /* Ubah ke flex-start agar bisa diatur margin atasnya */
+            padding-top: 60px; /* Jarak dari atas layar agar judul pas */
+            gap: 25px; /* Jarak antar elemen */
         }
         
         .home-header { text-align: center; margin-bottom: 10px; }
         .home-title { font-size: 36px; color: var(--neon-blue); text-shadow: 0 0 20px var(--neon-blue); margin: 0; font-weight: 900; }
-        .home-sub { font-size: 12px; background: #0072ff; padding: 4px 15px; border-radius: 4px; font-weight: bold; letter-spacing: 3px; display: inline-block; margin-top: 5px; box-shadow: 0 0 15px rgba(0, 114, 255, 0.5); }
+        .home-sub { font-size: 12px; background: #0072ff; padding: 5px 15px; border-radius: 4px; font-weight: bold; letter-spacing: 2px; display: inline-block; margin-top: 8px; box-shadow: 0 0 15px rgba(0, 114, 255, 0.5); }
         
-        /* Menu Grid lebih rapat */
-        .menu-grid { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 15px; }
+        /* Menu Grid */
+        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
         
         .menu-btn {
             position: relative; overflow: hidden;
-            background: rgba(0, 15, 30, 0.6); 
+            background: rgba(0, 15, 30, 0.7); 
             border: 1px solid var(--neon-blue);
-            border-radius: 12px; padding: 15px; 
-            display: flex; align-items: center; gap: 15px;
+            border-radius: 15px; padding: 15px; 
+            display: flex; align-items: center; gap: 20px;
             cursor: pointer; transition: 0.2s;
-            backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.05);
         }
         .menu-btn:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.1); }
         
-        /* Warna Khusus Tombol */
-        .btn-loc { border-color: #2979ff; box-shadow: 0 0 10px rgba(41, 121, 255, 0.2); }
+        .btn-loc { border-color: #2979ff; }
         .btn-loc .menu-ico { border-color: #2979ff; color: #2979ff; }
-        
-        .btn-sos { border-color: var(--neon-red); box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
-        .btn-sos .menu-ico { border-color: var(--neon-red); color: #fff; background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
-        
-        .btn-antrian { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
+        .btn-sos { border-color: var(--neon-red); }
+        .btn-sos .menu-ico { border-color: var(--neon-red); color: #fff; background: var(--neon-red); }
+        .btn-antrian { border-color: var(--neon-blue); }
         .btn-antrian .menu-ico { border-color: var(--neon-blue); color: var(--neon-blue); }
 
         .menu-ico { 
-            width: 45px; height: 45px; border-radius: 10px; border: 1px solid #fff;
-            display: flex; align-items: center; justify-content: center; font-size: 22px;
-            background: rgba(0,0,0,0.5); flex-shrink: 0;
+            width: 50px; height: 50px; border-radius: 12px; border: 1px solid #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            background: rgba(0,0,0,0.3); flex-shrink: 0;
         }
-        .menu-txt h3 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; }
-        .menu-txt p { margin: 2px 0 0; font-size: 11px; color: #aaa; }
+        .menu-txt h3 { margin: 0; font-size: 16px; color: #fff; }
+        .menu-txt p { margin: 3px 0 0; font-size: 11px; color: #aaa; }
 
-        .mitra-wrap { width: 100%; max-width: 380px; margin-top: 10px; }
-        .mitra-head { font-size: 12px; color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(0,243,255,0.3); display: inline-block; }
+        .mitra-wrap { width: 100%; max-width: 400px; border-top: 1px solid #333; padding-top: 20px; }
+        .mitra-head { font-size: 12px; color: var(--neon-blue); margin-bottom: 10px; font-family: var(--font-head); letter-spacing: 1px; }
         .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .m-btn { 
-            background: rgba(0,0,0,0.4); border: 1px solid #2979ff; padding: 12px; 
+            background: rgba(0,0,0,0.5); border: 1px solid #2979ff; padding: 15px; 
             border-radius: 12px; text-align: center; text-decoration: none; color: #fff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: 0.2s;
         }
-        .m-btn:active { background: rgba(41, 121, 255, 0.2); }
-        .m-icon { font-size: 22px; margin-bottom: 5px; }
-        .m-text { font-family: var(--font-head); font-size: 11px; text-decoration: underline; letter-spacing: 1px; }
+        .m-icon { font-size: 24px; margin-bottom: 5px; }
+        .m-text { font-family: var(--font-head); font-size: 12px; text-decoration: underline; }
 
         .footer-info { 
-            padding: 12px; border: 1px solid #fff; border-radius: 30px; 
-            width: 100%; max-width: 380px; text-align: center; 
+            padding: 15px; border: 1px solid #fff; border-radius: 30px; 
+            width: 100%; max-width: 400px; text-align: center; 
             font-family: var(--font-head) !important; font-size: 12px; 
-            cursor: pointer; background: rgba(0,0,0,0.5); 
-            margin-top: 10px; /* Jarak dari Mitra tidak terlalu jauh */
-            letter-spacing: 1px;
+            cursor: pointer; background: rgba(0,0,0,0.6); 
+            margin-top: auto; /* Mendorong tombol ke paling bawah */
+            margin-bottom: 30px; /* Jarak aman dari bawah layar */
         }
 
         /* ========================================= */
         /* [SEKAT 2] PETA (BLINKING FIX)             */
         /* ========================================= */
         #map { width: 100%; height: 100%; z-index: 1; }
-        .map-overlay { 
-            position: absolute; bottom: 0; left: 0; right: 0; z-index: 999;
-            background: linear-gradient(to top, #000 90%, transparent); padding: 20px; 
-            border-top: 2px solid var(--neon-blue); border-radius: 20px 20px 0 0;
-        }
         
-        .blink-marker { animation: pulseMarker 1s infinite alternate; z-index: 9999 !important; }
-        @keyframes pulseMarker { from { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-blue)); } to { transform: scale(1.2); filter: drop-shadow(0 0 20px var(--neon-blue)); } }
+        /* CARD STATUS BAWAH (PENGGANTI GARIS) */
+        .map-status-card { 
+            position: absolute; bottom: 30px; left: 20px; right: 20px; z-index: 999;
+            background: rgba(5, 10, 20, 0.95); 
+            border: 1px solid var(--neon-blue); border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* ANIMASI PETIR (DITERAPKAN KE DALAM ICON, BUKAN WRAPPER) */
+        .blink-inner { 
+            width: 100%; height: 100%; 
+            display: flex; align-items: center; justify-content: center;
+            animation: pulseIcon 1s infinite alternate; 
+        }
+        @keyframes pulseIcon { 
+            from { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-blue)); } 
+            to { transform: scale(1.3); filter: drop-shadow(0 0 25px var(--neon-blue)); } 
+        }
 
         .leaflet-popup-content-wrapper { background: rgba(5, 10, 20, 0.95); border: 1px solid var(--neon-blue); color: #fff; border-radius: 10px; }
         .leaflet-popup-tip { background: var(--neon-blue); }
@@ -140,7 +148,7 @@
         .nav-btn { display: block; background: var(--neon-blue); color: #000; text-align: center; padding: 6px; border-radius: 5px; margin-top: 8px; text-decoration: none; font-weight: bold; font-family: var(--font-head); font-size: 11px; }
 
         /* ========================================= */
-        /* [SEKAT 3] ANTRIAN (ADMIN LENGKAP)         */
+        /* [SEKAT 3] ANTRIAN                         */
         /* ========================================= */
         .antrian-container { padding: 20px; max-width: 480px; margin: 0 auto; padding-top: 60px; }
         
@@ -243,10 +251,13 @@
     <div id="view-lokasi" class="view-section">
         <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
         <div id="map"></div>
-        <div class="map-overlay">
-            <div style="width:50px; height:4px; background:var(--neon-blue); margin:0 auto 10px; border-radius:2px;"></div>
-            <h3 style="margin:0; color:#fff; font-size:16px;">LOKASI TERDEKAT</h3>
-            <div id="loc-status" style="font-size:12px; color:var(--neon-blue); margin-top:5px;">Mencari User & Station...</div>
+        
+        <div class="map-status-card">
+            <div>
+                <h3 style="margin:0; color:#fff; font-size:14px;">LOKASI TERDEKAT</h3>
+                <div id="loc-status" style="font-size:12px; color:var(--neon-blue); margin-top:3px;">Mencari User & Station...</div>
+            </div>
+            <div style="font-size:24px;">⚡</div>
         </div>
     </div>
 
@@ -394,14 +405,19 @@
 
                 stations.forEach(s => {
                     const isNearest = (s === nearest);
+                    
+                    // ICON KHUSUS: Menggunakan kelas blink-inner DI DALAM HTML, bukan di DivIcon container.
+                    // Ini mencegah animasi transform menimpa posisi Leaflet.
                     const m = L.marker([s.lat, s.lng], {
                         icon: L.divIcon({ 
-                            className: isNearest ? 'blink-marker' : '', 
-                            html: `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:${isNearest ? 40 : 24}px; ${isNearest ? 'text-shadow:0 0 20px var(--neon-blue); color:#fff;' : 'opacity:0.7; color:#fff;'}">⚡</div>`, 
-                            iconSize: [40,40], iconAnchor: [20,20]
+                            className: 'custom-pin-wrapper', // Kelas wrapper biasa
+                            html: `<div class="${isNearest ? 'blink-inner' : ''}" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:${isNearest ? 40 : 24}px; color:#fff; ${!isNearest ? 'opacity:0.7;' : ''}">⚡</div>`, 
+                            iconSize: [40,40], 
+                            iconAnchor: [20,20]
                         }),
                         zIndexOffset: isNearest ? 1000 : 0
                     }).addTo(map);
+
                     m.bindPopup(`<div class="popup-title">${s.name}</div><div style="font-size:10px;">${s.type}</div><a href="${s.link}" class="nav-btn">NAVIGASI GO</a>`);
                     if(isNearest) m.openPopup();
                 });
