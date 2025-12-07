@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP - FINAL FIX 2</title>
+    <title>MLU SUPER APP - FINAL DESIGN</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -28,8 +28,7 @@
         body { 
             margin: 0; padding: 0; background: #000; color: #fff; 
             font-family: var(--font-body); 
-            height: 100dvh; /* Dynamic Height untuk Mobile */
-            overflow: hidden; 
+            height: 100vh; overflow: hidden; 
             background-image: url('1763947427555.jpg'); background-size: cover; background-position: center;
         }
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
@@ -52,71 +51,86 @@
         }
 
         /* ========================================= */
-        /* [SEKAT 1] HOME (LAYOUT COMPACT)           */
+        /* [SEKAT 1] HOME (DESIGN SEPERTI GAMBAR)    */
         /* ========================================= */
         .home-wrap { 
             padding: 20px; 
-            height: 100%; 
+            min-height: 100%; /* Gunakan min-height agar bisa discroll jika layar kecil */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding-top: 40px; /* Dinaikkan lagi agar muat */
+            /* Hapus justify-content center agar flow natural dari atas */
+            padding-top: 50px; 
+            gap: 25px; 
         }
         
-        /* Spacer agar elemen terdistribusi rapi dari atas ke bawah */
-        .spacer { flex: 1; } 
-
-        .home-header { text-align: center; margin-bottom: 10px; flex-shrink: 0; }
-        .home-title { font-size: 32px; color: var(--neon-blue); text-shadow: 0 0 20px var(--neon-blue); margin: 0; font-weight: 900; line-height: 1; }
-        .home-sub { font-size: 11px; background: #0072ff; padding: 4px 12px; border-radius: 4px; font-weight: bold; letter-spacing: 2px; display: inline-block; margin-top: 8px; box-shadow: 0 0 15px rgba(0, 114, 255, 0.5); }
+        /* Header */
+        .home-header { text-align: center; width: 100%; }
+        .home-title { font-size: 38px; color: var(--neon-blue); text-shadow: 0 0 25px var(--neon-blue); margin: 0; font-weight: 900; }
+        .home-sub { 
+            font-size: 12px; background: #0072ff; padding: 6px 18px; 
+            border-radius: 6px; font-weight: bold; letter-spacing: 2px; 
+            display: inline-block; margin-top: 10px; 
+            box-shadow: 0 0 20px rgba(0, 114, 255, 0.6); 
+        }
         
-        /* Menu Grid Compact */
-        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; margin-top: 10px; }
+        /* Menu Grid Besar */
+        .menu-grid { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; }
         
         .menu-btn {
             position: relative; overflow: hidden;
-            background: rgba(0, 15, 30, 0.7); 
-            border: 1px solid var(--neon-blue);
-            border-radius: 12px; padding: 12px 15px; /* Padding diperkecil */
-            display: flex; align-items: center; gap: 15px;
+            background: rgba(0, 10, 20, 0.8); 
+            border: 2px solid var(--neon-blue); /* Border lebih tebal */
+            border-radius: 20px; /* Radius lebih bulat */
+            padding: 20px; /* Padding lebih besar agar tombol tinggi */
+            display: flex; align-items: center; gap: 20px;
             cursor: pointer; transition: 0.2s;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
         }
         .menu-btn:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.1); }
         
-        .btn-loc { border-color: #2979ff; }
-        .btn-loc .menu-ico { border-color: #2979ff; color: #2979ff; }
-        .btn-sos { border-color: var(--neon-red); }
-        .btn-sos .menu-ico { border-color: var(--neon-red); color: #fff; background: var(--neon-red); }
-        .btn-antrian { border-color: var(--neon-blue); }
-        .btn-antrian .menu-ico { border-color: var(--neon-blue); color: var(--neon-blue); }
+        .btn-loc { border-color: #2979ff; box-shadow: 0 0 20px rgba(41, 121, 255, 0.2); }
+        .btn-loc .menu-ico { color: #2979ff; }
+        
+        .btn-sos { border-color: var(--neon-red); box-shadow: 0 0 20px rgba(255, 0, 60, 0.2); }
+        .btn-sos .menu-ico { color: var(--neon-red); }
+        
+        .btn-antrian { border-color: var(--neon-blue); box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
+        .btn-antrian .menu-ico { color: var(--neon-blue); }
 
         .menu-ico { 
-            width: 42px; height: 42px; border-radius: 10px; border: 1px solid #fff;
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-            background: rgba(0,0,0,0.3); flex-shrink: 0;
+            font-size: 28px; /* Icon Besar */
+            filter: drop-shadow(0 0 5px currentColor);
+            flex-shrink: 0;
         }
-        .menu-txt h3 { margin: 0; font-size: 14px; color: #fff; text-transform: uppercase; }
-        .menu-txt p { margin: 2px 0 0; font-size: 10px; color: #aaa; }
+        .menu-txt h3 { margin: 0; font-size: 18px; color: #fff; text-transform: uppercase; font-weight: 800; }
+        .menu-txt p { margin: 4px 0 0; font-size: 12px; color: #ccc; }
 
-        .mitra-wrap { width: 100%; max-width: 400px; border-top: 1px solid #333; padding-top: 15px; flex-shrink: 0; margin-top: 10px; }
-        .mitra-head { font-size: 11px; color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; display: inline-block; }
-        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        /* Mitra Section Style Gambar */
+        .mitra-wrap { width: 100%; max-width: 420px; margin-top: 10px; }
+        .mitra-header-line {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+        }
+        .mitra-title { font-size: 12px; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 2px; white-space: nowrap; }
+        .mitra-line { height: 1px; background: rgba(0, 243, 255, 0.5); width: 100%; }
+
+        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .m-btn { 
-            background: rgba(0,0,0,0.5); border: 1px solid #2979ff; padding: 10px; 
-            border-radius: 12px; text-align: center; text-decoration: none; color: #fff;
+            background: rgba(0,0,0,0.6); border: 1px solid #2979ff; padding: 18px; 
+            border-radius: 15px; text-align: center; text-decoration: none; color: #fff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(41, 121, 255, 0.2);
         }
-        .m-icon { font-size: 20px; margin-bottom: 4px; }
-        .m-text { font-family: var(--font-head); font-size: 10px; text-decoration: underline; letter-spacing: 1px; }
+        .m-icon { font-size: 26px; margin-bottom: 8px; }
+        .m-text { font-family: var(--font-head); font-size: 12px; text-decoration: underline; letter-spacing: 1px; font-weight: bold; }
 
+        /* Footer Button */
         .footer-info { 
-            padding: 12px; border: 1px solid #fff; border-radius: 30px; 
-            width: 100%; max-width: 400px; text-align: center; 
+            padding: 15px; border: 1px solid #fff; border-radius: 30px; 
+            width: 100%; max-width: 420px; text-align: center; 
             font-family: var(--font-head) !important; font-size: 12px; 
             cursor: pointer; background: rgba(0,0,0,0.8); 
-            margin-bottom: 30px; /* Jarak aman dari bawah */
-            flex-shrink: 0;
+            margin-bottom: 30px; margin-top: 10px;
             backdrop-filter: blur(5px);
         }
 
@@ -125,36 +139,23 @@
         /* ========================================= */
         #map { width: 100%; height: 100%; z-index: 1; }
         
-        /* PANEL BAWAH SCROLLABLE */
         .bottom-panel {
             position: absolute; bottom: 0; left: 0; right: 0; z-index: 2000;
-            height: 35vh; /* Mengambil 35% layar bawah */
+            height: 35vh; 
             background: rgba(5, 10, 20, 0.95);
             border-top: 2px solid var(--neon-blue);
             border-top-left-radius: 20px; border-top-right-radius: 20px;
             display: flex; flex-direction: column;
             box-shadow: 0 -5px 30px rgba(0,0,0,0.8);
-            transition: transform 0.3s ease;
         }
 
-        .panel-header {
-            padding: 15px; text-align: center; flex-shrink: 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .panel-header { padding: 15px; text-align: center; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .drag-handle { width: 40px; height: 4px; background: #555; border-radius: 2px; margin: 0 auto 10px; }
         .drawer-title { margin: 0; font-size: 14px; color: #fff; letter-spacing: 1px; }
 
-        .panel-list {
-            flex: 1; overflow-y: auto; padding: 0 15px 15px;
-        }
+        .panel-list { flex: 1; overflow-y: auto; padding: 0 15px 15px; }
 
-        /* Item List di Panel */
-        .loc-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-        }
-        .loc-item:last-child { border-bottom: none; }
+        .loc-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
         .loc-item.nearest { background: rgba(0, 243, 255, 0.1); border: 1px solid var(--neon-blue); border-radius: 8px; margin-top: 10px; margin-bottom: 10px; }
         
         .loc-info h4 { margin: 0; font-size: 14px; font-family: var(--font-head); color: #fff; }
@@ -163,16 +164,9 @@
         .btn-go-small { background: var(--neon-blue); color: #000; font-size: 9px; padding: 3px 8px; border-radius: 4px; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 3px; }
 
         /* Blink Marker */
-        .blink-inner { 
-            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-            animation: pulseIcon 1s infinite alternate; 
-        }
-        @keyframes pulseIcon { 
-            from { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-blue)); } 
-            to { transform: scale(1.3); filter: drop-shadow(0 0 25px var(--neon-blue)); } 
-        }
+        .blink-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; animation: pulseIcon 1s infinite alternate; }
+        @keyframes pulseIcon { from { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-blue)); } to { transform: scale(1.3); filter: drop-shadow(0 0 25px var(--neon-blue)); } }
 
-        /* Popup */
         .leaflet-popup-content-wrapper { background: rgba(5, 10, 20, 0.95); border: 1px solid var(--neon-blue); color: #fff; border-radius: 10px; }
         .leaflet-popup-tip { background: var(--neon-blue); }
         .popup-title { font-family: var(--font-head); color: var(--neon-blue); font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #333; padding-bottom: 3px; }
@@ -230,8 +224,6 @@
                 <div class="home-sub">MAKA LINTAS UTARA SQUAD</div>
             </div>
 
-            <div class="spacer"></div>
-
             <div class="menu-grid">
                 <div class="menu-btn btn-loc" onclick="navTo('view-lokasi')">
                     <div class="menu-ico">📍</div>
@@ -248,14 +240,15 @@
             </div>
 
             <div class="mitra-wrap">
-                <div class="mitra-head">MITRA CHARGING</div>
+                <div class="mitra-header-line">
+                    <span class="mitra-title">MITRA CHARGING</span>
+                    <div class="mitra-line"></div>
+                </div>
                 <div class="mitra-box">
                     <a href="https://casan.id" class="m-btn"><div class="m-icon">🔌</div><div class="m-text">CASAN.ID</div></a>
                     <a href="#" class="m-btn"><div class="m-icon">📱</div><div class="m-text">STARVO</div></a>
                 </div>
             </div>
-
-            <div class="spacer"></div>
 
             <div class="footer-info" onclick="navTo('view-artikel')">📰 INFO & EVENT MLU</div>
 
