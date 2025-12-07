@@ -4,486 +4,453 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP</title>
+    <title>MLU SUPER APP - MODULAR</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
-        /* === GLOBAL THEME === */
+        /* ========================================= */
+        /* [GLOBAL] CSS UMUM (JANGAN DIUBAH)         */
+        /* ========================================= */
         :root {
             --neon-blue: #00f3ff;
-            --neon-red: #ff003c;
-            --bg-dark: #000000;
-            --font-main: 'Rajdhani', sans-serif;
+            --bg-dark: #050b14;
+            --glass: rgba(10, 20, 30, 0.85);
             --font-tech: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body { 
-            margin: 0; padding: 0;
-            background-color: var(--bg-dark); 
-            color: #fff;
-            font-family: var(--font-main);
-            height: 100vh; overflow: hidden;
-            display: flex; flex-direction: column;
-            position: relative;
+            margin: 0; padding: 0; background: #000; color: #fff; 
+            font-family: var(--font-body); height: 100vh; overflow: hidden; 
+            background-image: url('1763947427555.jpg'); background-size: cover; background-position: center;
         }
-
-        /* BACKGROUND IMAGE DENGAN OPACITY */
-        body::before {
-            content: '';
-            position: absolute; inset: 0;
-            background-image: url('1763947427555.jpg');
-            background-size: cover; background-position: center;
-            opacity: 0.3; /* Opacity tipis agar tidak ganggu */
-            z-index: -1;
-        }
-        body::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2), #000);
-            z-index: -1;
-        }
-
-        /* === VIEW MANAGEMENT === */
-        .view-section {
-            display: none; height: 100%; width: 100%;
-            overflow-y: auto; position: relative;
-            animation: fadeIn 0.4s ease-out;
-        }
+        body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: -1; }
+        
+        /* View Manager */
+        .view-section { display: none; height: 100%; width: 100%; overflow-y: auto; position: relative; animation: fadeIn 0.3s; }
         .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* === HOME SCREEN STYLING (MATCHING IMAGE) === */
-        .home-container {
-            padding: 30px 20px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: flex-start;
-            height: 100%;
-        }
-
-        /* JUDUL */
-        .app-title {
-            font-family: var(--font-tech);
-            font-size: 36px; font-weight: 900;
-            color: var(--neon-blue);
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
-            margin-bottom: 5px; margin-top: 30px;
-        }
-        .app-subtitle {
-            font-family: var(--font-tech);
-            font-size: 11px; font-weight: bold;
-            background: #2979ff; color: #fff;
-            padding: 5px 15px; border-radius: 4px;
-            letter-spacing: 1px; margin-bottom: 40px;
-            box-shadow: 0 0 15px rgba(41, 121, 255, 0.5);
-        }
-
-        /* MENU UTAMA (KOTAK BESAR) */
-        .main-menu { width: 100%; display: flex; flex-direction: column; gap: 15px; }
-        
-        .menu-card {
-            position: relative;
-            background: rgba(0, 15, 30, 0.85); /* Gelap agak transparan */
-            border: 1px solid var(--neon-blue);
-            border-radius: 15px;
-            padding: 20px;
-            display: flex; align-items: center; gap: 20px;
-            cursor: pointer; text-decoration: none;
-            backdrop-filter: blur(5px);
-            transition: 0.2s;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
-        }
-        .menu-card:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.1); }
-
-        /* Ikon Kotak di Kiri */
-        .card-icon-box {
-            width: 50px; height: 50px;
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
-        }
-
-        /* Warna Spesifik per Tombol */
-        /* LOKASI (Biru) */
-        .menu-card.loc { border-color: #2979ff; }
-        .menu-card.loc .card-icon-box { border: 1px solid #2979ff; color: #2979ff; box-shadow: 0 0 10px rgba(41, 121, 255, 0.3); }
-        .menu-card.loc:active { box-shadow: 0 0 20px rgba(41, 121, 255, 0.4); }
-
-        /* SOS (Merah) */
-        .menu-card.sos { border-color: var(--neon-red); }
-        .menu-card.sos .card-icon-box { border: 1px solid var(--neon-red); color: #fff; background: var(--neon-red); box-shadow: 0 0 15px rgba(255, 0, 60, 0.5); }
-        .menu-card.sos h2 { color: var(--neon-red); }
-
-        /* ANTRIAN (Cyan) */
-        .menu-card.antrian { border-color: var(--neon-blue); }
-        .menu-card.antrian .card-icon-box { border: 1px solid var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); }
-
-        .card-text h2 { margin: 0; font-family: var(--font-tech); font-size: 18px; color: #fff; letter-spacing: 1px; }
-        .card-text p { margin: 4px 0 0; font-size: 11px; color: #aaa; }
-
-        /* MITRA CHARGING SECTION */
-        .mitra-section { width: 100%; margin-top: 30px; }
-        .section-header { 
-            font-family: var(--font-tech); font-size: 12px; color: var(--neon-blue); 
-            border-bottom: 1px solid rgba(0, 243, 255, 0.3); 
-            padding-bottom: 5px; margin-bottom: 15px; letter-spacing: 1px;
-        }
-
-        .mitra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .mitra-btn {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #2979ff;
-            border-radius: 15px;
-            padding: 15px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; color: #fff;
-            transition: 0.2s;
-        }
-        .mitra-btn:active { background: rgba(41, 121, 255, 0.2); transform: scale(0.95); }
-        .mitra-icon { font-size: 24px; margin-bottom: 8px; color: #aaa; }
-        .mitra-label { font-family: var(--font-tech); font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
-
-        /* FOOTER BUTTON */
-        .btn-info {
-            width: 100%; margin-top: 20px; padding: 15px;
-            background: rgba(0,0,0,0.8); border: 1px solid #555; border-radius: 30px;
-            color: #ccc; font-family: var(--font-main); font-size: 14px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            text-decoration: none;
-        }
-
-        /* === MAPS === */
-        #map-container { width: 100%; height: 100%; position: relative; background: #0b101a; }
-        #map { width: 100%; height: 100%; z-index: 1; }
-        
-        .map-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0; z-index: 999;
-            background: rgba(0, 10, 20, 0.9); 
-            border-top: 2px solid var(--neon-blue);
-            border-radius: 24px 24px 0 0; padding: 20px;
-            box-shadow: 0 -10px 50px rgba(0,0,0,0.8);
-        }
-        .gps-stat { font-family: var(--font-tech); font-size: 12px; color: var(--neon-blue); margin-bottom: 5px; animation: pulse 1s infinite; }
-        @keyframes pulse { 50% { opacity: 0.5; } }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
         
         .btn-back-float {
-            position: absolute; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(0,0,0,0.8); border: 1px solid var(--neon-blue);
-            width: 40px; height: 40px; border-radius: 50%;
+            position: absolute; top: 15px; left: 15px; z-index: 1000;
+            width: 35px; height: 35px; border-radius: 50%;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--neon-blue);
             color: var(--neon-blue); display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer;
+            cursor: pointer; font-size: 18px; backdrop-filter: blur(5px);
         }
 
-        /* === ANTRIAN & SOS (Sama seperti sebelumnya tapi disesuaikan dikit) === */
-        .header {
-            padding: 15px; display: flex; align-items: center; gap: 15px;
-            background: rgba(0,0,0,0.9); border-bottom: 1px solid #333;
-        }
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        /* ========================================= */
+        /* [SEKAT 1] CSS HOME                        */
+        /* ========================================= */
+        .home-wrap { padding: 20px; height: 100%; display: flex; flex-direction: column; align-items: center; }
+        .home-logo { width: 80px; height: 80px; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 20px var(--neon-blue); background: #000; margin-bottom: 10px; }
+        .home-title { font-family: var(--font-tech); font-size: 24px; color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); margin-bottom: 5px; }
+        .home-sub { font-size: 10px; background: #0072ff; padding: 3px 10px; border-radius: 4px; letter-spacing: 2px; margin-bottom: 20px; }
         
-        input { 
-            width: 100%; padding: 12px; background: #111; border: 1px solid #333; 
-            color: #fff; border-radius: 8px; margin-bottom: 10px; font-family: var(--font-tech); text-align: center;
+        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
+        .menu-btn {
+            background: rgba(0, 20, 40, 0.7); border: 1px solid var(--neon-blue);
+            padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px;
+            backdrop-filter: blur(5px); transition: 0.2s; cursor: pointer;
         }
-        input:focus { border-color: var(--neon-blue); outline: none; }
+        .menu-btn:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.2); }
+        .menu-ico { font-size: 20px; width: 40px; height: 40px; background: rgba(0,0,0,0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.2); }
+        .menu-txt h3 { margin: 0; font-family: var(--font-tech); font-size: 14px; color: #fff; }
+        .menu-txt p { margin: 2px 0 0; font-size: 10px; color: #aaa; }
+
+        .mitra-wrap { margin-top: 15px; width: 100%; max-width: 400px; }
+        .mitra-head { font-size: 10px; color: var(--neon-blue); font-family: var(--font-tech); border-bottom: 1px solid rgba(0,243,255,0.3); margin-bottom: 10px; padding-bottom: 5px; }
+        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .m-btn { background: rgba(255,255,255,0.05); border: 1px solid #555; padding: 10px; border-radius: 10px; text-align: center; text-decoration: none; color: #fff; }
         
-        .btn-action {
-            width: 100%; padding: 12px; background: linear-gradient(90deg, #00c6ff, #0072ff);
-            border: none; border-radius: 8px; color: #fff; font-family: var(--font-tech); font-weight: bold;
-            margin-top: 10px; cursor: pointer;
+        .footer-btn { margin-top: auto; padding: 12px; width: 100%; max-width: 400px; border: 1px solid #fff; border-radius: 30px; text-align: center; font-size: 12px; backdrop-filter: blur(5px); margin-bottom: 10px;}
+
+        /* ========================================= */
+        /* [SEKAT 2] CSS PETA (PREMIUM POPUP)        */
+        /* ========================================= */
+        #map { width: 100%; height: 100%; z-index: 1; }
+        .map-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, #000 80%, transparent); padding: 20px; z-index: 999; pointer-events: none; }
+        .map-card { pointer-events: auto; background: rgba(5,10,20,0.9); border: 1px solid var(--neon-blue); padding: 15px; border-radius: 15px; margin-bottom: 10px; }
+        
+        /* Marker Blinking Logic */
+        .blink-marker { animation: markerPulse 1s infinite alternate; filter: drop-shadow(0 0 10px var(--neon-blue)); }
+        @keyframes markerPulse { from { transform: scale(1); opacity: 1; } to { transform: scale(1.3); opacity: 0.8; } }
+
+        /* Premium Popup Style */
+        .leaflet-popup-content-wrapper { background: rgba(5, 10, 20, 0.95); color: #fff; border: 1px solid var(--neon-blue); border-radius: 10px; box-shadow: 0 0 20px rgba(0, 243, 255, 0.3); }
+        .leaflet-popup-tip { background: var(--neon-blue); }
+        .leaflet-popup-content b { color: var(--neon-blue); font-family: var(--font-tech); font-size: 14px; text-transform: uppercase; }
+        .nav-btn { display: inline-block; background: var(--neon-blue); color: #000; padding: 5px 10px; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 10px; margin-top: 5px; }
+
+        /* ========================================= */
+        /* [SEKAT 3] CSS ANTRIAN (GLASS DESIGN)      */
+        /* ========================================= */
+        /* Mengembalikan desain ke Gambar 6 */
+        .antrian-container { padding: 20px; max-width: 450px; margin: 50px auto 0; }
+        
+        /* Glass Card Input */
+        .glass-form {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-        .slot-card { 
-            background: rgba(255,255,255,0.05); border: 1px solid #333; border-radius: 10px; 
-            padding: 10px; text-align: center; height: 180px; display: flex; flex-direction: column; justify-content: center;
+        .inp-label { font-family: var(--font-tech); font-size: 10px; color: var(--neon-blue); margin-bottom: 5px; letter-spacing: 1px; }
+        .inp-field {
+            width: 100%; padding: 12px; background: rgba(0,0,0,0.6);
+            border: 1px solid #333; border-radius: 8px;
+            color: #fff; text-align: center; font-family: var(--font-tech); font-size: 14px;
+            margin-bottom: 15px; outline: none; transition: 0.3s;
         }
-        .slot-card.active { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.1); }
-        .bat-icon { width: 30px; height: 50px; border: 2px solid #fff; margin: 10px auto; position: relative; border-radius: 4px; }
-        .bat-fill { background: var(--neon-blue); position: absolute; bottom: 0; left: 0; right: 0; transition: height 0.5s; }
+        .inp-field:focus { border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        
+        .btn-submit {
+            width: 100%; padding: 14px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border: none; border-radius: 8px;
+            color: #fff; font-family: var(--font-tech); font-weight: 900; letter-spacing: 1px;
+            cursor: pointer; box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
+        }
 
-        /* NEWS LIST */
-        .news-item { background: rgba(255,255,255,0.05); border: 1px solid #333; margin-bottom: 10px; border-radius: 10px; overflow: hidden; display: flex; }
-        .news-thumb { width: 100px; height: 100px; object-fit: cover; }
-        .news-content { padding: 10px; }
+        /* Slots Grid - Vertical Style like Image 6 */
+        .slots-area { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 25px; }
+        .slot-box {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; height: 160px;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            padding: 10px; position: relative;
+        }
+        .slot-box.active { border-color: var(--neon-blue); background: rgba(0, 243, 255, 0.05); }
+        
+        .slot-name { font-family: var(--font-body); font-size: 10px; color: #aaa; margin-bottom: 5px; border-top: 1px solid #555; width: 100%; text-align: center; padding-top: 5px; }
+        .slot-status { font-family: var(--font-tech); font-size: 16px; color: #555; font-weight: bold; margin-bottom: 20px; }
+        .slot-box.active .slot-status { color: #fff; text-shadow: 0 0 10px var(--neon-blue); }
+
+        .list-tunggu { margin-top: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; border: 1px solid #333; }
+        .list-item { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 8px 0; font-size: 12px; }
+
+        /* ========================================= */
+        /* [SEKAT 4] CSS ARTIKEL (SLIDER)            */
+        /* ========================================= */
+        .news-wrap { padding: 60px 20px 20px; }
+        .news-card { background: rgba(20, 20, 25, 0.9); border-radius: 15px; overflow: hidden; margin-bottom: 25px; border: 1px solid #333; }
+        
+        .news-slider { width: 100%; height: 200px; position: relative; overflow: hidden; background: #000; }
+        .slide-img { width: 100%; height: 100%; object-fit: cover; display: none; animation: fadeImg 1s; }
+        .slide-img.active { display: block; }
+        @keyframes fadeImg { from{opacity:0.5} to{opacity:1} }
+
+        .news-body { padding: 15px; }
+        .news-title { font-family: var(--font-tech); font-size: 16px; color: var(--neon-blue); margin: 0 0 5px 0; }
+        .news-date { font-size: 10px; color: #777; margin-bottom: 10px; display: block; }
+        .news-content { font-size: 12px; color: #ccc; line-height: 1.5; }
+
+        /* SOS CSS */
+        .sos-wrap { padding: 60px 20px; display: flex; flex-direction: column; gap: 15px; }
+        .sos-btn { padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 20px; text-decoration: none; color: #fff; background: rgba(20,20,20,0.9); border: 1px solid #333; }
+        .sos-btn.red { border-left: 5px solid #ff003c; }
+        .sos-btn.blue { border-left: 5px solid #00f3ff; }
 
     </style>
 </head>
 <body>
 
     <div id="view-home" class="view-section active">
-        <div class="home-container">
-            
-            <div class="app-title">MLU APPS</div>
-            <div class="app-subtitle">MAKA LINTAS UTARA SQUAD</div>
+        <div class="home-wrap">
+            <div class="home-logo">⚡</div>
+            <div class="home-title">MLU APPS</div>
+            <div class="home-sub">MAKA LINTAS UTARA SQUAD</div>
 
-            <div class="main-menu">
-                <div class="menu-card loc" onclick="navTo('view-lokasi')">
-                    <div class="card-icon-box">📍</div>
-                    <div class="card-text">
-                        <h2>LOKASI FC</h2>
-                        <p>Cari charging station</p>
-                    </div>
+            <div class="menu-grid">
+                <div class="menu-btn" onclick="navTo('view-lokasi')">
+                    <div class="menu-ico" style="border-color:#2979ff; color:#2979ff;">📍</div>
+                    <div class="menu-txt"><h3>LOKASI FC</h3><p>Cari charging station</p></div>
                 </div>
-
-                <div class="menu-card sos" onclick="navTo('view-sos')">
-                    <div class="card-icon-box">🆘</div>
-                    <div class="card-text">
-                        <h2>MAKA SOS</h2>
-                        <p>Layanan Darurat</p>
-                    </div>
+                <div class="menu-btn" onclick="navTo('view-sos')">
+                    <div class="menu-ico" style="border-color:#ff003c; color:#ff003c;">🆘</div>
+                    <div class="menu-txt"><h3>MAKA SOS</h3><p>Layanan Darurat</p></div>
                 </div>
-
-                <div class="menu-card antrian" onclick="navTo('view-antrian')">
-                    <div class="card-icon-box">⚡</div>
-                    <div class="card-text">
-                        <h2>ANTRIAN</h2>
-                        <p>Daftar & Pantau</p>
-                    </div>
+                <div class="menu-btn" onclick="navTo('view-antrian')">
+                    <div class="menu-ico" style="border-color:var(--neon-blue); color:var(--neon-blue);">⚡</div>
+                    <div class="menu-txt"><h3>ANTRIAN</h3><p>Daftar & Pantau</p></div>
                 </div>
             </div>
 
-            <div class="mitra-section">
-                <div class="section-header">MITRA CHARGING</div>
-                <div class="mitra-grid">
-                    <a href="https://casan.id" target="_blank" class="mitra-btn">
-                        <div class="mitra-icon">🔌</div>
-                        <div class="mitra-label">CASAN.ID</div>
-                    </a>
-                    <a href="https://play.google.com/store/apps/details?id=com.moizasia.starvo_mobile" target="_blank" class="mitra-btn">
-                        <div class="mitra-icon">📱</div>
-                        <div class="mitra-label">STARVO</div>
-                    </a>
+            <div class="mitra-wrap">
+                <div class="mitra-head">MITRA CHARGING</div>
+                <div class="mitra-box">
+                    <a href="https://casan.id" class="m-btn">🔌 CASAN.ID</a>
+                    <a href="#" class="m-btn">📱 STARVO</a>
                 </div>
             </div>
 
-            <a href="#" onclick="navTo('view-artikel')" class="btn-info">
-                📰 INFO & EVENT MLU
-            </a>
-
+            <div class="footer-btn" onclick="navTo('view-artikel')">📰 INFO & EVENT MLU</div>
         </div>
     </div>
 
     <div id="view-lokasi" class="view-section">
-        <div id="map-container">
-            <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
-            <div id="map"></div>
-            
-            <div class="map-overlay">
-                <div style="width:50px; height:4px; background:var(--neon-blue); margin:0 auto 15px; border-radius:2px;"></div>
-                <h2 style="font-family:var(--font-tech); margin:0; color:#fff;">LOKASI TERDEKAT</h2>
-                <div id="gps-status" class="gps-stat">Mencari satelit...</div>
-                <div id="loc-list" style="margin-top:10px; max-height:30vh; overflow-y:auto; font-size:12px; color:#ccc;">
-                    Memuat data charging station...
-                </div>
+        <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
+        <div id="map"></div>
+        <div class="map-overlay">
+            <div class="map-card">
+                <h3 style="margin:0 0 5px 0; font-family:var(--font-tech); color:var(--neon-blue)">LOKASI TERDEKAT</h3>
+                <div id="nearest-status" style="font-size:12px; color:#ccc;">Mencari GPS...</div>
             </div>
         </div>
     </div>
 
     <div id="view-antrian" class="view-section">
-        <div class="header">
-            <div class="btn-back-float" style="position:static;" onclick="navTo('view-home')">⬅</div>
-            <h3 style="font-family:var(--font-tech); margin:0; color:#fff;">SMART CHARGING</h3>
-        </div>
-        <div class="container">
-            <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:15px; border:1px solid #333;">
-                <label style="font-family:var(--font-tech); font-size:10px; color:var(--neon-blue);">PLAT NOMOR</label>
-                <input id="uPlat" placeholder="B 1234 XYZ">
-                <label style="font-family:var(--font-tech); font-size:10px; color:var(--neon-blue);">WHATSAPP</label>
-                <input id="uWa" type="number" placeholder="08xxx">
-                <label style="font-family:var(--font-tech); font-size:10px; color:var(--neon-blue);">BATERAI %</label>
-                <input id="uBat" type="number" placeholder="0-99">
-                <button class="btn-action" id="btnDaftar">DAFTAR ANTRIAN</button>
+        <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
+        
+        <div class="antrian-container">
+            <h2 style="text-align:center; font-family:var(--font-tech); color:var(--neon-blue); margin-bottom:20px;">SMART CHARGING</h2>
+            
+            <div class="glass-form">
+                <div class="inp-label">PLAT NOMOR</div>
+                <input id="uPlat" class="inp-field" placeholder="CONTOH: B 1234 XYZ">
+                
+                <div class="inp-label">WHATSAPP</div>
+                <input id="uWa" type="number" class="inp-field" placeholder="08xxx">
+                
+                <div class="inp-label">BATERAI %</div>
+                <input id="uBat" type="number" class="inp-field" placeholder="0 - 99">
+                
+                <button class="btn-submit" id="btnDaftar">DAFTAR ANTRIAN</button>
+            </div>
+
+            <div class="slots-area" id="slots-container">
+                <div class="slot-box">
+                    <div class="slot-status">...</div>
+                    <div class="slot-name">Slot 3</div>
+                </div>
+                <div class="slot-box">
+                    <div class="slot-status">...</div>
+                    <div class="slot-name">Slot 2</div>
+                </div>
+                <div class="slot-box">
+                    <div class="slot-status">...</div>
+                    <div class="slot-name">Slot 1</div>
+                </div>
+            </div>
+
+            <div class="list-tunggu">
+                <div style="font-family:var(--font-tech); font-size:12px; margin-bottom:10px; color:#aaa;">DAFTAR TUNGGU</div>
+                <div id="queue-list-container">
+                    <div style="text-align:center; font-size:10px;">Kosong</div>
+                </div>
             </div>
             
-            <div class="slot-grid" id="slots-container">
-                <div style="grid-column:1/-1; text-align:center; padding:20px;">Memuat data...</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-sos" class="view-section">
-        <div class="header">
-            <div class="btn-back-float" style="position:static;" onclick="navTo('view-home')">⬅</div>
-            <h3 style="font-family:var(--font-tech); margin:0; color:var(--neon-red);">EMERGENCY</h3>
-        </div>
-        <div class="container" style="display:flex; flex-direction:column; gap:20px;">
-            <a href="https://wa.me/6287722285445" style="text-decoration:none; background:#111; border-left:4px solid yellow; padding:20px; border-radius:10px; color:#fff; display:flex; gap:15px; align-items:center;">
-                <div style="font-size:30px;">🚑</div>
-                <div><h3 style="margin:0; font-family:var(--font-tech);">MAKA HELP</h3><p style="margin:0; font-size:12px; color:#aaa;">Towing / Mogok</p></div>
-            </a>
-            <a href="https://wa.me/628123456789" style="text-decoration:none; background:#111; border-left:4px solid var(--neon-red); padding:20px; border-radius:10px; color:#fff; display:flex; gap:15px; align-items:center;">
-                <div style="font-size:30px;">🚨</div>
-                <div><h3 style="margin:0; font-family:var(--font-tech); color:var(--neon-red);">URC EMERGENCY</h3><p style="margin:0; font-size:12px; color:#aaa;">Kecelakaan (Fast Response)</p></div>
-            </a>
+            <div style="text-align:center; margin-top:20px; font-size:10px; opacity:0.5; cursor:pointer;" onclick="alert('Fitur Admin belum aktif di demo ini')">🔒 ADMIN LOGIN</div>
         </div>
     </div>
 
     <div id="view-artikel" class="view-section">
-        <div class="header">
-            <div class="btn-back-float" style="position:static;" onclick="navTo('view-home')">⬅</div>
-            <h3 style="font-family:var(--font-tech); margin:0; color:#fff;">INFO MLU</h3>
+        <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
+        <div class="news-wrap" id="news-container">
+            <div style="text-align:center">Memuat Berita...</div>
         </div>
-        <div class="container" id="news-container">
-            <div style="text-align:center;">Memuat berita...</div>
+    </div>
+
+    <div id="view-sos" class="view-section">
+        <div class="btn-back-float" onclick="navTo('view-home')">⬅</div>
+        <div class="sos-wrap">
+            <h2 style="font-family:var(--font-tech); margin-left:10px;">EMERGENCY</h2>
+            <a href="https://wa.me/6287722285445" class="sos-btn blue">
+                <div style="font-size:30px">🚑</div>
+                <div><h3 style="margin:0">MAKA HELP</h3><p style="margin:0; font-size:12px; color:#aaa">Layanan Towing</p></div>
+            </a>
+            <a href="https://wa.me/628123456789" class="sos-btn red">
+                <div style="font-size:30px">🚨</div>
+                <div><h3 style="margin:0">URC EMERGENCY</h3><p style="margin:0; font-size:12px; color:#aaa">Layanan Medis</p></div>
+            </a>
         </div>
     </div>
 
     <script>
-        // === NAVIGASI ===
+        // 1. NAVIGASI SYSTEM
         function navTo(id) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
-            // Fix Map Render Issue (Penting!)
-            if(id === 'view-lokasi') {
-                setTimeout(() => {
-                    if(map) map.invalidateSize();
-                    initMap(); 
-                }, 300);
-            }
-            if(id === 'view-artikel') loadNews();
+            if(id === 'view-lokasi') setTimeout(initMap, 300);
             if(id === 'view-antrian') initAntrian();
+            if(id === 'view-artikel') loadNews();
         }
 
-        // === MAP LOGIC ===
+        // 2. LOGIKA PETA (BLINKING MARKER)
         let map;
-        const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA"; // Token Jawg
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
-        let userMarker, markers = [];
-
+        const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA"; 
+        
         function initMap() {
-            if(map) {
-                locateUser(); // Jika map sudah ada, cukup cari lokasi user lagi
-                return;
-            }
-
-            // Inisialisasi Peta
-            map = L.map('map', {zoomControl: false}).setView([-6.200000, 106.816666], 11);
+            if(map) { map.invalidateSize(); locateUser(); return; }
             
-            // Tile Layer (Dark Mode)
-            L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {
-                attribution: '', maxZoom: 18
-            }).addTo(map);
-
-            // Icon Custom
-            const fcIcon = L.divIcon({ className: 'custom-pin', html: '⚡', iconSize: [30, 30], iconAnchor: [15, 15] });
-
-            // Load Data CSV
-            fetch(SHEET_URL).then(res => res.text()).then(text => {
-                const rows = text.split('\n').slice(1);
-                const listEl = document.getElementById('loc-list');
-                listEl.innerHTML = "";
-                
-                rows.forEach(row => {
-                    const cols = row.split(',');
-                    if(cols.length >= 6) {
-                        const lat = parseFloat(cols[4]);
-                        const lng = parseFloat(cols[5]);
-                        const name = cols[0].replace(/"/g,'');
-                        
-                        if(!isNaN(lat)) {
-                            L.marker([lat, lng], {icon: fcIcon}).addTo(map)
-                                .bindPopup(`<b style="color:#000">${name}</b><br><a href="${cols[6]}">Navigasi</a>`);
-                            
-                            // Tambah ke list bawah
-                            listEl.innerHTML += `<div style="padding:10px; border-bottom:1px solid #333; cursor:pointer;" onclick="map.flyTo([${lat},${lng}], 15)"><b>${name}</b><br><span style="color:var(--neon-blue)">${cols[2]}</span></div>`;
-                        }
-                    }
-                });
-            }).catch(err => {
-                document.getElementById('loc-list').innerHTML = "Gagal memuat data lokasi. Cek koneksi.";
-            });
-
+            map = L.map('map', {zoomControl: false}).setView([-6.2, 106.8], 11);
+            L.tileLayer(`https://tile.jawg.io/jawg-matrix/{z}/{x}/{y}{r}.png?access-token=${MAP_TOKEN}`, {maxZoom:18}).addTo(map);
+            
             locateUser();
         }
 
         function locateUser() {
-            const status = document.getElementById('gps-status');
-            if(!navigator.geolocation) {
-                status.innerText = "GPS Tidak Didukung";
-                return;
-            }
-            
+            if(!navigator.geolocation) return;
             navigator.geolocation.getCurrentPosition(pos => {
-                const lat = pos.coords.latitude;
-                const lng = pos.coords.longitude;
-                status.innerText = "Lokasi User Ditemukan ✅";
+                const uLat = pos.coords.latitude;
+                const uLng = pos.coords.longitude;
                 
-                if(userMarker) map.removeLayer(userMarker);
+                // Marker User
+                L.circleMarker([uLat, uLng], {radius: 8, color: '#fff', fillColor: '#2979ff', fillOpacity: 1}).addTo(map);
+                map.setView([uLat, uLng], 13);
                 
-                // Marker User (Lingkaran Biru)
-                userMarker = L.circleMarker([lat, lng], {
-                    radius: 8, fillColor: '#2979ff', color: '#fff', weight: 2, opacity: 1, fillOpacity: 1
-                }).addTo(map);
-
-                map.setView([lat, lng], 13);
-            }, err => {
-                status.innerText = "Gagal Deteksi GPS ❌";
-            }, { enableHighAccuracy: true });
+                loadStations(uLat, uLng); // Cari station terdekat setelah dapat lokasi user
+            });
         }
 
-        // === ANTRIAN LOGIC (FIREBASE) ===
-        // Config Firebase (Sama seperti sebelumnya)
+        function loadStations(uLat, uLng) {
+            const url = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
+            fetch(url).then(r=>r.text()).then(t => {
+                const rows = t.split('\n').slice(1);
+                let nearestDist = Infinity;
+                let nearestMarker = null;
+                let nearestName = "";
+
+                rows.forEach(r => {
+                    const c = r.split(',');
+                    if(c.length > 5) {
+                        const lat = parseFloat(c[4]);
+                        const lng = parseFloat(c[5]);
+                        if(!isNaN(lat)) {
+                            // Hitung jarak
+                            const dist = Math.sqrt(Math.pow(lat-uLat, 2) + Math.pow(lng-uLng, 2));
+                            
+                            // Custom Icon Default
+                            let iconClass = 'custom-pin';
+                            if(dist < nearestDist) {
+                                nearestDist = dist;
+                                nearestName = c[0].replace(/"/g,'');
+                            }
+
+                            // Render Marker
+                            const m = L.marker([lat, lng], {
+                                icon: L.divIcon({
+                                    className: 'custom-pin', 
+                                    html: '<div style="font-size:30px;">⚡</div>',
+                                    iconSize: [30,30]
+                                })
+                            }).addTo(map);
+                            
+                            // Premium Popup
+                            m.bindPopup(`<b>${c[0].replace(/"/g,'')}</b><br><div style="font-size:10px; margin-bottom:5px;">${c[2]}</div><a href="${c[6]}" class="nav-btn">NAVIGASI GO</a>`);
+
+                            // Simpan referensi marker terdekat untuk dikasih efek BLINK
+                            if(dist === nearestDist) nearestMarker = m;
+                        }
+                    }
+                });
+
+                // Terapkan efek BLINK pada marker terdekat
+                if(nearestMarker) {
+                    const el = nearestMarker.getElement();
+                    if(el) el.classList.add('blink-marker');
+                    document.getElementById('nearest-status').innerHTML = `Terdekat: <span style="color:var(--neon-blue); font-weight:bold;">${nearestName}</span> (Blinking)`;
+                }
+            });
+        }
+
+        // 3. LOGIKA ANTRIAN (FIREBASE & DISPLAY)
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         let db;
 
         function initAntrian() {
-            if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
+            if(!firebase.apps.length) { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); }
             
             db.collection("antrian").doc("utama").onSnapshot(snap => {
-                const d = snap.data() || {chargingSlots:[null,null,null]};
-                const s = d.chargingSlots;
+                const d = snap.data() || {chargingSlots:[null,null,null], waitingQueue:[]};
+                const slots = d.chargingSlots;
                 
-                document.getElementById('slots-container').innerHTML = s.map((x,i) => {
-                    const label = ["Slot 3", "Slot 2", "Slot 1"][i];
-                    if(!x) return `<div class="slot-card"><div style="font-family:var(--font-tech); font-size:10px; border-bottom:1px solid #555; margin-bottom:10px;">${label}</div><div style="font-size:24px; color:#555;">KOSONG</div></div>`;
-                    
-                    const isRun = !!x.startTime;
-                    return `
-                    <div class="slot-card ${isRun?'active':''}">
-                        <div style="font-family:var(--font-tech); font-size:10px; color:${isRun?'var(--neon-blue)':'#fff'}">${label}</div>
-                        <div class="bat-icon"><div class="bat-fill" style="height:${isRun?100:x.startBattery}%"></div></div>
-                        <div style="font-weight:bold; font-size:14px;">${x.name}</div>
-                        <div style="font-size:10px; color:var(--neon-blue);">${isRun ? 'SEDANG CAS...' : 'MENUNGGU'}</div>
+                // Render Slots (Urutan 3, 2, 1 dari Kiri ke Kanan)
+                const slotContainer = document.getElementById('slots-container');
+                slotContainer.innerHTML = "";
+                
+                // Kita loop manual agar urutannya Slot 3, Slot 2, Slot 1
+                const mapIdx = [0, 1, 2]; // Slot index di DB [0=slot3, 1=slot2, 2=slot1] sesuaikan mapping DB anda
+                // Asumsi di DB index 0 = Slot 3 (Kiri), index 1 = Slot 2, index 2 = Slot 1
+                
+                // Render 3 Slot
+                const labels = ["Slot 3", "Slot 2", "Slot 1"];
+                slots.forEach((s, i) => {
+                    const isFilled = s && s.name;
+                    const html = `
+                    <div class="slot-box ${isFilled ? 'active' : ''}">
+                        <div class="slot-status">
+                             ${isFilled ? `<div style="font-size:12px; color:#fff">${s.name}</div><div style="font-size:20px; color:var(--neon-blue); margin-top:5px;">${s.startBattery}%</div>` : 'KOSONG'}
+                        </div>
+                        <div class="slot-name">${labels[i]}</div>
                     </div>`;
-                }).join('');
+                    slotContainer.innerHTML += html;
+                });
+
+                // Render Queue List
+                const qList = document.getElementById('queue-list-container');
+                if(d.waitingQueue && d.waitingQueue.length > 0) {
+                    qList.innerHTML = d.waitingQueue.map(q => `
+                        <div class="list-item">
+                            <span style="font-weight:bold; color:#fff">${q.name}</span>
+                            <span style="color:var(--neon-blue)">${q.startBattery}%</span>
+                        </div>
+                    `).join('');
+                } else {
+                    qList.innerHTML = '<div style="text-align:center; font-size:10px;">Tidak ada antrian</div>';
+                }
             });
-            
-            // Logic Daftar (Simplified)
-            document.getElementById('btnDaftar').onclick = () => {
-                const p = document.getElementById('uPlat').value;
-                if(!p) return alert("Isi Plat Nomor");
-                alert("Simulasi: Masuk Antrian " + p);
-                // Di real app, masukkan ke Firestore transaction disini
-            };
         }
 
-        // === BERITA LOGIC ===
+        // 4. LOGIKA ARTIKEL (AUTO SLIDER)
         function loadNews() {
             const url = "https://docs.google.com/spreadsheets/d/1qh_aKEQQvN0B1E6ONO0LGIpuQ6phzc-ALc4SduClMyY/export?format=csv";
             fetch(url).then(r=>r.text()).then(t => {
                 const rows = t.split('\n').slice(1);
-                const c = document.getElementById('news-container');
-                c.innerHTML = "";
-                rows.forEach(r => {
-                    const col = r.split(',');
-                    if(col.length>3) {
-                         let img = col[3].includes('http') ? col[3] : '1763947427555.jpg';
-                         c.innerHTML += `<div class="news-item"><img src="${img.replace(/"/g,'')}" class="news-thumb"><div class="news-content"><h4 style="margin:0;">${col[0].replace(/"/g,'')}</h4><p style="font-size:10px; color:#aaa;">${col[1].replace(/"/g,'')}</p></div></div>`;
+                const container = document.getElementById('news-container');
+                container.innerHTML = "";
+
+                rows.forEach((r, idx) => {
+                    const c = r.split(',');
+                    if(c.length > 3) {
+                        // Slider Logic
+                        // Asumsi kolom 3 berisi link gambar dipisah koma jika banyak
+                        // Untuk demo ini saya pakai 1 gambar saja, tapi dibungkus struktur slider
+                        let img = c[3].replace(/"/g,'').trim();
+                        if(!img.includes('http')) img = '1763947427555.jpg';
+
+                        container.innerHTML += `
+                        <div class="news-card">
+                            <div class="news-body">
+                                <h3 class="news-title">${c[0].replace(/"/g,'')}</h3>
+                                <span class="news-date">${c[1].replace(/"/g,'')}</span>
+                            </div>
+                            <div class="news-slider" id="slider-${idx}">
+                                <img src="${img}" class="slide-img active">
+                                </div>
+                            <div class="news-body">
+                                <p class="news-content">${c[2].replace(/"/g,'')}</p>
+                            </div>
+                        </div>`;
                     }
                 });
             });
         }
+
+        // Init Antrian Listener on Load (Background)
+        document.addEventListener("DOMContentLoaded", () => {
+             // Optional: Preload logic
+        });
+
     </script>
 </body>
 </html>
