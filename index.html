@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP - FINAL SYSTEM</title>
+    <title>MLU SUPER APP - PREMIUM CHARGING</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -18,6 +18,7 @@
         /* ========================================= */
         :root {
             --neon-blue: #00f3ff;
+            --neon-dark: #0072ff;
             --neon-red: #ff003c;
             --bg-dark: #000000;
             --font-head: 'Orbitron', sans-serif;
@@ -34,7 +35,7 @@
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
         
         /* FORCE FONT */
-        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label, .drawer-title, .modal-title { font-family: var(--font-head) !important; letter-spacing: 1px; }
+        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label, .drawer-title, .modal-title, .batt-percent { font-family: var(--font-head) !important; letter-spacing: 1px; }
         p, span, input, .news-content, .home-sub { font-family: var(--font-body) !important; }
 
         /* View Manager */
@@ -102,7 +103,7 @@
         .nav-btn { display: block; background: var(--neon-blue); color: #000; text-align: center; padding: 6px; border-radius: 5px; margin-top: 8px; text-decoration: none; font-weight: bold; font-family: var(--font-head); font-size: 11px; }
 
         /* ========================================= */
-        /* [SEKAT 3] ANTRIAN (REPLIKA GAMBAR 1)      */
+        /* [SEKAT 3] ANTRIAN (PREMIUM BATTERY ANIM)  */
         /* ========================================= */
         .antrian-container { padding: 20px; max-width: 480px; margin: 0 auto; padding-top: 60px; padding-bottom: 50px;}
         .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -113,45 +114,77 @@
         
         .slot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
         
-        /* DESIGN SLOT MIRIP GAMBAR 1 */
+        /* CARD SLOT (GLASS) */
         .slot-box { 
-            background: rgba(30, 40, 50, 0.6); 
+            background: rgba(30, 40, 50, 0.4); 
             border: 1px solid rgba(255,255,255,0.1); 
             border-radius: 15px; 
-            height: 160px; 
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between; 
-            padding: 15px 5px; 
-            position: relative;
+            height: 180px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            padding: 10px; position: relative;
             backdrop-filter: blur(5px);
+            transition: 0.3s;
         }
-        .slot-box.active { border: 1px solid var(--neon-blue); box-shadow: 0 0 15px rgba(0,243,255,0.2); }
+        .slot-box.active { border: 1px solid var(--neon-blue); background: rgba(0, 243, 255, 0.05); box-shadow: 0 0 20px rgba(0,243,255,0.1); }
 
-        /* Icon Baterai Besar */
-        .batt-main { 
-            width: 40px; height: 60px; 
-            border: 2px solid #fff; border-radius: 5px; 
-            position: relative; 
-            display: flex; align-items: flex-end; padding: 2px;
+        /* BATTERY ICON (PREMIUM) */
+        .batt-wrapper {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            width: 50px; height: 85px; 
+            border: 2px solid #fff; border-radius: 8px; 
+            padding: 3px; 
+            display: flex; align-items: flex-end;
         }
-        .batt-main::before { content: ''; position: absolute; top: -5px; left: 10px; width: 16px; height: 3px; background: #fff; }
-        .batt-fill { width: 100%; background: linear-gradient(to top, #00f3ff, #0072ff); border-radius: 2px; transition: height 0.5s; }
-        .batt-bolt { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #fff; z-index: 2; text-shadow: 0 0 5px #000; }
-
-        /* Progress Line Bawah */
-        .prog-line-bg { width: 80%; height: 4px; background: #333; border-radius: 2px; margin-top: 10px; overflow: hidden; }
-        .prog-line-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.5s; }
-
-        /* Status Text Dot */
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; margin-right: 5px; }
-        .status-text { font-size: 10px; color: #aaa; font-family: var(--font-head); display: flex; align-items: center; justify-content: center; margin-top: 5px; }
+        .batt-wrapper::before { 
+            content: ''; position: absolute; top: -6px; left: 12px; 
+            width: 20px; height: 4px; background: #fff; border-radius: 2px 2px 0 0; 
+        }
         
-        .slot-box.active .status-dot { background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
-        .slot-box.active .status-text { color: #fff; }
-
-        .btn-act-slot { 
-            margin-top: 5px; background: transparent; border: 1px solid var(--neon-blue); 
-            color: var(--neon-blue); font-size: 9px; padding: 2px 8px; border-radius: 4px; cursor: pointer; 
+        .batt-fill { 
+            width: 100%; background: linear-gradient(180deg, #00f3ff, #0072ff); 
+            border-radius: 4px; transition: height 0.5s ease-in-out; 
+            position: relative; overflow: hidden;
         }
+        
+        /* EFEK NGE-CAS (Liquid/Pulse) */
+        .slot-box.charging .batt-fill {
+            animation: glowPulse 1.5s infinite alternate;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+        @keyframes glowPulse {
+            0% { opacity: 0.8; filter: brightness(1); }
+            100% { opacity: 1; filter: brightness(1.3); }
+        }
+
+        .batt-bolt { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            font-size: 32px; color: #fff; z-index: 10; text-shadow: 0 0 10px #000;
+            display: none;
+        }
+        .slot-box.charging .batt-bolt { display: block; animation: boltFlash 1s infinite; }
+        @keyframes boltFlash { 0%,100% {opacity:1;} 50% {opacity:0.5;} }
+
+        /* PROGRESS LINE */
+        .prog-bar { 
+            width: 80%; height: 4px; background: #333; border-radius: 2px; 
+            margin-bottom: 35px; /* Jarak dari bawah */
+            position: relative; overflow: hidden;
+        }
+        .prog-fill { height: 100%; background: var(--neon-blue); width: 0%; transition: width 0.5s; }
+
+        /* TEKS STATUS DI BAWAH */
+        .status-area { position: absolute; bottom: 10px; width: 100%; text-align: center; }
+        .slot-label { font-size: 10px; color: #aaa; border-top: 1px solid #444; padding-top: 3px; }
+        .batt-percent { font-size: 16px; color: #fff; font-weight: bold; position: absolute; bottom: 60px; width: 100%; text-align: center; }
+
+        /* TOMBOL AKSI KECIL */
+        .btn-act { 
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            font-size: 10px; padding: 4px 10px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer;
+            z-index: 20;
+        }
+        .btn-go { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(0,243,255,0.4); }
+        .btn-stop { background: rgba(255,0,0,0.2); border: 1px solid red; color: red; }
 
         /* CUSTOM MODAL CSS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -409,7 +442,7 @@
                     listContainer.innerHTML += `<div class="loc-item ${isNearest?'nearest':''}" onclick="map.flyTo([${s.lat},${s.lng}], 16)"><div class="loc-info"><h4>${s.name} ${isNearest?'✅':''}</h4><p>${s.type}</p></div><div><div class="loc-dist">${km} KM</div><a href="${s.link}" target="_blank" class="btn-go-small">GO ➡</a></div></div>`;
                     
                     const m = L.marker([s.lat, s.lng], {
-                        icon: L.divIcon({ className: 'custom-pin-wrapper', html: `<div class="${isNearest?'blink-inner':''}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:${isNearest?40:24}px;color:#fff;${!isNearest?'opacity:0.7':''}">⚡</div>`, iconSize:[40,40], iconAnchor:[20,20] }),
+                        icon: L.divIcon({ className: 'custom-pin-wrapper', html: `<div class="${isNearest?'blink-inner' : ''}" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:${isNearest?40:24}px;color:#fff;${!isNearest?'opacity:0.7':''}">⚡</div>`, iconSize:[40,40], iconAnchor:[20,20] }),
                         zIndexOffset: isNearest ? 1000 : 0
                     }).addTo(map);
                     m.bindPopup(`<div class="popup-title">${s.name}</div><div style="font-size:10px;">${s.type}</div><a href="${s.link}" class="nav-btn">NAVIGASI GO</a>`);
@@ -424,13 +457,13 @@
         const FC_LAT = -6.171583; 
         const FC_LNG = 106.899884; 
 
-        // RUMUS TIMER BARU (REALISTIS)
+        // RUMUS TIMER BARU (REALISTIS KALIBRASI MESIN)
         function calcDuration(start, target) {
             let m = 0;
             for(let i=start; i<target; i++) {
-                if(i < 80) m += 1.0;        // Normal
-                else if(i < 90) m += 1.5;   // Mulai Lambat
-                else m += 2.5;              // Balancing (Sangat Lambat)
+                if(i < 80) m += 1.3;        // Fase Cepat
+                else if(i < 95) m += 1.8;   // Fase Lambat
+                else m += 2.0;              // Fase Balancing
             }
             return Math.ceil(m);
         }
@@ -500,38 +533,40 @@
                 const isRun = s && s.startTime;
                 
                 let content = `
-                    <div class="batt-main"><div class="batt-fill" style="height:0%"></div><div class="batt-bolt" style="color:#555">⚡</div></div>
-                    <div class="prog-line-bg"><div class="prog-line-fill" style="width:0%"></div></div>
-                    <div class="status-text"><span class="status-dot"></span>KOSONG</div>
+                    <div class="batt-wrapper"><div class="batt-fill" style="height:0%"></div><div class="batt-bolt">⚡</div></div>
+                    <div class="batt-percent" style="color:#555">0%</div>
+                    <div class="prog-bar"><div class="prog-fill" style="width:0%"></div></div>
+                    <div class="status-area">
+                        <div style="font-size:10px; color:#555;">KOSONG</div>
+                    </div>
                 `;
                 
                 if(hasData) {
-                    // Logic Display
-                    let percent = isRun ? 100 : s.startBattery; // Animasi penuh jika jalan
-                    let statusTxt = isRun ? "CHARGING" : "TERISI";
-                    let dotColor = isRun ? "var(--neon-blue)" : "yellow";
-                    let actionBtn = "";
-
+                    let actionBtn = isRun 
+                        ? `<button class="btn-act btn-stop" onclick="userStop(${i})">STOP</button>` 
+                        : `<button class="btn-act btn-go" onclick="userStart(${i})">START</button>`;
+                    
+                    let timerDisplay = "";
                     if(isRun) {
                         const durMs = calcDuration(s.startBattery, s.target) * 60 * 1000;
                         const startMs = s.startTime.toMillis ? s.startTime.toMillis() : new Date(s.startTime).getTime();
                         const endMs = startMs + durMs;
-                        actionBtn = `<div class="timer-text" data-end="${endMs}">...</div><button class="btn-act-slot" onclick="userStop(${i})" style="border-color:red; color:red;">STOP</button>`;
-                    } else {
-                        actionBtn = `<button class="btn-act-slot" onclick="userStart(${i})">MULAI</button>`;
+                        timerDisplay = `<div class="timer-text" data-end="${endMs}" style="font-size:12px; color:var(--neon-blue); margin-bottom:2px;">...</div>`;
                     }
 
                     content = `
-                        <div class="batt-main"><div class="batt-fill" style="height:${s.startBattery}%"></div><div class="batt-bolt">⚡</div></div>
-                        <div style="font-size:16px; font-weight:bold; margin-top:5px;">${s.startBattery}%</div>
-                        <div class="prog-line-bg"><div class="prog-line-fill" style="width:${s.startBattery}%"></div></div>
-                        <div class="status-text" style="color:#fff"><span class="status-dot" style="background:${dotColor}; box-shadow:0 0 5px ${dotColor}"></span>${statusTxt}</div>
+                        <div class="batt-wrapper"><div class="batt-fill" style="height:${s.startBattery}%"></div><div class="batt-bolt">⚡</div></div>
+                        <div class="batt-percent">${s.startBattery}%</div>
+                        <div class="prog-bar"><div class="prog-fill" style="width:${s.startBattery}%"></div></div>
+                        <div class="status-area">
+                            ${timerDisplay}
+                            <div style="font-size:10px; font-weight:bold; color:#fff;">${s.name}</div>
+                        </div>
                         ${actionBtn}
-                        <div style="font-size:10px; color:#aaa; margin-top:2px;">${s.name}</div>
                     `;
                 }
                 
-                container.innerHTML += `<div class="slot-box ${hasData?'active':''}">${content}<div style="position:absolute; top:5px; right:5px; font-size:9px; color:#555;">${labels[i]}</div></div>`;
+                container.innerHTML += `<div class="slot-box ${hasData?'active':''} ${isRun?'charging':''}">${content}<div style="position:absolute; top:5px; right:8px; font-size:9px; color:#aaa;">${labels[i]}</div></div>`;
             });
         }
 
