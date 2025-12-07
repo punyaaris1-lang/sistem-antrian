@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>MLU SUPER APP - FINAL FIX</title>
+    <title>MLU SUPER APP</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -14,14 +14,15 @@
 
     <style>
         /* ========================================= */
-        /* [GLOBAL] CSS UTAMA                        */
+        /* [GLOBAL] CSS UTAMA (FONT FIX)             */
         /* ========================================= */
         :root {
             --neon-blue: #00f3ff;
             --neon-red: #ff003c;
             --bg-dark: #000000;
-            --font-head: 'Orbitron', sans-serif;
-            --font-body: 'Rajdhani', sans-serif;
+            --glass: rgba(10, 20, 30, 0.9);
+            --font-head: 'Orbitron', sans-serif; /* FONT JUDUL */
+            --font-body: 'Rajdhani', sans-serif; /* FONT ISI */
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
@@ -32,9 +33,9 @@
         }
         body::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
         
-        /* FORCE FONT */
-        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label { font-family: var(--font-head) !important; letter-spacing: 1px; }
-        p, span, input, .news-content, .home-sub { font-family: var(--font-body) !important; }
+        /* FORCE FONT TO ALL ELEMENTS */
+        h1, h2, h3, h4, h5, button, .menu-txt h3, .slot-status, .inp-label, .home-title, .mitra-head { font-family: var(--font-head) !important; letter-spacing: 1px; }
+        p, span, input, .news-content, .home-sub, .menu-txt p { font-family: var(--font-body) !important; }
 
         /* View Manager */
         .view-section { display: none; height: 100%; width: 100%; overflow-y: auto; position: relative; animation: fadeIn 0.3s; }
@@ -50,69 +51,74 @@
         }
 
         /* ========================================= */
-        /* [SEKAT 1] HOME (LAYOUT PROPORSIONAL)      */
+        /* [SEKAT 1] HOME (LAYOUT FIXED PROPORSIONAL)*/
         /* ========================================= */
         .home-wrap { 
-            padding: 30px 20px; 
+            padding: 20px; 
             height: 100%; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: space-between; /* Agar jarak atas bawah seimbang */
+            justify-content: center; /* Konten di tengah vertikal */
+            gap: 20px; /* Jarak antar blok elemen */
         }
         
-        .home-header { text-align: center; margin-top: 20px; }
-        .home-title { font-size: 32px; color: var(--neon-blue); text-shadow: 0 0 20px var(--neon-blue); margin: 0; }
-        .home-sub { font-size: 12px; background: #0072ff; padding: 4px 12px; border-radius: 4px; font-weight: bold; letter-spacing: 2px; display: inline-block; margin-top: 5px; }
+        .home-header { text-align: center; margin-bottom: 10px; }
+        .home-title { font-size: 36px; color: var(--neon-blue); text-shadow: 0 0 20px var(--neon-blue); margin: 0; font-weight: 900; }
+        .home-sub { font-size: 12px; background: #0072ff; padding: 4px 15px; border-radius: 4px; font-weight: bold; letter-spacing: 3px; display: inline-block; margin-top: 5px; box-shadow: 0 0 15px rgba(0, 114, 255, 0.5); }
         
-        .menu-grid { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+        /* Menu Grid lebih rapat */
+        .menu-grid { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 15px; }
         
         .menu-btn {
             position: relative; overflow: hidden;
-            background: rgba(0, 15, 30, 0.8); 
+            background: rgba(0, 15, 30, 0.6); 
             border: 1px solid var(--neon-blue);
-            border-radius: 15px; padding: 12px 15px; /* Padding dikurangi dikit biar muat */
+            border-radius: 12px; padding: 15px; 
             display: flex; align-items: center; gap: 15px;
             cursor: pointer; transition: 0.2s;
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
         .menu-btn:active { transform: scale(0.98); background: rgba(0, 243, 255, 0.1); }
         
         /* Warna Khusus Tombol */
-        .btn-loc { border-color: #2979ff; }
+        .btn-loc { border-color: #2979ff; box-shadow: 0 0 10px rgba(41, 121, 255, 0.2); }
         .btn-loc .menu-ico { border-color: #2979ff; color: #2979ff; }
         
-        .btn-sos { border-color: var(--neon-red); }
-        .btn-sos .menu-ico { border-color: var(--neon-red); color: #fff; background: var(--neon-red); }
+        .btn-sos { border-color: var(--neon-red); box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
+        .btn-sos .menu-ico { border-color: var(--neon-red); color: #fff; background: var(--neon-red); box-shadow: 0 0 10px var(--neon-red); }
         
-        .btn-antrian { border-color: var(--neon-blue); }
+        .btn-antrian { border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
         .btn-antrian .menu-ico { border-color: var(--neon-blue); color: var(--neon-blue); }
 
         .menu-ico { 
-            width: 45px; height: 45px; border-radius: 12px; border: 1px solid #fff;
+            width: 45px; height: 45px; border-radius: 10px; border: 1px solid #fff;
             display: flex; align-items: center; justify-content: center; font-size: 22px;
-            background: rgba(0,0,0,0.3); flex-shrink: 0;
+            background: rgba(0,0,0,0.5); flex-shrink: 0;
         }
-        .menu-txt h3 { margin: 0; font-size: 15px; color: #fff; }
+        .menu-txt h3 { margin: 0; font-size: 16px; color: #fff; text-transform: uppercase; }
         .menu-txt p { margin: 2px 0 0; font-size: 11px; color: #aaa; }
 
-        .mitra-wrap { width: 100%; max-width: 400px; border-top: 1px solid #333; padding-top: 15px; }
-        .mitra-head { font-size: 12px; color: var(--neon-blue); margin-bottom: 10px; font-family: var(--font-head); letter-spacing: 1px; }
-        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .mitra-wrap { width: 100%; max-width: 380px; margin-top: 10px; }
+        .mitra-head { font-size: 12px; color: var(--neon-blue); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(0,243,255,0.3); display: inline-block; }
+        .mitra-box { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .m-btn { 
-            background: rgba(0,0,0,0.6); border: 1px solid #2979ff; padding: 10px; 
+            background: rgba(0,0,0,0.4); border: 1px solid #2979ff; padding: 12px; 
             border-radius: 12px; text-align: center; text-decoration: none; color: #fff;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: 0.2s;
         }
-        .m-icon { font-size: 20px; margin-bottom: 5px; }
-        .m-text { font-family: var(--font-head); font-size: 11px; text-decoration: underline; }
+        .m-btn:active { background: rgba(41, 121, 255, 0.2); }
+        .m-icon { font-size: 22px; margin-bottom: 5px; }
+        .m-text { font-family: var(--font-head); font-size: 11px; text-decoration: underline; letter-spacing: 1px; }
 
         .footer-info { 
             padding: 12px; border: 1px solid #fff; border-radius: 30px; 
-            width: 100%; max-width: 400px; text-align: center; 
-            font-family: var(--font-head); font-size: 12px; 
+            width: 100%; max-width: 380px; text-align: center; 
+            font-family: var(--font-head) !important; font-size: 12px; 
             cursor: pointer; background: rgba(0,0,0,0.5); 
-            margin-bottom: 20px; /* Jarak aman dari bawah layar */
+            margin-top: 10px; /* Jarak dari Mitra tidak terlalu jauh */
+            letter-spacing: 1px;
         }
 
         /* ========================================= */
@@ -125,11 +131,9 @@
             border-top: 2px solid var(--neon-blue); border-radius: 20px 20px 0 0;
         }
         
-        /* Marker Animation */
         .blink-marker { animation: pulseMarker 1s infinite alternate; z-index: 9999 !important; }
         @keyframes pulseMarker { from { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-blue)); } to { transform: scale(1.2); filter: drop-shadow(0 0 20px var(--neon-blue)); } }
 
-        /* Premium Popup */
         .leaflet-popup-content-wrapper { background: rgba(5, 10, 20, 0.95); border: 1px solid var(--neon-blue); color: #fff; border-radius: 10px; }
         .leaflet-popup-tip { background: var(--neon-blue); }
         .popup-title { font-family: var(--font-head); color: var(--neon-blue); font-size: 14px; margin-bottom: 5px; border-bottom: 1px solid #333; padding-bottom: 3px; }
@@ -181,22 +185,19 @@
         .btn-dark { background: #333; color: #fff; border: 1px solid #555; }
 
         /* ========================================= */
-        /* [SEKAT 4] ARTIKEL (SLIDER)                */
+        /* [SEKAT 4] ARTIKEL & SOS                   */
         /* ========================================= */
         .news-container { padding: 60px 20px; }
         .news-card { background: rgba(20,20,20,0.8); border: 1px solid #333; border-radius: 15px; overflow: hidden; margin-bottom: 25px; }
         .news-head { padding: 15px; border-bottom: 1px solid #333; }
         .news-title { font-size: 16px; color: var(--neon-blue); margin: 0; }
         .news-date { font-size: 10px; color: #777; }
-        
         .slider-box { width: 100%; height: 200px; background: #000; position: relative; overflow: hidden; }
         .slide-img { width: 100%; height: 100%; object-fit: cover; display: none; animation: fade 1s; }
         .slide-img.active { display: block; }
         @keyframes fade { from{opacity:0.5} to{opacity:1} }
-        
         .news-body { padding: 15px; font-size: 13px; color: #ccc; line-height: 1.5; }
 
-        /* SOS BUTTONS */
         .sos-container { padding: 80px 20px; display: flex; flex-direction: column; gap: 20px; }
         .sos-card { background: #111; padding: 25px; border-radius: 15px; display: flex; align-items: center; gap: 20px; text-decoration: none; color: #fff; border: 1px solid #333; }
     </style>
@@ -205,6 +206,7 @@
 
     <div id="view-home" class="view-section active">
         <div class="home-wrap">
+            
             <div class="home-header">
                 <h1 class="home-title">MLU APPS</h1>
                 <div class="home-sub">MAKA LINTAS UTARA SQUAD</div>
@@ -234,6 +236,7 @@
             </div>
 
             <div class="footer-info" onclick="navTo('view-artikel')">📰 INFO & EVENT MLU</div>
+
         </div>
     </div>
 
@@ -339,7 +342,6 @@
     </div>
 
     <script>
-        // --- 1. NAVIGASI ---
         function navTo(id) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -348,7 +350,6 @@
             if(id === 'view-artikel') loadNews();
         }
 
-        // --- 2. PETA (BLINKING LOGIC FIXED) ---
         let map;
         const MAP_TOKEN = "l1PdBwk1arfZcY7wECff2jE2Ts7qpJyMqGGqHK8cjCxcLb6m0FPHm1sExB5NvLyA";
         const SHEET_URL = "https://docs.google.com/spreadsheets/d/1EJOTMMfGpBMFPqR0LzbMbh7tZUcTCZld4x387OO9aJM/export?format=csv";
@@ -365,15 +366,9 @@
             navigator.geolocation.getCurrentPosition(pos => {
                 const uLat = pos.coords.latitude;
                 const uLng = pos.coords.longitude;
-                
-                // Marker User
                 if(window.userMarker) map.removeLayer(window.userMarker);
                 window.userMarker = L.circleMarker([uLat, uLng], {radius: 8, color: '#fff', fillColor: '#2979ff', fillOpacity: 1}).addTo(map);
-                
-                // Centering map to User first
                 map.setView([uLat, uLng], 14);
-                
-                // Load & Find Nearest
                 findNearestStation(uLat, uLng);
             });
         }
@@ -382,7 +377,6 @@
             fetch(SHEET_URL).then(r=>r.text()).then(t => {
                 const rows = t.split('\n').slice(1);
                 let stations = [];
-                
                 rows.forEach(r => {
                     const c = r.split(',');
                     if(c.length > 5) {
@@ -395,92 +389,57 @@
                     }
                 });
 
-                // Find Min Distance
                 stations.sort((a,b) => a.dist - b.dist);
                 const nearest = stations[0];
 
-                // Render Markers (FIXED: Show All, Blink Nearest, Correct Anchor)
                 stations.forEach(s => {
                     const isNearest = (s === nearest);
-                    
                     const m = L.marker([s.lat, s.lng], {
                         icon: L.divIcon({ 
                             className: isNearest ? 'blink-marker' : '', 
-                            // Center the content using Flexbox inside the icon container
                             html: `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:${isNearest ? 40 : 24}px; ${isNearest ? 'text-shadow:0 0 20px var(--neon-blue); color:#fff;' : 'opacity:0.7; color:#fff;'}">⚡</div>`, 
-                            iconSize: [40,40], 
-                            iconAnchor: [20,20] // Exact center of 40x40 box
+                            iconSize: [40,40], iconAnchor: [20,20]
                         }),
                         zIndexOffset: isNearest ? 1000 : 0
                     }).addTo(map);
-
-                    m.bindPopup(`
-                        <div class="popup-title">${s.name}</div>
-                        <div style="font-size:10px; margin-bottom:5px;">${s.type}</div>
-                        <a href="${s.link}" class="nav-btn">NAVIGASI GO</a>
-                    `);
-
+                    m.bindPopup(`<div class="popup-title">${s.name}</div><div style="font-size:10px;">${s.type}</div><a href="${s.link}" class="nav-btn">NAVIGASI GO</a>`);
                     if(isNearest) m.openPopup();
                 });
-
                 document.getElementById('loc-status').innerHTML = `Terdekat: <b style="color:#fff">${nearest.name}</b>`;
             });
         }
 
-        // --- 3. ANTRIAN & ADMIN (FIREBASE) ---
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         let db;
 
         function initAntrian() {
             if(!firebase.apps.length) { firebase.initializeApp(firebaseConfig); db = firebase.firestore(); }
-            
-            // Listener Utama
             db.collection("antrian").doc("utama").onSnapshot(snap => {
                 const d = snap.data() || {chargingSlots:[null,null,null], waitingQueue:[]};
                 renderSlots(d.chargingSlots);
                 renderQueue(d.waitingQueue);
             });
-
-            // Logic Daftar
             document.getElementById('btnDaftar').onclick = async () => {
                 const p = document.getElementById('uPlat').value.toUpperCase().trim();
                 const w = document.getElementById('uWa').value;
                 const b = document.getElementById('uBat').value;
-                
                 if(!p || !w || !b) return alert("Lengkapi Data!");
                 
-                // Cek Blokir
                 const doc = await db.collection("antrian").doc("utama").get();
                 const blocked = doc.data().blockedList || [];
                 if(blocked.includes(p)) return alert("PLAT INI DIBLOKIR!");
 
-                // Proses Masuk
                 const ref = db.collection("antrian").doc("utama");
                 db.runTransaction(async t => {
                     const current = (await t.get(ref)).data();
                     let s = current.chargingSlots;
                     let q = current.waitingQueue;
-                    
-                    // Cek Duplikat
                     if(s.some(x => x?.name === p) || q.some(x => x?.name === p)) throw "Sudah Terdaftar";
-
-                    // Masuk Slot Kosong atau Antrian
                     let filled = false;
-                    for(let i=0; i<3; i++) {
-                        if(s[i] === null) {
-                            s[i] = { name:p, phone:w, startBattery:b, startTime:null };
-                            filled = true;
-                            break;
-                        }
-                    }
-
+                    for(let i=0; i<3; i++) { if(s[i] === null) { s[i] = { name:p, phone:w, startBattery:b, startTime:null }; filled = true; break; } }
                     if(!filled) q.push({ name:p, phone:w, startBattery:b });
-
                     t.update(ref, { chargingSlots: s, waitingQueue: q });
-                }).then(() => {
-                    alert("Berhasil Daftar!");
-                    document.getElementById('uPlat').value = '';
-                }).catch(e => alert(e));
+                }).then(() => { alert("Berhasil Daftar!"); document.getElementById('uPlat').value = ''; }).catch(e => alert(e));
             };
         }
 
@@ -488,110 +447,38 @@
             const container = document.getElementById('slots-area');
             container.innerHTML = "";
             const labels = ["Slot 3", "Slot 2", "Slot 1"];
-            
             slots.forEach((s, i) => {
                 const isActive = s && s.name;
                 const isRun = s && s.startTime;
-                
                 let statusHTML = `<div style="color:#555; font-size:16px;">KOSONG</div>`;
                 if(isActive) {
-                    statusHTML = `
-                        <div style="font-size:14px; font-weight:bold; color:#fff">${s.name}</div>
-                        <div style="font-size:20px; color:${isRun ? 'var(--neon-blue)' : '#aaa'}">${s.startBattery}%</div>
-                        <div style="font-size:10px; color:${isRun ? 'var(--neon-blue)' : 'yellow'}">${isRun ? 'CHARGING...' : 'MENUNGGU'}</div>
-                    `;
+                    statusHTML = `<div style="font-size:14px; font-weight:bold; color:#fff">${s.name}</div><div style="font-size:20px; color:${isRun ? 'var(--neon-blue)' : '#aaa'}">${s.startBattery}%</div><div style="font-size:10px; color:${isRun ? 'var(--neon-blue)' : 'yellow'}">${isRun ? 'CHARGING...' : 'MENUNGGU'}</div>`;
                 }
-
-                container.innerHTML += `
-                    <div class="slot-box ${isActive ? 'active' : ''}">
-                        <div class="slot-content">${statusHTML}</div>
-                        <div class="slot-label">${labels[i]}</div>
-                    </div>
-                `;
+                container.innerHTML += `<div class="slot-box ${isActive ? 'active' : ''}"><div class="slot-content">${statusHTML}</div><div class="slot-label">${labels[i]}</div></div>`;
             });
         }
 
         function renderQueue(q) {
             const div = document.getElementById('queue-list');
             if(!q || q.length === 0) div.innerHTML = "Antrian Kosong";
-            else {
-                div.innerHTML = q.map((x,i) => `
-                    <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333;">
-                        <span>${i+1}. ${x.name}</span>
-                        <span style="color:var(--neon-blue)">${x.startBattery}%</span>
-                    </div>
-                `).join('');
-            }
+            else { div.innerHTML = q.map((x,i) => `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333;"><span>${i+1}. ${x.name}</span><span style="color:var(--neon-blue)">${x.startBattery}%</span></div>`).join(''); }
         }
 
-        // --- 4. ADMIN FUNCTIONS (LENGKAP) ---
-        function openAdminLogin() {
-            const p = prompt("Masukkan PIN Admin:");
-            if(p === "1131") document.getElementById('adminModal').style.display = "flex";
-            else alert("PIN Salah");
-        }
+        function openAdminLogin() { const p = prompt("PIN Admin:"); if(p === "1131") document.getElementById('adminModal').style.display = "flex"; else alert("PIN Salah"); }
+        async function runAdm(fn) { const ref = db.collection("antrian").doc("utama"); try { await db.runTransaction(async t => { const doc = (await t.get(ref)).data(); const newData = fn(doc); t.update(ref, newData); }); alert("Sukses"); } catch(e) { alert("Error: " + e); } }
+        function admClear(idx) { runAdm(d => { d.chargingSlots[idx] = null; return { chargingSlots: d.chargingSlots }; }); }
+        function admStart(idx) { runAdm(d => { if(d.chargingSlots[idx]) d.chargingSlots[idx].startTime = new Date(); return { chargingSlots: d.chargingSlots }; }); }
+        function admStartAll() { runAdm(d => { d.chargingSlots.forEach(s => { if(s) s.startTime = new Date(); }); return { chargingSlots: d.chargingSlots }; }); }
+        function admReset() { if(confirm("Hapus semua data?")) db.collection("antrian").doc("utama").set({ chargingSlots:[null,null,null], waitingQueue:[], blockedList:[] }); }
+        function admForceFill() { runAdm(d => { let s = d.chargingSlots; let q = d.waitingQueue; if(q.length === 0) throw "Antrian Kosong"; let emptyIdx = s.indexOf(null); if(emptyIdx === -1) throw "Slot Penuh!"; s[emptyIdx] = q.shift(); return { chargingSlots: s, waitingQueue: q }; }); }
+        function admBlock() { const p = document.getElementById('admBlockPlat').value.toUpperCase(); if(!p) return; runAdm(d => { let b = d.blockedList || []; if(!b.includes(p)) b.push(p); return { blockedList: b }; }); }
 
-        async function runAdm(fn) {
-            const ref = db.collection("antrian").doc("utama");
-            try {
-                await db.runTransaction(async t => {
-                    const doc = (await t.get(ref)).data();
-                    const newData = fn(doc);
-                    t.update(ref, newData);
-                });
-                alert("Sukses");
-            } catch(e) { alert("Error: " + e); }
-        }
-
-        function admClear(idx) {
-            runAdm(d => { d.chargingSlots[idx] = null; return { chargingSlots: d.chargingSlots }; });
-        }
-
-        function admStart(idx) {
-            runAdm(d => { if(d.chargingSlots[idx]) d.chargingSlots[idx].startTime = new Date(); return { chargingSlots: d.chargingSlots }; });
-        }
-
-        function admStartAll() {
-            runAdm(d => { d.chargingSlots.forEach(s => { if(s) s.startTime = new Date(); }); return { chargingSlots: d.chargingSlots }; });
-        }
-
-        function admReset() {
-            if(confirm("Yakin hapus semua data?")) {
-                db.collection("antrian").doc("utama").set({ chargingSlots:[null,null,null], waitingQueue:[], blockedList:[] });
-                alert("Data Direset");
-            }
-        }
-
-        function admForceFill() {
-            runAdm(d => {
-                let s = d.chargingSlots;
-                let q = d.waitingQueue;
-                if(q.length === 0) throw "Antrian Kosong";
-                let emptyIdx = s.indexOf(null);
-                if(emptyIdx === -1) throw "Slot Penuh!";
-                s[emptyIdx] = q.shift();
-                return { chargingSlots: s, waitingQueue: q };
-            });
-        }
-
-        function admBlock() {
-            const p = document.getElementById('admBlockPlat').value.toUpperCase();
-            if(!p) return;
-            runAdm(d => {
-                let b = d.blockedList || [];
-                if(!b.includes(p)) b.push(p);
-                return { blockedList: b };
-            });
-        }
-
-        // --- 5. ARTIKEL (SLIDER) ---
         function loadNews() {
             const url = "https://docs.google.com/spreadsheets/d/1qh_aKEQQvN0B1E6ONO0LGIpuQ6phzc-ALc4SduClMyY/export?format=csv";
             fetch(url).then(r=>r.text()).then(t => {
                 const rows = t.split('\n').slice(1);
                 const con = document.getElementById('news-content');
                 con.innerHTML = "";
-
                 rows.forEach((r, idx) => {
                     const c = r.split(',');
                     if(c.length > 3) {
@@ -600,18 +487,7 @@
                         const content = c[2].replace(/"/g,'');
                         let img = c[3].replace(/"/g,'').trim();
                         if(!img.includes('http')) img = '1763947427555.jpg';
-
-                        con.innerHTML += `
-                        <div class="news-card">
-                            <div class="news-head">
-                                <h3 class="news-title">${title}</h3>
-                                <span class="news-date">${date}</span>
-                            </div>
-                            <div class="slider-box" id="slider-${idx}">
-                                <img src="${img}" class="slide-img active">
-                            </div>
-                            <div class="news-body">${content}</div>
-                        </div>`;
+                        con.innerHTML += `<div class="news-card"><div class="news-head"><h3 class="news-title">${title}</h3><span class="news-date">${date}</span></div><div class="slider-box" id="slider-${idx}"><img src="${img}" class="slide-img active"></div><div class="news-body">${content}</div></div>`;
                     }
                 });
             });
