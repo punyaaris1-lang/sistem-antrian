@@ -1,27 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MAKA GIANT</title>
+    <title>MAKA MASTER COMMAND</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --c-main: #00F0FF; /* Cyan */
-            --c-sec: #FF003C;  /* Red/Pink */
-            --c-ok: #39FF14;   /* Green */
-            --bg: #050505;
+            --cyan: #00F0FF; --green: #39FF14; --red: #FF003C; --gold: #FFD700;
+            --bg: #050505; --panel: #0a0a0a;
         }
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            margin: 0; padding: 20px; background-color: var(--bg); color: var(--c-main);
-            font-family: 'Share Tech Mono', monospace; overflow-x: hidden; min-height: 100vh;
-            padding-bottom: 120px;
+            margin: 0; padding: 20px; background-color: var(--bg); color: #fff;
+            font-family: 'Share Tech Mono', monospace; min-height: 100vh; padding-bottom: 150px; /* Space for music player */
+            overflow-x: hidden;
         }
 
-        /* BACKGROUND TETAP */
+        /* BACKGROUND */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
@@ -31,408 +28,423 @@
         /* HEADER */
         .hud-header {
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--c-main); padding-bottom: 15px; margin-bottom: 20px;
-            height: 60px; /* Tinggi Kunci */
+            border-bottom: 2px solid var(--cyan); padding-bottom: 15px; margin-bottom: 20px;
+            height: 60px;
         }
-        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: #fff; text-shadow: 0 0 10px var(--c-main); }
-        .brand-text span { color: var(--c-ok); }
-        
-        /* TOMBOL ADMIN (GIGI RODA) */
-        .admin-trigger { font-size: 24px; cursor: pointer; color: #666; transition: 0.3s; padding: 10px; }
-        .admin-trigger:active { color: #fff; transform: rotate(90deg); }
+        .brand { font-family: 'Orbitron'; font-weight: 900; font-size: 22px; color: #fff; text-shadow: 0 0 10px var(--cyan); }
+        .brand span { color: var(--green); }
+        .adm-trig { font-size: 24px; cursor: pointer; color: #444; padding: 10px; transition:0.3s; }
+        .adm-trig:hover { color: var(--cyan); transform: rotate(90deg); }
 
-        /* --- LAYOUT UTAMA (DIKUNCI AGAR TIDAK NAIK TURUN) --- */
-        #mainInterface { min-height: 500px; display: flex; flex-direction: column; justify-content: center; }
+        /* VIEW MANAGER */
+        .view-section { display: none; animation: fadeIn 0.5s; }
+        .view-section.active { display: block; }
 
-        /* --- 1. REACTOR RAKSASA (USER FOCUS) --- */
-        .focus-box { text-align: center; animation: fadeIn 0.5s; }
-        
-        .reactor-container { 
-            position: relative; 
-            width: 300px; height: 300px; /* DIPERBESAR */
-            margin: 0 auto 30px; 
-            display: flex; align-items: center; justify-content: center; 
-        }
-        
-        .ring-outer {
-            position: absolute; width: 100%; height: 100%; border: 1px dashed #444; border-radius: 50%;
-            animation: spin 30s linear infinite; /* Putaran Sangat Pelan */
-        }
-        .ring-inner {
-            position: absolute; width: 85%; height: 85%; border-radius: 50%;
-            border: 4px solid transparent; border-top: 4px solid var(--c-main); border-bottom: 4px solid var(--c-main);
-            animation: spin 10s linear infinite reverse; /* Putaran Stabil */
-        }
-        /* Progress SVG */
-        .ring-progress { position: absolute; width: 94%; height: 94%; transform: rotate(-90deg); }
-        .ring-progress circle { fill: none; stroke-width: 10; stroke: #111; }
-        .ring-progress .fill { stroke: var(--c-ok); stroke-dasharray: 816; stroke-dashoffset: 816; transition: 1s; filter: drop-shadow(0 0 15px var(--c-ok)); }
-        
-        .reactor-text { z-index: 10; text-align: center; }
-        .reactor-big { font-family: 'Orbitron'; font-size: 80px; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 0 40px var(--c-ok); }
-        .reactor-sub { font-size: 16px; color: var(--c-main); letter-spacing: 3px; margin-top: 5px; font-weight: bold; }
-        
-        /* TIMER DIGIT MONOSPACE (ANTI GESER) */
-        .reactor-timer { 
-            font-family: 'Orbitron'; font-size: 40px; color: #fff; margin-top: 20px; font-weight: bold; 
-            font-variant-numeric: tabular-nums; /* Kunci lebar angka */
-            letter-spacing: 2px;
-        }
-
-        .status-pill { display: inline-block; background: #000; padding: 8px 20px; border: 1px solid #333; color: #888; font-size: 12px; margin-bottom: 30px; letter-spacing: 2px; border-radius: 20px; }
-
-        /* --- 2. TOMBOL SHINY (BERKILAU) --- */
-        .shiny-btn {
-            width: 100%; padding: 20px; font-family: 'Orbitron'; font-weight: 900; font-size: 18px;
-            background: var(--c-ok); color: #000; border: none; cursor: pointer;
-            position: relative; overflow: hidden; margin-top: 15px; border-radius: 8px;
-        }
-        .shiny-btn::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            animation: sheen 3s infinite;
-        }
-        .shiny-btn:active { transform: scale(0.98); filter: brightness(0.9); }
-        .btn-red { background: var(--c-sec); color: #fff; }
-        .btn-cyan { background: var(--c-main); color: #000; }
-
-        /* --- 3. SLOT LAIN (HURUF SAJA / TEXT ONLY) --- */
-        .text-list-container { 
-            margin-top: 50px; border-top: 1px solid #222; padding-top: 20px; 
-        }
-        .list-title { font-size: 10px; color: #666; margin-bottom: 15px; letter-spacing: 1px; }
-        
-        .text-slot-row {
-            display: flex; justify-content: space-between; padding: 12px 0;
-            border-bottom: 1px solid #111; font-size: 14px; color: #888;
-        }
-        .text-slot-row b { color: #fff; font-family: 'Orbitron'; }
-        .text-slot-row span.active { color: var(--c-main); font-weight: bold; }
-
-        /* --- 4. FORMULIR DAFTAR --- */
-        .reg-container {
-            background: #0a0a0a; border: 1px solid #333; padding: 30px; margin-bottom: 20px;
-            border-radius: 12px;
+        /* 1. FORMULIR */
+        .reg-box {
+            background: var(--panel); border: 1px solid #333; padding: 30px; border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
         .cy-input {
             width: 100%; background: #000; border: 1px solid #444; color: #fff;
-            padding: 18px; font-family: 'Orbitron'; font-size: 18px; text-align: center;
-            outline: none; transition: 0.3s; margin-bottom: 15px; border-radius: 6px;
+            padding: 15px; font-family: 'Orbitron'; font-size: 18px; text-align: center;
+            outline: none; margin-bottom: 15px; border-radius: 6px; transition: 0.3s;
         }
-        .cy-input:focus { border-color: var(--c-main); }
+        .cy-input:focus { border-color: var(--cyan); box-shadow: 0 0 10px rgba(0,240,255,0.2); }
 
-        /* --- 5. ADMIN PANEL --- */
-        #adminPanel { display: none; margin-top: 40px; border: 1px solid var(--c-sec); padding: 20px; background: #000; }
-        .adm-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .adm-btn { flex: 1; padding: 15px; background: #111; border: 1px solid #444; color: #fff; font-size: 12px; cursor: pointer; }
+        /* 2. REACTOR RAKSASA */
+        .focus-wrap { text-align: center; }
+        .reactor-giant {
+            position: relative; width: 280px; height: 280px; margin: 0 auto 30px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .r-track { position: absolute; width: 100%; height: 100%; border: 2px dashed #333; border-radius: 50%; }
+        .r-spin {
+            position: absolute; width: 85%; height: 85%; border-radius: 50%;
+            border: 4px solid transparent; border-top: 4px solid var(--cyan); border-bottom: 4px solid var(--cyan);
+            animation: spin 6s linear infinite; 
+        }
+        .r-svg { position: absolute; width: 94%; height: 94%; transform: rotate(-90deg); }
+        .r-svg circle { fill: none; stroke-width: 10; stroke: #111; }
+        .r-svg .fill { stroke: var(--green); stroke-dasharray: 753; stroke-dashoffset: 753; transition: stroke-dashoffset 0.5s linear; }
+
+        .r-val { font-family: 'Orbitron'; font-size: 72px; font-weight: 900; line-height: 1; text-shadow: 0 0 20px var(--green); z-index: 10; }
+        .r-label { font-size: 14px; color: var(--cyan); letter-spacing: 2px; margin-top: 5px; z-index: 10; }
+        
+        .timer-display { 
+            font-family: 'Orbitron'; font-size: 40px; color: #fff; font-weight: bold; margin-bottom: 20px; 
+            font-variant-numeric: tabular-nums; 
+        }
+        .status-badge { display: inline-block; background: #111; color: #888; padding: 8px 20px; border-radius: 20px; border: 1px solid #333; margin-bottom: 20px; letter-spacing: 1px; }
+
+        /* TOMBOL SHINY */
+        .btn-solid {
+            width: 100%; padding: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 14px;
+            background: var(--green); color: #000; border: none; cursor: pointer; border-radius: 6px;
+            position: relative; overflow: hidden; margin-top: 5px;
+        }
+        .btn-solid::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: sheen 3s infinite;
+        }
+        .btn-cyan { background: var(--cyan); color: #000; }
+        .btn-red { background: var(--red); color: #fff; }
+        .btn-gold { background: var(--gold); color: #000; }
+
+        /* 3. MONITOR LIST */
+        .monitor-list { margin-top: 40px; border-top: 1px solid #222; padding-top: 20px; }
+        .mon-row { 
+            display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #111; 
+            font-size: 14px; color: #666; 
+        }
+        .mon-row b { color: #fff; font-family: 'Orbitron'; }
+        .mon-row .active-txt { color: var(--cyan); font-weight: bold; }
+
+        /* 4. ADMIN PANEL (FULL FEATURES) */
+        #adminView { 
+            border: 1px solid var(--red); padding: 15px; background: #080808; margin-top: 20px; border-radius: 8px;
+        }
+        .adm-header { color: var(--red); text-align: center; font-weight: bold; margin-bottom: 15px; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .adm-section { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #333; }
+        .adm-row { display: flex; gap: 5px; margin-bottom: 8px; }
+        .adm-inp { background: #000; border: 1px solid #444; color: #fff; padding: 10px; flex: 1; text-align: center; font-size: 11px; }
+        .adm-act { padding: 10px; cursor: pointer; background: #222; border: 1px solid #444; color: #fff; flex: 1; font-size: 10px; }
+        .adm-act:hover { background: #333; border-color: #fff; }
+
+        /* MUSIC PLAYER BAR */
+        .music-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100;
+            background: #000; border-top: 1px solid var(--cyan);
+        }
+        .music-toggle {
+            text-align: center; padding: 8px; font-size: 10px; cursor: pointer;
+            color: var(--cyan); letter-spacing: 2px; background: rgba(0, 240, 255, 0.1);
+        }
+        #musicFrame { width: 100%; height: 0px; border: none; transition: 0.3s; }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes sheen { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="hud-header">
-        <div class="brand-text">FC <span>GADING</span></div>
-        <div class="admin-trigger" onclick="toggleAdmin()">⚙️</div>
+        <div class="brand">FC <span>GADING</span></div>
+        <div class="adm-trig" onclick="toggleAdmin()">⚙️</div>
     </div>
 
-    <div id="mainInterface"></div>
-
-    <div id="secondaryInterface" style="display:none;" class="text-list-container">
-        <div class="list-title">MONITORING UNIT LAIN</div>
-        <div id="textSlotsList"></div> <div style="margin-top:20px; font-size:12px; color:#444; text-align:center;" id="qStatus">ANTRIAN: 0</div>
+    <div id="view-form" class="view-section">
+        <div class="reg-box">
+            <div style="text-align:center; color:#666; margin-bottom:20px; letter-spacing:2px;">PENDAFTARAN</div>
+            <input id="rp" class="cy-input" placeholder="PLAT NOMOR" style="text-transform:uppercase">
+            <input id="rn" class="cy-input" placeholder="NAMA ANDA">
+            <div style="display:flex; gap:10px;">
+                <input id="rb" type="number" class="cy-input" placeholder="BAT %">
+                <input id="rw" type="number" class="cy-input" placeholder="WA (OPT)">
+            </div>
+            <button onclick="reg()" class="btn-solid btn-cyan">AMBIL SLOT / ANTRIAN</button>
+        </div>
     </div>
 
-    <div id="adminPanel">
-        <div style="color:var(--c-sec); font-weight:bold; margin-bottom:15px; text-align:center;">/// ADMIN CONTROL PANEL ///</div>
-        <div class="adm-row">
-            <select id="as" class="adm-btn"><option value="0">SLOT 1</option><option value="1">SLOT 2</option><option value="2">SLOT 3</option></select>
-            <input id="ap" class="adm-btn" placeholder="PLAT" style="text-align:center;">
-            <input id="ab" class="adm-btn" placeholder="%" style="width:60px; text-align:center;">
+    <div id="view-focus" class="view-section">
+        <div class="focus-wrap">
+            <div id="focus-badge" class="status-badge">MEMUAT STATUS...</div>
+            <div class="reactor-giant">
+                <div class="r-track"></div>
+                <div class="r-spin"></div>
+                <svg class="r-svg" width="280" height="280">
+                    <circle cx="140" cy="140" r="120"></circle>
+                    <circle id="focus-ring" class="fill" cx="140" cy="140" r="120" style="stroke-dashoffset: 753;"></circle>
+                </svg>
+                <div class="r-content" style="position: absolute;">
+                    <div id="focus-val" class="r-val">0%</div>
+                    <div id="focus-sub" class="r-label">TARGET</div>
+                </div>
+            </div>
+            <div id="focus-timer" class="timer-display">--:--</div>
+            <div id="focus-controls"></div>
         </div>
-        <button onclick="admForce()" class="adm-btn" style="width:100%; margin-bottom:10px; color:var(--c-ok); border-color:var(--c-ok)">ISI MANUAL</button>
-        <div class="adm-row">
-            <button onclick="admClear()" class="adm-btn" style="color:var(--c-sec)">CLEAR SLOT</button>
-            <button onclick="admReset()" class="adm-btn">RESET DB</button>
-            <button onclick="logout()" class="adm-btn">LOGOUT</button>
+    </div>
+
+    <div id="view-admin" class="view-section">
+        <div id="adminView">
+            <div class="adm-header">/// COMMAND CENTER ///</div>
+            
+            <div class="adm-section">
+                <div style="font-size:10px; color:#aaa; margin-bottom:5px;">MANUAL ASSIGN</div>
+                <div class="adm-row">
+                    <select id="as" class="adm-inp"><option value="0">SLOT 1</option><option value="1">SLOT 2</option><option value="2">SLOT 3</option></select>
+                    <input id="ap" class="adm-inp" placeholder="PLAT">
+                    <input id="ab" class="adm-inp" placeholder="%" style="width:40px">
+                </div>
+                <button onclick="admForce()" class="btn-solid btn-green" style="font-size:12px; padding:10px;">PAKSA ISI SLOT</button>
+            </div>
+
+            <div class="adm-section">
+                <div style="font-size:10px; color:#aaa; margin-bottom:5px;">QUEUE CONTROL</div>
+                <div class="adm-row">
+                    <select id="aq" class="adm-inp"></select> <button onclick="admMoveQ()" class="adm-act" style="color:var(--cyan)">MOVE TO SLOT</button>
+                    <button onclick="admDelQ()" class="adm-act" style="color:var(--red)">HAPUS</button>
+                </div>
+            </div>
+
+            <div class="adm-section">
+                <div style="font-size:10px; color:#aaa; margin-bottom:5px;">SLOT SWAP & CLEAR</div>
+                <div class="adm-row">
+                    <select id="sw1" class="adm-inp"><option value="0">S1</option><option value="1">S2</option><option value="2">S3</option></select>
+                    <select id="sw2" class="adm-inp"><option value="1">S2</option><option value="2">S3</option><option value="0">S1</option></select>
+                    <button onclick="admSwap()" class="adm-act" style="color:var(--gold)">SWAP POSISI</button>
+                </div>
+                <div class="adm-row">
+                    <select id="ac_slot" class="adm-inp"><option value="0">S1</option><option value="1">S2</option><option value="2">S3</option></select>
+                    <button onclick="admClear()" class="adm-act" style="color:var(--red)">KOSONGKAN SLOT</button>
+                </div>
+            </div>
+
+            <div class="adm-row">
+                <button onclick="admReset()" class="adm-act" style="border-color:var(--red); color:var(--red)">RESET DATABASE</button>
+                <button onclick="logout()" class="adm-act">LOGOUT</button>
+            </div>
         </div>
+    </div>
+
+    <div class="monitor-list">
+        <div style="font-size:10px; color:#444; margin-bottom:10px; letter-spacing:1px;">MONITORING UNIT LAIN</div>
+        <div id="slot-list-container"></div>
+        <div style="text-align:center; font-size:12px; color:#666; margin-top:20px;" id="q-total">ANTRIAN: 0</div>
+    </div>
+
+    <div class="music-bar">
+        <div class="music-toggle" onclick="toggleMusic()">▲ AUDIO PLAYER ▲</div>
+        <iframe id="musicFrame" src="https://punyaaris1-lang.github.io/music/"></iframe>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG
         const app = initializeApp({ apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" });
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        // STATE
         let slots = [null,null,null], queue = [], myPlat = localStorage.getItem('myPlat'), isAdmin = localStorage.getItem('superAdminAuth') === 'true';
+        let processing = [false, false, false];
 
         // AUTO FILL
-        let bridgeData = { plat: "", nama: "" };
-        try { const raw = localStorage.getItem('maka_user'); if(raw) bridgeData = JSON.parse(raw); } catch(e) {}
+        try { const raw = localStorage.getItem('maka_user'); if(raw) { const p = JSON.parse(raw); document.getElementById('rp').value = p.plat||''; document.getElementById('rn').value = p.nama||''; } } catch(e){}
 
-        // MATH (SAFE LONG FORM)
+        // MATH
         const CURVE = [[100,0], [99,1], [95,4], [90,17], [89,18], [85,22], [81,25], [72,33], [61,45], [50,50], [20,68], [0,86]];
-        function getCurveTime(v) {
-            for (let i = 0; i < CURVE.length - 1; i++) {
-                let p1 = CURVE[i];
-                let p2 = CURVE[i+1];
-                if (v <= p1[0] && v >= p2[0]) {
-                    let r = (p1[0] - v) / (p1[0] - p2[0]);
-                    return p1[1] + r * (p2[1] - p1[1]);
-                }
-            } return 0;
-        }
-        function getDur(start, target) {
-            if (start >= target) return 5;
-            let tS = getCurveTime(start);
-            let tT = getCurveTime(target);
-            return Math.max(1, Math.ceil(tS - tT));
-        }
-        function getTar(len) {
-            if (len >= 11) return 85;
-            if (len >= 6) return 90;
-            if (len >= 3) return 95;
-            return 100;
-        }
+        function getCurveTime(v) { for(let i=0;i<CURVE.length-1;i++){ if(v<=CURVE[i][0]&&v>=CURVE[i+1][0]){ const r=(CURVE[i][0]-v)/(CURVE[i][0]-CURVE[i+1][0]); return CURVE[i][1]+r*(CURVE[i+1][1]-CURVE[i][1]); } } return 0; }
+        function getDur(s, t) { if(s>=t) return 5; return Math.max(1, Math.ceil(getCurveTime(s)-getCurveTime(t))); }
+        function getTar(l) { return l>=11?85:(l>=6?90:(l>=3?95:100)); }
 
-        // --- RENDER UTAMA ---
-        function render() {
-            const main = document.getElementById('mainInterface');
-            const sec = document.getElementById('secondaryInterface');
-            const qStat = document.getElementById('qStatus');
+        // --- UPDATE ENGINE ---
+        function updateUI() {
+            let myS = -1, myQ = -1;
+            for(let i=0; i<slots.length; i++) if(slots[i] && slots[i].plat === myPlat) myS = i;
+            for(let i=0; i<queue.length; i++) if(queue[i].plat === myPlat) myQ = i;
 
-            let myS = -1;
-            let myQ = -1;
+            const vForm = document.getElementById('view-form');
+            const vFocus = document.getElementById('view-focus');
+            const vAdmin = document.getElementById('view-admin');
 
-            for(let i=0; i<slots.length; i++) { if(slots[i] && slots[i].plat === myPlat) myS = i; }
-            for(let i=0; i<queue.length; i++) { if(queue[i].plat === myPlat) myQ = i; }
+            vForm.style.display = 'none'; vFocus.style.display = 'none'; vAdmin.style.display = 'none';
 
-            // ADMIN MODE
-            if (isAdmin) {
-                renderForm(main, true); 
-                sec.style.display = 'block';
-                document.getElementById('adminPanel').style.display = 'block';
-                renderTextSlots(true); 
-                return;
-            }
-
-            // USER MODE
-            if (myS !== -1) {
-                renderFocus(main, slots[myS], myS, 'charging');
-                sec.style.display = 'block';
-                renderTextSlots(false); 
+            if(isAdmin) {
+                vAdmin.style.display = 'block';
+                updateAdminDropdowns();
+            } else if (myS !== -1) {
+                vFocus.style.display = 'block';
+                updateFocusData(slots[myS], myS, 'charging');
             } else if (myQ !== -1) {
-                renderFocus(main, queue[myQ], myQ, 'waiting');
-                sec.style.display = 'block';
-                renderTextSlots(false);
+                vFocus.style.display = 'block';
+                updateFocusData(queue[myQ], myQ, 'waiting');
             } else {
-                renderForm(main, false);
-                sec.style.display = 'block'; 
-                renderTextSlots(false);
+                vForm.style.display = 'block';
             }
-            qStat.innerText = "TOTAL ANTRIAN: " + queue.length;
+
+            updateTextSlots();
+            document.getElementById('q-total').innerText = "TOTAL ANTRIAN: " + queue.length;
         }
 
-        // 1. TAMPILAN FOKUS (GIANT REACTOR)
-        function renderFocus(el, data, idx, type) {
-            let bigVal="0%", subTxt="LOADING", badge="STATUS", controls="", rot=0, timer="CALC";
+        function updateFocusData(data, idx, type) {
+            const elBadge = document.getElementById('focus-badge');
+            const elVal = document.getElementById('focus-val');
+            const elSub = document.getElementById('focus-sub');
+            const elTimer = document.getElementById('focus-timer');
+            const elRing = document.getElementById('focus-ring');
+            const elCtrl = document.getElementById('focus-controls');
 
             if (type === 'charging') {
-                const s = data;
-                const tar = s.targetLimit || 100;
-                let pct = s.startBattery;
-                
-                if (s.startTime) {
-                    const st = s.startTime.toDate();
-                    const dur = s.durationMinutes;
-                    const now = new Date();
-                    const diff = st.getTime() + dur * 60000 - now.getTime();
-                    const rem = Math.max(0, Math.ceil(diff / 1000));
-                    
-                    let min = Math.floor(rem/60);
-                    let sec = rem % 60;
-                    let secStr = sec < 10 ? "0" + sec : sec;
-                    timer = min + ":" + secStr;
+                const tar = data.targetLimit || 100;
+                let pct = data.startBattery;
+                let timeStr = "CALC";
 
-                    const gain = (tar - s.startBattery) * ((dur*60 - rem)/(dur*60));
-                    pct = Math.min(tar, Math.floor(s.startBattery + gain));
+                if (data.startTime) {
+                    const st = data.startTime.toDate();
+                    const dur = data.durationMinutes;
+                    const diff = st.getTime() + dur*60000 - new Date().getTime();
+                    const rem = Math.max(0, Math.ceil(diff/1000));
+                    let m = Math.floor(rem/60); let s = rem % 60;
+                    timeStr = `${m}:${s<10?'0'+s:s}`;
+                    const gain = (tar - data.startBattery) * ((dur*60 - rem)/(dur*60));
+                    pct = Math.min(tar, Math.floor(data.startBattery + gain));
                 }
-                
-                bigVal = pct + "%";
-                subTxt = "TARGET: " + tar + "%";
-                badge = "SLOT " + (idx+1) + " AKTIF";
-                // SVG Dasharray = 816 (untuk r=130)
-                rot = (pct/tar) * 816; 
 
-                if(!s.startTime) {
-                    controls = '<button onclick="window.actStart('+idx+')" class="shiny-btn btn-cyan">MULAI PENGISIAN</button>';
-                } else {
-                    controls = '<div style="display:flex; gap:10px;">' +
-                        '<button onclick="window.actEdit('+idx+')" class="shiny-btn btn-cyan" style="flex:1;">EDIT</button>' +
-                        '<button onclick="window.actStop('+idx+')" class="shiny-btn btn-red" style="flex:1;">STOP</button>' +
-                    '</div>';
-                }
+                elBadge.innerText = `SLOT ${idx+1} AKTIF`;
+                elVal.innerText = pct + "%";
+                elSub.innerText = "TARGET: " + tar + "%";
+                elTimer.innerText = timeStr;
+                const offset = 753 - ((pct/tar) * 753);
+                elRing.style.strokeDashoffset = offset;
+                elRing.style.stroke = "var(--green)";
+
+                if(!data.startTime) elCtrl.innerHTML = `<button onclick="window.actStart(${idx})" class="btn-solid btn-cyan">MULAI PENGISIAN</button>`;
+                else elCtrl.innerHTML = `<div style="display:flex; gap:10px;"><button onclick="window.actEdit(${idx})" class="btn-solid btn-cyan" style="flex:1">EDIT</button><button onclick="window.actStop(${idx})" class="btn-solid btn-red" style="flex:1">STOP</button></div>`;
 
             } else {
-                bigVal = "#" + (idx + 1);
-                subTxt = "ESTIMASI: " + ((idx+1)*20) + " MENIT";
-                badge = "MENUNGGU GILIRAN";
-                timer = "ANTRI";
-                controls = '<button onclick="window.actCancel('+idx+')" class="shiny-btn btn-red">BATALKAN ANTRIAN</button>';
+                elBadge.innerText = "MENUNGGU GILIRAN";
+                elVal.innerText = "#" + (idx+1);
+                elSub.innerText = "URUTAN ANDA";
+                elTimer.innerText = "EST: " + ((idx+1)*20) + " MIN";
+                elRing.style.strokeDashoffset = 0; elRing.style.stroke = "var(--cyan)";
+                elCtrl.innerHTML = `<button onclick="window.actCancel(${idx})" class="btn-solid btn-red">BATALKAN</button>`;
             }
-
-            el.innerHTML = `
-                <div class="focus-box">
-                    <div class="status-pill">${badge}</div>
-                    
-                    <div class="reactor-container">
-                        <div class="ring-outer"></div>
-                        <div class="ring-inner"></div>
-                        <svg class="ring-progress" width="300" height="300">
-                            <circle cx="150" cy="150" r="130"></circle>
-                            <circle class="fill" cx="150" cy="150" r="130" style="stroke-dashoffset:${816 - rot}"></circle>
-                        </svg>
-                        <div class="reactor-text">
-                            <div class="reactor-big">${bigVal}</div>
-                            <div class="reactor-sub">${subTxt}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="reactor-timer">${timer}</div>
-                    ${controls}
-                </div>`;
         }
 
-        // 2. TAMPILAN FORMULIR
-        function renderForm(el, isAdminMode) {
-            if (isAdminMode) {
-                el.innerHTML = '<div class="reg-container" style="text-align:center; color:var(--c-sec); font-weight:bold;">PANEL ADMIN DIAKTIFKAN</div>';
-                return;
-            }
-            let pVal = bridgeData.plat || "";
-            let nVal = bridgeData.nama || "";
-
-            el.innerHTML = `
-                <div class="reg-container">
-                    <div style="margin-bottom:20px; font-size:12px; color:#aaa; text-align:center;">PENDAFTARAN ANTRIAN</div>
-                    
-                    <input id="rp" class="cy-input" placeholder="PLAT NOMOR" style="text-transform:uppercase" value="${pVal}">
-                    <input id="rn" class="cy-input" placeholder="NAMA ANDA" value="${nVal}">
-                    
-                    <div style="display:flex; gap:10px;">
-                        <input id="rb" type="number" class="cy-input" placeholder="BAT %">
-                        <input id="rw" type="number" class="cy-input" placeholder="WA">
-                    </div>
-
-                    <button onclick="window.reg()" class="shiny-btn btn-cyan">AMBIL NOMOR ANTRIAN</button>
-                </div>`;
-        }
-
-        // 3. TAMPILAN TEKS (BAWAH) - HURUF SAJA
-        function renderTextSlots(showAll) {
-            const c = document.getElementById('textSlotsList');
-            c.innerHTML = '';
-            
+        function updateTextSlots() {
+            const c = document.getElementById('slot-list-container');
+            let html = '';
             slots.forEach((s, i) => {
-                // Sembunyikan slot sendiri (kecuali admin)
-                if (!showAll && s && s.plat === myPlat) return;
-
-                let content = "";
-                if (!s) {
-                    content = `<div class="text-slot-row"><span>SLOT ${i+1}</span> <span style="color:#444">KOSONG</span></div>`;
-                } else {
-                    let pct = s.startBattery;
+                if(!isAdmin && s && s.plat === myPlat) return;
+                if(!s) html += `<div class="mon-row"><span>SLOT ${i+1}</span> <span style="color:#444">KOSONG</span></div>`;
+                else {
                     let st = "WAITING";
+                    let pct = s.startBattery;
                     if(s.startTime) {
-                        const stt=s.startTime.toDate();
-                        const dur=s.durationMinutes;
-                        const now = new Date();
-                        const diff = stt.getTime() + dur * 60000 - now.getTime();
-                        const rem = Math.max(0, Math.ceil(diff / 60000));
+                        const stt=s.startTime.toDate(); const dur=s.durationMinutes;
+                        const rem=Math.max(0, Math.ceil((new Date(stt.getTime()+dur*60000)-new Date())/60000));
                         const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-rem)/(dur*60));
                         pct=Math.min(s.targetLimit||100, Math.floor(s.startBattery+gain));
                         st = "CHARGING";
                     }
-                    content = `<div class="text-slot-row">
-                        <span>SLOT ${i+1}</span> 
-                        <span class="active">[ <b>${pct}%</b> ] ${st}</span>
-                    </div>`;
+                    html += `<div class="mon-row"><span>SLOT ${i+1}</span> <span class="active-txt">[ ${pct}% ] ${st}</span></div>`;
                 }
-                c.innerHTML += content;
             });
+            c.innerHTML = html;
         }
 
-        // --- DATABASE ---
+        function updateAdminDropdowns() {
+            const aq = document.getElementById('aq');
+            aq.innerHTML = queue.map((q,i) => `<option value="${i}">#${i+1} ${q.plat}</option>`).join('');
+        }
+
+        // --- DATABASE & AUTO LOGIC ---
         onSnapshot(ref, (d) => {
             if(d.exists()) {
                 const data = d.data();
                 slots = data.chargingSlots || [null,null,null];
                 queue = data.waitingQueue || [];
-                render();
+                updateUI();
             }
         });
-        setInterval(() => { if(slots.some(s=>s&&s.startTime)) render(); }, 1000);
 
-        // --- ACTIONS ---
+        setInterval(() => {
+            let needsUpdate = false;
+            const now = new Date();
+            slots.forEach((s, i) => {
+                if (s && s.startTime) needsUpdate = true;
+                if (s && s.startTime && !processing[i]) {
+                    const st = s.startTime.toDate();
+                    const dur = s.durationMinutes;
+                    const diff = st.getTime() + dur * 60000 - now.getTime();
+                    if (diff <= 0) {
+                        processing[i] = true; 
+                        runTransaction(db, async(t) => {
+                            const d = (await t.get(ref)).data();
+                            d.chargingSlots[i] = null;
+                            if (d.waitingQueue.length > 0) {
+                                const nextUser = d.waitingQueue.shift();
+                                const tar = getTar(d.waitingQueue.length);
+                                d.chargingSlots[i] = { ...nextUser, startTime: null, targetLimit: tar, durationMinutes: getDur(nextUser.startBattery, tar) };
+                            }
+                            t.update(ref, d);
+                        }).then(() => processing[i] = false).catch(() => processing[i] = false);
+                    }
+                }
+            });
+            if(needsUpdate) updateUI();
+        }, 1000);
+
+        // --- SMART REGISTRATION ---
         window.reg = () => {
             const p=document.getElementById('rp').value.toUpperCase().replace(/\s/g,'');
             const n=document.getElementById('rn').value, b=parseInt(document.getElementById('rb').value);
             const w=document.getElementById('rw').value || '-';
             if(!p||isNaN(b)) { alert("Data kurang"); return; }
             localStorage.setItem('myPlat', p); myPlat=p;
+            
             runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(), q=d.waitingQueue||[];
-                if(q.find(x=>x.plat===p)) throw "Sudah antri";
-                q.push({plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null});
-                t.update(ref,{waitingQueue:q});
-            }).catch((e) => alert(e));
-        };
+                const d=(await t.get(ref)).data();
+                let q = d.waitingQueue || [];
+                let s = d.chargingSlots || [null,null,null];
 
-        window.actStart = (i) => {
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                const s = d.chargingSlots[i];
-                s.startTime = new Date();
-                s.targetLimit = getTar(d.waitingQueue.length);
-                s.durationMinutes = getDur(s.startBattery, s.targetLimit);
-                t.update(ref,d);
-            });
-        };
-        window.actStop = (i) => {
-            if(confirm("Stop?")) runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                d.chargingSlots[i]=null;
-                if(d.waitingQueue.length>0) {
-                    const n = d.waitingQueue.shift();
-                    const tLim = getTar(d.waitingQueue.length);
-                    d.chargingSlots[i] = {...n, startTime:null, targetLimit:tLim, durationMinutes:getDur(n.startBattery,tLim)};
+                if(q.find(x=>x.plat===p)) throw "Sudah Antri";
+                for(let i=0; i<3; i++) if(s[i] && s[i].plat===p) throw "Sudah di Slot";
+
+                const newUser = {plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null};
+                let emptyIndex = -1;
+                for(let i=0; i<3; i++) { if(s[i] == null) { emptyIndex = i; break; } }
+
+                if(emptyIndex !== -1) {
+                    const tar = getTar(q.length);
+                    newUser.targetLimit = tar;
+                    newUser.durationMinutes = getDur(b, tar);
+                    s[emptyIndex] = newUser;
+                    t.update(ref, {chargingSlots: s});
+                } else {
+                    q.push(newUser);
+                    t.update(ref, {waitingQueue: q});
                 }
-                t.update(ref,d);
-            });
-        };
-        window.actEdit = (i) => {
-            const m = prompt("Menit:");
-            if(m && !isNaN(m)) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=new Date(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d); });
-        };
-        window.actCancel = (i) => {
-            if(confirm("Batal?")) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,{waitingQueue:d.waitingQueue}); }).then(()=>{localStorage.removeItem('myPlat'); myPlat=null; location.reload();});
+            }).catch(e=>alert(e));
         };
 
-        // ADMIN
-        window.toggleAdmin = () => { const p=prompt("Password:"); if(p==="admin123"){ localStorage.setItem('superAdminAuth','true'); location.reload(); }};
+        // ACTIONS USER
+        window.actStart = (i) => runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const s=d.chargingSlots[i]; s.startTime=new Date(); s.targetLimit=getTar(d.waitingQueue.length); s.durationMinutes=getDur(s.startBattery,s.targetLimit); t.update(ref,d); });
+        window.actStop = (i) => { if(confirm("Stop?")) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[i]=null; if(d.waitingQueue.length>0){const n=d.waitingQueue.shift(); const tl=getTar(d.waitingQueue.length); d.chargingSlots[i]={...n, startTime:null, targetLimit:tl, durationMinutes:getDur(n.startBattery,tl)};} t.update(ref,d); }); };
+        window.actEdit = (i) => { const m=prompt("Menit:"); if(m&&!isNaN(m)) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=new Date(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d); }); };
+        window.actCancel = (i) => { if(confirm("Batal?")) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,{waitingQueue:d.waitingQueue}); }).then(()=>{localStorage.removeItem('myPlat'); myPlat=null; location.reload();}); };
+
+        // ACTIONS ADMIN
+        window.toggleAdmin = () => { const p=prompt("Pass:"); if(p==="admin123"){ localStorage.setItem('superAdminAuth','true'); location.reload(); }};
         window.logout = () => { localStorage.clear(); location.reload(); };
-        window.admForce = () => {
-            const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value);
-            if(p) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d); });
-        };
-        window.admClear = () => window.actStop(document.getElementById('as').value);
+        window.admForce = () => { const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value); if(p) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d); }); };
+        window.admClear = () => window.actStop(document.getElementById('ac_slot').value);
         window.admReset = () => { if(confirm("RESET?")) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[]}); };
+        
+        window.admMoveQ = () => {
+            const qi = document.getElementById('aq').value;
+            const si = document.getElementById('as').value;
+            runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); if(d.chargingSlots[si]) throw "Busy"; const i=d.waitingQueue.splice(qi,1)[0]; const tar=getTar(d.waitingQueue.length); d.chargingSlots[si]={...i, startTime:null, targetLimit:tar, durationMinutes:getDur(i.startBattery,tar)}; t.update(ref,d); });
+        };
+        window.admDelQ = () => {
+            const qi = document.getElementById('aq').value;
+            runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.waitingQueue.splice(qi,1); t.update(ref,{waitingQueue:d.waitingQueue}); });
+        };
+        window.admSwap = () => {
+            const s1 = document.getElementById('sw1').value;
+            const s2 = document.getElementById('sw2').value;
+            if(s1 == s2) return;
+            runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const temp = d.chargingSlots[s1]; d.chargingSlots[s1] = d.chargingSlots[s2]; d.chargingSlots[s2] = temp; t.update(ref,d); });
+        };
+
+        window.toggleMusic = () => {
+            const f = document.getElementById('musicFrame');
+            f.style.height = f.style.height === '0px' ? '150px' : '0px';
+        };
     </script>
 </body>
 </html>
