@@ -3,293 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MAKA TRINITY</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <title>MAKA HUD TUNED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-blue: #00F3FF;
-            --neon-green: #00FF41;
-            --neon-red: #FF003C;
-            --neon-gold: #FFD700;
-            --bg-dark: #020204;
-            --glass: rgba(0, 243, 255, 0.05);
+            --c-blue: #00F0FF; /* BIRU NEON */
+            --c-yel: #CCFF00;  /* KUNING NEON (STABILO) */
+            --c-red: #FF003C; 
+            --c-green: #00FF41;
+            --bg: #020205; 
         }
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            margin: 0; padding: 15px; background-color: var(--bg-dark); color: #fff;
-            font-family: 'Rajdhani', sans-serif; min-height: 100vh; padding-bottom: 150px;
+            margin: 0; padding: 15px; background-color: var(--bg); color: #fff;
+            font-family: 'Inter', sans-serif; min-height: 100vh; padding-bottom: 150px;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 60%),
-                linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, .03) 25%, rgba(0, 255, 65, .03) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .03) 75%, rgba(0, 255, 65, .03) 76%, transparent 77%, transparent), 
-                linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, .03) 25%, rgba(0, 255, 65, .03) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .03) 75%, rgba(0, 255, 65, .03) 76%, transparent 77%, transparent);
-            background-size: 100% 100%, 50px 50px, 50px 50px;
+            background-image: radial-gradient(circle at 50% 30%, #0d1a2b 0%, #000 70%);
         }
 
-        /* --- HEADER GLITCH EXTREME --- */
-        .header-section { text-align: center; margin-bottom: 40px; position: relative; padding-top: 20px; }
-        .cyber-glitch {
-            font-family: 'Orbitron'; font-weight: 900; font-size: 40px; color: #fff;
-            text-shadow: 2px 2px var(--neon-red), -2px -2px var(--neon-blue);
-            position: relative; display: inline-block; letter-spacing: 4px;
+        /* HEADER */
+        .header-wrap { 
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #222; padding-bottom: 15px;
         }
-        .cyber-sub {
-            color: var(--neon-gold); font-size: 14px; font-weight: 700; letter-spacing: 6px; 
-            margin-top: 5px; text-transform: uppercase;
-            border-top: 1px solid var(--neon-gold); display: inline-block; padding-top: 5px;
+        .glitch-title {
+            font-family: 'Orbitron'; font-weight: 900; font-size: 26px;
+            color: var(--c-blue); text-shadow: 0 0 15px var(--c-blue);
+            letter-spacing: 1px; position: relative; display: inline-block;
         }
-        .adm-lock { position: absolute; top: 0; right: 0; font-size: 20px; color: #333; cursor: pointer; }
+        .glitch-title::before, .glitch-title::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+        }
+        .glitch-title::before { left: 2px; text-shadow: -1px 0 var(--c-red); clip: rect(24px, 550px, 90px, 0); animation: glitch-1 3s infinite linear alternate-reverse; }
+        .glitch-title::after { left: -2px; text-shadow: -1px 0 var(--c-yel); clip: rect(85px, 550px, 140px, 0); animation: glitch-2 2.5s infinite linear alternate-reverse; }
+        
+        .sub-brand { 
+            color: var(--c-yel); font-size: 10px; font-weight: 800; letter-spacing: 4px; margin-top: 5px; 
+            text-transform: uppercase; text-shadow: 0 0 5px rgba(204, 255, 0, 0.5);
+        }
+        .adm-gear { font-size: 24px; color: #444; cursor: pointer; padding: 5px; }
 
-        /* --- TRINITY DASHBOARD (SEGITIGA) --- */
-        .trinity-deck {
-            position: relative; height: 320px; margin-bottom: 20px;
-            display: flex; justify-content: center;
+        /* --- DASHBOARD V-SHAPE --- */
+        #v-dash { display: block; }
+        
+        .queue-top { text-align: center; font-family: 'Orbitron'; font-size: 14px; color: #fff; margin-bottom: 10px; font-weight: bold; }
+        .queue-top span { color: var(--c-yel); font-size: 18px; text-shadow: 0 0 10px var(--c-yel); }
+
+        /* CONTAINER TINGGI DISESUAIKAN */
+        .slots-container {
+            position: relative; height: 320px; width: 100%; margin-bottom: 20px;
         }
         
-        /* POSISI HEXAGON */
-        .hex-slot {
-            position: absolute; width: 110px; height: 120px;
-            background: rgba(0,0,0,0.8); 
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            border: 2px solid #333; transition: 0.3s;
-        }
-        /* Slot 1: Atas Tengah */
-        .pos-1 { top: 0; left: 50%; transform: translateX(-50%); z-index: 2; }
-        /* Slot 2: Bawah Kiri */
-        .pos-2 { bottom: 0; left: 10px; }
-        /* Slot 3: Bawah Kanan */
-        .pos-3 { bottom: 0; right: 10px; }
-
-        /* Connecting Lines (Sirkuit) */
-        .circuit-line {
-            position: absolute; background: #333; z-index: 1;
-            box-shadow: 0 0 5px var(--neon-blue);
-        }
-        .cl-1 { width: 2px; height: 80px; top: 110px; left: 50%; transform: translateX(-50%); } /* Tengah Vertikal */
-        .cl-2 { width: 100px; height: 2px; top: 190px; left: 50%; transform: translateX(-50%); } /* Tengah Horizontal */
-        .cl-3 { width: 2px; height: 30px; top: 190px; left: 60px; } /* Ke Kiri */
-        .cl-4 { width: 2px; height: 30px; top: 190px; right: 60px; } /* Ke Kanan */
-
-        /* Styles Hexagon Active */
-        .hex-slot.active { border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue) inset; }
-        .hex-slot.charging { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green) inset; }
+        .slot-wrapper { position: absolute; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
         
-        .hex-lbl { font-size: 10px; color: #888; font-weight: bold; margin-bottom: 5px; }
-        .hex-val { font-family: 'Orbitron'; font-size: 24px; color: #fff; font-weight: 900; }
-        .hex-sub { font-size: 9px; color: var(--neon-blue); margin-top: 5px; font-weight: bold; text-transform: uppercase; }
+        /* POSISI (V-Shape Dinaikkan Sedikit) */
+        /* Tengah (Besar) */
+        .slot-wrapper.center { width: 220px; height: 220px; top: 0; left: 50%; transform: translateX(-50%); z-index: 10; }
+        
+        /* Kiri & Kanan (Kecil) - Posisi top: 140px (Naik dari 180px) */
+        .slot-wrapper.side { width: 120px; height: 120px; top: 155px; } 
+        .sw-left { left: 5px; } 
+        .sw-right { right: 5px; }
 
-        /* Queue Center */
-        .queue-core {
-            position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; z-index: 3;
-        }
-        .q-circle {
-            width: 60px; height: 60px; border-radius: 50%; background: #000;
-            border: 2px dashed var(--neon-gold); display: flex; align-items: center; justify-content: center;
-            font-family: 'Orbitron'; font-size: 18px; color: var(--neon-gold);
-            animation: spin 10s linear infinite;
-        }
-        .q-txt { font-size: 10px; color: #aaa; margin-top: 5px; letter-spacing: 1px; }
+        /* SVG & Colors */
+        .slot-svg { position: absolute; top:0; left:0; width:100%; height:100%; overflow: visible; }
+        .svg-ring { fill: rgba(10,15,25,0.95); stroke-width: 5px; transition: 0.3s; }
+        
+        /* WARNA FIX */
+        .center .svg-ring { stroke: var(--c-blue); filter: drop-shadow(0 0 10px var(--c-blue)); }
+        .center .slot-label { color: var(--c-blue); }
+        
+        .side .svg-ring { stroke: var(--c-yel); filter: drop-shadow(0 0 8px var(--c-yel)); }
+        .side .slot-label { color: var(--c-yel); }
 
-        /* --- BIO SCANNER BUTTON --- */
-        .bio-scan-wrap {
-            display: flex; justify-content: center; align-items: center; flex-direction: column;
-            margin-top: 10px; position: relative;
+        /* LABEL DI BAWAH */
+        .slot-label {
+            position: absolute; bottom: -25px; width: 100%; text-align: center;
+            font-family: 'Orbitron'; font-size: 12px; font-weight: bold; letter-spacing: 1px;
         }
-        .scan-btn {
-            width: 90px; height: 90px; border-radius: 50%;
-            background: #000; border: 2px solid var(--neon-blue);
-            position: relative; cursor: pointer; overflow: hidden;
+        .center .slot-label { font-size: 16px; bottom: -30px; }
+
+        .center-val { position: absolute; font-family: 'Orbitron'; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .side .center-val { font-size: 32px; }
+        .center .center-val { font-size: 64px; }
+        .val-sub { display: block; font-size: 9px; color: #888; text-align: center; margin-top: 5px; font-weight: bold; text-transform: uppercase; }
+
+        /* --- FINGERPRINT SCANNER --- */
+        .scan-area { 
+            position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -10px; /* Naik Dikit */
+        }
+        .fp-btn {
+            width: 90px; height: 90px; border-radius: 50%; 
+            /* BORDER KUNING JELAS (SOLID) */
+            border: 3px solid var(--c-yel); 
+            background: #080808; color: #333;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.2); /* Glow Dikit */
         }
-        .scan-icon { font-size: 40px; color: var(--neon-blue); opacity: 0.8; }
         
-        /* Ripple Effect */
-        .scan-btn::after {
-            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 2px solid var(--neon-blue); opacity: 0;
-            animation: ripple 2s infinite;
-        }
-        .scan-text { margin-top: 15px; color: var(--neon-blue); font-size: 12px; letter-spacing: 3px; font-weight: 700; animation: blink 2s infinite; }
+        /* ICON DEFAULT: KUNING JELAS */
+        .fp-svg { width: 50px; height: 50px; fill: var(--c-yel); opacity: 0.5; transition: 0.3s; }
 
-        /* Laser Overlay */
-        .laser-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            z-index: 999; display: none; flex-direction: column; justify-content: center; align-items: center;
+        /* SAAT GPS OK / ADMIN */
+        .fp-btn.ready {
+             border-color: var(--c-blue); background: radial-gradient(circle, #1a1a1a, #000);
+             box-shadow: 0 0 25px rgba(0,240,255,0.4); animation: pulse 2s infinite;
         }
-        .laser-beam {
-            width: 100%; height: 4px; background: var(--neon-green);
-            box-shadow: 0 0 20px var(--neon-green); position: absolute; bottom: 0;
-            animation: scanUp 1.2s ease-in-out forwards;
-        }
+        .fp-btn.ready .fp-svg { fill: var(--c-blue); opacity: 1; } 
+        .fp-btn.ready:active { transform: scale(0.95); background: var(--c-blue); }
+        .fp-btn.ready:active .fp-svg { fill: #000; }
 
-        /* --- USER FOCUS --- */
-        .focus-ui { display: none; text-align: center; animation: zoomIn 0.5s; }
-        .slot-tag { 
-            background: var(--glass); border: 1px solid var(--neon-blue); padding: 5px 20px; 
-            color: var(--neon-blue); font-size: 12px; font-weight: bold; border-radius: 4px; 
-            display: inline-block; margin-bottom: 20px;
+        /* Laser Line */
+        .fp-laser {
+            position: absolute; left: 0; width: 100%; height: 3px; background: var(--c-green);
+            box-shadow: 0 0 10px var(--c-green); bottom: 0; opacity: 0; pointer-events: none;
         }
-        .reactor-hud {
-            width: 260px; height: 260px; margin: 0 auto 20px; position: relative;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .r-ring { position: absolute; width: 100%; height: 100%; border: 5px dashed #333; border-radius: 50%; animation: spin 20s linear infinite; }
-        .r-progress { position: absolute; width: 90%; height: 90%; transform: rotate(-90deg); }
-        .r-progress circle { fill: none; stroke-width: 12; stroke: #111; }
-        .r-progress .fill { stroke: var(--neon-green); stroke-dasharray: 700; stroke-dashoffset: 700; transition: 1s; filter: drop-shadow(0 0 10px var(--neon-green)); }
+        .fp-btn.scanning .fp-laser { opacity: 1; animation: scanUp 1.2s ease-in-out forwards; }
+
+        /* TEKS DAFTAR PUTIH */
+        .scan-txt { margin-top: 15px; font-size: 14px; color: #fff; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
         
-        .r-info { z-index: 5; }
-        .r-val { font-family: 'Orbitron'; font-size: 64px; color: #fff; font-weight: 900; line-height: 1; }
-        .r-lbl { font-size: 12px; color: var(--neon-blue); letter-spacing: 2px; margin-top: 5px; }
-        
-        .timer-hud { font-family: 'Orbitron'; font-size: 36px; color: #fff; margin-bottom: 20px; font-variant-numeric: tabular-nums; }
-        
-        .ctrl-btns { display: flex; gap: 10px; }
-        .btn-neon {
-            flex: 1; padding: 15px; border: 1px solid var(--neon-blue); background: rgba(0, 243, 255, 0.1);
-            color: var(--neon-blue); font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
-            text-transform: uppercase; transition: 0.3s;
-        }
-        .btn-neon:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
-        .btn-red { border-color: var(--neon-red); color: var(--neon-red); background: rgba(255, 0, 60, 0.1); }
-        .btn-red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 20px var(--neon-red); }
+        .gps-txt { margin-top: 5px; font-size: 10px; color: #444; font-weight: bold; }
 
-        /* --- ADMIN PANEL --- */
-        #adminView { display: none; margin-top: 30px; border: 1px solid var(--neon-red); padding: 15px; background: #080808; }
-        .adm-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
-        .adm-in { background: #111; border: 1px solid #444; color: #fff; padding: 10px; flex: 1; text-align: center; min-width: 80px; }
-        .adm-bt { padding: 10px; background: #222; border: 1px solid #666; color: #fff; flex: 1; min-width: 80px; cursor: pointer; }
-        .adm-bt:hover { border-color: #fff; }
+        /* --- USER & ADMIN --- */
+        #v-focus { display: none; text-align: center; animation: zoomIn 0.3s; }
+        .f-card { background: #0a0a0a; border: 2px solid var(--c-blue); padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(0,240,255,0.1); margin-bottom: 20px; }
+        .f-big { font-family: 'Orbitron'; font-size: 80px; font-weight: 900; color: #fff; line-height: 1; margin: 10px 0; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        .f-timer { font-family: 'Orbitron'; font-size: 48px; color: #fff; margin-bottom: 20px; font-variant-numeric: tabular-nums; }
+        .btn-grp { display: flex; gap: 10px; }
+        .btn-act { flex: 1; padding: 18px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; border: none; cursor: pointer; text-transform: uppercase; color: #000; }
+        .bg-green { background: var(--c-green); } .bg-red { background: var(--c-red); color: #fff; } .bg-blue { background: var(--c-blue); }
 
-        /* MODAL */
-        .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200; display:none; align-items:center; justify-content:center; }
-        .modal-body { background:#0a0a0a; border:2px solid var(--neon-blue); padding:30px; width:90%; max-width:400px; text-align:center; position:relative; }
-        .modal-in { width:100%; padding:15px; background:#000; border:1px solid #333; color:#fff; margin-bottom:10px; text-align:center; font-family:'Orbitron'; font-size:16px; }
-        .modal-in:focus { border-color: var(--neon-blue); }
+        #v-admin { display: none; margin-top: 20px; border: 2px solid var(--c-red); padding: 15px; background: #080808; border-radius: 10px; }
+        .adm-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .adm-in { background: #111; border: 1px solid #555; color: #fff; padding: 12px; flex: 1; min-width: 80px; text-align: center; font-weight: bold; }
+        .adm-bt { padding: 12px; background: #222; border: 1px solid #666; color: #fff; flex: 1; min-width: 80px; cursor: pointer; font-weight: bold; font-size: 10px; }
+        .btn-float { position:fixed; bottom:80px; right:20px; background:var(--c-yel); color:#000; padding:15px 25px; border-radius:50px; font-weight:900; cursor:pointer; box-shadow:0 0 20px var(--c-yel); display:none; z-index:999; }
 
-        /* LOG */
-        #logBox { height: 100px; overflow-y: auto; font-family: monospace; font-size: 10px; color: #666; border: 1px solid #333; padding: 5px; margin-bottom: 15px; }
+        .modal-bg { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; display:none; align-items:center; justify-content:center; }
+        .modal-box { background:#111; border:1px solid var(--c-blue); padding:25px; border-radius:12px; width:90%; max-width:350px; text-align:center; }
+        .modal-inp { width:100%; padding:15px; margin-bottom:10px; background:#000; border:1px solid #444; color:#fff; font-size:16px; text-align:center; font-weight:bold; }
 
-        @keyframes scanUp { 0% { height:0; bottom:0; opacity:0; } 20% { opacity:1; } 100% { height:100%; bottom:100%; opacity:0; } }
-        @keyframes ripple { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
-        @keyframes zoomIn { from { transform: scale(0.9); opacity:0; } to { transform: scale(1); opacity:1; } }
+        .music-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 2px solid var(--c-yel); z-index: 100; }
+        .music-tog { text-align: center; padding: 10px; font-weight: 900; font-size: 10px; color: var(--c-yel); cursor: pointer; }
+        #musicFrame { width: 100%; height: 0px; border: none; transition: 0.3s; }
+
+        @keyframes scanUp { 0% { bottom:0; opacity:0; } 20% { opacity:1; } 100% { bottom:100%; opacity:0; } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(0, 240, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); } }
+        @keyframes glitch-1 { 0% { clip: rect(20px, 999px, 80px, 0); } 100% { clip: rect(50px, 999px, 10px, 0); } }
+        @keyframes glitch-2 { 0% { clip: rect(10px, 999px, 90px, 0); } 100% { clip: rect(80px, 999px, 20px, 0); } }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity:0; } to { transform: scale(1); opacity:1; } }
     </style>
 </head>
 <body>
 
     <script>
         const CFG = {
-            USE_GPS: false, LAT: -6.171583, LNG: 106.899844, RAD: 0.2,
+            USE_GPS: false, // FALSE = UNLOCKED (UNTUK TESTING)
+            LAT: -6.171583, LNG: 106.899844, RAD: 0.2,
             FONNTE: "MuR8CucXAsYd2YvWBxVo", ADMIN: "admin123",
             IDLE: 300, CLEAR: 60
         };
     </script>
 
-    <div class="header-section">
-        <div class="cyber-glitch">FC GADING</div><br>
-        <div class="cyber-sub">HOME OF MLU</div>
-        <div class="adm-lock" onclick="toggleAdmin()">🔒</div>
+    <div class="header-wrap">
+        <div class="header-left">
+            <div class="glitch-title" data-text="FC KELAPA GADING">FC KELAPA GADING</div><br>
+            <div class="sub-brand">HOME OF MLU</div>
+        </div>
+        <div class="adm-gear" onclick="window.askPass()">⚙️</div>
     </div>
 
     <div id="v-dash">
-        <div class="trinity-deck">
-            <div class="circuit-line cl-1"></div><div class="circuit-line cl-2"></div>
-            <div class="circuit-line cl-3"></div><div class="circuit-line cl-4"></div>
-            
-            <div class="queue-core">
-                <div class="q-circle"><span id="q-val">0</span></div>
-                <div class="q-txt">ANTRIAN</div>
+        <div class="queue-top">ANTRIAN: <span id="q-val">0</span> MOTOR</div>
+
+        <div class="slots-container">
+            <div id="sw-1" class="slot-wrapper side sw-left">
+                <svg class="slot-svg" viewBox="0 0 100 100"><circle class="svg-ring" cx="50" cy="50" r="48" /></svg>
+                <div class="center-val"><span id="v1">--</span><span class="val-sub" id="s1">SIAP</span></div>
+                <div class="slot-label">SLOT 1</div>
             </div>
 
-            <div id="hex-1" class="hex-slot pos-1">
-                <div class="hex-lbl">SLOT 1</div><div id="h1-val" class="hex-val">--</div><div id="h1-sub" class="hex-sub">SIAP</div>
+            <div id="sw-2" class="slot-wrapper center">
+                <svg class="slot-svg" viewBox="0 0 100 100"><circle class="svg-ring" cx="50" cy="50" r="48" /></svg>
+                <div class="center-val"><span id="v2">--</span><span class="val-sub" id="s2">SIAP</span></div>
+                <div class="slot-label">SLOT 2</div>
             </div>
-            <div id="hex-2" class="hex-slot pos-2">
-                <div class="hex-lbl">SLOT 2</div><div id="h2-val" class="hex-val">--</div><div id="h2-sub" class="hex-sub">SIAP</div>
-            </div>
-            <div id="hex-3" class="hex-slot pos-3">
-                <div class="hex-lbl">SLOT 3</div><div id="h3-val" class="hex-val">--</div><div id="h3-sub" class="hex-sub">SIAP</div>
+
+            <div id="sw-3" class="slot-wrapper side sw-right">
+                <svg class="slot-svg" viewBox="0 0 100 100"><circle class="svg-ring" cx="50" cy="50" r="48" /></svg>
+                <div class="center-val"><span id="v3">--</span><span class="val-sub" id="s3">SIAP</span></div>
+                <div class="slot-label">SLOT 3</div>
             </div>
         </div>
 
-        <div class="bio-scan-wrap">
-            <div class="scan-btn" onclick="openReg()">
-                <div class="scan-icon">Fingerprint</div> <div style="font-size:30px">ID</div>
+        <div class="scan-area">
+            <div id="fp-btn" class="fp-btn" onclick="window.openReg()">
+                <div class="fp-laser"></div> 
+                <svg class="fp-svg" viewBox="0 0 24 24"><path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.26-.03.55-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
             </div>
-            <div class="scan-text">DAFTAR ANTRIAN</div>
-            <div id="gps-msg" style="font-size:9px; margin-top:5px; color:#444;">GPS: READY</div>
+            <div class="scan-txt">DAFTAR</div>
+            <div id="gps-msg" class="gps-txt">MENGECEK LOKASI...</div>
         </div>
     </div>
 
-    <div id="laser-fx" class="laser-overlay">
-        <div style="color:var(--neon-green); font-family:'Orbitron'; font-size:24px; margin-bottom:20px;">MEMINDAI...</div>
-        <div class="laser-beam"></div>
-    </div>
-
-    <div id="v-focus" class="focus-ui">
-        <div id="u-tag" class="slot-tag">SLOT 1</div>
-        
-        <div class="reactor-hud">
-            <div class="r-ring"></div>
-            <svg class="r-progress" width="260" height="260">
-                <circle cx="130" cy="130" r="110"></circle>
-                <circle id="u-ring" class="fill" cx="130" cy="130" r="110" style="stroke-dashoffset: 700;"></circle>
-            </svg>
-            <div class="r-info">
-                <div id="u-val" class="r-val">0%</div>
-                <div id="u-sub" class="r-lbl">TARGET</div>
-            </div>
+    <div id="v-focus">
+        <div class="f-card">
+            <div id="u-head" class="f-head">ANDA DI SLOT 1</div>
+            <div id="u-val" class="f-big">0%</div>
+            <div id="u-sub" style="color:var(--c-stab); font-weight:bold;">TARGET 100%</div>
+            <div id="u-timer" class="f-timer">--:--</div>
+            <div id="u-ctrl" class="btn-grp"></div>
         </div>
-
-        <div id="u-timer" class="timer-hud">--:--</div>
-        <div id="u-ctrl" class="ctrl-btns"></div>
+        <div id="u-start" style="color:#666; font-size:12px; font-weight:bold;">START BAT: 45%</div>
     </div>
 
     <div id="v-admin">
-        <div id="adminView">
-            <div style="color:var(--neon-red); font-weight:bold; text-align:center; margin-bottom:10px;">SYSTEM LOGS</div>
-            <div id="logBox"></div>
-
-            <div style="color:#aaa; font-size:10px; margin-bottom:5px;">MANUAL OVERRIDE</div>
-            <div class="adm-grid">
-                <select id="as" class="adm-in"><option value="0">S1</option><option value="1">S2</option><option value="2">S3</option></select>
-                <input id="ap" class="adm-in" placeholder="PLAT">
-                <input id="ab" class="adm-in" placeholder="%" style="width:50px">
-                <button onclick="admForce()" class="adm-bt" style="background:var(--neon-green); color:#000;">ISI</button>
-            </div>
-            <div class="adm-grid">
-                <select id="aq" class="adm-in" style="flex:2"></select>
-                <button onclick="admMove()" class="adm-bt" style="color:var(--neon-blue)">NAIK</button>
-                <button onclick="admDel()" class="adm-bt" style="color:var(--neon-red)">DEL</button>
-            </div>
-            <div class="adm-grid">
-                <button onclick="admAddQ()" class="adm-bt" style="color:var(--neon-blue)">+ Q</button>
-                <button onclick="admClear()" class="adm-bt" style="color:var(--neon-red)">CLEAR</button>
-                <button onclick="admReset()" class="adm-bt">RESET</button>
-                <button onclick="logout()" class="adm-bt">LOGOUT</button>
-            </div>
+        <div style="text-align:center; color:var(--c-red); font-weight:900; margin-bottom:10px;">GOD MODE PANEL</div>
+        <div class="adm-row"><button onclick="window.admMon()" class="adm-bt" style="background:var(--c-stab); color:#000;">👁️ MONITOR MODE</button></div>
+        <div id="logBox" style="height:100px; overflow-y:auto; border:1px solid #333; margin:10px 0; font-size:10px; color:#aaa; padding:5px;"></div>
+        
+        <div class="adm-row">
+            <select id="as" class="adm-in"><option value="0">S1</option><option value="1">S2</option><option value="2">S3</option></select>
+            <input id="ap" class="adm-in" placeholder="PLAT">
+            <input id="ab" class="adm-in" placeholder="%" style="width:50px">
+            <button onclick="window.admForce()" class="adm-bt" style="background:var(--c-green); color:#000;">ISI</button>
+        </div>
+        <div class="adm-row">
+            <select id="aq" class="adm-in" style="flex:2"></select>
+            <button onclick="window.admMove()" class="adm-bt" style="color:var(--c-cyan)">NAIK</button>
+            <button onclick="window.admDel()" class="adm-bt" style="color:var(--c-red)">DEL</button>
+        </div>
+        <div class="adm-row">
+            <button onclick="window.admAddQ()" class="adm-bt" style="color:var(--c-cyan)">+ Q</button>
+            <button onclick="window.admClear()" class="adm-bt" style="color:var(--c-red)">CLEAR</button>
+            <button onclick="window.admReset()" class="adm-bt">RESET</button>
+            <button onclick="window.logout()" class="adm-bt">LOGOUT</button>
         </div>
     </div>
 
-    <div id="regModal" class="modal-wrap">
-        <div class="modal-body">
-            <h3 style="color:var(--neon-blue); margin-top:0;">IDENTITAS</h3>
-            <input id="frm_plat" class="modal-in" placeholder="PLAT NOMOR">
-            <input id="frm_nama" class="modal-in" placeholder="NAMA">
+    <div id="btn-back" class="btn-float" onclick="window.exitMon()">KEMBALI KE ADMIN</div>
+
+    <div id="regModal" class="modal-bg">
+        <div class="modal-box">
+            <h3 style="color:var(--c-cyan); margin-top:0;">PENDAFTARAN</h3>
+            <input id="fr_plat" class="modal-inp" placeholder="PLAT NOMOR" style="text-transform:uppercase">
+            <input id="fr_nama" class="modal-inp" placeholder="NAMA PENGENDARA">
             <div style="display:flex; gap:10px;">
-                <input id="frm_bat" type="number" class="modal-in" placeholder="BAT %">
-                <input id="frm_wa" type="number" class="modal-in" placeholder="WA">
+                <input id="fr_bat" type="number" class="modal-inp" placeholder="BAT %">
+                <input id="fr_wa" type="number" class="modal-inp" placeholder="WA (08xx)">
             </div>
-            <button onclick="submitReg()" class="btn-neon" style="width:100%; margin-top:10px;">KONFIRMASI</button>
-            <div onclick="closeReg()" style="color:var(--neon-red); margin-top:15px; cursor:pointer; font-size:12px;">BATALKAN</div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button onclick="window.closeReg()" class="adm-bt">BATAL</button>
+                <button onclick="window.submitReg()" class="adm-bt" style="background:var(--c-cyan); color:#000;">DAFTAR</button>
+            </div>
         </div>
     </div>
+
+    <div id="alertModal" class="modal-bg" style="z-index:3000"><div class="modal-box"><h3 id="al-tt" style="color:var(--c-stab)">INFO</h3><p id="al-msg" style="color:#fff">Msg</p><button onclick="window.closeAlert()" class="adm-bt" style="width:100%">OK</button></div></div>
+    <div id="promptModal" class="modal-bg" style="z-index:3000"><div class="modal-box"><h3 id="pr-tt" style="color:var(--c-cyan)">INPUT</h3><input id="pr-in" class="modal-inp"><div style="display:flex; gap:10px;"><button onclick="window.closePrompt()" class="adm-bt">BATAL</button><button id="pr-ok" class="adm-bt" style="background:var(--c-green); color:#000;">OK</button></div></div></div>
+
+    <div class="music-bar"><div class="music-tog" onclick="window.togMusic()">🎵 MUSIC PLAYER</div><iframe id="musicFrame" src="https://punyaaris1-lang.github.io/music/"></iframe></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -299,139 +275,150 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        let slots=[null,null,null], queue=[], myPlat=localStorage.getItem('myPlat'), isAdmin=localStorage.getItem('superAdminAuth')==='true';
-        let processing=[false,false,false], gpsOk=false;
+        let slots=[null,null,null], queue=[], myPlat=localStorage.getItem('myPlat'), isAdmin=localStorage.getItem('superAdminAuth')==='true', isMon=false;
+        let gpsOk=false, processing=[false,false,false];
 
-        // GPS
+        // GPS & BUTTON STATE
         if(navigator.geolocation) navigator.geolocation.watchPosition(p=>{
             const d=getDist(p.coords.latitude,p.coords.longitude,CFG.LAT,CFG.LNG);
-            gpsOk = (d<=CFG.RAD || !CFG.USE_GPS);
-            document.getElementById('gps-msg').innerHTML = gpsOk ? `<span style="color:var(--neon-green)">LOKASI OK</span>` : `<span style="color:var(--neon-red)">DILUAR JANGKAUAN</span>`;
-        });
+            gpsOk=(d<=CFG.RAD || !CFG.USE_GPS);
+            const btn=document.getElementById('fp-btn'), txt=document.getElementById('gps-msg');
+            if(gpsOk){ btn.classList.add('ready'); txt.innerHTML=`<span style="color:var(--c-green)">LOKASI TERKONFIRMASI</span>`; }
+            else { btn.classList.remove('ready'); txt.innerHTML=`<span style="color:var(--c-red)">DILUAR JANGKAUAN (${d.toFixed(2)} KM)</span>`; }
+        }, ()=>document.getElementById('gps-msg').innerText="GPS ERROR");
         function getDist(lat1,lon1,lat2,lon2){ const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))); }
 
-        // UPDATE
+        // EXPORTS
+        window.openReg=()=>{ if(!gpsOk&&!isAdmin)return window.showAlert("DILUAR JANGKAUAN"); document.getElementById('fp-btn').classList.add('scanning'); setTimeout(()=>{document.getElementById('fp-btn').classList.remove('scanning'); document.getElementById('regModal').style.display='flex';},800); };
+        window.closeReg=()=>document.getElementById('regModal').style.display='none';
+        window.showAlert=(m)=>{document.getElementById('al-msg').innerText=m; document.getElementById('alertModal').style.display='flex';};
+        window.closeAlert=()=>document.getElementById('alertModal').style.display='none';
+        window.showPrompt=(t,cb,pw=false)=>{document.getElementById('pr-tt').innerText=t; const i=document.getElementById('pr-in'); i.value=''; i.type=pw?'password':'text'; document.getElementById('pr-ok').onclick=()=>{if(i.value)cb(i.value); window.closePrompt();}; document.getElementById('promptModal').style.display='flex';};
+        window.closePrompt=()=>document.getElementById('promptModal').style.display='none';
+        window.askPass=()=>{ window.showPrompt("PASSWORD", (p)=>{if(p===CFG.ADMIN){localStorage.setItem('superAdminAuth','true'); location.reload();}else window.showAlert("SALAH");}, true); };
+        window.logout=()=>{localStorage.clear(); location.reload();};
+        window.togMusic=()=>{const f=document.getElementById('musicFrame'); f.style.height=f.style.height==='0px'?'150px':'0px';};
+
+        // --- CORE ---
         onSnapshot(ref, (d) => {
             if(d.exists()) { const dt=d.data(); slots=dt.chargingSlots||[null,null,null]; queue=dt.waitingQueue||[]; renderUI(); }
         });
 
         function renderUI() {
-            // DASHBOARD TRINITY
+            // DASHBOARD SPEEDO
             slots.forEach((s,i)=>{
-                const el=document.getElementById(`hex-${i+1}`), val=document.getElementById(`h${i+1}-val`), sub=document.getElementById(`h${i+1}-sub`);
-                if(!s) { el.className=`hex-slot pos-${i+1}`; val.innerText="--"; sub.innerText="SIAP"; }
+                const sw=document.getElementById(`sw-${i+1}`), val=document.getElementById(`v${i+1}`), sub=document.getElementById(`s${i+1}`);
+                if(!s) { sw.classList.remove('active','charging'); val.innerText="--"; sub.innerText="SIAP"; }
                 else {
                     let pct=s.startBattery, st="WAITING";
                     if(s.startTime) {
                         const dur=s.durationMinutes, now=new Date(), stt=s.startTime.toDate();
-                        const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-Math.max(0,(stt.getTime()+dur*60000-now.getTime())/1000))/(dur*60));
+                        const rem=Math.max(0, Math.ceil((stt.getTime()+dur*60000-now.getTime())/1000));
+                        const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-rem)/(dur*60));
                         pct=Math.min(s.targetLimit||100, Math.floor(s.startBattery+gain));
-                        st="CHARGING"; el.className=`hex-slot pos-${i+1} charging`;
-                    } else { el.className=`hex-slot pos-${i+1} active`; }
+                        st="CHARGING"; sw.classList.add('charging'); sw.classList.remove('active');
+                    } else { sw.classList.add('active'); sw.classList.remove('charging'); }
                     val.innerText=pct+"%"; sub.innerText=st;
                 }
             });
-            document.getElementById('q-val').innerText = queue.length;
+            document.getElementById('q-val').innerText=queue.length;
 
-            // SWITCH VIEW
-            const vDash=document.getElementById('v-dash'), vUser=document.getElementById('v-focus'), vAdm=document.getElementById('v-admin');
-            vDash.style.display='none'; vUser.style.display='none'; vAdm.style.display='none';
+            // VIEW SWAP
+            const vD=document.getElementById('v-dash'), vU=document.getElementById('v-focus'), vA=document.getElementById('v-admin'), bB=document.getElementById('btn-back');
+            vD.style.display='none'; vU.style.display='none'; vA.style.display='none'; bB.style.display='none';
 
             let myS=slots.findIndex(s=>s&&s.plat===myPlat), myQ=queue.findIndex(q=>q.plat===myPlat);
 
-            if(isAdmin) { vAdm.style.display='block'; updateAdmin(); }
-            else if(myS!==-1) { vUser.style.display='block'; renderFocus(slots[myS], myS, 'SLOT'); }
-            else if(myQ!==-1) { vUser.style.display='block'; renderFocus(queue[myQ], myQ, 'QUEUE'); }
-            else { vDash.style.display='block'; }
+            if(isAdmin && !isMon) { vA.style.display='block'; updAdm(); }
+            else if(isAdmin && isMon) { vD.style.display='block'; bB.style.display='block'; }
+            else if(myS!==-1) { vU.style.display='block'; renderFocus(slots[myS], myS, 'SLOT'); }
+            else if(myQ!==-1) { vU.style.display='block'; renderFocus(queue[myQ], myQ, 'QUEUE'); }
+            else { vD.style.display='block'; }
         }
 
         function renderFocus(d, i, type) {
-            const elT=document.getElementById('u-tag'), elV=document.getElementById('u-val'), elS=document.getElementById('u-sub'), elTm=document.getElementById('u-timer'), elC=document.getElementById('u-ctrl'), elR=document.getElementById('u-ring');
+            const elH=document.getElementById('u-head'), elV=document.getElementById('u-val'), elS=document.getElementById('u-sub'), elSt=document.getElementById('u-start'), elTm=document.getElementById('u-timer'), elC=document.getElementById('u-ctrl');
             if(type==='SLOT') {
-                elT.innerText=`SLOT ${i+1}`;
+                elH.innerText=`ANDA DI SLOT ${i+1}`; elSt.innerText=`START: ${d.startBattery}%`;
                 if(d.startTime) {
                     const dur=d.durationMinutes, st=d.startTime.toDate(), now=new Date();
                     const rem=Math.max(0, Math.ceil((st.getTime()+dur*60000-now.getTime())/1000));
                     elTm.innerText=`${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
                     const pct=Math.min(d.targetLimit, Math.floor(d.startBattery+((d.targetLimit-d.startBattery)*((dur*60-rem)/(dur*60)))));
-                    elV.innerText=pct+"%"; elS.innerText=`TARGET ${d.targetLimit}%`;
-                    const off=700-((pct/d.targetLimit)*700); elR.style.strokeDashoffset=off; elR.style.stroke="var(--neon-green)";
-                    if(d.plat===myPlat || isAdmin) elC.innerHTML=`<button onclick="window.actEdit(${i})" class="btn-neon">EDIT</button><button onclick="window.actStop(${i})" class="btn-neon btn-red">STOP</button>`;
+                    elV.innerText=pct+"%"; elS.innerText=`TARGET ${d.targetLimit}%`; elS.style.color="var(--c-stab)";
+                    if(d.plat===myPlat||isAdmin) elC.innerHTML=`<button onclick="window.askEdit(${i})" class="btn-act bg-blue">EDIT</button><button onclick="window.actStop(${i})" class="btn-act bg-red">STOP</button>`;
                 } else if(d.finishTime) {
-                    elV.innerText="SELESAI"; elS.innerText="AUTO CLEAR"; elTm.innerText="00:00";
-                    elC.innerHTML=`<button onclick="window.actClear(${i})" class="btn-neon btn-red">KOSONGKAN</button>`;
+                    elV.innerText="DONE"; elS.innerText="AUTO CLEAR"; elTm.innerText="00:00";
+                    elC.innerHTML=`<button onclick="window.actClear(${i})" class="btn-act bg-red">CLEAR</button>`;
                 } else {
                     elV.innerText="SIAP"; elS.innerText="KLIK MULAI"; elTm.innerText="AUTO 5 MIN";
-                    if(d.plat===myPlat || isAdmin) elC.innerHTML=`<button onclick="window.actStart(${i})" class="btn-neon">MULAI</button>`;
+                    if(d.plat===myPlat||isAdmin) elC.innerHTML=`<button onclick="window.actStart(${i})" class="btn-act bg-green">MULAI</button>`;
                 }
             } else {
-                elT.innerText="ANTRIAN"; elV.innerText=`#${i+1}`; elS.innerText="MENUNGGU"; elTm.innerText=`EST: ${(i+1)*20} MIN`;
-                elC.innerHTML=`<button onclick="window.actCancel(${i})" class="btn-neon btn-red">BATAL</button>`;
+                elH.innerText=`STATUS ANTRIAN`; elV.innerText=`#${i+1}`; elS.innerText="MENUNGGU"; elTm.innerText=`EST: ${(i+1)*20} MIN`;
+                elC.innerHTML=`<button onclick="window.actCancel(${i})" class="btn-act bg-red">BATAL</button>`;
             }
         }
 
-        // --- ACTIONS ---
-        window.openReg = () => { if(!gpsOk && !isAdmin) return alert("DILUAR JANGKAUAN"); document.getElementById('laser-fx').style.display='flex'; setTimeout(()=>{document.getElementById('laser-fx').style.display='none'; document.getElementById('regModal').style.display='flex';},1200); };
-        window.closeReg = () => document.getElementById('regModal').style.display='none';
-        
+        // --- TRANSACTIONS ---
         window.submitReg = () => {
-            const p=document.getElementById('frm_plat').value.toUpperCase().replace(/\s/g,''), n=document.getElementById('frm_nama').value, b=parseInt(document.getElementById('frm_bat').value), w=document.getElementById('frm_wa').value;
-            if(!p||isNaN(b)) return alert("Isi Data");
-            closeReg(); localStorage.setItem('myPlat', p); myPlat=p;
+            const p=document.getElementById('fr_plat').value.toUpperCase().replace(/\s/g,''), n=document.getElementById('fr_nama').value, b=parseInt(document.getElementById('fr_bat').value), w=document.getElementById('fr_wa').value;
+            if(!p||isNaN(b)) return window.showAlert("DATA KURANG");
+            window.closeReg(); localStorage.setItem('myPlat', p); myPlat=p;
             runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data(); let s=d.chargingSlots, q=d.waitingQueue;
-                if(q.find(x=>x.plat===p) || s.find(x=>x&&x.plat===p)) throw "Double";
+                if(q.find(x=>x.plat===p)||s.find(x=>x&&x.plat===p)) throw "SUDAH ADA";
                 const u={plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null, reservedTime:null};
                 let e=-1; for(let i=0;i<3;i++) if(!s[i]){e=i;break;}
                 if(e!==-1) {
-                    const tar=(q.length>=11?85:q.length>=6?90:q.length>=3?95:100);
-                    u.targetLimit=tar; u.durationMinutes=getDur(b,tar); u.reservedTime=new Date(); s[e]=u;
+                    const tar=getTar(q.length); u.targetLimit=tar; u.durationMinutes=getDur(b,tar); u.reservedTime=new Date(); s[e]=u;
                 } else q.push(u);
-                t.update(ref,{chargingSlots:s, waitingQueue:q}); log(`REG: ${p}`);
-            }).catch(e=>alert(e));
+                t.update(ref,{chargingSlots:s, waitingQueue:q}); addLog(`REG: ${p}`);
+            }).catch(e=>window.showAlert(e));
         };
 
-        // --- MATH & HELPERS ---
-        const CURVE=[[100,0],[99,1],[95,4],[90,17],[89,18],[85,22],[81,25],[72,33],[61,45],[50,50],[20,68],[0,86]];
-        function getDur(s,t){ if(s>=t)return 5; const f=v=>{for(let i=0;i<CURVE.length-1;i++)if(v<=CURVE[i][0]&&v>=CURVE[i+1][0])return CURVE[i][1]+((CURVE[i][0]-v)/(CURVE[i][0]-CURVE[i+1][0]))*(CURVE[i+1][1]-CURVE[i][1]);return 0;}; return Math.max(1,Math.ceil(f(s)-f(t))); }
-        
-        // --- ADMIN & LOGIC ---
-        window.actStart=(i)=>runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); const s=d.chargingSlots[i]; s.startTime=new Date(); s.reservedTime=null; t.update(ref,d); log(`START S${i+1}`);});
-        window.actStop=(i)=>{if(confirm("Stop?")){const s=slots[i]; sendWA(s.wa,s.userName,s.plat); runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d); log(`STOP S${i+1}`);});}};
+        window.actStart=(i)=>runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=new Date(); d.chargingSlots[i].reservedTime=null; t.update(ref,d);});
+        window.actStop=(i)=>{ if(confirm("Stop?")){ const s=slots[i]; sendWA(s.wa,s.userName,s.plat); runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d);}); }};
         window.actClear=(i)=>runTransaction(db,async(t)=>{
             const d=(await t.get(ref)).data(); d.chargingSlots[i]=null;
             if(d.waitingQueue.length>0){
-                const n=d.waitingQueue.shift(), tar=(d.waitingQueue.length>=11?85:d.waitingQueue.length>=6?90:d.waitingQueue.length>=3?95:100);
+                const n=d.waitingQueue.shift(), tar=getTar(d.waitingQueue.length);
                 d.chargingSlots[i]={...n, startTime:null, reservedTime:new Date(), targetLimit:tar, durationMinutes:getDur(n.startBattery,tar)};
-            } t.update(ref,d); log(`CLEAR S${i+1}`);
+            } t.update(ref,d);
         });
-        window.actCancel=(i)=>{if(confirm("Batal?"))runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,d);}).then(()=>{localStorage.removeItem('myPlat'); location.reload();});};
-        window.actEdit=(i)=>{const m=prompt("Menit:"); if(m) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d); log(`EDIT S${i+1}`);});};
+        window.actEdit=(i, m)=>{ runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d);}); };
+        window.actCancel=(i)=>{ runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,d);}).then(()=>{localStorage.removeItem('myPlat'); location.reload();}); };
 
-        window.toggleAdmin=()=>{const p=prompt("Pass:"); if(p===CFG.ADMIN){localStorage.setItem('superAdminAuth','true'); location.reload();}};
-        window.logout=()=>{localStorage.clear(); location.reload();};
-        function updateAdmin(){ document.getElementById('aq').innerHTML=queue.map((q,i)=>`<option value="${i}">#${i+1} ${q.plat}</option>`).join(''); }
-        function log(m){ const l=document.getElementById('logBox'); const t=new Date().toLocaleTimeString(); l.innerHTML=`<div>[${t}] ${m}</div>`+l.innerHTML; }
-        async function sendWA(n,nm,p){ try{const f=new FormData();f.append('target',n);f.append('message',`Halo ${nm}, Motor ${p} selesai.`);await fetch("https://api.fonnte.com/send",{method:"POST",headers:{'Authorization':CFG.FONNTE},body:f});}catch(e){} }
-
-        window.admForce=()=>{ const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value); if(p) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', wa:'-', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d); log(`FORCE S${parseInt(s)+1}`);}); };
+        // ADMIN EXTRAS
+        window.admMon=()=>{ isMon=true; renderUI(); }; window.exitMon=()=>{ isMon=false; renderUI(); };
+        window.askEdit=(i)=>window.showPrompt("MENIT:", (m)=>window.actEdit(i,m));
+        window.admForce=()=>{const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value); if(p) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', wa:'-', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d);});};
+        window.admAddQ=()=>{ window.showPrompt("PLAT:", (p)=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.push({plat:p.toUpperCase(), userName:'ADM', wa:'-', startBattery:50, targetLimit:100}); t.update(ref,d);});}); };
         window.admMove=()=>{ const qi=document.getElementById('aq').value; runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); const n=d.waitingQueue.splice(qi,1)[0]; d.waitingQueue.unshift(n); t.update(ref,d);}); };
         window.admDel=()=>{ const qi=document.getElementById('aq').value; runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(qi,1); t.update(ref,d);}); };
         window.admClear=()=>{ window.actClear(document.getElementById('as').value); };
-        window.admAddQ=()=>{ const p=prompt("Plat:"); if(p) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.push({plat:p.toUpperCase(), userName:'ADM', startBattery:50, wa:'-', targetLimit:100}); t.update(ref,d);}); };
-        window.admReset=()=>{ if(confirm("RESET?")) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[]}); };
+        window.admReset=()=>{ setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[]}); };
+
+        // HELPER
+        const CURVE=[[100,0],[99,1],[95,4],[90,17],[89,18],[85,22],[81,25],[72,33],[61,45],[50,50],[20,68],[0,86]];
+        function getDur(s,t){ if(s>=t)return 5; const f=v=>{for(let i=0;i<CURVE.length-1;i++)if(v<=CURVE[i][0]&&v>=CURVE[i+1][0])return CURVE[i][1]+((CURVE[i][0]-v)/(CURVE[i][0]-CURVE[i+1][0]))*(CURVE[i+1][1]-CURVE[i][1]);return 0;}; return Math.max(1,Math.ceil(f(s)-f(t))); }
+        function getTar(l){ return l>=11?85:(l>=6?90:(l>=3?95:100)); }
+        function updAdm(){ document.getElementById('aq').innerHTML=queue.map((q,i)=>`<option value="${i}">#${i+1} ${q.plat}</option>`).join(''); }
+        function addLog(m){const l=document.getElementById('logBox'), d=new Date().toLocaleTimeString(); l.innerHTML=`<div>[${d}] ${m}</div>`+l.innerHTML;}
+        async function sendWA(n,nm,p){ try{const f=new FormData();f.append('target',n);f.append('message',`Halo ${nm}, Motor ${p} selesai.`);await fetch("https://api.fonnte.com/send",{method:"POST",headers:{'Authorization':CFG.FONNTE},body:f});}catch(e){} }
 
         setInterval(()=>{
             const now=new Date();
             slots.forEach((s,i)=>{
                 if(!s||processing[i])return;
-                if(!s.startTime&&!s.finishTime&&s.reservedTime&&now-(s.reservedTime.toDate())>CFG.IDLE*1000) window.actStart(i);
-                if(s.startTime&&s.startTime.toDate().getTime()+s.durationMinutes*60000-now.getTime()<=0){
+                if(s.reservedTime && now-(s.reservedTime.toDate())>CFG.IDLE*1000) window.actStart(i);
+                if(s.startTime && s.startTime.toDate().getTime()+s.durationMinutes*60000-now.getTime()<=0){
                     processing[i]=true; sendWA(s.wa,s.userName,s.plat);
                     runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d);}).then(()=>processing[i]=false);
                 }
-                if(s.finishTime&&now-(s.finishTime.toDate())>CFG.CLEAR*1000) window.actClear(i);
+                if(s.finishTime && now-(s.finishTime.toDate())>CFG.CLEAR*1000) window.actClear(i);
             });
+            if(slots.some(s=>s&&s.startTime)) renderUI();
         },1000);
     </script>
 </body>
