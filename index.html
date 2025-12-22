@@ -3,193 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MAKA FONTE SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <title>MAKA TRINITY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --c-cyan: #00F0FF; --c-green: #00E676; --c-red: #FF1744; --c-gold: #FFD700;
-            --bg: #050505; --panel: #111;
+            --neon-blue: #00F3FF;
+            --neon-green: #00FF41;
+            --neon-red: #FF003C;
+            --neon-gold: #FFD700;
+            --bg-dark: #020204;
+            --glass: rgba(0, 243, 255, 0.05);
         }
         * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            margin: 0; padding: 15px; background-color: var(--bg); color: #fff;
-            font-family: 'Inter', sans-serif; min-height: 100vh; padding-bottom: 140px; overflow-x: hidden;
+            margin: 0; padding: 15px; background-color: var(--bg-dark); color: #fff;
+            font-family: 'Rajdhani', sans-serif; min-height: 100vh; padding-bottom: 150px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 60%),
+                linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, .03) 25%, rgba(0, 255, 65, .03) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .03) 75%, rgba(0, 255, 65, .03) 76%, transparent 77%, transparent), 
+                linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, .03) 25%, rgba(0, 255, 65, .03) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, .03) 75%, rgba(0, 255, 65, .03) 76%, transparent 77%, transparent);
+            background-size: 100% 100%, 50px 50px, 50px 50px;
         }
 
-        /* BACKGROUND */
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px; z-index: -2; opacity: 0.3; pointer-events: none;
+        /* --- HEADER GLITCH EXTREME --- */
+        .header-section { text-align: center; margin-bottom: 40px; position: relative; padding-top: 20px; }
+        .cyber-glitch {
+            font-family: 'Orbitron'; font-weight: 900; font-size: 40px; color: #fff;
+            text-shadow: 2px 2px var(--neon-red), -2px -2px var(--neon-blue);
+            position: relative; display: inline-block; letter-spacing: 4px;
         }
-
-        /* HEADER */
-        .hud-header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--c-cyan); padding-bottom: 15px; margin-bottom: 20px;
+        .cyber-sub {
+            color: var(--neon-gold); font-size: 14px; font-weight: 700; letter-spacing: 6px; 
+            margin-top: 5px; text-transform: uppercase;
+            border-top: 1px solid var(--neon-gold); display: inline-block; padding-top: 5px;
         }
-        .brand { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: #fff; letter-spacing: 1px; }
-        .brand span { color: var(--c-green); }
-        .adm-btn { font-size: 24px; padding: 10px; cursor: pointer; color: #666; transition: 0.3s; }
-        .adm-btn:hover { color: #fff; transform: rotate(90deg); }
+        .adm-lock { position: absolute; top: 0; right: 0; font-size: 20px; color: #333; cursor: pointer; }
 
-        /* VIEW MANAGER */
-        .view-section { display: none; animation: fadeIn 0.5s; }
-        .view-section.active { display: block; }
-
-        /* 1. FORMULIR */
-        .reg-box {
-            background: var(--panel); border: 1px solid #333; padding: 25px; border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        /* --- TRINITY DASHBOARD (SEGITIGA) --- */
+        .trinity-deck {
+            position: relative; height: 320px; margin-bottom: 20px;
+            display: flex; justify-content: center;
         }
-        .inp-label { font-size: 11px; color: #aaa; margin-bottom: 8px; display: block; font-weight: 800; letter-spacing: 1px; }
-        .cy-input {
-            width: 100%; background: #000; border: 1px solid #444; color: #fff;
-            padding: 16px; font-family: 'Orbitron'; font-size: 20px; text-align: center;
-            outline: none; margin-bottom: 20px; border-radius: 8px; transition: 0.3s;
-        }
-        .cy-input:focus { border-color: var(--c-cyan); box-shadow: 0 0 15px rgba(0,240,255,0.2); }
-
-        /* 2. REAKTOR RAKSASA */
-        .focus-wrap { text-align: center; margin-top: 10px; }
-        .reactor-container { position: relative; width: 300px; height: 300px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; }
-        .ring-outer { position: absolute; width: 100%; height: 100%; border: 2px dashed #333; border-radius: 50%; animation: spin 30s linear infinite; }
-        .ring-inner { position: absolute; width: 85%; height: 85%; border-radius: 50%; border: 4px solid transparent; border-top: 4px solid var(--c-cyan); border-bottom: 4px solid var(--c-cyan); animation: spin 8s linear infinite reverse; }
-        .ring-progress { position: absolute; width: 94%; height: 94%; transform: rotate(-90deg); }
-        .ring-progress circle { fill: none; stroke-width: 10; stroke: #111; }
-        .ring-progress .fill { stroke: var(--c-green); stroke-dasharray: 816; stroke-dashoffset: 816; transition: 1s; filter: drop-shadow(0 0 15px var(--c-green)); }
         
-        .r-content { z-index: 10; text-align: center; }
-        .r-val { font-family: 'Orbitron'; font-size: 80px; font-weight: 900; line-height: 1; text-shadow: 0 0 30px var(--c-green); }
-        .r-sub { font-size: 16px; color: var(--c-cyan); font-weight: 800; letter-spacing: 2px; margin-top: 5px; }
+        /* POSISI HEXAGON */
+        .hex-slot {
+            position: absolute; width: 110px; height: 120px;
+            background: rgba(0,0,0,0.8); 
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 2px solid #333; transition: 0.3s;
+        }
+        /* Slot 1: Atas Tengah */
+        .pos-1 { top: 0; left: 50%; transform: translateX(-50%); z-index: 2; }
+        /* Slot 2: Bawah Kiri */
+        .pos-2 { bottom: 0; left: 10px; }
+        /* Slot 3: Bawah Kanan */
+        .pos-3 { bottom: 0; right: 10px; }
+
+        /* Connecting Lines (Sirkuit) */
+        .circuit-line {
+            position: absolute; background: #333; z-index: 1;
+            box-shadow: 0 0 5px var(--neon-blue);
+        }
+        .cl-1 { width: 2px; height: 80px; top: 110px; left: 50%; transform: translateX(-50%); } /* Tengah Vertikal */
+        .cl-2 { width: 100px; height: 2px; top: 190px; left: 50%; transform: translateX(-50%); } /* Tengah Horizontal */
+        .cl-3 { width: 2px; height: 30px; top: 190px; left: 60px; } /* Ke Kiri */
+        .cl-4 { width: 2px; height: 30px; top: 190px; right: 60px; } /* Ke Kanan */
+
+        /* Styles Hexagon Active */
+        .hex-slot.active { border-color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue) inset; }
+        .hex-slot.charging { border-color: var(--neon-green); box-shadow: 0 0 15px var(--neon-green) inset; }
         
-        .timer-display { font-family: 'Orbitron'; font-size: 42px; color: #fff; font-weight: bold; margin-bottom: 25px; font-variant-numeric: tabular-nums; }
-        .status-badge { display: inline-block; background: #222; color: #aaa; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 12px; margin-bottom: 25px; }
+        .hex-lbl { font-size: 10px; color: #888; font-weight: bold; margin-bottom: 5px; }
+        .hex-val { font-family: 'Orbitron'; font-size: 24px; color: #fff; font-weight: 900; }
+        .hex-sub { font-size: 9px; color: var(--neon-blue); margin-top: 5px; font-weight: bold; text-transform: uppercase; }
 
-        /* TOMBOL SHINY */
-        .btn-act {
-            width: 100%; padding: 18px; font-family: 'Orbitron'; font-weight: 900; font-size: 16px;
-            border: none; cursor: pointer; border-radius: 8px; position: relative; overflow: hidden;
-            text-transform: uppercase; letter-spacing: 1px; margin-top: 10px;
+        /* Queue Center */
+        .queue-core {
+            position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; z-index: 3;
         }
-        .btn-act::before {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-            animation: sheen 3s infinite;
+        .q-circle {
+            width: 60px; height: 60px; border-radius: 50%; background: #000;
+            border: 2px dashed var(--neon-gold); display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron'; font-size: 18px; color: var(--neon-gold);
+            animation: spin 10s linear infinite;
         }
-        .btn-blue { background: var(--c-cyan); color: #000; }
-        .btn-green { background: var(--c-green); color: #000; }
-        .btn-red { background: var(--c-red); color: #fff; }
+        .q-txt { font-size: 10px; color: #aaa; margin-top: 5px; letter-spacing: 1px; }
 
-        /* 3. MONITOR BAWAH */
-        .monitor-area { margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; }
-        .sec-title { font-size: 11px; color: #888; font-weight: 900; margin-bottom: 10px; letter-spacing: 1px; }
-        .slot-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; font-size: 14px; font-weight: bold; color: #666; }
-        .slot-row b { color: #fff; font-family: 'Orbitron'; }
-        .slot-row .hl { color: var(--c-cyan); }
+        /* --- BIO SCANNER BUTTON --- */
+        .bio-scan-wrap {
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            margin-top: 10px; position: relative;
+        }
+        .scan-btn {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: #000; border: 2px solid var(--neon-blue);
+            position: relative; cursor: pointer; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+        .scan-icon { font-size: 40px; color: var(--neon-blue); opacity: 0.8; }
+        
+        /* Ripple Effect */
+        .scan-btn::after {
+            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            border: 2px solid var(--neon-blue); opacity: 0;
+            animation: ripple 2s infinite;
+        }
+        .scan-text { margin-top: 15px; color: var(--neon-blue); font-size: 12px; letter-spacing: 3px; font-weight: 700; animation: blink 2s infinite; }
 
-        /* 4. ADMIN PANEL */
-        #adminView { border: 1px solid var(--c-red); padding: 15px; background: #0a0a0a; margin-top: 20px; border-radius: 8px; }
-        .adm-head { text-align: center; color: var(--c-red); font-weight: 900; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .adm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
-        .adm-box { background: #000; border: 1px solid #444; padding: 10px; text-align: center; border-radius: 4px; }
-        .adm-box h2 { margin: 0; font-family: 'Orbitron'; font-size: 18px; color: #fff; }
-        .adm-box small { display: block; font-size: 9px; color: #888; margin-top: 2px; }
-        .adm-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        .adm-inp { background: #111; border: 1px solid #444; color: #fff; padding: 10px; flex: 1; text-align: center; font-weight: bold; border-radius: 4px; }
-        .adm-click { padding: 10px; background: #222; border: 1px solid #555; color: #fff; flex: 1; cursor: pointer; font-size: 10px; font-weight: bold; border-radius: 4px; }
-        .adm-click:hover { background: #333; border-color: #fff; }
+        /* Laser Overlay */
+        .laser-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            z-index: 999; display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .laser-beam {
+            width: 100%; height: 4px; background: var(--neon-green);
+            box-shadow: 0 0 20px var(--neon-green); position: absolute; bottom: 0;
+            animation: scanUp 1.2s ease-in-out forwards;
+        }
 
-        /* Music */
-        .music-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 2px solid var(--c-cyan); z-index: 100; }
-        .music-toggle { text-align: center; padding: 10px; font-weight: bold; font-size: 12px; color: var(--c-cyan); cursor: pointer; }
-        #musicFrame { width: 100%; height: 0px; border: none; transition: 0.3s; }
+        /* --- USER FOCUS --- */
+        .focus-ui { display: none; text-align: center; animation: zoomIn 0.5s; }
+        .slot-tag { 
+            background: var(--glass); border: 1px solid var(--neon-blue); padding: 5px 20px; 
+            color: var(--neon-blue); font-size: 12px; font-weight: bold; border-radius: 4px; 
+            display: inline-block; margin-bottom: 20px;
+        }
+        .reactor-hud {
+            width: 260px; height: 260px; margin: 0 auto 20px; position: relative;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .r-ring { position: absolute; width: 100%; height: 100%; border: 5px dashed #333; border-radius: 50%; animation: spin 20s linear infinite; }
+        .r-progress { position: absolute; width: 90%; height: 90%; transform: rotate(-90deg); }
+        .r-progress circle { fill: none; stroke-width: 12; stroke: #111; }
+        .r-progress .fill { stroke: var(--neon-green); stroke-dasharray: 700; stroke-dashoffset: 700; transition: 1s; filter: drop-shadow(0 0 10px var(--neon-green)); }
+        
+        .r-info { z-index: 5; }
+        .r-val { font-family: 'Orbitron'; font-size: 64px; color: #fff; font-weight: 900; line-height: 1; }
+        .r-lbl { font-size: 12px; color: var(--neon-blue); letter-spacing: 2px; margin-top: 5px; }
+        
+        .timer-hud { font-family: 'Orbitron'; font-size: 36px; color: #fff; margin-bottom: 20px; font-variant-numeric: tabular-nums; }
+        
+        .ctrl-btns { display: flex; gap: 10px; }
+        .btn-neon {
+            flex: 1; padding: 15px; border: 1px solid var(--neon-blue); background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-blue); font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-neon:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 20px var(--neon-blue); }
+        .btn-red { border-color: var(--neon-red); color: var(--neon-red); background: rgba(255, 0, 60, 0.1); }
+        .btn-red:hover { background: var(--neon-red); color: #fff; box-shadow: 0 0 20px var(--neon-red); }
 
+        /* --- ADMIN PANEL --- */
+        #adminView { display: none; margin-top: 30px; border: 1px solid var(--neon-red); padding: 15px; background: #080808; }
+        .adm-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+        .adm-in { background: #111; border: 1px solid #444; color: #fff; padding: 10px; flex: 1; text-align: center; min-width: 80px; }
+        .adm-bt { padding: 10px; background: #222; border: 1px solid #666; color: #fff; flex: 1; min-width: 80px; cursor: pointer; }
+        .adm-bt:hover { border-color: #fff; }
+
+        /* MODAL */
+        .modal-wrap { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200; display:none; align-items:center; justify-content:center; }
+        .modal-body { background:#0a0a0a; border:2px solid var(--neon-blue); padding:30px; width:90%; max-width:400px; text-align:center; position:relative; }
+        .modal-in { width:100%; padding:15px; background:#000; border:1px solid #333; color:#fff; margin-bottom:10px; text-align:center; font-family:'Orbitron'; font-size:16px; }
+        .modal-in:focus { border-color: var(--neon-blue); }
+
+        /* LOG */
+        #logBox { height: 100px; overflow-y: auto; font-family: monospace; font-size: 10px; color: #666; border: 1px solid #333; padding: 5px; margin-bottom: 15px; }
+
+        @keyframes scanUp { 0% { height:0; bottom:0; opacity:0; } 20% { opacity:1; } 100% { height:100%; bottom:100%; opacity:0; } }
+        @keyframes ripple { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes sheen { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
-        @keyframes fadeIn { from {opacity:0} to {opacity:1} }
+        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity:0; } to { transform: scale(1); opacity:1; } }
     </style>
 </head>
 <body>
 
-    <div class="hud-header">
-        <div class="brand">FC <span>GADING</span></div>
-        <div class="adm-btn" onclick="toggleAdmin()">⚙️</div>
+    <script>
+        const CFG = {
+            USE_GPS: false, LAT: -6.171583, LNG: 106.899844, RAD: 0.2,
+            FONNTE: "MuR8CucXAsYd2YvWBxVo", ADMIN: "admin123",
+            IDLE: 300, CLEAR: 60
+        };
+    </script>
+
+    <div class="header-section">
+        <div class="cyber-glitch">FC GADING</div><br>
+        <div class="cyber-sub">HOME OF MLU</div>
+        <div class="adm-lock" onclick="toggleAdmin()">🔒</div>
     </div>
 
-    <div id="v-form" class="view-section">
-        <div class="reg-box">
-            <h3 style="margin-top:0; text-align:center; margin-bottom:20px; font-family:'Orbitron'">FORMULIR ANTRIAN</h3>
-            <span class="inp-label">PLAT NOMOR</span>
-            <input id="rp" class="cy-input" placeholder="B 1234 ABC" style="text-transform:uppercase">
-            <span class="inp-label">NAMA PENGENDARA</span>
-            <input id="rn" class="cy-input" placeholder="NAMA ANDA">
-            <div style="display:flex; gap:10px;">
-                <div style="flex:1"><span class="inp-label">BATERAI (%)</span><input id="rb" type="number" class="cy-input" placeholder="0-99"></div>
-                <div style="flex:1"><span class="inp-label">WHATSAPP</span><input id="rw" type="number" class="cy-input" placeholder="08xxx"></div>
-            </div>
-            <button onclick="reg()" class="btn-act btn-blue">AMBIL NOMOR ANTRIAN</button>
-        </div>
-    </div>
-
-    <div id="v-focus" class="view-section">
-        <div class="focus-wrap">
-            <div id="f-badge" class="status-badge">MEMUAT STATUS...</div>
-            <div class="reactor-container">
-                <div class="ring-outer"></div><div class="ring-inner"></div>
-                <svg class="ring-progress" width="300" height="300">
-                    <circle cx="150" cy="150" r="130"></circle>
-                    <circle id="f-ring" class="fill" cx="150" cy="150" r="130" style="stroke-dashoffset: 816;"></circle>
-                </svg>
-                <div class="r-content" style="position: absolute;">
-                    <div id="f-val" class="r-val">0%</div>
-                    <div id="f-sub" class="r-sub">TARGET</div>
-                </div>
-            </div>
-            <div id="f-timer" class="timer-display">--:--</div>
-            <div id="f-controls"></div>
-        </div>
-    </div>
-
-    <div id="v-admin" class="view-section">
-        <div id="adminView">
-            <div class="adm-head">PANEL ADMIN</div>
-            <div class="adm-grid" id="adm-mon"></div>
+    <div id="v-dash">
+        <div class="trinity-deck">
+            <div class="circuit-line cl-1"></div><div class="circuit-line cl-2"></div>
+            <div class="circuit-line cl-3"></div><div class="circuit-line cl-4"></div>
             
-            <span class="inp-label" style="color:#aaa">MANUAL ASSIGN</span>
-            <div class="adm-row">
-                <select id="as" class="adm-inp"><option value="0">SLOT 1</option><option value="1">SLOT 2</option><option value="2">SLOT 3</option></select>
-                <input id="ap" class="adm-inp" placeholder="PLAT">
-                <input id="ab" class="adm-inp" placeholder="%" style="width:50px">
-            </div>
-            <button onclick="admForce()" class="btn-act btn-green" style="padding:10px; font-size:12px; margin-bottom:20px;">ISI SLOT MANUAL</button>
-
-            <span class="inp-label" style="color:#aaa">QUEUE CONTROL</span>
-            <div class="adm-row">
-                <select id="aq" class="adm-inp" style="flex:2"></select>
-                <button onclick="admMove()" class="adm-click" style="color:var(--c-main)">MOVE</button>
-                <button onclick="admDel()" class="adm-click" style="color:var(--c-red)">HAPUS</button>
+            <div class="queue-core">
+                <div class="q-circle"><span id="q-val">0</span></div>
+                <div class="q-txt">ANTRIAN</div>
             </div>
 
-            <span class="inp-label" style="color:#aaa">DARURAT</span>
-            <div class="adm-row">
-                <button onclick="admClear()" class="adm-click">CLEAR SLOT</button>
-                <button onclick="admReset()" class="adm-click">RESET DB</button>
-                <button onclick="logout()" class="adm-click" style="background:#333; color:#fff;">LOGOUT</button>
+            <div id="hex-1" class="hex-slot pos-1">
+                <div class="hex-lbl">SLOT 1</div><div id="h1-val" class="hex-val">--</div><div id="h1-sub" class="hex-sub">SIAP</div>
+            </div>
+            <div id="hex-2" class="hex-slot pos-2">
+                <div class="hex-lbl">SLOT 2</div><div id="h2-val" class="hex-val">--</div><div id="h2-sub" class="hex-sub">SIAP</div>
+            </div>
+            <div id="hex-3" class="hex-slot pos-3">
+                <div class="hex-lbl">SLOT 3</div><div id="h3-val" class="hex-val">--</div><div id="h3-sub" class="hex-sub">SIAP</div>
+            </div>
+        </div>
+
+        <div class="bio-scan-wrap">
+            <div class="scan-btn" onclick="openReg()">
+                <div class="scan-icon">Fingerprint</div> <div style="font-size:30px">ID</div>
+            </div>
+            <div class="scan-text">DAFTAR ANTRIAN</div>
+            <div id="gps-msg" style="font-size:9px; margin-top:5px; color:#444;">GPS: READY</div>
+        </div>
+    </div>
+
+    <div id="laser-fx" class="laser-overlay">
+        <div style="color:var(--neon-green); font-family:'Orbitron'; font-size:24px; margin-bottom:20px;">MEMINDAI...</div>
+        <div class="laser-beam"></div>
+    </div>
+
+    <div id="v-focus" class="focus-ui">
+        <div id="u-tag" class="slot-tag">SLOT 1</div>
+        
+        <div class="reactor-hud">
+            <div class="r-ring"></div>
+            <svg class="r-progress" width="260" height="260">
+                <circle cx="130" cy="130" r="110"></circle>
+                <circle id="u-ring" class="fill" cx="130" cy="130" r="110" style="stroke-dashoffset: 700;"></circle>
+            </svg>
+            <div class="r-info">
+                <div id="u-val" class="r-val">0%</div>
+                <div id="u-sub" class="r-lbl">TARGET</div>
+            </div>
+        </div>
+
+        <div id="u-timer" class="timer-hud">--:--</div>
+        <div id="u-ctrl" class="ctrl-btns"></div>
+    </div>
+
+    <div id="v-admin">
+        <div id="adminView">
+            <div style="color:var(--neon-red); font-weight:bold; text-align:center; margin-bottom:10px;">SYSTEM LOGS</div>
+            <div id="logBox"></div>
+
+            <div style="color:#aaa; font-size:10px; margin-bottom:5px;">MANUAL OVERRIDE</div>
+            <div class="adm-grid">
+                <select id="as" class="adm-in"><option value="0">S1</option><option value="1">S2</option><option value="2">S3</option></select>
+                <input id="ap" class="adm-in" placeholder="PLAT">
+                <input id="ab" class="adm-in" placeholder="%" style="width:50px">
+                <button onclick="admForce()" class="adm-bt" style="background:var(--neon-green); color:#000;">ISI</button>
+            </div>
+            <div class="adm-grid">
+                <select id="aq" class="adm-in" style="flex:2"></select>
+                <button onclick="admMove()" class="adm-bt" style="color:var(--neon-blue)">NAIK</button>
+                <button onclick="admDel()" class="adm-bt" style="color:var(--neon-red)">DEL</button>
+            </div>
+            <div class="adm-grid">
+                <button onclick="admAddQ()" class="adm-bt" style="color:var(--neon-blue)">+ Q</button>
+                <button onclick="admClear()" class="adm-bt" style="color:var(--neon-red)">CLEAR</button>
+                <button onclick="admReset()" class="adm-bt">RESET</button>
+                <button onclick="logout()" class="adm-bt">LOGOUT</button>
             </div>
         </div>
     </div>
 
-    <div class="monitor-area">
-        <div class="sec-title">STATUS SLOT LAIN</div>
-        <div id="slot-list"></div>
-        <div style="text-align:center; margin-top:20px; font-size:12px; font-weight:bold; color:#666;" id="q-stat">ANTRIAN: 0</div>
-    </div>
-
-    <div class="music-bar">
-        <div class="music-toggle" onclick="toggleMusic()">🎵 AUDIO PLAYER (KLIK)</div>
-        <iframe id="musicFrame" src="https://punyaaris1-lang.github.io/music/"></iframe>
+    <div id="regModal" class="modal-wrap">
+        <div class="modal-body">
+            <h3 style="color:var(--neon-blue); margin-top:0;">IDENTITAS</h3>
+            <input id="frm_plat" class="modal-in" placeholder="PLAT NOMOR">
+            <input id="frm_nama" class="modal-in" placeholder="NAMA">
+            <div style="display:flex; gap:10px;">
+                <input id="frm_bat" type="number" class="modal-in" placeholder="BAT %">
+                <input id="frm_wa" type="number" class="modal-in" placeholder="WA">
+            </div>
+            <button onclick="submitReg()" class="btn-neon" style="width:100%; margin-top:10px;">KONFIRMASI</button>
+            <div onclick="closeReg()" style="color:var(--neon-red); margin-top:15px; cursor:pointer; font-size:12px;">BATALKAN</div>
+        </div>
     </div>
 
     <script type="module">
@@ -200,263 +299,140 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
 
-        // --- CONFIG FONTE & WA ---
-        // ISIKAN TOKEN FONNTE ANDA DI BAWAH INI
-        const FONTE_TOKEN = "MASUKAN_TOKEN_FONNTE_DISINI"; 
-        const WA_MSG = "*FC GADING ALERT*\n\nHalo *[nama]*,\nMotor: *[plat]*\n\nPengisian daya telah SELESAI atau DIHENTIKAN. Mohon segera pindahkan unit agar antrian berikutnya dapat masuk.\n\nTerima Kasih.";
+        let slots=[null,null,null], queue=[], myPlat=localStorage.getItem('myPlat'), isAdmin=localStorage.getItem('superAdminAuth')==='true';
+        let processing=[false,false,false], gpsOk=false;
 
-        let slots = [null,null,null], queue = [], myPlat = localStorage.getItem('myPlat'), isAdmin = localStorage.getItem('superAdminAuth') === 'true';
-        let processing = [false, false, false];
+        // GPS
+        if(navigator.geolocation) navigator.geolocation.watchPosition(p=>{
+            const d=getDist(p.coords.latitude,p.coords.longitude,CFG.LAT,CFG.LNG);
+            gpsOk = (d<=CFG.RAD || !CFG.USE_GPS);
+            document.getElementById('gps-msg').innerHTML = gpsOk ? `<span style="color:var(--neon-green)">LOKASI OK</span>` : `<span style="color:var(--neon-red)">DILUAR JANGKAUAN</span>`;
+        });
+        function getDist(lat1,lon1,lat2,lon2){ const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))); }
 
-        // AUTO FILL
-        try { const raw = localStorage.getItem('maka_user'); if(raw) { const p = JSON.parse(raw); document.getElementById('rp').value = p.plat||''; document.getElementById('rn').value = p.nama||''; } } catch(e){}
-
-        // CLOCK
-        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString('id-ID'), 1000);
-
-        // MATH
-        const CURVE = [[100,0], [99,1], [95,4], [90,17], [89,18], [85,22], [81,25], [72,33], [61,45], [50,50], [20,68], [0,86]];
-        function getCurveTime(v) { for(let i=0;i<CURVE.length-1;i++){ if(v<=CURVE[i][0]&&v>=CURVE[i+1][0]){ const r=(CURVE[i][0]-v)/(CURVE[i][0]-CURVE[i+1][0]); return CURVE[i][1]+r*(CURVE[i+1][1]-CURVE[i][1]); } } return 0; }
-        function getDur(s, t) { if(s>=t) return 5; return Math.max(1, Math.ceil(getCurveTime(s)-getCurveTime(t))); }
-        function getTar(l) { return l>=11?85:(l>=6?90:(l>=3?95:100)); }
-
-        // --- FONTE SENDER ---
-        async function sendFonnte(target, name, plat) {
-            if(!target || target.length < 5 || target === '-') return;
-            const msg = WA_MSG.replace('[nama]', name).replace('[plat]', plat);
-            
-            const data = new FormData();
-            data.append('target', target);
-            data.append('message', msg);
-            data.append('countryCode', '62');
-
-            try {
-                await fetch("https://api.fonnte.com/send", {
-                    method: "POST",
-                    headers: { "Authorization": FONTE_TOKEN },
-                    body: data
-                });
-                console.log("WA Sent to " + target);
-            } catch (e) { console.error("Fonte Error", e); }
-        }
-
-        // --- UPDATE ENGINE ---
-        function updateUI() {
-            let myS = -1, myQ = -1;
-            for(let i=0; i<slots.length; i++) if(slots[i] && slots[i].plat === myPlat) myS = i;
-            for(let i=0; i<queue.length; i++) if(queue[i].plat === myPlat) myQ = i;
-
-            const vForm = document.getElementById('v-form');
-            const vFocus = document.getElementById('v-focus');
-            const vAdmin = document.getElementById('v-admin');
-
-            vForm.style.display = 'none'; vFocus.style.display = 'none'; vAdmin.style.display = 'none';
-
-            if(isAdmin) {
-                vAdmin.style.display = 'block';
-                updateAdminMon(); updateAdminQ();
-            } else if (myS !== -1) {
-                vFocus.style.display = 'block';
-                updateFocus(slots[myS], myS, 'charging');
-            } else if (myQ !== -1) {
-                vFocus.style.display = 'block';
-                updateFocus(queue[myQ], myQ, 'waiting');
-            } else {
-                vForm.style.display = 'block';
-            }
-
-            updateSlotList();
-            document.getElementById('q-stat').innerText = "ANTRIAN MENUNGGU: " + queue.length;
-        }
-
-        // FOKUS USER
-        function updateFocus(data, idx, type) {
-            const elBadge = document.getElementById('f-badge');
-            const elVal = document.getElementById('f-val');
-            const elSub = document.getElementById('f-sub');
-            const elTimer = document.getElementById('f-timer');
-            const elRing = document.getElementById('f-ring');
-            const elCtrl = document.getElementById('f-controls');
-
-            if (type === 'charging') {
-                const tar = data.targetLimit || 100;
-                let pct = data.startBattery;
-                let timeStr = "CALC";
-
-                if (data.startTime) {
-                    const st = data.startTime.toDate();
-                    const dur = data.durationMinutes;
-                    const rem = Math.max(0, Math.ceil((st.getTime() + dur*60000 - new Date().getTime())/1000));
-                    let m = Math.floor(rem/60); let s = rem % 60;
-                    timeStr = `${m}:${s<10?'0'+s:s}`;
-                    const gain = (tar - data.startBattery) * ((dur*60 - rem)/(dur*60));
-                    pct = Math.min(tar, Math.floor(data.startBattery + gain));
-                }
-
-                elBadge.innerText = `SLOT ${idx+1} AKTIF`;
-                elVal.innerText = pct + "%";
-                elSub.innerText = "TARGET: " + tar + "%";
-                elTimer.innerText = timeStr;
-                const offset = 816 - ((pct/tar) * 816);
-                elRing.style.strokeDashoffset = offset;
-                elRing.style.stroke = "var(--c-green)";
-
-                if(!data.startTime) elCtrl.innerHTML = `<button onclick="window.actStart(${idx})" class="btn-act btn-blue">MULAI PENGISIAN</button>`;
-                else elCtrl.innerHTML = `<div style="display:flex; gap:10px;"><button onclick="window.actEdit(${idx})" class="btn-act btn-blue" style="flex:1">EDIT TIMER</button><button onclick="window.actStop(${idx})" class="btn-act btn-red" style="flex:1">STOP</button></div>`;
-
-            } else {
-                elBadge.innerText = "MENUNGGU GILIRAN";
-                elVal.innerText = "#" + (idx+1);
-                elSub.innerText = "URUTAN";
-                elTimer.innerText = "EST: " + ((idx+1)*20) + " MENIT";
-                elRing.style.strokeDashoffset = 0; elRing.style.stroke = "var(--c-cyan)";
-                elCtrl.innerHTML = `<button onclick="window.actCancel(${idx})" class="btn-act btn-red">BATALKAN ANTRIAN</button>`;
-            }
-        }
-
-        // LIST BAWAH
-        function updateSlotList() {
-            const c = document.getElementById('slot-list');
-            let html = '';
-            slots.forEach((s, i) => {
-                if(!isAdmin && s && s.plat === myPlat) return;
-                if(!s) html += `<div class="slot-row"><span class="sr-left">SLOT ${i+1}</span><span class="sr-val" style="color:#444">KOSONG</span></div>`;
-                else {
-                    let st = "SIAP CAS"; let pct = s.startBattery;
-                    if(s.startTime) {
-                        const stt=s.startTime.toDate(); const dur=s.durationMinutes;
-                        const rem=Math.max(0, Math.ceil((new Date(stt.getTime()+dur*60000)-new Date())/60000));
-                        const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-rem)/(dur*60));
-                        pct=Math.min(s.targetLimit||100, Math.floor(s.startBattery+gain));
-                        st = "MENGISI";
-                    }
-                    html += `<div class="slot-row"><span class="sr-left">SLOT ${i+1}</span><div class="sr-right"><div class="sr-val hl">BAT: ${pct}%</div><div class="sr-stat">${st}</div></div></div>`;
-                }
-            });
-            c.innerHTML = html;
-        }
-
-        // ADMIN FUNCTIONS
-        function updateAdminMon() {
-            document.getElementById('adm-mon').innerHTML = slots.map((s,i) => {
-                if(!s) return `<div class="adm-box"><h4>SLOT ${i+1}</h4><h2>--</h2><small>KOSONG</small></div>`;
-                let pct = s.startBattery;
-                if(s.startTime) {
-                    const stt=s.startTime.toDate(); const dur=s.durationMinutes;
-                    const rem=Math.max(0, Math.ceil((new Date(stt.getTime()+dur*60000)-new Date())/60000));
-                    const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-rem)/(dur*60));
-                    pct=Math.min(s.targetLimit||100, Math.floor(s.startBattery+gain));
-                }
-                return `<div class="adm-box" style="border-color:${s.startTime?'var(--c-green)':'var(--c-cyan)'}"><h4>SLOT ${i+1}</h4><h2>${pct}%</h2><small>${s.plat}</small></div>`;
-            }).join('');
-        }
-        function updateAdminQ() { document.getElementById('aq').innerHTML = queue.map((q,i)=>`<option value="${i}">#${i+1} ${q.plat}</option>`).join(''); }
-
-        // --- DATABASE ---
+        // UPDATE
         onSnapshot(ref, (d) => {
-            if(d.exists()) {
-                const data = d.data();
-                slots = data.chargingSlots || [null,null,null];
-                queue = data.waitingQueue || [];
-                updateUI();
-            }
+            if(d.exists()) { const dt=d.data(); slots=dt.chargingSlots||[null,null,null]; queue=dt.waitingQueue||[]; renderUI(); }
         });
 
-        // --- AUTO KILL & FONTE TRIGGER ---
-        setInterval(() => {
-            let needsUpdate = false;
-            const now = new Date();
-            slots.forEach((s, i) => {
-                if (s && s.startTime) needsUpdate = true;
-                if (s && s.startTime && !processing[i]) {
-                    const st = s.startTime.toDate();
-                    const dur = s.durationMinutes;
-                    
-                    // JIKA WAKTU HABIS
-                    if (st.getTime() + dur * 60000 - now.getTime() <= 0) {
-                        processing[i] = true;
-                        
-                        // KIRIM WA DULU
-                        sendFonnte(s.wa, s.userName, s.plat);
-
-                        // HAPUS & NEXT
-                        runTransaction(db, async(t) => {
-                            const d = (await t.get(ref)).data();
-                            d.chargingSlots[i] = null;
-                            if (d.waitingQueue.length > 0) {
-                                const nextUser = d.waitingQueue.shift();
-                                const tar = getTar(d.waitingQueue.length);
-                                d.chargingSlots[i] = { ...nextUser, startTime: null, targetLimit: tar, durationMinutes: getDur(nextUser.startBattery, tar) };
-                            }
-                            t.update(ref, d);
-                        }).then(() => processing[i] = false).catch(() => processing[i] = false);
-                    }
+        function renderUI() {
+            // DASHBOARD TRINITY
+            slots.forEach((s,i)=>{
+                const el=document.getElementById(`hex-${i+1}`), val=document.getElementById(`h${i+1}-val`), sub=document.getElementById(`h${i+1}-sub`);
+                if(!s) { el.className=`hex-slot pos-${i+1}`; val.innerText="--"; sub.innerText="SIAP"; }
+                else {
+                    let pct=s.startBattery, st="WAITING";
+                    if(s.startTime) {
+                        const dur=s.durationMinutes, now=new Date(), stt=s.startTime.toDate();
+                        const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-Math.max(0,(stt.getTime()+dur*60000-now.getTime())/1000))/(dur*60));
+                        pct=Math.min(s.targetLimit||100, Math.floor(s.startBattery+gain));
+                        st="CHARGING"; el.className=`hex-slot pos-${i+1} charging`;
+                    } else { el.className=`hex-slot pos-${i+1} active`; }
+                    val.innerText=pct+"%"; sub.innerText=st;
                 }
             });
-            if(needsUpdate) updateUI();
-        }, 1000);
+            document.getElementById('q-val').innerText = queue.length;
+
+            // SWITCH VIEW
+            const vDash=document.getElementById('v-dash'), vUser=document.getElementById('v-focus'), vAdm=document.getElementById('v-admin');
+            vDash.style.display='none'; vUser.style.display='none'; vAdm.style.display='none';
+
+            let myS=slots.findIndex(s=>s&&s.plat===myPlat), myQ=queue.findIndex(q=>q.plat===myPlat);
+
+            if(isAdmin) { vAdm.style.display='block'; updateAdmin(); }
+            else if(myS!==-1) { vUser.style.display='block'; renderFocus(slots[myS], myS, 'SLOT'); }
+            else if(myQ!==-1) { vUser.style.display='block'; renderFocus(queue[myQ], myQ, 'QUEUE'); }
+            else { vDash.style.display='block'; }
+        }
+
+        function renderFocus(d, i, type) {
+            const elT=document.getElementById('u-tag'), elV=document.getElementById('u-val'), elS=document.getElementById('u-sub'), elTm=document.getElementById('u-timer'), elC=document.getElementById('u-ctrl'), elR=document.getElementById('u-ring');
+            if(type==='SLOT') {
+                elT.innerText=`SLOT ${i+1}`;
+                if(d.startTime) {
+                    const dur=d.durationMinutes, st=d.startTime.toDate(), now=new Date();
+                    const rem=Math.max(0, Math.ceil((st.getTime()+dur*60000-now.getTime())/1000));
+                    elTm.innerText=`${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
+                    const pct=Math.min(d.targetLimit, Math.floor(d.startBattery+((d.targetLimit-d.startBattery)*((dur*60-rem)/(dur*60)))));
+                    elV.innerText=pct+"%"; elS.innerText=`TARGET ${d.targetLimit}%`;
+                    const off=700-((pct/d.targetLimit)*700); elR.style.strokeDashoffset=off; elR.style.stroke="var(--neon-green)";
+                    if(d.plat===myPlat || isAdmin) elC.innerHTML=`<button onclick="window.actEdit(${i})" class="btn-neon">EDIT</button><button onclick="window.actStop(${i})" class="btn-neon btn-red">STOP</button>`;
+                } else if(d.finishTime) {
+                    elV.innerText="SELESAI"; elS.innerText="AUTO CLEAR"; elTm.innerText="00:00";
+                    elC.innerHTML=`<button onclick="window.actClear(${i})" class="btn-neon btn-red">KOSONGKAN</button>`;
+                } else {
+                    elV.innerText="SIAP"; elS.innerText="KLIK MULAI"; elTm.innerText="AUTO 5 MIN";
+                    if(d.plat===myPlat || isAdmin) elC.innerHTML=`<button onclick="window.actStart(${i})" class="btn-neon">MULAI</button>`;
+                }
+            } else {
+                elT.innerText="ANTRIAN"; elV.innerText=`#${i+1}`; elS.innerText="MENUNGGU"; elTm.innerText=`EST: ${(i+1)*20} MIN`;
+                elC.innerHTML=`<button onclick="window.actCancel(${i})" class="btn-neon btn-red">BATAL</button>`;
+            }
+        }
 
         // --- ACTIONS ---
-        window.reg = () => {
-            const p=document.getElementById('rp').value.toUpperCase().replace(/\s/g,'');
-            const n=document.getElementById('rn').value, b=parseInt(document.getElementById('rb').value);
-            const w=document.getElementById('rw').value || '-';
-            if(!p||isNaN(b)) return alert("Isi Data!");
-            localStorage.setItem('myPlat', p); myPlat=p;
-            
+        window.openReg = () => { if(!gpsOk && !isAdmin) return alert("DILUAR JANGKAUAN"); document.getElementById('laser-fx').style.display='flex'; setTimeout(()=>{document.getElementById('laser-fx').style.display='none'; document.getElementById('regModal').style.display='flex';},1200); };
+        window.closeReg = () => document.getElementById('regModal').style.display='none';
+        
+        window.submitReg = () => {
+            const p=document.getElementById('frm_plat').value.toUpperCase().replace(/\s/g,''), n=document.getElementById('frm_nama').value, b=parseInt(document.getElementById('frm_bat').value), w=document.getElementById('frm_wa').value;
+            if(!p||isNaN(b)) return alert("Isi Data");
+            closeReg(); localStorage.setItem('myPlat', p); myPlat=p;
             runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                let q=d.waitingQueue||[], s=d.chargingSlots||[null,null,null];
-                if(q.find(x=>x.plat===p)) throw "Sudah Antri";
-                
-                const newUser = {plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null};
-                let emptyIndex = -1;
-                for(let i=0; i<3; i++) { if(s[i] == null) { emptyIndex = i; break; } }
-
-                if(emptyIndex !== -1) {
-                    const tar = getTar(q.length);
-                    newUser.targetLimit = tar;
-                    newUser.durationMinutes = getDur(b, tar);
-                    s[emptyIndex] = newUser;
-                    t.update(ref, {chargingSlots: s});
-                } else {
-                    q.push(newUser);
-                    t.update(ref, {waitingQueue: q});
-                }
+                const d=(await t.get(ref)).data(); let s=d.chargingSlots, q=d.waitingQueue;
+                if(q.find(x=>x.plat===p) || s.find(x=>x&&x.plat===p)) throw "Double";
+                const u={plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null, reservedTime:null};
+                let e=-1; for(let i=0;i<3;i++) if(!s[i]){e=i;break;}
+                if(e!==-1) {
+                    const tar=(q.length>=11?85:q.length>=6?90:q.length>=3?95:100);
+                    u.targetLimit=tar; u.durationMinutes=getDur(b,tar); u.reservedTime=new Date(); s[e]=u;
+                } else q.push(u);
+                t.update(ref,{chargingSlots:s, waitingQueue:q}); log(`REG: ${p}`);
             }).catch(e=>alert(e));
         };
 
-        window.actStart = (i) => runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const s=d.chargingSlots[i]; s.startTime=new Date(); s.targetLimit=getTar(d.waitingQueue.length); s.durationMinutes=getDur(s.startBattery,s.targetLimit); t.update(ref,d); });
+        // --- MATH & HELPERS ---
+        const CURVE=[[100,0],[99,1],[95,4],[90,17],[89,18],[85,22],[81,25],[72,33],[61,45],[50,50],[20,68],[0,86]];
+        function getDur(s,t){ if(s>=t)return 5; const f=v=>{for(let i=0;i<CURVE.length-1;i++)if(v<=CURVE[i][0]&&v>=CURVE[i+1][0])return CURVE[i][1]+((CURVE[i][0]-v)/(CURVE[i][0]-CURVE[i+1][0]))*(CURVE[i+1][1]-CURVE[i][1]);return 0;}; return Math.max(1,Math.ceil(f(s)-f(t))); }
         
-        window.actStop = (i) => { 
-            if(confirm("Stop Pengisian?")) {
-                const s = slots[i];
-                if(s) sendFonnte(s.wa, s.userName, s.plat); // MANUAL STOP JUGA KIRIM WA
+        // --- ADMIN & LOGIC ---
+        window.actStart=(i)=>runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); const s=d.chargingSlots[i]; s.startTime=new Date(); s.reservedTime=null; t.update(ref,d); log(`START S${i+1}`);});
+        window.actStop=(i)=>{if(confirm("Stop?")){const s=slots[i]; sendWA(s.wa,s.userName,s.plat); runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d); log(`STOP S${i+1}`);});}};
+        window.actClear=(i)=>runTransaction(db,async(t)=>{
+            const d=(await t.get(ref)).data(); d.chargingSlots[i]=null;
+            if(d.waitingQueue.length>0){
+                const n=d.waitingQueue.shift(), tar=(d.waitingQueue.length>=11?85:d.waitingQueue.length>=6?90:d.waitingQueue.length>=3?95:100);
+                d.chargingSlots[i]={...n, startTime:null, reservedTime:new Date(), targetLimit:tar, durationMinutes:getDur(n.startBattery,tar)};
+            } t.update(ref,d); log(`CLEAR S${i+1}`);
+        });
+        window.actCancel=(i)=>{if(confirm("Batal?"))runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,d);}).then(()=>{localStorage.removeItem('myPlat'); location.reload();});};
+        window.actEdit=(i)=>{const m=prompt("Menit:"); if(m) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d); log(`EDIT S${i+1}`);});};
 
-                runTransaction(db, async(t)=>{ 
-                    const d=(await t.get(ref)).data(); d.chargingSlots[i]=null; 
-                    if(d.waitingQueue.length>0){
-                        const n=d.waitingQueue.shift(); 
-                        const tl=getTar(d.waitingQueue.length); 
-                        d.chargingSlots[i]={...n, startTime:null, targetLimit:tl, durationMinutes:getDur(n.startBattery,tl)};
-                    } 
-                    t.update(ref,d); 
-                });
-            }
-        };
-        
-        window.actEdit = (i) => { const m=prompt("Menit:"); if(m&&!isNaN(m)) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=new Date(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d); }); };
-        window.actCancel = (i) => { if(confirm("Batal?")) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,{waitingQueue:d.waitingQueue}); }).then(()=>{localStorage.removeItem('myPlat'); myPlat=null; location.reload();}); };
+        window.toggleAdmin=()=>{const p=prompt("Pass:"); if(p===CFG.ADMIN){localStorage.setItem('superAdminAuth','true'); location.reload();}};
+        window.logout=()=>{localStorage.clear(); location.reload();};
+        function updateAdmin(){ document.getElementById('aq').innerHTML=queue.map((q,i)=>`<option value="${i}">#${i+1} ${q.plat}</option>`).join(''); }
+        function log(m){ const l=document.getElementById('logBox'); const t=new Date().toLocaleTimeString(); l.innerHTML=`<div>[${t}] ${m}</div>`+l.innerHTML; }
+        async function sendWA(n,nm,p){ try{const f=new FormData();f.append('target',n);f.append('message',`Halo ${nm}, Motor ${p} selesai.`);await fetch("https://api.fonnte.com/send",{method:"POST",headers:{'Authorization':CFG.FONNTE},body:f});}catch(e){} }
 
-        window.toggleAdmin = () => { const p=prompt("Pass:"); if(p==="admin123"){ localStorage.setItem('superAdminAuth','true'); location.reload(); }};
-        window.logout = () => { localStorage.clear(); location.reload(); };
-        window.admForce = () => { const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value); if(p) runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d); }); };
-        window.admClear = () => window.actStop(document.getElementById('as').value);
-        window.admReset = () => { if(confirm("RESET?")) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[]}); };
-        window.admMove = () => { const qi=document.getElementById('aq').value, si=document.getElementById('as').value; runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); if(d.chargingSlots[si]) throw "Busy"; const i=d.waitingQueue.splice(qi,1)[0]; const tar=getTar(d.waitingQueue.length); d.chargingSlots[si]={...i, startTime:null, targetLimit:tar, durationMinutes:getDur(i.startBattery,tar)}; t.update(ref,d); }); };
-        window.admDel = () => { const qi=document.getElementById('aq').value; runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.waitingQueue.splice(qi,1); t.update(ref,{waitingQueue:d.waitingQueue}); }); };
+        window.admForce=()=>{ const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value); if(p) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', wa:'-', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d); log(`FORCE S${parseInt(s)+1}`);}); };
+        window.admMove=()=>{ const qi=document.getElementById('aq').value; runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); const n=d.waitingQueue.splice(qi,1)[0]; d.waitingQueue.unshift(n); t.update(ref,d);}); };
+        window.admDel=()=>{ const qi=document.getElementById('aq').value; runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(qi,1); t.update(ref,d);}); };
+        window.admClear=()=>{ window.actClear(document.getElementById('as').value); };
+        window.admAddQ=()=>{ const p=prompt("Plat:"); if(p) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.push({plat:p.toUpperCase(), userName:'ADM', startBattery:50, wa:'-', targetLimit:100}); t.update(ref,d);}); };
+        window.admReset=()=>{ if(confirm("RESET?")) setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[]}); };
 
-        window.toggleMusic = () => { const f=document.getElementById('musicFrame'); f.style.height = f.style.height==='0px'?'150px':'0px'; };
+        setInterval(()=>{
+            const now=new Date();
+            slots.forEach((s,i)=>{
+                if(!s||processing[i])return;
+                if(!s.startTime&&!s.finishTime&&s.reservedTime&&now-(s.reservedTime.toDate())>CFG.IDLE*1000) window.actStart(i);
+                if(s.startTime&&s.startTime.toDate().getTime()+s.durationMinutes*60000-now.getTime()<=0){
+                    processing[i]=true; sendWA(s.wa,s.userName,s.plat);
+                    runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d);}).then(()=>processing[i]=false);
+                }
+                if(s.finishTime&&now-(s.finishTime.toDate())>CFG.CLEAR*1000) window.actClear(i);
+            });
+        },1000);
     </script>
 </body>
 </html>
