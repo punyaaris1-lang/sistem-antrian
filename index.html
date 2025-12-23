@@ -3,423 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MAKA HUD TUNED</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <title>FC KELAPA GADING - SMART SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --c-blue: #00F0FF; /* BIRU NEON */
-            --c-yel: #CCFF00;  /* KUNING NEON (STABILO) */
-            --c-red: #FF003C; 
-            --c-green: #00FF41;
-            --bg: #020205; 
-        }
-        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            margin: 0; padding: 15px; background-color: var(--bg); color: #fff;
-            font-family: 'Inter', sans-serif; min-height: 100vh; padding-bottom: 150px;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 30%, #0d1a2b 0%, #000 70%);
-        }
+        :root { --bg: #020205; --accent: #CCFF00; --blue: #00F0FF; --red: #ff003c; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at 50% 30%, #0d1a2b 0%, #000 70%); }
 
-        /* HEADER */
-        .header-wrap { 
-            display: flex; justify-content: space-between; align-items: flex-start;
-            margin-bottom: 10px; padding-top: 10px; border-bottom: 1px solid #222; padding-bottom: 15px;
+        /* --- 1. HEADER & GLITCH (Warna saja, posisi tetap) --- */
+        .header-wrap { padding: 25px 20px; position: relative; z-index: 100; text-align: center; }
+        .glitch-title { 
+            font-family: 'Orbitron'; font-weight: 900; font-size: 26px; color: var(--blue); 
+            text-shadow: 0 0 15px var(--blue);
+            animation: text-flicker 6s infinite step-end;
         }
-        .glitch-title {
-            font-family: 'Orbitron'; font-weight: 900; font-size: 26px;
-            color: var(--c-blue); text-shadow: 0 0 15px var(--c-blue);
-            letter-spacing: 1px; position: relative; display: inline-block;
+        @keyframes text-flicker {
+            0%, 96%, 100% { color: var(--blue); text-shadow: 0 0 15px var(--blue); }
+            97% { color: #fff; text-shadow: -2px 0 var(--red), 2px 0 var(--accent); } /* Efek warna */
+            98% { color: var(--bg); text-shadow: none; }
+            99% { color: var(--blue); text-shadow: 2px 0 var(--red), -2px 0 var(--blue); }
         }
-        .glitch-title::before, .glitch-title::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
-        }
-        .glitch-title::before { left: 2px; text-shadow: -1px 0 var(--c-red); clip: rect(24px, 550px, 90px, 0); animation: glitch-1 3s infinite linear alternate-reverse; }
-        .glitch-title::after { left: -2px; text-shadow: -1px 0 var(--c-yel); clip: rect(85px, 550px, 140px, 0); animation: glitch-2 2.5s infinite linear alternate-reverse; }
-        
-        .sub-brand { 
-            color: var(--c-yel); font-size: 10px; font-weight: 800; letter-spacing: 4px; margin-top: 5px; 
-            text-transform: uppercase; text-shadow: 0 0 5px rgba(204, 255, 0, 0.5);
-        }
-        .adm-gear { font-size: 24px; color: #444; cursor: pointer; padding: 5px; }
+        .sub-brand { color: var(--accent); font-size: 10px; letter-spacing: 4px; font-weight: bold; margin-top: 5px; text-shadow: 0 0 5px var(--accent); }
 
-        /* --- DASHBOARD V-SHAPE --- */
-        #v-dash { display: block; }
+        /* --- 2. HUD VISUALISASI SLOT --- */
+        .viewport { position: relative; height: 350px; width: 100%; margin-top: 10px; }
+        .slot-box { position: absolute; display: flex; flex-direction: column; align-items: center; }
         
-        .queue-top { text-align: center; font-family: 'Orbitron'; font-size: 14px; color: #fff; margin-bottom: 10px; font-weight: bold; }
-        .queue-top span { color: var(--c-yel); font-size: 18px; text-shadow: 0 0 10px var(--c-yel); }
+        /* Z-Index: Slot Tengah (Biru) menutupi samping */
+        .s-side { width: 130px; top: 160px; z-index: 5; } 
+        .s-left { left: 10px; } .s-right { right: 10px; }
+        .s-mid { width: 220px; top: 20px; left: 50%; transform: translateX(-50%); z-index: 20; }
 
-        /* CONTAINER TINGGI DISESUAIKAN */
-        .slots-container {
-            position: relative; height: 320px; width: 100%; margin-bottom: 20px;
-        }
-        
-        .slot-wrapper { position: absolute; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
-        
-        /* POSISI (V-Shape Dinaikkan Sedikit) */
-        /* Tengah (Besar) */
-        .slot-wrapper.center { width: 220px; height: 220px; top: 0; left: 50%; transform: translateX(-50%); z-index: 10; }
-        
-        /* Kiri & Kanan (Kecil) - Posisi top: 140px (Naik dari 180px) */
-        .slot-wrapper.side { width: 120px; height: 120px; top: 155px; } 
-        .sw-left { left: 5px; } 
-        .sw-right { right: 5px; }
-
-        /* SVG & Colors */
-        .slot-svg { position: absolute; top:0; left:0; width:100%; height:100%; overflow: visible; }
-        .svg-ring { fill: rgba(10,15,25,0.95); stroke-width: 5px; transition: 0.3s; }
-        
-        /* WARNA FIX */
-        .center .svg-ring { stroke: var(--c-blue); filter: drop-shadow(0 0 10px var(--c-blue)); }
-        .center .slot-label { color: var(--c-blue); }
-        
-        .side .svg-ring { stroke: var(--c-yel); filter: drop-shadow(0 0 8px var(--c-yel)); }
-        .side .slot-label { color: var(--c-yel); }
-
-        /* LABEL DI BAWAH */
-        .slot-label {
-            position: absolute; bottom: -25px; width: 100%; text-align: center;
-            font-family: 'Orbitron'; font-size: 12px; font-weight: bold; letter-spacing: 1px;
-        }
-        .center .slot-label { font-size: 16px; bottom: -30px; }
-
-        .center-val { position: absolute; font-family: 'Orbitron'; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .side .center-val { font-size: 32px; }
-        .center .center-val { font-size: 64px; }
-        .val-sub { display: block; font-size: 9px; color: #888; text-align: center; margin-top: 5px; font-weight: bold; text-transform: uppercase; }
-
-        /* --- FINGERPRINT SCANNER --- */
-        .scan-area { 
-            position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -10px; /* Naik Dikit */
-        }
-        .fp-btn {
-            width: 90px; height: 90px; border-radius: 50%; 
-            /* BORDER KUNING JELAS (SOLID) */
-            border: 3px solid var(--c-yel); 
-            background: #080808; color: #333;
+        .circle-ui {
+            width: 100%; aspect-ratio: 1/1; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
-            box-shadow: 0 0 15px rgba(204, 255, 0, 0.2); /* Glow Dikit */
+            border: 8px solid transparent; transition: 0.3s;
+            flex-direction: column;
         }
+
+        /* Styling Kuning (Samping) */
+        .s-side .circle-ui { 
+            background: rgba(0,0,0,0.6); 
+            border-color: var(--accent); 
+            box-shadow: 0 0 20px var(--accent), inset 0 0 10px rgba(204, 255, 0, 0.2); 
+        }
+
+        /* Styling Biru (Tengah) - Background Solid agar tidak tembus */
+        .s-mid .circle-ui { 
+            background: #050505; 
+            border-color: var(--blue); 
+            box-shadow: 0 0 40px var(--blue), inset 0 0 20px rgba(0, 240, 255, 0.3); 
+        }
+
+        .val-txt { font-family: 'Orbitron'; font-weight: 900; color: #fff; line-height: 1; }
+        .s-side .val-txt { font-size: 24px; } .s-mid .val-txt { font-size: 55px; }
+        .info-txt { font-family: 'Inter'; font-size: 9px; margin-top: 5px; font-weight: bold; color: #aaa; text-transform: uppercase; }
+        .label-txt { margin-top: 10px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; text-align: center; }
         
-        /* ICON DEFAULT: KUNING JELAS */
-        .fp-svg { width: 50px; height: 50px; fill: var(--c-yel); opacity: 0.5; transition: 0.3s; }
-
-        /* SAAT GPS OK / ADMIN */
-        .fp-btn.ready {
-             border-color: var(--c-blue); background: radial-gradient(circle, #1a1a1a, #000);
-             box-shadow: 0 0 25px rgba(0,240,255,0.4); animation: pulse 2s infinite;
-        }
-        .fp-btn.ready .fp-svg { fill: var(--c-blue); opacity: 1; } 
-        .fp-btn.ready:active { transform: scale(0.95); background: var(--c-blue); }
-        .fp-btn.ready:active .fp-svg { fill: #000; }
-
-        /* Laser Line */
-        .fp-laser {
-            position: absolute; left: 0; width: 100%; height: 3px; background: var(--c-green);
-            box-shadow: 0 0 10px var(--c-green); bottom: 0; opacity: 0; pointer-events: none;
-        }
-        .fp-btn.scanning .fp-laser { opacity: 1; animation: scanUp 1.2s ease-in-out forwards; }
-
-        /* TEKS DAFTAR PUTIH */
-        .scan-txt { margin-top: 15px; font-size: 14px; color: #fff; letter-spacing: 2px; font-weight: 900; text-transform: uppercase; }
+        /* --- 3. FINGERPRINT & RING KUNING --- */
+        .fp-area { display: flex; flex-direction: column; align-items: center; margin-top: 25px; position: relative; }
         
-        .gps-txt { margin-top: 5px; font-size: 10px; color: #444; font-weight: bold; }
+        /* Ring Kuning Berdenyut */
+        .fp-area::before {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 110px; height: 110px; border-radius: 50%;
+            border: 2px solid var(--accent); opacity: 0;
+            animation: pulse-ring 2s infinite ease-out; z-index: 0; pointer-events: none;
+        }
+        @keyframes pulse-ring { 0% { width: 90px; height: 90px; opacity: 0.8; } 100% { width: 130px; height: 130px; opacity: 0; } }
+        
+        .fp-btn {
+            width: 90px; height: 90px; border-radius: 50%; border: 2px solid #333; background: #111; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; 
+            transition: 0.5s; position: relative; overflow: hidden; z-index: 1; filter: grayscale(100%) opacity(0.5);
+        }
+        /* State Aktif (GPS Valid) */
+        .fp-btn.active-zone {
+            border-color: var(--blue); box-shadow: 0 0 25px var(--blue), inset 0 0 10px var(--blue);
+            filter: grayscale(0%) opacity(1);
+        }
+        .fp-icon { width: 55px; fill: #444; transition: 0.5s; }
+        .fp-btn.active-zone .fp-icon { fill: var(--blue); }
 
-        /* --- USER & ADMIN --- */
-        #v-focus { display: none; text-align: center; animation: zoomIn 0.3s; }
-        .f-card { background: #0a0a0a; border: 2px solid var(--c-blue); padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(0,240,255,0.1); margin-bottom: 20px; }
-        .f-big { font-family: 'Orbitron'; font-size: 80px; font-weight: 900; color: #fff; line-height: 1; margin: 10px 0; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
-        .f-timer { font-family: 'Orbitron'; font-size: 48px; color: #fff; margin-bottom: 20px; font-variant-numeric: tabular-nums; }
-        .btn-grp { display: flex; gap: 10px; }
-        .btn-act { flex: 1; padding: 18px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; border: none; cursor: pointer; text-transform: uppercase; color: #000; }
-        .bg-green { background: var(--c-green); } .bg-red { background: var(--c-red); color: #fff; } .bg-blue { background: var(--c-blue); }
+        /* Animasi Scan Merah */
+        .scan-line {
+            position: absolute; width: 100%; height: 4px; background: var(--red);
+            box-shadow: 0 0 10px var(--red); top: -10%; left: 0; display: none; z-index: 5;
+        }
+        .fp-btn.scanning .scan-line { display: block; animation: scanDown 1.5s ease-in-out infinite; }
+        .fp-btn.scanning .fp-icon { fill: var(--red); }
+        @keyframes scanDown { 0% { top: -10%; opacity:0; } 50% { opacity:1; } 100% { top: 110%; opacity:0; } }
 
-        #v-admin { display: none; margin-top: 20px; border: 2px solid var(--c-red); padding: 15px; background: #080808; border-radius: 10px; }
-        .adm-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-        .adm-in { background: #111; border: 1px solid #555; color: #fff; padding: 12px; flex: 1; min-width: 80px; text-align: center; font-weight: bold; }
-        .adm-bt { padding: 12px; background: #222; border: 1px solid #666; color: #fff; flex: 1; min-width: 80px; cursor: pointer; font-weight: bold; font-size: 10px; }
-        .btn-float { position:fixed; bottom:80px; right:20px; background:var(--c-yel); color:#000; padding:15px 25px; border-radius:50px; font-weight:900; cursor:pointer; box-shadow:0 0 20px var(--c-yel); display:none; z-index:999; }
+        /* --- 4. MUSIC PLAYER --- */
+        .player-bar { 
+            position: fixed; bottom: 0; width: 100%; background: #050505; 
+            border-top: 1px solid var(--accent); padding: 10px 20px; 
+            display: flex; align-items: center; gap: 15px; z-index: 200;
+        }
+        .hb-line { stroke: var(--accent); stroke-width: 2; fill: none; stroke-dasharray: 60; animation: hb-move 1s linear infinite; opacity: 0.3; }
+        .playing .hb-line { opacity: 1; animation-duration: 0.5s; }
+        @keyframes hb-move { to { stroke-dashoffset: -60; } }
 
-        .modal-bg { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; display:none; align-items:center; justify-content:center; }
-        .modal-box { background:#111; border:1px solid var(--c-blue); padding:25px; border-radius:12px; width:90%; max-width:350px; text-align:center; }
-        .modal-inp { width:100%; padding:15px; margin-bottom:10px; background:#000; border:1px solid #444; color:#fff; font-size:16px; text-align:center; font-weight:bold; }
+        /* --- 5. MODALS & POPUPS --- */
+        .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:3000; align-items:center; justify-content:center; backdrop-filter: blur(8px); }
+        
+        .modal-box { background:#080808; border:1px solid var(--blue); padding:25px; border-radius:15px; width:85%; max-width:350px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.15); }
+        input, select { width:100%; padding:12px; margin:8px 0; background:#1a1a1a; border:1px solid #333; color:#fff; border-radius:5px; text-transform: uppercase; font-family: 'Inter'; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(204,255,0,0.2); }
+        .btn-reg { width:100%; padding:15px; background:var(--blue); border:none; font-weight:900; cursor:pointer; border-radius:5px; color:#000; font-family: 'Orbitron'; margin-top: 10px; box-shadow: 0 0 15px var(--blue); }
 
-        .music-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; border-top: 2px solid var(--c-yel); z-index: 100; }
-        .music-tog { text-align: center; padding: 10px; font-weight: 900; font-size: 10px; color: var(--c-yel); cursor: pointer; }
-        #musicFrame { width: 100%; height: 0px; border: none; transition: 0.3s; }
+        /* Custom Alert Mewah */
+        #customAlert { z-index: 5000; }
+        .alert-box { 
+            background: rgba(10, 10, 10, 0.98); border: 2px solid var(--accent); 
+            padding: 30px; border-radius: 10px; text-align: center; width: 80%; max-width: 320px;
+            box-shadow: 0 0 40px rgba(204, 255, 0, 0.3); animation: popIn 0.3s;
+        }
+        .alert-msg { font-family: 'Orbitron'; color: #fff; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+        .alert-btn { 
+            background: transparent; border: 1px solid var(--accent); color: var(--accent); 
+            padding: 10px 30px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; 
+            border-radius: 50px; transition: 0.3s;
+        }
+        .alert-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        @keyframes scanUp { 0% { bottom:0; opacity:0; } 20% { opacity:1; } 100% { bottom:100%; opacity:0; } }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(0, 240, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); } }
-        @keyframes glitch-1 { 0% { clip: rect(20px, 999px, 80px, 0); } 100% { clip: rect(50px, 999px, 10px, 0); } }
-        @keyframes glitch-2 { 0% { clip: rect(10px, 999px, 90px, 0); } 100% { clip: rect(80px, 999px, 20px, 0); } }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity:0; } to { transform: scale(1); opacity:1; } }
+        /* Admin Area Styling (Adapted for Cyberpunk Theme) */
+        #adminArea { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:2000; padding:20px; overflow-y:auto; }
+        .adm-card { background: #0a0a0a; border: 1px solid #333; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .adm-card.blue { border-color: var(--blue); }
+        .adm-card.red { border-color: var(--red); }
+        .adm-title { font-family: 'Orbitron'; font-size: 12px; color: #888; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+        .adm-row { display: flex; gap: 5px; margin-bottom: 5px; }
+        .btn-adm { flex:1; padding:10px; border:none; border-radius:4px; font-weight:bold; cursor:pointer; font-size:10px; color:#000; }
+        .bg-blue { background: var(--blue); } .bg-acc { background: var(--accent); } .bg-red { background: var(--red); color:#fff; }
     </style>
 </head>
 <body>
 
-    <script>
-        const CFG = {
-            USE_GPS: false, // FALSE = UNLOCKED (UNTUK TESTING)
-            LAT: -6.171583, LNG: 106.899844, RAD: 0.2,
-            FONNTE: "MuR8CucXAsYd2YvWBxVo", ADMIN: "admin123",
-            IDLE: 300, CLEAR: 60
-        };
-    </script>
-
-    <div class="header-wrap">
-        <div class="header-left">
-            <div class="glitch-title" data-text="FC KELAPA GADING">FC KELAPA GADING</div><br>
+    <div id="ui-user">
+        <div class="header-wrap">
+            <div class="glitch-title">FC KELAPA GADING</div>
             <div class="sub-brand">HOME OF MLU</div>
+            <div style="position:absolute; right:20px; top:30px; cursor:pointer; opacity:0.5;" onclick="goAdmin()">⚙️</div>
         </div>
-        <div class="adm-gear" onclick="window.askPass()">⚙️</div>
-    </div>
 
-    <div id="v-dash">
-        <div class="queue-top">ANTRIAN: <span id="q-val">0</span> MOTOR</div>
-
-        <div class="slots-container">
-            <div id="sw-1" class="slot-wrapper side sw-left">
-                <svg class="slot-svg" viewBox="0 0 100 100"><circle class="svg-ring" cx="50" cy="50" r="48" /></svg>
-                <div class="center-val"><span id="v1">--</span><span class="val-sub" id="s1">SIAP</span></div>
-                <div class="slot-label">SLOT 1</div>
+        <div class="viewport">
+            <div class="slot-box s-side s-left">
+                <div class="circle-ui">
+                    <div class="val-txt" id="v1-bat">--%</div>
+                    <div class="info-txt" id="v1-plat">READY</div>
+                </div>
+                <div class="label-txt">SLOT 1</div>
             </div>
-
-            <div id="sw-2" class="slot-wrapper center">
-                <svg class="slot-svg" viewBox="0 0 100 100"><circle class="svg-ring" cx="50" cy="50" r="48" /></svg>
-                <div class="center-val"><span id="v2">--</span><span class="val-sub" id="s2">SIAP</span></div>
-                <div class="slot-label">SLOT 2</div>
+            
+            <div class="slot-box s-mid">
+                <div class="circle-ui">
+                    <div class="val-txt" id="v2-bat">--%</div>
+                    <div class="info-txt" id="v2-plat">READY</div>
+                    <div style="font-size:10px; color:var(--blue); margin-top:5px;" id="v2-timer"></div>
+                </div>
+                <div class="label-txt">SLOT 2</div>
             </div>
-
-            <div id="sw-3" class="slot-wrapper side sw-right">
-                <svg class="slot-svg" viewBox="0 0 100 100"><circle class="svg-ring" cx="50" cy="50" r="48" /></svg>
-                <div class="center-val"><span id="v3">--</span><span class="val-sub" id="s3">SIAP</span></div>
-                <div class="slot-label">SLOT 3</div>
+            
+            <div class="slot-box s-side s-right">
+                <div class="circle-ui">
+                    <div class="val-txt" id="v3-bat">--%</div>
+                    <div class="info-txt" id="v3-plat">READY</div>
+                </div>
+                <div class="label-txt">SLOT 3</div>
             </div>
         </div>
 
-        <div class="scan-area">
-            <div id="fp-btn" class="fp-btn" onclick="window.openReg()">
-                <div class="fp-laser"></div> 
-                <svg class="fp-svg" viewBox="0 0 24 24"><path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .78.07 2.01.67 3.61.1.26-.03.55-.29.64-.26.1-.55-.04-.64-.29-.49-1.31-.73-2.61-.73-3.96 0-1.2.23-2.29.68-3.24 1.33-2.79 4.28-4.6 7.51-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
+        <div class="fp-area">
+            <div id="fp-trigger" class="fp-btn" onclick="checkLocationAndOpen()">
+                <div class="scan-line"></div>
+                <svg class="fp-icon" viewBox="0 0 24 24"><path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-1.15.23-2.19.65-3.12 1.33-2.79 4.28-4.6 7.55-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
             </div>
-            <div class="scan-txt">DAFTAR</div>
-            <div id="gps-msg" class="gps-txt">MENGECEK LOKASI...</div>
+            <div id="fp-label" style="margin-top:10px; font-size:10px; font-family:'Orbitron'; color:#555; letter-spacing:2px;">DETECTING LOCATION...</div>
         </div>
-    </div>
 
-    <div id="v-focus">
-        <div class="f-card">
-            <div id="u-head" class="f-head">ANDA DI SLOT 1</div>
-            <div id="u-val" class="f-big">0%</div>
-            <div id="u-sub" style="color:var(--c-stab); font-weight:bold;">TARGET 100%</div>
-            <div id="u-timer" class="f-timer">--:--</div>
-            <div id="u-ctrl" class="btn-grp"></div>
-        </div>
-        <div id="u-start" style="color:#666; font-size:12px; font-weight:bold;">START BAT: 45%</div>
-    </div>
-
-    <div id="v-admin">
-        <div style="text-align:center; color:var(--c-red); font-weight:900; margin-bottom:10px;">GOD MODE PANEL</div>
-        <div class="adm-row"><button onclick="window.admMon()" class="adm-bt" style="background:var(--c-stab); color:#000;">👁️ MONITOR MODE</button></div>
-        <div id="logBox" style="height:100px; overflow-y:auto; border:1px solid #333; margin:10px 0; font-size:10px; color:#aaa; padding:5px;"></div>
-        
-        <div class="adm-row">
-            <select id="as" class="adm-in"><option value="0">S1</option><option value="1">S2</option><option value="2">S3</option></select>
-            <input id="ap" class="adm-in" placeholder="PLAT">
-            <input id="ab" class="adm-in" placeholder="%" style="width:50px">
-            <button onclick="window.admForce()" class="adm-bt" style="background:var(--c-green); color:#000;">ISI</button>
-        </div>
-        <div class="adm-row">
-            <select id="aq" class="adm-in" style="flex:2"></select>
-            <button onclick="window.admMove()" class="adm-bt" style="color:var(--c-cyan)">NAIK</button>
-            <button onclick="window.admDel()" class="adm-bt" style="color:var(--c-red)">DEL</button>
-        </div>
-        <div class="adm-row">
-            <button onclick="window.admAddQ()" class="adm-bt" style="color:var(--c-cyan)">+ Q</button>
-            <button onclick="window.admClear()" class="adm-bt" style="color:var(--c-red)">CLEAR</button>
-            <button onclick="window.admReset()" class="adm-bt">RESET</button>
-            <button onclick="window.logout()" class="adm-bt">LOGOUT</button>
+        <div class="player-bar" id="p-bar">
+            <div id="m-btn" onclick="togglePlay()" style="color:var(--accent); cursor:pointer; font-size:20px;">▶</div>
+            <div style="flex:1"><svg width="100%" height="30"><path class="hb-line" d="M0,15 L30,15 L35,5 L40,25 L45,15 L1000,15"/></svg></div>
+            <div id="track-name" style="font-size:9px; color:var(--accent); font-family:Orbitron; width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LOADING PLAYLIST...</div>
         </div>
     </div>
 
-    <div id="btn-back" class="btn-float" onclick="window.exitMon()">KEMBALI KE ADMIN</div>
+    <div id="customAlert" class="modal">
+        <div class="alert-box">
+            <div class="alert-msg" id="alertText">SYSTEM MESSAGE</div>
+            <button class="alert-btn" onclick="document.getElementById('customAlert').style.display='none'">CONFIRM</button>
+        </div>
+    </div>
 
-    <div id="regModal" class="modal-bg">
+    <div id="regModal" class="modal">
         <div class="modal-box">
-            <h3 style="color:var(--c-cyan); margin-top:0;">PENDAFTARAN</h3>
-            <input id="fr_plat" class="modal-inp" placeholder="PLAT NOMOR" style="text-transform:uppercase">
-            <input id="fr_nama" class="modal-inp" placeholder="NAMA PENGENDARA">
-            <div style="display:flex; gap:10px;">
-                <input id="fr_bat" type="number" class="modal-inp" placeholder="BAT %">
-                <input id="fr_wa" type="number" class="modal-inp" placeholder="WA (08xx)">
-            </div>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button onclick="window.closeReg()" class="adm-bt">BATAL</button>
-                <button onclick="window.submitReg()" class="adm-bt" style="background:var(--c-cyan); color:#000;">DAFTAR</button>
-            </div>
+            <h2 style="font-family:Orbitron; color:var(--blue); font-size:16px; margin-top:0;">REGISTRASI CHARGING</h2>
+            <input id="userPlat" placeholder="PLAT NOMOR (CONTOH: B 1234 XY)">
+            <input id="userName" placeholder="NAMA PENGENDARA">
+            <input id="userWA" type="number" placeholder="NOMOR WHATSAPP (08...)">
+            <label style="font-size:10px; color:#888; margin-top:10px; display:block;">SISA BATERAI: <span id="batVal">50</span>%</label>
+            <input id="userBattery" type="range" min="0" max="100" value="50" oninput="document.getElementById('batVal').innerText=this.value" style="margin:0;">
+            <button class="btn-reg" onclick="processRegFromModal()">SUBMIT DATA</button>
+            <button onclick="document.getElementById('regModal').style.display='none'" style="background:none; border:none; color:#666; width:100%; margin-top:15px;">CANCEL</button>
         </div>
     </div>
 
-    <div id="alertModal" class="modal-bg" style="z-index:3000"><div class="modal-box"><h3 id="al-tt" style="color:var(--c-stab)">INFO</h3><p id="al-msg" style="color:#fff">Msg</p><button onclick="window.closeAlert()" class="adm-bt" style="width:100%">OK</button></div></div>
-    <div id="promptModal" class="modal-bg" style="z-index:3000"><div class="modal-box"><h3 id="pr-tt" style="color:var(--c-cyan)">INPUT</h3><input id="pr-in" class="modal-inp"><div style="display:flex; gap:10px;"><button onclick="window.closePrompt()" class="adm-bt">BATAL</button><button id="pr-ok" class="adm-bt" style="background:var(--c-green); color:#000;">OK</button></div></div></div>
+    <div id="adminArea">
+        <h1 style="color:var(--accent); font-size:18px; text-align:center;">ADMIN COMMAND CENTER</h1>
+        <button onclick="logoutUser()" style="background:transparent; border:1px solid var(--red); color:var(--red); width:100%; padding:10px; margin-bottom:20px;">EXIT ADMIN MODE</button>
+        
+        <div class="adm-card blue">
+            <div class="adm-title">ANTRIAN</div>
+            <div id="admQueueList" style="font-size:10px; color:#fff; margin-bottom:10px;">Loading...</div>
+            <div class="adm-row">
+                <input id="miniQPlat" placeholder="PLAT" style="flex:2">
+                <input id="miniQBat" type="number" placeholder="%" style="flex:1">
+            </div>
+            <button onclick="miniRegQ()" class="btn-adm bg-blue" style="width:100%">+ TAMBAH ANTRIAN MANUAL</button>
+        </div>
 
-    <div class="music-bar"><div class="music-tog" onclick="window.togMusic()">🎵 MUSIC PLAYER</div><iframe id="musicFrame" src="https://punyaaris1-lang.github.io/music/"></iframe></div>
+        <div class="adm-card">
+            <div class="adm-title">KONTROL SLOT & ASSIGN</div>
+            <div class="adm-row">
+                <select id="miniSlotSelect" style="flex:1"></select>
+                <input id="miniPlatInput" placeholder="PLAT" style="flex:1">
+                <input id="miniBatInput" type="number" placeholder="%" style="width:50px">
+            </div>
+            <div class="adm-row">
+                <button onclick="miniManualAssign()" class="btn-adm bg-acc">ISI PAKSA</button>
+                <button onclick="miniClearSlot()" class="btn-adm bg-red">KOSONGKAN</button>
+            </div>
+        </div>
+
+        <div class="adm-card">
+            <div class="adm-title">MANAJEMEN ARUS</div>
+            <label style="font-size:9px; color:#666;">PINDAH ANTRIAN KE SLOT:</label>
+            <div class="adm-row">
+                <select id="miniQIdx" style="flex:2"></select>
+                <select id="miniQTarget" style="flex:1"></select>
+                <button onclick="miniMoveQ()" class="btn-adm bg-blue">GO</button>
+            </div>
+            <label style="font-size:9px; color:#666; margin-top:5px; display:block;">SWAP ANTRIAN:</label>
+            <div class="adm-row">
+                <select id="miniQSwap1" style="flex:1"></select>
+                <select id="miniQSwap2" style="flex:1"></select>
+                <button onclick="miniSwapQueuePositions()" class="btn-adm bg-acc">SWAP</button>
+            </div>
+        </div>
+
+        <div class="adm-card red">
+            <div class="adm-title">DANGER ZONE</div>
+            <div class="adm-row">
+                <input id="miniBlockPlat" placeholder="PLAT BLOKIR">
+                <button onclick="miniBlock()" class="btn-adm bg-red">BLOK</button>
+                <button onclick="miniUnblock()" class="btn-adm bg-acc">BUKA</button>
+            </div>
+            <button onclick="miniStopAll()" class="btn-adm bg-red" style="width:100%; margin-top:5px;">STOP ALL SYSTEM</button>
+        </div>
+    </div>
+
+    <audio id="audio"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, runTransaction, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, runTransaction, setDoc, updateDoc, arrayUnion, arrayRemove, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const app = initializeApp({ apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" });
+        // --- KONFIGURASI DARI MASTER FILE ---
+        const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
+        const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
+        const logRef = collection(db, "activityLog");
 
-        let slots=[null,null,null], queue=[], myPlat=localStorage.getItem('myPlat'), isAdmin=localStorage.getItem('superAdminAuth')==='true', isMon=false;
-        let gpsOk=false, processing=[false,false,false];
+        const FONTE_TOKEN = "MuR8CucXAsYd2YvWBxVo"; 
+        const WA_SIGNATURE = "\n\n- Admin FC Kelapa Gading";
+        const WA_TEMPLATES = [
+            "Halo {name}, motor {plat} sudah selesai charging. Mohon segera dipindahkan agar teman lain bisa pakai.",
+            "Charging selesai untuk {plat}. Terima kasih {name}, jangan lupa cabut kabel ya.",
+            "Waktu habis! Motor {plat} milik {name} sudah 100%. Giliran teman lain."
+        ];
 
-        // GPS & BUTTON STATE
-        if(navigator.geolocation) navigator.geolocation.watchPosition(p=>{
-            const d=getDist(p.coords.latitude,p.coords.longitude,CFG.LAT,CFG.LNG);
-            gpsOk=(d<=CFG.RAD || !CFG.USE_GPS);
-            const btn=document.getElementById('fp-btn'), txt=document.getElementById('gps-msg');
-            if(gpsOk){ btn.classList.add('ready'); txt.innerHTML=`<span style="color:var(--c-green)">LOKASI TERKONFIRMASI</span>`; }
-            else { btn.classList.remove('ready'); txt.innerHTML=`<span style="color:var(--c-red)">DILUAR JANGKAUAN (${d.toFixed(2)} KM)</span>`; }
-        }, ()=>document.getElementById('gps-msg').innerText="GPS ERROR");
-        function getDist(lat1,lon1,lat2,lon2){ const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))); }
+        // LOGIKA GPS & CHARGING
+        const STATION_LOC = { lat: -6.171583, lng: 106.899844 }; 
+        const MAX_DIST_KM = 0.2; 
+        const CHARGING_CURVE = [[100,0], [99,1], [95,4], [90,17], [89,18], [85,22], [81,25], [72,33], [61,45], [50,50], [20,68], [0,86]];
 
-        // EXPORTS
-        window.openReg=()=>{ if(!gpsOk&&!isAdmin)return window.showAlert("DILUAR JANGKAUAN"); document.getElementById('fp-btn').classList.add('scanning'); setTimeout(()=>{document.getElementById('fp-btn').classList.remove('scanning'); document.getElementById('regModal').style.display='flex';},800); };
-        window.closeReg=()=>document.getElementById('regModal').style.display='none';
-        window.showAlert=(m)=>{document.getElementById('al-msg').innerText=m; document.getElementById('alertModal').style.display='flex';};
-        window.closeAlert=()=>document.getElementById('alertModal').style.display='none';
-        window.showPrompt=(t,cb,pw=false)=>{document.getElementById('pr-tt').innerText=t; const i=document.getElementById('pr-in'); i.value=''; i.type=pw?'password':'text'; document.getElementById('pr-ok').onclick=()=>{if(i.value)cb(i.value); window.closePrompt();}; document.getElementById('promptModal').style.display='flex';};
-        window.closePrompt=()=>document.getElementById('promptModal').style.display='none';
-        window.askPass=()=>{ window.showPrompt("PASSWORD", (p)=>{if(p===CFG.ADMIN){localStorage.setItem('superAdminAuth','true'); location.reload();}else window.showAlert("SALAH");}, true); };
-        window.logout=()=>{localStorage.clear(); location.reload();};
-        window.togMusic=()=>{const f=document.getElementById('musicFrame'); f.style.height=f.style.height==='0px'?'150px':'0px';};
+        let latestSlots = [null, null, null]; 
+        let latestQueue = [];
+        let isClearing = {}; 
+        let isUserInArea = false;
 
-        // --- CORE ---
-        onSnapshot(ref, (d) => {
-            if(d.exists()) { const dt=d.data(); slots=dt.chargingSlots||[null,null,null]; queue=dt.waitingQueue||[]; renderUI(); }
-        });
+        // --- MP3 PLAYER DENGAN PLAYLIST ---
+        // Daftar lagu dari request user
+        const playlist = [
+            "https://mlump3player.netlify.app/Ada%20Apa%20Denganmu.mp3",
+            "https://mlump3player.netlify.app/anji-menunggu-kamu.mp3",
+            "https://mlump3player.netlify.app/Anugerah%20Terindah%20Yang%20Pernah%20Kumiliki.mp3",
+            "https://mlump3player.netlify.app/armada_asalkan_kau_bahagia.mp3",
+            "https://mlump3player.netlify.app/armada_harusnya_aku.mp3",
+            "https://mlump3player.netlify.app/Bendera%20-%20Cokelat%20-%202003.mp3",
+            "https://mlump3player.netlify.app/Bintang%20Di%20Surga.mp3",
+            "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Always%20.MP3",
+            "https://mlump3player.netlify.app/Bon%20Jovi%20-%20I'll%20Be%20There%20For%20You%20.MP3",
+            "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Its%20My%20Life%20.mp3"
+        ];
+        
+        let currentTrackIndex = 0;
+        const audio = document.getElementById('audio');
+        const mBtn = document.getElementById('m-btn');
+        const pBar = document.getElementById('p-bar');
+        const trackNameDisp = document.getElementById('track-name');
 
-        function renderUI() {
-            // DASHBOARD SPEEDO
-            slots.forEach((s,i)=>{
-                const sw=document.getElementById(`sw-${i+1}`), val=document.getElementById(`v${i+1}`), sub=document.getElementById(`s${i+1}`);
-                if(!s) { sw.classList.remove('active','charging'); val.innerText="--"; sub.innerText="SIAP"; }
-                else {
-                    let pct=s.startBattery, st="WAITING";
-                    if(s.startTime) {
-                        const dur=s.durationMinutes, now=new Date(), stt=s.startTime.toDate();
-                        const rem=Math.max(0, Math.ceil((stt.getTime()+dur*60000-now.getTime())/1000));
-                        const gain=((s.targetLimit||100)-s.startBattery)*((dur*60-rem)/(dur*60));
-                        pct=Math.min(s.targetLimit||100, Math.floor(s.startBattery+gain));
-                        st="CHARGING"; sw.classList.add('charging'); sw.classList.remove('active');
-                    } else { sw.classList.add('active'); sw.classList.remove('charging'); }
-                    val.innerText=pct+"%"; sub.innerText=st;
-                }
-            });
-            document.getElementById('q-val').innerText=queue.length;
+        trackNameDisp.innerText = "PLAYLIST READY (" + playlist.length + " SONGS)";
 
-            // VIEW SWAP
-            const vD=document.getElementById('v-dash'), vU=document.getElementById('v-focus'), vA=document.getElementById('v-admin'), bB=document.getElementById('btn-back');
-            vD.style.display='none'; vU.style.display='none'; vA.style.display='none'; bB.style.display='none';
-
-            let myS=slots.findIndex(s=>s&&s.plat===myPlat), myQ=queue.findIndex(q=>q.plat===myPlat);
-
-            if(isAdmin && !isMon) { vA.style.display='block'; updAdm(); }
-            else if(isAdmin && isMon) { vD.style.display='block'; bB.style.display='block'; }
-            else if(myS!==-1) { vU.style.display='block'; renderFocus(slots[myS], myS, 'SLOT'); }
-            else if(myQ!==-1) { vU.style.display='block'; renderFocus(queue[myQ], myQ, 'QUEUE'); }
-            else { vD.style.display='block'; }
+        function loadTrack(index) {
+            if(index >= playlist.length) index = 0;
+            currentTrackIndex = index;
+            audio.src = playlist[currentTrackIndex];
+            // Ambil nama file dari URL, decode, dan hapus ekstensi
+            let filename = decodeURIComponent(playlist[currentTrackIndex].split('/').pop()).replace('.mp3','').replace('.MP3','');
+            trackNameDisp.innerText = filename;
         }
 
-        function renderFocus(d, i, type) {
-            const elH=document.getElementById('u-head'), elV=document.getElementById('u-val'), elS=document.getElementById('u-sub'), elSt=document.getElementById('u-start'), elTm=document.getElementById('u-timer'), elC=document.getElementById('u-ctrl');
-            if(type==='SLOT') {
-                elH.innerText=`ANDA DI SLOT ${i+1}`; elSt.innerText=`START: ${d.startBattery}%`;
-                if(d.startTime) {
-                    const dur=d.durationMinutes, st=d.startTime.toDate(), now=new Date();
-                    const rem=Math.max(0, Math.ceil((st.getTime()+dur*60000-now.getTime())/1000));
-                    elTm.innerText=`${Math.floor(rem/60)}:${(rem%60).toString().padStart(2,'0')}`;
-                    const pct=Math.min(d.targetLimit, Math.floor(d.startBattery+((d.targetLimit-d.startBattery)*((dur*60-rem)/(dur*60)))));
-                    elV.innerText=pct+"%"; elS.innerText=`TARGET ${d.targetLimit}%`; elS.style.color="var(--c-stab)";
-                    if(d.plat===myPlat||isAdmin) elC.innerHTML=`<button onclick="window.askEdit(${i})" class="btn-act bg-blue">EDIT</button><button onclick="window.actStop(${i})" class="btn-act bg-red">STOP</button>`;
-                } else if(d.finishTime) {
-                    elV.innerText="DONE"; elS.innerText="AUTO CLEAR"; elTm.innerText="00:00";
-                    elC.innerHTML=`<button onclick="window.actClear(${i})" class="btn-act bg-red">CLEAR</button>`;
-                } else {
-                    elV.innerText="SIAP"; elS.innerText="KLIK MULAI"; elTm.innerText="AUTO 5 MIN";
-                    if(d.plat===myPlat||isAdmin) elC.innerHTML=`<button onclick="window.actStart(${i})" class="btn-act bg-green">MULAI</button>`;
-                }
-            } else {
-                elH.innerText=`STATUS ANTRIAN`; elV.innerText=`#${i+1}`; elS.innerText="MENUNGGU"; elTm.innerText=`EST: ${(i+1)*20} MIN`;
-                elC.innerHTML=`<button onclick="window.actCancel(${i})" class="btn-act bg-red">BATAL</button>`;
+        window.togglePlay = () => {
+            if (!audio.src) loadTrack(0);
+
+            if(audio.paused) {
+                audio.play().then(() => {
+                    mBtn.innerText = "⏸";
+                    pBar.classList.add('playing');
+                }).catch(e => {
+                    showAlert("INTERAKSI DIBUTUHKAN UNTUK MEMUTAR MUSIK");
+                });
+            } else { 
+                audio.pause(); 
+                mBtn.innerText = "▶"; 
+                pBar.classList.remove('playing');
             }
-        }
-
-        // --- TRANSACTIONS ---
-        window.submitReg = () => {
-            const p=document.getElementById('fr_plat').value.toUpperCase().replace(/\s/g,''), n=document.getElementById('fr_nama').value, b=parseInt(document.getElementById('fr_bat').value), w=document.getElementById('fr_wa').value;
-            if(!p||isNaN(b)) return window.showAlert("DATA KURANG");
-            window.closeReg(); localStorage.setItem('myPlat', p); myPlat=p;
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(); let s=d.chargingSlots, q=d.waitingQueue;
-                if(q.find(x=>x.plat===p)||s.find(x=>x&&x.plat===p)) throw "SUDAH ADA";
-                const u={plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null, reservedTime:null};
-                let e=-1; for(let i=0;i<3;i++) if(!s[i]){e=i;break;}
-                if(e!==-1) {
-                    const tar=getTar(q.length); u.targetLimit=tar; u.durationMinutes=getDur(b,tar); u.reservedTime=new Date(); s[e]=u;
-                } else q.push(u);
-                t.update(ref,{chargingSlots:s, waitingQueue:q}); addLog(`REG: ${p}`);
-            }).catch(e=>window.showAlert(e));
         };
 
-        window.actStart=(i)=>runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=new Date(); d.chargingSlots[i].reservedTime=null; t.update(ref,d);});
-        window.actStop=(i)=>{ if(confirm("Stop?")){ const s=slots[i]; sendWA(s.wa,s.userName,s.plat); runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d);}); }};
-        window.actClear=(i)=>runTransaction(db,async(t)=>{
-            const d=(await t.get(ref)).data(); d.chargingSlots[i]=null;
-            if(d.waitingQueue.length>0){
-                const n=d.waitingQueue.shift(), tar=getTar(d.waitingQueue.length);
-                d.chargingSlots[i]={...n, startTime:null, reservedTime:new Date(), targetLimit:tar, durationMinutes:getDur(n.startBattery,tar)};
-            } t.update(ref,d);
+        audio.addEventListener('ended', () => {
+            loadTrack(currentTrackIndex + 1);
+            audio.play();
         });
-        window.actEdit=(i, m)=>{ runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].durationMinutes=parseInt(m); t.update(ref,d);}); };
-        window.actCancel=(i)=>{ runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(i,1); t.update(ref,d);}).then(()=>{localStorage.removeItem('myPlat'); location.reload();}); };
 
-        // ADMIN EXTRAS
-        window.admMon=()=>{ isMon=true; renderUI(); }; window.exitMon=()=>{ isMon=false; renderUI(); };
-        window.askEdit=(i)=>window.showPrompt("MENIT:", (m)=>window.actEdit(i,m));
-        window.admForce=()=>{const s=document.getElementById('as').value, p=document.getElementById('ap').value.toUpperCase(), b=parseInt(document.getElementById('ab').value); if(p) runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[s]={plat:p, userName:'ADM', wa:'-', startBattery:b||50, targetLimit:100, durationMinutes:60, startTime:new Date()}; t.update(ref,d);});};
-        window.admAddQ=()=>{ window.showPrompt("PLAT:", (p)=>{runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.push({plat:p.toUpperCase(), userName:'ADM', wa:'-', startBattery:50, targetLimit:100}); t.update(ref,d);});}); };
-        window.admMove=()=>{ const qi=document.getElementById('aq').value; runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); const n=d.waitingQueue.splice(qi,1)[0]; d.waitingQueue.unshift(n); t.update(ref,d);}); };
-        window.admDel=()=>{ const qi=document.getElementById('aq').value; runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.waitingQueue.splice(qi,1); t.update(ref,d);}); };
-        window.admClear=()=>{ window.actClear(document.getElementById('as').value); };
-        window.admReset=()=>{ setDoc(ref,{chargingSlots:[null,null,null],waitingQueue:[]}); };
+        // --- HELPER FUNCTIONS ---
+        window.showAlert = (msg) => {
+            document.getElementById('alertText').innerText = msg;
+            document.getElementById('customAlert').style.display = 'flex';
+        }
 
-        // HELPER
-        const CURVE=[[100,0],[99,1],[95,4],[90,17],[89,18],[85,22],[81,25],[72,33],[61,45],[50,50],[20,68],[0,86]];
-        function getDur(s,t){ if(s>=t)return 5; const f=v=>{for(let i=0;i<CURVE.length-1;i++)if(v<=CURVE[i][0]&&v>=CURVE[i+1][0])return CURVE[i][1]+((CURVE[i][0]-v)/(CURVE[i][0]-CURVE[i+1][0]))*(CURVE[i+1][1]-CURVE[i][1]);return 0;}; return Math.max(1,Math.ceil(f(s)-f(t))); }
-        function getTar(l){ return l>=11?85:(l>=6?90:(l>=3?95:100)); }
-        function updAdm(){ document.getElementById('aq').innerHTML=queue.map((q,i)=>`<option value="${i}">#${i+1} ${q.plat}</option>`).join(''); }
-        function addLog(m){const l=document.getElementById('logBox'), d=new Date().toLocaleTimeString(); l.innerHTML=`<div>[${d}] ${m}</div>`+l.innerHTML;}
-        async function sendWA(n,nm,p){ try{const f=new FormData();f.append('target',n);f.append('message',`Halo ${nm}, Motor ${p} selesai.`);await fetch("https://api.fonnte.com/send",{method:"POST",headers:{'Authorization':CFG.FONNTE},body:f});}catch(e){} }
+        function log(action, plat, det) { 
+            const userType = localStorage.getItem('isAdminLoggedIn') ? 'ADMIN' : 'USER';
+            addDoc(logRef, { timestamp: new Date(), action: action, plat: plat, user: userType, details: det }).catch(console.error); 
+        }
 
-        setInterval(()=>{
-            const now=new Date();
-            slots.forEach((s,i)=>{
-                if(!s||processing[i])return;
-                if(s.reservedTime && now-(s.reservedTime.toDate())>CFG.IDLE*1000) window.actStart(i);
-                if(s.startTime && s.startTime.toDate().getTime()+s.durationMinutes*60000-now.getTime()<=0){
-                    processing[i]=true; sendWA(s.wa,s.userName,s.plat);
-                    runTransaction(db,async(t)=>{const d=(await t.get(ref)).data(); d.chargingSlots[i].startTime=null; d.chargingSlots[i].finishTime=new Date(); t.update(ref,d);}).then(()=>processing[i]=false);
+        function formatTime(m) { const s = Math.round(m * 60); return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`; }
+        function parseDate(ts) { if(!ts) return null; if(ts.toDate) return ts.toDate(); if(ts instanceof Date) return ts; return new Date(ts); }
+        
+        function getBatteryFromRemTime(rem) {
+            if (rem <= 0) return 100;
+            for (let i=0; i<CHARGING_CURVE.length-1; i++) {
+                const [p1, t1] = CHARGING_CURVE[i]; const [p2, t2] = CHARGING_CURVE[i+1];
+                if (rem >= t1 && rem <= t2) return Math.round(p1 - ((rem - t1) / (t2 - t1)) * (p1 - p2));
+            }
+            return 0;
+        }
+        function calculateDuration(start, target) {
+            if (start >= target) return 5;
+            let timeStart=90, timeTarget=0;
+            for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(start<=CHARGING_CURVE[i][0] && start>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-start)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeStart=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i][1]); break; } }
+            for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(target<=CHARGING_CURVE[i][0] && target>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-target)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeTarget=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i][1]); break; } }
+            return Math.max(1, Math.ceil(timeStart - timeTarget));
+        }
+        function calculateTargetLimit(len) { if(len >= 11) return 85; if(len >= 6) return 90; if(len >= 3) return 95; return 100; }
+        
+        function formatWA(num) {
+            let n = num.replace(/\D/g,'');
+            if(n.startsWith('0')) n = '62' + n.substring(1);
+            if(!n.startsWith('62')) n = '62' + n;
+            return n;
+        }
+        async function sendFonnteNotif(targetWA, plat, name) {
+            if(!targetWA || targetWA.length < 5 || targetWA === '-') return;
+            const finalMsg = WA_TEMPLATES[Math.floor(Math.random() * WA_TEMPLATES.length)].replace("{name}", name).replace("{plat}", plat) + WA_SIGNATURE;
+            try {
+                const formData = new FormData();
+                formData.append('target', formatWA(targetWA));
+                formData.append('message', finalMsg);
+                await fetch('https://api.fonnte.com/send', { method: 'POST', headers: { 'Authorization': FONTE_TOKEN }, body: formData });
+            } catch(e) { console.error("WA Error", e); }
+        }
+
+        // --- GPS LOGIC ---
+        function getDist(lat1,lon1,lat2,lon2){ const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))); }
+
+        if(navigator.geolocation) {
+            navigator.geolocation.watchPosition((pos) => {
+                const dist = getDist(pos.coords.latitude, pos.coords.longitude, STATION_LOC.lat, STATION_LOC.lng);
+                const btn = document.getElementById('fp-trigger');
+                const lbl = document.getElementById('fp-label');
+                
+                if(dist <= MAX_DIST_KM) {
+                    isUserInArea = true; btn.classList.add('active-zone');
+                    lbl.innerText = "ACCESS GRANTED"; lbl.style.color = "var(--blue)";
+                } else {
+                    isUserInArea = false; btn.classList.remove('active-zone');
+                    lbl.innerText = "OUT OF RANGE (" + dist.toFixed(2) + "km)"; lbl.style.color = "#555";
                 }
-                if(s.finishTime && now-(s.finishTime.toDate())>CFG.CLEAR*1000) window.actClear(i);
+            }, (err) => { document.getElementById('fp-label').innerText = "GPS REQUIRED"; });
+        }
+
+        window.checkLocationAndOpen = () => {
+            if(!isUserInArea) { showAlert("ANDA DI LUAR JANGKAUAN (MAX 0.2KM)"); return; }
+            const btn = document.getElementById('fp-trigger');
+            btn.classList.add('scanning');
+            setTimeout(() => {
+                btn.classList.remove('scanning');
+                document.getElementById('regModal').style.display='flex';
+            }, 1500);
+        };
+
+        // --- RENDER HUD ---
+        onSnapshot(ref, (snap) => {
+            const d = snap.data(); if(!d) return;
+            latestSlots = d.chargingSlots || [null,null,null];
+            latestQueue = d.waitingQueue || [];
+            const qLen = latestQueue.length;
+
+            latestSlots.forEach((m, i) => {
+                const elBat = document.getElementById(`v${i+1}-bat`);
+                const elPlat = document.getElementById(`v${i+1}-plat`);
+                
+                if(m && m.startTime) {
+                    const st = parseDate(m.startTime);
+                    let durReal = m.isManualTime ? m.durationMinutes : calculateDuration(m.startBattery, calculateTargetLimit(qLen));
+                    const rem = ((new Date(st.getTime() + durReal*60000)) - new Date())/60000;
+
+                    if(rem <= 0) {
+                        elBat.innerText = "FULL"; elBat.style.color = "var(--accent)";
+                        elPlat.innerText = m.plat; elPlat.style.color = "#fff";
+                        // Auto Clear logic handled in interval
+                    } else {
+                        // Perkiraan baterai saat ini
+                        const target = calculateTargetLimit(qLen);
+                        const timeToTarget = calculateDuration(target, 100);
+                        const dispBat = getBatteryFromRemTime(rem + timeToTarget);
+                        
+                        elBat.innerText = dispBat + "%"; elBat.style.color = "#fff";
+                        elPlat.innerText = m.plat;
+                        if(i === 1) document.getElementById('v2-timer').innerText = formatTime(rem);
+                    }
+                } else if(m) {
+                    elBat.innerText = m.startBattery + "%"; elBat.style.color = "#aaa";
+                    elPlat.innerText = "WAITING"; elPlat.style.color = "var(--blue)";
+                } else {
+                    elBat.innerText = "RDY"; elBat.style.color = "#444";
+                    elPlat.innerText = "EMPTY"; elPlat.style.color = "#444";
+                    if(i === 1) document.getElementById('v2-timer').innerText = "";
+                }
             });
-            if(slots.some(s=>s&&s.startTime)) renderUI();
-        },1000);
+
+            // Update Admin Select Options & Queue List
+            const sOpts = latestSlots.map((_,i)=>`<option value="${i}">Slot ${i+1}</option>`).join('');
+            document.getElementById('miniSlotSelect').innerHTML = sOpts;
+            document.getElementById('miniQTarget').innerHTML = sOpts;
+            document.getElementById('miniQSwap1').innerHTML = latestQueue.map((x,i)=>`<option value="${i}">#${i+1} ${x.plat}</option>`).join('');
+            document.getElementById('miniQSwap2').innerHTML = document.getElementById('miniQSwap1').innerHTML;
+            document.getElementById('miniQIdx').innerHTML = document.getElementById('miniQSwap1').innerHTML;
+            
+            // Queue Display in Admin
+            let qHtml = "";
+            latestQueue.forEach((q, idx) => {
+                qHtml += `<div>#${idx+1} ${q.plat} (${q.startBattery}%) - ${q.userName}</div>`;
+            });
+            document.getElementById('admQueueList').innerHTML = qHtml || "ANTRIAN KOSONG";
+        });
+
+        // --- REGISTRATION LOGIC ---
+        window.processRegFromModal = () => {
+            const p = document.getElementById('userPlat').value.toUpperCase().replace(/\s/g,'');
+            const n = document.getElementById('userName').value.trim();
+            const w = document.getElementById('userWA').value.trim();
+            const b = parseInt(document.getElementById('userBattery').value);
+            
+            if(!p || !n || !w || isNaN(b)) { showAlert("LENGKAPI SEMUA DATA"); return; }
+            
+            let strikes = parseInt(localStorage.getItem('gpsStrikes')||'0');
+            if(strikes >= 3) { showAlert("AKSES DIBLOKIR SEMENTARA (GPS ERROR)"); return; }
+
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data()||{}; 
+                if((d.blockedList||[]).includes(p)) throw "BLOCKED";
+                let s=d.chargingSlots||[null,null,null], q=d.waitingQueue||[];
+                if(s.some(x=>x?.plat===p)||q.some(x=>x?.plat===p)) throw "PLAT SUDAH TERDAFTAR";
+                
+                const tar = calculateTargetLimit(q.length);
+                const dur = calculateDuration(b, tar);
+                
+                const idx = s.findIndex(x=>x===null);
+                if(idx!==-1) { 
+                    s[idx]={plat:p, userName:n, wa:w, startBattery:b, targetLimit:tar, durationMinutes:dur, startTime:null, readyTime: new Date()}; 
+                } else { 
+                    q.push({plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null}); 
+                }
+                t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
+            }).then(()=>{ 
+                showAlert("PENDAFTARAN BERHASIL");
+                document.getElementById('regModal').style.display='none';
+                log('USER_REGISTER', p, {name:n, bat:b});
+            }).catch(e=>{ showAlert("GAGAL: " + e); });
+        };
+
+        // --- ADMIN FUNCTIONS ---
+        window.goAdmin = () => {
+            if(prompt("PIN ADMIN") === "8080") {
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                document.getElementById('ui-user').style.display='none';
+                document.getElementById('adminArea').style.display='block';
+            }
+        };
+        window.logoutUser = () => { location.reload(); };
+
+        window.miniRegQ = () => {
+            const p = document.getElementById('miniQPlat').value.toUpperCase().replace(/\s/g,'');
+            const b = parseInt(document.getElementById('miniQBat').value);
+            if(!p) return;
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data(); const q=d.waitingQueue||[];
+                q.push({plat:p, userName:'ADMIN', wa:'-', startBattery:b, targetLimit:100, durationMinutes:0, startTime:null});
+                t.update(ref,{waitingQueue:q});
+            });
+        };
+
+        window.miniManualAssign = () => {
+            const s=document.getElementById('miniSlotSelect').value;
+            const p=document.getElementById('miniPlatInput').value.toUpperCase();
+            const b=parseInt(document.getElementById('miniBatInput').value);
+            if(!p) return;
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data();
+                const target = calculateTargetLimit(d.waitingQueue.length);
+                const dur = calculateDuration(b, target);
+                d.chargingSlots[s]={plat:p, userName:'ADMIN', wa:'-', startBattery:b, targetLimit:target, durationMinutes:dur, startTime:null, readyTime: new Date()};
+                t.update(ref,{chargingSlots:d.chargingSlots});
+            });
+        };
+
+        window.miniClearSlot = () => {
+            const s=document.getElementById('miniSlotSelect').value;
+            if(confirm('Clear Slot?')) runTransaction(db, async(t)=>{
+                const d = (await t.get(ref)).data(); d.chargingSlots[s] = null;
+                // Pull queue if exists
+                if(d.waitingQueue.length > 0) {
+                    const next = d.waitingQueue.shift();
+                    const tar = calculateTargetLimit(d.waitingQueue.length);
+                    d.chargingSlots[s] = {...next, startTime:null, readyTime:new Date(), targetLimit:tar, durationMinutes:calculateDuration(next.startBattery, tar)};
+                }
+                t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue});
+            });
+        };
+
+        window.miniMoveQ = () => {
+            const qi=document.getElementById('miniQIdx').value, si=document.getElementById('miniQTarget').value;
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data(); const q=d.waitingQueue; const s=d.chargingSlots;
+                if(s[si]) throw "Slot Penuh";
+                const item=q.splice(qi,1)[0]; 
+                item.readyTime = new Date();
+                item.targetLimit = calculateTargetLimit(q.length);
+                item.durationMinutes = calculateDuration(item.startBattery, item.targetLimit);
+                s[si]=item;
+                t.update(ref,{chargingSlots:s, waitingQueue:q});
+            });
+        };
+        
+        window.miniSwapQueuePositions = () => {
+            const i1=document.getElementById('miniQSwap1').value, i2=document.getElementById('miniQSwap2').value;
+            if(i1==i2) return;
+            runTransaction(db, async(t)=>{
+                const d=(await t.get(ref)).data(); const q=d.waitingQueue;
+                [q[i1], q[i2]] = [q[i2], q[i1]];
+                t.update(ref,{waitingQueue:q});
+            });
+        };
+
+        window.miniBlock = () => { updateDoc(ref,{blockedList:arrayUnion(document.getElementById('miniBlockPlat').value.toUpperCase())}); };
+        window.miniUnblock = () => { updateDoc(ref,{blockedList:arrayRemove(document.getElementById('miniBlockPlat').value.toUpperCase())}); };
+        window.miniStopAll = () => { if(confirm('DARURAT: STOP SEMUA?')) updateDoc(ref,{chargingSlots:[null,null,null]}); };
+
+        // --- AUTO SYSTEM (INTERVAL) ---
+        setInterval(()=>{
+            if(!latestSlots) return;
+            latestSlots.forEach((m,i)=>{
+                // Auto Start logic (5 menit ready)
+                if(m && !m.startTime && m.readyTime) {
+                    if((new Date() - parseDate(m.readyTime)) >= 300000) { // 5 mins
+                        runTransaction(db, async(t)=>{
+                            const d=(await t.get(ref)).data();
+                            if(d.chargingSlots[i] && !d.chargingSlots[i].startTime) {
+                                d.chargingSlots[i].startTime = new Date();
+                                t.update(ref, d);
+                            }
+                        });
+                    }
+                }
+                // Auto Kill logic (Finished + 1 min)
+                if(m && m.startTime && !isClearing[i]) {
+                    const st = parseDate(m.startTime);
+                    let dur = m.isManualTime ? m.durationMinutes : calculateDuration(m.startBattery, m.targetLimit||100);
+                    const finishTime = new Date(st.getTime() + dur*60000);
+                    
+                    if(new Date() > new Date(finishTime.getTime() + 60000)) {
+                        isClearing[i] = true;
+                        runTransaction(db, async(t)=>{
+                            const d = (await t.get(ref)).data();
+                            const oldWA = d.chargingSlots[i]?.wa; const oldPlat = d.chargingSlots[i]?.plat; const oldName = d.chargingSlots[i]?.userName;
+                            d.chargingSlots[i] = null;
+                            if(d.waitingQueue.length > 0) {
+                                const next = d.waitingQueue.shift();
+                                const tar = calculateTargetLimit(d.waitingQueue.length);
+                                d.chargingSlots[i] = {...next, startTime:null, readyTime:new Date(), targetLimit:tar, durationMinutes:calculateDuration(next.startBattery, tar)};
+                            }
+                            t.update(ref, d);
+                            sendFonnteNotif(oldWA, oldPlat, oldName);
+                        }).finally(() => { setTimeout(() => { delete isClearing[i]; }, 2000); });
+                    }
+                }
+            });
+        }, 2000);
+
     </script>
 </body>
 </html>
