@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FC KELAPA GADING - ULTIMATE SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { 
             --bg: #020205; 
@@ -25,405 +25,414 @@
             background-image: radial-gradient(circle at 50% 30%, #0d1a2b 0%, #000 70%); 
         }
 
-        /* --- 1. HEADER (TERPISAH & TEGAS) --- */
-        .header-container {
-            padding: 20px;
+        /* --- CSS MODAL (GLOBAL) --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 3000; justify-content: center; align-items: center; }
+        .modal-box { 
+            background: rgba(10, 10, 10, 0.95); 
+            border: 2px solid var(--blue); 
+            padding: 35px 25px; 
+            border-radius: 20px; 
+            width: 85%; max-width: 350px; 
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.2); 
             text-align: center;
             position: relative;
-            z-index: 100;
-            background: linear-gradient(to bottom, #000 0%, transparent 100%);
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .main-title {
-            font-family: 'Orbitron'; font-weight: 900; font-size: 26px; color: var(--blue);
-            text-shadow: 0 0 15px var(--blue); margin: 0;
-            letter-spacing: 2px;
+        @keyframes modalPop { 0%{transform: scale(0.8); opacity: 0;} 100%{transform: scale(1); opacity: 1;} }
+
+        /* --- FORM FLOATING LABEL --- */
+        .input-group { position: relative; margin-bottom: 30px; width: 100%; }
+        .reg-input {
+            width: 100%; padding: 10px 5px; background: transparent; border: none; border-bottom: 2px solid #555;
+            color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800;
+            text-align: center; transition: 0.3s; letter-spacing: 1px; border-radius: 0;
         }
-        .sub-brand {
-            font-family: 'Inter'; font-size: 10px; color: var(--accent); 
-            letter-spacing: 4px; font-weight: 700; margin-top: 5px;
-            text-shadow: 0 0 5px var(--accent);
+        .reg-input:focus { outline: none; border-bottom-color: var(--blue); box-shadow: 0 10px 10px -10px rgba(0, 240, 255, 0.5); }
+        .reg-label {
+            position: absolute; top: 10px; left: 0; width: 100%; text-align: center; color: #888;
+            font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; pointer-events: none; transition: 0.3s ease all;
         }
-        /* INFO JUMLAH ANTRIAN (PUTIH TEGAS - TERPISAH) */
-        .queue-header-info {
-            margin-top: 15px;
-            font-family: 'Orbitron'; font-weight: 700; font-size: 14px;
-            color: #FFFFFF; /* Putih Tegas */
-            background: rgba(255,255,255,0.1);
-            display: inline-block; padding: 5px 15px; border-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.2);
+        .reg-input:focus ~ .reg-label, .reg-input:valid ~ .reg-label {
+            top: -20px; font-size: 10px; color: var(--blue); text-shadow: 0 0 5px var(--blue); letter-spacing: 2px;
         }
 
-        /* --- 2. FRONT VIEW (MODE TV/UMUM) --- */
+        /* --- HEADER & GLITCH --- */
+        .header-container { padding: 20px; text-align: center; position: relative; z-index: 100; background: linear-gradient(to bottom, #000 0%, transparent 100%); }
+        @keyframes glitch-text {
+            0%, 90%, 100% { transform: none; text-shadow: 0 0 15px var(--blue); opacity: 1; }
+            92% { transform: skewX(20deg) scaleY(1.1); text-shadow: 3px 0 var(--red), -3px 0 var(--accent); opacity: 0.8; }
+            94% { transform: skewX(-20deg); clip-path: inset(10% 0 30% 0); }
+            96% { transform: translate(5px, -5px); text-shadow: -3px 0 var(--red); opacity: 0.9; }
+            98% { transform: none; text-shadow: 0 0 30px var(--blue); }
+        }
+        .main-title { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: var(--blue); text-shadow: 0 0 15px var(--blue); margin: 0; letter-spacing: 2px; animation: glitch-text 4s infinite; }
+        .sub-brand { font-family: 'Inter'; font-size: 10px; color: var(--accent); letter-spacing: 4px; font-weight: 700; margin-top: 5px; text-shadow: 0 0 5px var(--accent); }
+        .queue-header-info { margin-top: 15px; font-family: 'Orbitron'; font-weight: 700; font-size: 16px; color: #FFFFFF; background: rgba(255,255,255,0.1); display: inline-block; padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); }
+
+        .gear-btn { position: absolute; right: 20px; top: 25px; font-size: 20px; cursor: pointer; opacity: 0.7; transition: 0.3s; z-index: 101; }
+        .gear-btn:hover { opacity: 1; transform: rotate(90deg); color: var(--accent); }
+
+        /* --- UI COMPONENTS --- */
         #frontView { display: block; position: relative; height: 400px; width: 100%; transition: 0.5s; }
-        
         .slot-box { position: absolute; display: flex; flex-direction: column; align-items: center; transition: 0.5s; }
-        /* Posisi Slot Front View */
-        .fv-side { width: 120px; top: 180px; z-index: 5; }
+        .fv-side { width: 120px; top: 160px; z-index: 5; }
         .fv-left { left: 10px; } .fv-right { right: 10px; }
         .fv-mid { width: 200px; top: 40px; left: 50%; transform: translateX(-50%); z-index: 20; }
-
+        
         .circle-ui {
             width: 100%; aspect-ratio: 1/1; border-radius: 50%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 6px solid transparent; transition: 0.3s;
-            background: rgba(0,0,0,0.8);
+            border: 6px solid #333; background: rgba(0,0,0,0.8);
+            position: relative; box-shadow: inset 0 0 20px #000; transition: 0.3s;
         }
-        .fv-side .circle-ui { border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
-        .fv-mid .circle-ui { 
-            background: #000; /* Solid agar nutup belakang */
-            border-color: var(--blue); box-shadow: 0 0 30px var(--blue); 
-        }
-        .val-txt { font-family: 'Orbitron'; font-weight: 900; color: #fff; line-height: 1; }
-        .fv-side .val-txt { font-size: 22px; } .fv-mid .val-txt { font-size: 50px; }
-        .info-txt { font-family: 'Inter'; font-size: 9px; margin-top: 5px; font-weight: 700; color: #aaa; text-transform: uppercase; }
-        .slot-label { margin-top: 5px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; color: #666; }
-
-        /* --- 3. USER VIEW (MODE PERSONAL - BERSIH) --- */
-        #userView { 
-            display: none; /* Default Hidden */
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 500; 
-            flex-direction: column; align-items: center; justify-content: center;
-        }
+        .fv-side .circle-ui.active { border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .fv-mid .circle-ui.active { border-color: var(--blue); box-shadow: 0 0 20px var(--blue); }
         
-        /* Container Lingkaran User */
-        .uv-circle-container {
-            position: relative; width: 280px; height: 280px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 30px;
+        .circle-ui.active::before {
+            content: ''; position: absolute; inset: -10px; border-radius: 50%;
+            border: 4px solid transparent; animation: spinRing 8s linear infinite; z-index: -1;
         }
+        .fv-side .circle-ui.active::before { border-top-color: var(--white); border-left-color: var(--white); }
+        .fv-mid .circle-ui.active::before { border-top-color: var(--white); border-right-color: var(--white); }
+        @keyframes spinRing { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
 
-        /* Lingkaran Biru Neon (Static/Pulse) */
-        .uv-blue-ring {
-            position: absolute; inset: 0; border-radius: 50%;
-            border: 4px solid var(--blue);
-            box-shadow: 0 0 30px var(--blue), inset 0 0 30px var(--blue);
-            opacity: 0.6; animation: pulse-blue 3s infinite alternate;
-        }
-        @keyframes pulse-blue { from{opacity:0.4; transform:scale(0.95);} to{opacity:0.8; transform:scale(1.05);} }
+        .val-txt { font-family: 'Orbitron'; font-weight: 900; line-height: 1; color: #555; transition: 0.3s; }
+        .circle-ui.active .val-txt { color: #fff; text-shadow: 0 0 10px #fff; }
+        .fv-side .val-txt { font-size: 32px; } .fv-mid .val-txt { font-size: 65px; } 
+        .val-txt.ready-mode { font-size: 20px !important; letter-spacing: 2px; color: #444 !important; text-shadow: none !important; }
+        .info-txt { font-family: 'Inter'; font-size: 10px; margin-top: 5px; font-weight: 700; text-transform: uppercase; color: #444; }
+        .circle-ui.active .info-txt { color: #ccc; }
+        .slot-label { margin-top: 15px; font-family: 'Orbitron'; font-size: 14px; font-weight: 900; color: var(--accent); text-shadow: 0 0 10px var(--accent); letter-spacing: 1px; }
+        .fv-mid .slot-label { color: var(--blue); text-shadow: 0 0 10px var(--blue); }
 
-        /* Lingkaran Kuning Abstrak (Berputar & Size Variable) */
-        .uv-yellow-abstract {
-            position: absolute; 
-            width: 100%; height: 100%; 
-            border: 8px solid var(--accent);
-            box-shadow: 0 0 20px var(--accent);
-            /* Membuat bentuk tidak bulat sempurna */
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            animation: abstract-spin 6s linear infinite;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            /* Scale akan diatur JS berdasarkan baterai */
-        }
-        @keyframes abstract-spin {
-            0% { transform: rotate(0deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-            100% { transform: rotate(360deg); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-        }
-
-        /* Text Data User di Tengah */
-        .uv-data { position: relative; z-index: 10; text-align: center; }
-        .uv-plat { font-family: 'Orbitron'; font-size: 32px; font-weight: 900; color: #fff; text-shadow: 0 2px 10px #000; }
-        .uv-stat { font-family: 'Inter'; font-size: 14px; font-weight: 700; color: var(--blue); margin-top: 5px; }
-
-        /* Tombol Glossy Mewah */
-        .uv-controls { display: flex; gap: 20px; margin-top: 20px; z-index: 10; }
-        .btn-glossy {
-            padding: 12px 30px; border: none; border-radius: 50px;
-            font-family: 'Orbitron'; font-weight: 900; font-size: 12px;
-            color: #fff; cursor: pointer; position: relative; overflow: hidden;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px); transition: 0.3s;
-        }
-        .btn-glossy::before {
-            content:''; position: absolute; top:0; left:0; width: 100%; height: 50%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
-            border-radius: 50px 50px 0 0;
-        }
-        .btn-glossy.stop { border-color: var(--red); color: var(--red); box-shadow: 0 0 10px rgba(255, 42, 60, 0.3); }
-        .btn-glossy.edit { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px rgba(204, 255, 0, 0.3); }
+        /* --- USER VIEW --- */
+        #userView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 0; }
+        .uv-ring-box { position: relative; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; margin-top: 20px; }
+        .uv-svg { position: absolute; top:0; left:0; width: 100%; height: 100%; transform: rotate(-90deg); animation: slowSpin 8s linear infinite; }
+        @keyframes slowSpin { 0% {transform: rotate(-90deg);} 100% {transform: rotate(270deg);} }
+        .uv-svg circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+        .uv-track { stroke: #222; }
+        .uv-progress { stroke: var(--accent); stroke-dasharray: 0, 1000; transition: stroke-dasharray 1s ease; filter: drop-shadow(0 0 10px var(--accent)); }
+        .uv-data { position: absolute; z-index: 10; text-align: center; }
+        .uv-bat-val { font-family: 'Orbitron'; font-size: 60px; font-weight: 900; color: #fff; text-shadow: 0 0 20px #fff; }
+        .uv-timer { font-family: 'Orbitron'; font-size: 16px; font-weight: 700; color: var(--blue); margin-top: 5px; text-shadow: 0 0 10px var(--blue); }
+        .uv-slot-title { font-family: 'Orbitron'; font-size: 18px; color: #fff; margin-bottom: 5px; letter-spacing: 3px; font-weight: bold; margin-top: 10px; }
+        .uv-controls { display: flex; gap: 20px; margin-top: 10px; z-index: 10; }
+        
+        /* MODERN BUTTONS */
+        .btn-glossy { padding: 12px 30px; border: none; border-radius: 50px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; color: #fff; cursor: pointer; position: relative; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: 0.3s; }
+        .btn-glossy.stop { border-color: var(--red); color: var(--red); box-shadow: 0 0 15px rgba(255,0,60,0.3); }
+        .btn-glossy.edit { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 15px rgba(204,255,0,0.3); }
+        .btn-glossy.blue { border-color: var(--blue); color: var(--blue); box-shadow: 0 0 15px rgba(0,240,255,0.3); }
         .btn-glossy:active { transform: scale(0.95); }
 
-        /* Footer Info Slot Lain (User View) */
-        .uv-footer {
-            position: absolute; bottom: 80px; width: 90%; 
-            background: rgba(10,10,10,0.8); border: 1px solid #333;
-            border-radius: 10px; padding: 15px;
-            display: flex; justify-content: space-between;
-            font-family: 'Inter'; font-size: 11px; color: #aaa;
-        }
-        .uv-footer b { color: #fff; }
-        .uv-hl { color: var(--accent); font-weight: bold; }
+        .uv-footer { position: absolute; bottom: 85px; width: 90%; background: rgba(20,20,20,0.9); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; font-family: 'Inter'; font-size: 11px; color: #aaa; }
+        .uv-nav-link { color: #555; text-decoration: underline; cursor: pointer; font-size: 10px; margin-top: 10px; display: block; text-align: center; }
 
-        /* --- 4. ADMIN & LOGS --- */
+        /* --- PLAYER & FINGERPRINT --- */
+        .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 1px solid var(--accent); padding: 10px 20px; display: flex; align-items: center; gap: 15px; z-index: 2000; height: 70px; }
+        #playlistPopup { display: none; position: fixed; bottom: 70px; left: 0; width: 100%; background: rgba(0,0,0,0.95); border-top: 2px solid var(--blue); height: 60vh; overflow-y: auto; z-index: 2500; backdrop-filter: blur(10px); }
+        .track-item { padding: 15px 20px; border-bottom: 1px solid #222; font-family: 'Orbitron'; font-size: 12px; color: #666; cursor: pointer; transition: 0.3s; display: flex; align-items: center; letter-spacing: 1px; }
+        .track-item:hover { color: #fff; background: #111; }
+        .track-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); font-weight: 900; border-left: 4px solid var(--accent); background: rgba(204, 255, 0, 0.05); }
+
+        .fp-area { position: absolute; bottom: 110px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 50; }
+        .fp-btn { width: 85px; height: 85px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 4px solid var(--accent); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); cursor: pointer; transition: 0.5s; box-shadow: 0 0 20px var(--accent); animation: fp-glitch 3s infinite ease-in-out; }
+        .fp-btn.active { border-color: var(--blue); box-shadow: 0 0 40px var(--blue); background: rgba(0, 240, 255, 0.1); }
+        .fp-icon { width: 45px; fill: #555; transition: 0.5s; filter: drop-shadow(0 0 2px #000); }
+        .fp-btn.active .fp-icon { fill: var(--blue); filter: drop-shadow(0 0 10px var(--blue)); }
+        @keyframes fp-glitch { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--accent); } 50% { transform: scale(1.05); box-shadow: 0 0 35px var(--accent); } }
+        .scan-anim { position: absolute; width: 100%; height: 2px; background: #fff; top: 0; animation: scan 1.5s infinite; display: none; box-shadow: 0 0 15px #fff; }
+        .fp-btn.scanning .scan-anim { display: block; }
+        @keyframes scan { 0% {top:0; opacity:1;} 100% {top:100%; opacity:0;} }
+
+        /* --- ADMIN & LOGS --- */
         #adminArea { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:2000; padding:20px; overflow-y:auto; }
         .adm-header { font-family: 'JetBrains Mono'; color: var(--accent); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; }
         .adm-card { background: #0a0a0a; border: 1px solid #333; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
         .adm-input { width: 100%; background: #000; border: 1px solid #444; color: #fff; font-family: 'Inter'; padding: 10px; margin-bottom: 10px; font-weight: bold; }
-        
-        /* Log Termux Style */
-        .term-box { 
-            background: var(--term-bg); border: 1px solid #333; height: 250px; 
-            overflow-y: auto; padding: 10px; font-family: 'JetBrains Mono'; font-size: 10px; 
-            color: #0f0; margin-bottom: 20px; box-shadow: inset 0 0 20px #000;
-        }
-        .log-line { border-bottom: 1px solid #222; padding: 2px 0; display: flex; gap: 8px; }
-        .l-err { color: #ff0000; font-weight: bold; }
-        .l-warn { color: #ffff00; }
-        .l-suc { color: #00ff00; }
-        .l-inf { color: #00ffff; }
+        .term-box { background: var(--term-bg); border: 1px solid #333; height: 250px; overflow-y: auto; padding: 10px; font-family: 'JetBrains Mono'; font-size: 10px; color: #0f0; margin-bottom: 20px; scrollbar-width: thin; scrollbar-color: #333 #000; }
+        .log-line { border-bottom: 1px solid #222; padding: 4px 0; display: block; gap: 8px; color: #aaa; }
+        .log-line span.time { color: var(--blue); margin-right: 5px; }
+        .log-line span.act { color: var(--accent); font-weight: bold; }
 
-        /* --- 5. MUSIC PLAYER BAR --- */
-        .player-bar { 
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; 
-            border-top: 1px solid var(--accent); padding: 10px 20px; 
-            display: flex; align-items: center; gap: 15px; z-index: 2000; height: 70px;
-        }
-        #playlistPopup {
-            display: none; position: fixed; bottom: 70px; left: 0; width: 100%; 
-            background: rgba(0,0,0,0.95); border-top: 2px solid var(--blue);
-            height: 60vh; overflow-y: auto; z-index: 2500; padding: 0;
-        }
-        .track-item { padding: 15px; border-bottom: 1px solid #222; font-size: 12px; color: #ccc; cursor: pointer; }
-        .track-item.active { background: rgba(0, 240, 255, 0.1); color: var(--blue); font-weight: bold; }
-
-        /* --- 6. TOMBOL DAFTAR (GLOSSY FINGERPRINT) --- */
-        .fp-area { position: absolute; bottom: 100px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 50; }
-        .fp-btn {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: rgba(0,0,0,0.5); border: 2px solid #333;
-            display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(5px); cursor: pointer; transition: 0.3s;
-        }
-        .fp-btn.active { border-color: var(--blue); box-shadow: 0 0 20px var(--blue); }
-        .fp-icon { width: 40px; fill: #555; transition: 0.3s; }
-        .fp-btn.active .fp-icon { fill: var(--blue); }
-        .scan-anim { position: absolute; width: 100%; height: 2px; background: var(--red); top: 0; animation: scan 1.5s infinite; display: none; }
-        .fp-btn.scanning .scan-anim { display: block; }
-        @keyframes scan { 0% {top:0; opacity:1;} 100% {top:100%; opacity:0;} }
     </style>
 </head>
-<body>
+<body onclick="firstInteraction()">
+    
+    <div id="customAlert" class="modal">
+        <div class="modal-box" style="border-color: var(--blue);">
+            <div id="alertMsg" style="font-family:'Orbitron'; color:#fff; font-size:14px; margin-bottom:20px; line-height:1.5;">MESSAGE</div>
+            <button onclick="document.getElementById('customAlert').style.display='none'" class="btn-glossy blue" style="width:100%">OK</button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-box" style="border-color: var(--red);">
+            <h3 style="font-family:'Orbitron'; color:var(--red); margin-top:0;">KONFIRMASI</h3>
+            <div id="confirmMsg" style="font-family:'Inter'; color:#ccc; font-size:13px; margin-bottom:25px;">Apakah anda yakin?</div>
+            <div style="display:flex; gap:10px;">
+                <button id="btnConfirmYes" class="btn-glossy stop" style="flex:1;">YA</button>
+                <button onclick="document.getElementById('confirmModal').style.display='none'" class="btn-glossy" style="flex:1; background:transparent;">BATAL</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="inputModal" class="modal">
+        <div class="modal-box" style="border-color: var(--accent);">
+            <h3 id="inputTitle" style="font-family:'Orbitron'; color:var(--accent); margin-top:0;">INPUT</h3>
+            <div class="input-group">
+                <input id="inputVal" class="reg-input" required autocomplete="off">
+                <label class="reg-label" id="inputLabel">VALUE</label>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button id="btnInputOk" class="btn-glossy edit" style="flex:1;">OK</button>
+                <button onclick="document.getElementById('inputModal').style.display='none'" class="btn-glossy" style="flex:1; background:transparent;">BATAL</button>
+            </div>
+        </div>
+    </div>
     <div id="mainUI">
         
         <div class="header-container">
             <h1 class="main-title">FC KELAPA GADING</h1>
             <div class="sub-brand">HOME OF MLU</div>
-            
-            <div class="queue-header-info">
-                ANTRIAN: <span id="qCountDisplay">0</span>
-            </div>
-
-            <div style="position:absolute; right:20px; top:25px; opacity:0.4; cursor:pointer; font-size:20px;" onclick="goAdmin()">⚙️</div>
+            <div class="queue-header-info">ANTRIAN: <span id="qCountDisplay">0</span></div>
+            <div class="gear-btn" onclick="window.checkAdminAuth()">⚙️</div>
         </div>
 
         <div id="frontView">
             <div class="slot-box fv-side fv-left">
                 <div class="circle-ui">
-                    <div class="val-txt" id="fv1-bat">--%</div>
-                    <div class="info-txt" id="fv1-plat">READY</div>
+                    <div class="val-txt ready-mode" id="fv1-bat">READY</div>
+                    <div class="info-txt" id="fv1-plat"></div>
                 </div>
                 <div class="slot-label">SLOT 1</div>
             </div>
-
             <div class="slot-box fv-mid">
                 <div class="circle-ui">
-                    <div class="val-txt" id="fv2-bat">--%</div>
-                    <div class="info-txt" id="fv2-plat">READY</div>
+                    <div class="val-txt ready-mode" id="fv2-bat">READY</div>
+                    <div class="info-txt" id="fv2-plat"></div>
                     <div style="font-size:12px; color:var(--blue); font-weight:bold; margin-top:5px;" id="fv2-timer"></div>
                 </div>
                 <div class="slot-label">SLOT 2</div>
             </div>
-
             <div class="slot-box fv-side fv-right">
                 <div class="circle-ui">
-                    <div class="val-txt" id="fv3-bat">--%</div>
-                    <div class="info-txt" id="fv3-plat">READY</div>
+                    <div class="val-txt ready-mode" id="fv3-bat">READY</div>
+                    <div class="info-txt" id="fv3-plat"></div>
                 </div>
                 <div class="slot-label">SLOT 3</div>
             </div>
         </div>
 
         <div id="userView">
-            <h2 style="font-family:'Orbitron'; color:#666; font-size:12px; margin-bottom:40px; letter-spacing:2px;">SMART MONITORING</h2>
+            <div class="header-container" style="padding-top:20px; width:100%; position:relative;">
+                <h1 class="main-title" style="font-size:20px;">FC KELAPA GADING</h1>
+                <div class="sub-brand">HOME OF MLU</div>
+                <div class="gear-btn" onclick="window.checkAdminAuth()">⚙️</div> 
+            </div>
 
-            <div class="uv-circle-container">
-                <div class="uv-blue-ring"></div>
-                
-                <div class="uv-yellow-abstract" id="uvYellowRing"></div>
-                
+            <div class="uv-slot-title" id="uvSlotTitle">SLOT -</div>
+
+            <div class="uv-ring-box">
+                <svg class="uv-svg" viewBox="0 0 100 100">
+                    <circle class="uv-track" cx="50" cy="50" r="45"></circle>
+                    <circle class="uv-progress" id="uvBatRing" cx="50" cy="50" r="45"></circle>
+                </svg>
                 <div class="uv-data">
-                    <div class="uv-plat" id="uvPlat">LOADING</div>
-                    <div class="uv-stat" id="uvStat">CONNECTING...</div>
+                    <div class="uv-bat-val" id="uvBatVal">--%</div>
+                    <div class="uv-timer" id="uvTimer">-- MIN</div>
                 </div>
             </div>
 
             <div class="uv-controls">
-                <button class="btn-glossy edit" onclick="userEditTimer()">⏱ EDIT TIMER</button>
-                <button class="btn-glossy stop" onclick="userStop()">🛑 STOP CHARGING</button>
+                <button class="btn-glossy edit" onclick="window.userEditTimer()">⏱ EDIT TIMER</button>
+                <button class="btn-glossy stop" onclick="window.userStop()">🛑 STOP CHARGING</button>
             </div>
 
             <div class="uv-footer">
-                <div>SLOT LAIN: <b id="uvFooterSlots">-</b></div>
-                <div>POSISI ANTRIAN: <b class="uv-hl" id="uvFooterQueue">-</b></div>
+                <div id="uvOtherSlots" style="text-align:left; flex:1;">LOADING...</div>
+                <div style="text-align:right;">ANTRIAN: <b class="uv-hl" id="uvFooterQueue">-</b></div>
             </div>
 
-            <button onclick="switchView('front')" style="margin-top:30px; background:none; border:none; color:#333; cursor:pointer; font-size:10px;">[ BACK TO FRONT VIEW ]</button>
+            <div class="uv-nav-link" onclick="window.switchView('front')">[ KEMBALI KE HALAMAN UTAMA ]</div>
         </div>
 
         <div class="fp-area" id="fpArea">
-            <div id="fp-trigger" class="fp-btn" onclick="checkLocationAndOpen()">
+            <div id="fp-trigger" class="fp-btn" onclick="window.checkLocationAndOpen()">
                 <div class="scan-anim"></div>
                 <svg class="fp-icon" viewBox="0 0 24 24"><path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.61 4.03-.39.81-.59 1.76-.59 2.8 0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-1.15.23-2.19.65-3.12 1.33-2.79 4.28-4.6 7.55-4.6 4.55 0 8.25 3.51 8.25 7.83 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/></svg>
             </div>
-            <div id="fp-label" style="position:absolute; bottom:-25px; font-family:'Orbitron'; font-size:10px; color:#666; width:200px; text-align:center;">GPS LOCATING...</div>
+            <div id="fp-label" style="position:absolute; bottom:-25px; font-family:'Orbitron'; font-size:10px; color:#666; width:200px; text-align:center;">GPS: BYPASSED (TEST MODE)</div>
         </div>
 
         <div id="playlistPopup">
             <div style="padding:15px; border-bottom:1px solid #333; position:sticky; top:0; background:#000; display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-family:'Orbitron'; color:var(--blue);">SELECT TRACK</span>
-                <span onclick="togglePlaylist()" style="color:#666; cursor:pointer;">[ CLOSE ]</span>
+                <span onclick="window.togglePlaylist()" style="color:#666; cursor:pointer;">[ CLOSE ]</span>
             </div>
-            <div id="playlistContainer">
-                </div>
+            <div id="playlistContainer"></div>
         </div>
 
         <div class="player-bar">
-            <div id="m-btn" onclick="togglePlay()" style="color:var(--accent); cursor:pointer; font-size:24px;">▶</div>
-            
-            <div style="flex:1; margin:0 15px; height:40px; display:flex; align-items:center; cursor:pointer;" onclick="togglePlaylist()">
+            <div id="m-btn" onclick="window.togglePlay()" style="color:var(--accent); cursor:pointer; font-size:24px;">▶</div>
+            <div style="flex:1; margin:0 15px; height:40px; display:flex; align-items:center; cursor:pointer;" onclick="window.togglePlaylist()">
                 <div style="width:100%; height:2px; background:#333; position:relative; overflow:hidden;">
                     <div id="hb-anim" style="width:100%; height:100%; background:var(--accent); transform:scaleX(0); transition:0.1s;"></div>
                 </div>
             </div>
-            
-            <div style="text-align:right; width:120px;" onclick="togglePlaylist()">
+            <div style="text-align:right; width:120px;" onclick="window.togglePlaylist()">
                 <div id="track-name" style="font-family:'Orbitron'; font-size:10px; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">NO MUSIC</div>
                 <div style="font-size:8px; color:#666;">TAP FOR PLAYLIST ▲</div>
             </div>
-        </div>
-
-    </div>
-
-    <div id="adminArea">
-        <div class="adm-header">
-            <span>ROOT@SYSTEM:~# ADMIN_PANEL</span>
-            <span onclick="logoutAdmin()" style="color:var(--red); cursor:pointer;">[ EXIT ]</span>
-        </div>
-
-        <div style="font-family:'JetBrains Mono'; color:#888; font-size:10px; margin-bottom:5px;">SYSTEM LOGS (REALTIME)</div>
-        <div class="term-box" id="termLog">
-            <div class="log-line"><span class="l-inf">[INIT] System Loaded. Waiting for input...</span></div>
-        </div>
-
-        <div class="adm-card">
-            <div style="font-family:'Orbitron'; font-size:12px; color:var(--blue); margin-bottom:10px;">SLOT CONTROL</div>
-            <select id="admSlotSel" class="adm-input"></select>
-            <div style="display:flex; gap:10px;">
-                <input id="admPlat" placeholder="PLAT NOMOR" class="adm-input">
-                <input id="admBat" placeholder="%" type="number" class="adm-input" style="width:60px;">
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button onclick="admManualAssign()" class="adm-input" style="background:var(--accent); color:#000; cursor:pointer;">FORCE ASSIGN</button>
-                <button onclick="admClearSlot()" class="adm-input" style="background:var(--red); cursor:pointer;">CLEAR SLOT</button>
-            </div>
-        </div>
-
-        <div class="adm-card">
-            <div style="font-family:'Orbitron'; font-size:12px; color:#aaa; margin-bottom:10px;">DANGER ZONE</div>
-            <input id="admBlockPlat" placeholder="PLAT TO BLOCK" class="adm-input">
-            <div style="display:flex; gap:10px;">
-                <button onclick="admBlock()" class="adm-input" style="border-color:var(--red); color:var(--red);">BLOCK</button>
-                <button onclick="admUnblock()" class="adm-input" style="border-color:var(--blue); color:var(--blue);">UNBLOCK</button>
-            </div>
-            <button onclick="admStopAll()" class="adm-input" style="background:var(--red); color:#fff; margin-top:10px;">EMERGENCY STOP ALL</button>
         </div>
     </div>
 
     <div id="regModal" class="modal">
         <div class="modal-box">
-            <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0;">REGISTRASI</h2>
-            <input id="regPlat" class="adm-input" placeholder="PLAT NOMOR (CONTOH: B 1234 XY)">
-            <input id="regName" class="adm-input" placeholder="NAMA ANDA">
-            <input id="regWA" class="adm-input" type="number" placeholder="NOMOR WHATSAPP">
-            <div style="font-size:10px; color:#888; margin-top:10px;">BATERAI SAAT INI: <span id="batDisp">50</span>%</div>
-            <input id="regBat" type="range" min="0" max="100" value="50" oninput="document.getElementById('batDisp').innerText=this.value" style="width:100%; margin:10px 0;">
+            <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0; margin-bottom:30px; letter-spacing:2px; text-shadow:0 0 10px var(--blue);">REGISTRASI</h2>
+
+            <div class="input-group">
+                <input id="regPlat" class="reg-input" required oninput="window.formatPlatInput(this)">
+                <label class="reg-label">PLAT NOMOR</label>
+            </div>
+
+            <div class="input-group">
+                <input id="regName" class="reg-input" required>
+                <label class="reg-label">NAMA PENGGUNA</label>
+            </div>
+
+            <div class="input-group">
+                <input id="regWA" class="reg-input" type="number" required>
+                <label class="reg-label">NOMOR WHATSAPP</label>
+            </div>
+
+            <div class="input-group">
+                <input id="regBat" class="reg-input" type="number" min="0" max="100" required>
+                <label class="reg-label">BATERAI SAAT INI (%)</label>
+            </div>
             
-            <button onclick="submitReg()" class="adm-input" style="background:var(--blue); color:#000; font-weight:bold; margin-top:10px;">MULAI CHARGING</button>
-            <button onclick="document.getElementById('regModal').style.display='none'" class="adm-input" style="border:none; color:#666;">BATAL</button>
+            <button onclick="window.submitReg()" class="btn-glossy blue" style="width:100%; margin-top:15px;">MULAI CHARGING</button>
+            <button onclick="document.getElementById('regModal').style.display='none'" style="background:transparent; border:none; color:#666; cursor:pointer; margin-top:15px; font-family:'Inter'; font-size:12px;">[ BATAL ]</button>
         </div>
     </div>
 
-    <div id="customAlert" class="modal" style="z-index:9999;">
-        <div class="modal-box" style="text-align:center; border-color:var(--accent);">
-            <div id="alertMsg" style="font-family:'Orbitron'; color:#fff; font-size:14px; margin-bottom:20px;">MESSAGE</div>
-            <button onclick="document.getElementById('customAlert').style.display='none'" class="adm-input" style="background:var(--accent); color:#000;">OK</button>
+    <div id="adminArea">
+        <div class="adm-header">
+            <span>ROOT@SYSTEM:~# ADMIN_PANEL</span>
+            <span onclick="window.logoutAdmin()" style="color:var(--red); cursor:pointer;">[ KEMBALI ]</span>
+        </div>
+        
+        <div style="color:#888; font-size:10px; margin-bottom:5px; font-family:'JetBrains Mono';">SYSTEM LOGS:</div>
+        <div class="term-box" id="termLog">
+            <div class="log-line">System initialized... waiting for connection.</div>
+        </div>
+
+        <div class="adm-card">
+            <div style="color:var(--blue); font-family:'Orbitron'; margin-bottom:10px;">MANUAL OVERRIDE</div>
+            <select id="admSlotSel" class="adm-input"></select>
+            <input id="admPlat" placeholder="PLAT NOMOR" class="adm-input">
+            <input id="admBat" placeholder="%" type="number" class="adm-input" style="width:80px;">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button onclick="window.admManualAssign()" class="adm-input" style="background:var(--accent); color:#000; cursor:pointer;">FORCE ASSIGN</button>
+                <button onclick="window.admClearSlot()" class="adm-input" style="background:var(--red); cursor:pointer;">CLEAR SLOT</button>
+            </div>
         </div>
     </div>
-    <audio id="audio"></audio>
+
+    <audio id="audio" crossorigin="anonymous"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, runTransaction, updateDoc, arrayUnion, arrayRemove, collection, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, runTransaction, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- KONFIGURASI FIREBASE ---
+        // CONFIG
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
-        const logRef = collection(db, "activityLog");
 
-        // --- KONFIGURASI LOKASI & CHARGING ---
-        const STATION_LOC = { lat: -6.171583, lng: 106.899844 }; // Kelapa Gading
-        const MAX_DIST_KM = 0.2; 
-        const CHARGING_CURVE = [[100,0], [99,1], [95,4], [90,17], [89,18], [85,22], [81,25], [72,33], [61,45], [50,50], [20,68], [0,86]];
-
-        // --- STATE VARIABLES ---
+        // GLOBAL VARS
         let latestSlots = [null, null, null];
         let latestQueue = [];
-        let isUserInArea = false;
+        let logs = []; // Menyimpan log lokal untuk render
         let currentUserPlat = localStorage.getItem('myPlat') || null;
         let audioInterval = null;
 
-        // --- 1. PLAYLIST DATA (40+ LAGU) ---
+        // --- CUSTOM MODAL HANDLERS (Pengganti Popup Bawaan) ---
+        window.showAlert = (msg) => {
+            document.getElementById('alertMsg').innerHTML = msg;
+            document.getElementById('customAlert').style.display = 'flex';
+        };
+
+        window.askConfirm = (msg, callback) => {
+            document.getElementById('confirmMsg').innerText = msg;
+            const modal = document.getElementById('confirmModal');
+            const btnYes = document.getElementById('btnConfirmYes');
+            
+            // Hapus event listener lama agar tidak menumpuk
+            const newBtn = btnYes.cloneNode(true);
+            btnYes.parentNode.replaceChild(newBtn, btnYes);
+            
+            newBtn.onclick = () => {
+                modal.style.display = 'none';
+                callback();
+            };
+            modal.style.display = 'flex';
+        };
+
+        window.askInput = (title, label, callback) => {
+            document.getElementById('inputTitle').innerText = title;
+            document.getElementById('inputLabel').innerText = label;
+            const inp = document.getElementById('inputVal');
+            inp.value = "";
+            const modal = document.getElementById('inputModal');
+            const btnOk = document.getElementById('btnInputOk');
+
+            const newBtn = btnOk.cloneNode(true);
+            btnOk.parentNode.replaceChild(newBtn, btnOk);
+
+            newBtn.onclick = () => {
+                if(inp.value.trim() !== "") {
+                    modal.style.display = 'none';
+                    callback(inp.value.trim());
+                }
+            };
+            modal.style.display = 'flex';
+            inp.focus();
+        };
+
+        // --- MUSIC PLAYER DATA ---
         const baseURL = "https://mlump3player.netlify.app/";
-        const rawList = [
-            "Ada Apa Denganmu.mp3", "anji-menunggu-kamu.mp3", "Anugerah Terindah Yang Pernah Kumiliki.mp3",
-            "armada_asalkan_kau_bahagia.mp3", "armada_harusnya_aku.mp3", "Bendera - Cokelat - 2003.mp3",
-            "Bintang Di Surga.mp3", "Bon Jovi - Always .MP3", "Bon Jovi - I'll Be There For You .MP3",
-            "Bon Jovi - Its My Life .mp3", "Bon Jovi - Lay Your Hands On Me.MP3", "Bon Jovi - Livin' On A Prayer .MP3",
-            "Bon Jovi - This house is not for sale.mp3", "Bon Jovi - Who Says You Can't Go Home [Duet].mp3",
-            "Bon Jovi - You Give Love A Bad Name.mp3", "Bunda - Potret - 1997.mp3", "Cukup Siti Nurbaya - Dewa 19 - 1995.mp3",
-            "Dan - Sheila On 7 - 1999.mp3", "Fourtwnty - Mangu (Official Lyric Visualizer).mp3", "Galang Rambu Anarki - Iwan Fals - 1982.mp3",
-            "Guru Oemar Bakri - Iwan Fals - 1981.mp3", "Janji - Gigi - 1995.mp3", "Judika - Bagaimana Kalau Aku Tidak Baik - Baik Saja.mp3",
-            "Judika - Putus atau Terus (Official Music Video).mp3", "Mahadewi - Padi - 1999.mp3", "Melompat Lebih Tinggi - Sheila on 7 - 2003.mp3",
-            "Mimpi - Anggun C. Sasmi - 1990.mp3", "Mix Lagu Pop Indonesia.mp3", "Mungkin Nanti.mp3", "No Doubt - Don't Speak.mp3",
-            "PADI - Kasih Tak Sampai.mp3", "PADI - Semua Tak Sama.mp3", "Pelangi Di Matamu.mp3", "Pesawat Tempurku - Iwan Fals - 1987.mp3",
-            "Sarjana Muda - Iwan Fals - 1981.mp3", "Sheila On 7 - Saat Aku Lanjut Usia.mp3", "Slank - Terlalu Manis.mp3",
-            "Sobat - Padi - 1999.mp3", "Sore Tugu Pancoran.mp3", "Stevie B-Dream About You.mp3", "Stinky - Mungkinkah.mp3",
-            "Surat Buat Wakil Rakyat.mp3", "Terbang - Gigi - 1997.mp3", "Terbunuh Sepi - Slank - 1994.mp3", "Terima Kasih.mp3"
-        ];
-
-        // Generate Playlist Objects
-        const playlist = rawList.map(file => ({
-            title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','')),
-            url: baseURL + file
+        const rawList = ["Ada Apa Denganmu.mp3", "anji-menunggu-kamu.mp3", "Anugerah Terindah Yang Pernah Kumiliki.mp3", "armada_asalkan_kau_bahagia.mp3", "armada_harusnya_aku.mp3", "Bendera - Cokelat - 2003.mp3", "Bintang Di Surga.mp3", "Bon Jovi - Always .MP3", "Bon Jovi - I'll Be There For You .MP3", "Bon Jovi - Its My Life .mp3", "Bon Jovi - Lay Your Hands On Me.MP3", "Bon Jovi - Livin' On A Prayer .MP3", "Bon Jovi - This house is not for sale.mp3", "Bon Jovi - Who Says You Can't Go Home [Duet].mp3", "Bon Jovi - You Give Love A Bad Name.mp3", "Bunda - Potret - 1997.mp3", "Cukup Siti Nurbaya - Dewa 19 - 1995.mp3", "Dan - Sheila On 7 - 1999.mp3", "Fourtwnty - Mangu (Official Lyric Visualizer).mp3", "Galang Rambu Anarki - Iwan Fals - 1982.mp3", "Guru Oemar Bakri - Iwan Fals - 1981.mp3", "Janji - Gigi - 1995.mp3", "Judika - Bagaimana Kalau Aku Tidak Baik - Baik Saja.mp3", "Judika - Putus atau Terus (Official Music Video).mp3", "Mahadewi - Padi - 1999.mp3", "Melompat Lebih Tinggi - Sheila on 7 - 2003.mp3", "Mimpi - Anggun C. Sasmi - 1990.mp3", "Mix Lagu Pop Indonesia.mp3", "Mungkin Nanti.mp3", "No Doubt - Don't Speak.mp3", "PADI - Kasih Tak Sampai.mp3", "PADI - Semua Tak Sama.mp3", "Pelangi Di Matamu.mp3", "Pesawat Tempurku - Iwan Fals - 1987.mp3", "Sarjana Muda - Iwan Fals - 1981.mp3", "Sheila On 7 - Saat Aku Lanjut Usia.mp3", "Slank - Terlalu Manis.mp3", "Sobat - Padi - 1999.mp3", "Sore Tugu Pancoran.mp3", "Stevie B-Dream About You.mp3", "Stinky - Mungkinkah.mp3", "Surat Buat Wakil Rakyat.mp3", "Terbang - Gigi - 1997.mp3", "Terbunuh Sepi - Slank - 1994.mp3", "Terima Kasih.mp3"];
+        
+        // Bersihkan nama file
+        const playlist = rawList.map(file => ({ 
+            title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','').replace(/_/g, ' ')), 
+            url: baseURL + file 
         }));
-
-        // --- 2. MUSIC PLAYER & VISUALIZER LOGIC ---
         const audio = document.getElementById('audio');
-        const mBtn = document.getElementById('m-btn');
-        const hbAnim = document.getElementById('hb-anim');
         let currentTrackIdx = 0;
+        let audioUnlocked = false;
+        let isTrackSelected = false;
 
-        // Init Playlist UI
+        // --- 1. AUDIO SYSTEM FIX ---
+        window.firstInteraction = () => {
+            if (audioUnlocked) return;
+            // Pancing browser dengan file silent agar autoplay diizinkan
+            audio.src = "data:audio/wav;base64,UklGRigAAABXQVZFAmZtdCAQAAAAAQABAIAAAIAAAIABAABhZGF0YQAAAAA=";
+            audio.play().then(() => { 
+                audioUnlocked = true; 
+                console.log("Audio Unlocked"); 
+            }).catch((e) => console.log("Audio Policy Restriction:", e));
+        };
+
         const plContainer = document.getElementById('playlistContainer');
         playlist.forEach((song, idx) => {
             const el = document.createElement('div');
             el.className = 'track-item';
             el.innerText = `${idx + 1}. ${song.title}`;
-            el.onclick = () => playTrack(idx);
+            el.onclick = () => window.playTrack(idx);
             plContainer.appendChild(el);
         });
 
@@ -433,367 +442,424 @@
         };
 
         window.playTrack = (idx) => {
+            if (!audioUnlocked) window.firstInteraction(); 
             currentTrackIdx = idx;
+            isTrackSelected = true;
+            
+            // Error handling jika URL mati
             audio.src = playlist[idx].url;
             document.getElementById('track-name').innerText = playlist[idx].title;
             document.getElementById('playlistPopup').style.display = 'none';
             
-            // Interaction handling
-            audio.play().then(() => {
-                setPlayingState(true);
-            }).catch(() => {
-                showAlert("TAP LAYAR SEKALI LAGI UNTUK PLAY");
+            // Update UI Playlist
+            document.querySelectorAll('.track-item').forEach((el, i) => { 
+                el.classList.toggle('active', i === idx); 
+            });
+
+            audio.play().then(() => setPlayingState(true)).catch(e => {
+                console.error("Play Error:", e);
+                window.showAlert("GAGAL MEMUTAR LAGU. KONEKSI ANDA LEMAH?");
             });
         };
 
         window.togglePlay = () => {
-            if(!audio.src) window.playTrack(0);
-            else if(audio.paused) {
-                audio.play().then(() => setPlayingState(true)).catch(() => showAlert("TAP LAYAR UNTUK IZIN AUDIO"));
-            } else {
-                audio.pause();
-                setPlayingState(false);
+            if (!audioUnlocked) window.firstInteraction();
+            if(!isTrackSelected) { window.playTrack(0); return; }
+            
+            if(audio.paused) {
+                audio.play().then(() => setPlayingState(true));
+            } else { 
+                audio.pause(); 
+                setPlayingState(false); 
             }
         };
 
         function setPlayingState(isPlaying) {
+            const mBtn = document.getElementById('m-btn');
+            const hbAnim = document.getElementById('hb-anim');
             if(isPlaying) {
                 mBtn.innerText = "⏸";
-                // Simple Heartbeat Visualizer Animation
                 if(audioInterval) clearInterval(audioInterval);
-                audioInterval = setInterval(() => {
-                    const randomScale = 0.5 + Math.random(); // Random scale 0.5 - 1.5
-                    hbAnim.style.transform = `scaleX(${randomScale})`;
+                // Efek visualizer sederhana
+                audioInterval = setInterval(() => { 
+                    hbAnim.style.transform = `scaleX(${0.5 + Math.random()})`; 
                 }, 100);
-            } else {
-                mBtn.innerText = "▶";
-                clearInterval(audioInterval);
-                hbAnim.style.transform = `scaleX(0)`;
+            } else { 
+                mBtn.innerText = "▶"; 
+                clearInterval(audioInterval); 
+                hbAnim.style.transform = `scaleX(0)`; 
             }
         }
 
-        // Auto Next
-        audio.addEventListener('ended', () => {
-            currentTrackIdx = (currentTrackIdx + 1) % playlist.length;
-            window.playTrack(currentTrackIdx);
+        audio.addEventListener('ended', () => { 
+            currentTrackIdx = (currentTrackIdx + 1) % playlist.length; 
+            window.playTrack(currentTrackIdx); 
         });
 
 
-        // --- 3. CORE SYSTEM LOGIC (FIREBASE) ---
-        onSnapshot(ref, (snap) => {
-            const d = snap.data(); if(!d) return;
-            latestSlots = d.chargingSlots || [null, null, null];
-            latestQueue = d.waitingQueue || [];
-
-            // Update Global Queue Count
-            document.getElementById('qCountDisplay').innerText = latestQueue.length;
-
-            updateFrontView();
-            updateUserView();
-            updateAdminSelects();
-        });
-
-        // Update Tampilan Front View (TV Mode)
-        function updateFrontView() {
-            const qLen = latestQueue.length;
-            latestSlots.forEach((m, i) => {
-                const elBat = document.getElementById(`fv${i+1}-bat`);
-                const elPlat = document.getElementById(`fv${i+1}-plat`);
-                
-                if(m && m.startTime) {
-                    const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
-                    let dur = m.isManualTime ? m.durationMinutes : calculateDuration(m.startBattery, calculateTargetLimit(qLen));
-                    const rem = ((new Date(st.getTime() + dur*60000)) - new Date())/60000;
-
-                    if(rem <= 0) {
-                        elBat.innerText = "DONE"; elBat.style.color = "var(--accent)";
-                        elPlat.innerText = m.plat; elPlat.style.color = "#fff";
-                    } else {
-                        const target = calculateTargetLimit(qLen);
-                        const timeToTarget = calculateDuration(target, 100);
-                        const dispBat = getBatteryFromRemTime(rem + timeToTarget);
-                        elBat.innerText = dispBat + "%"; elBat.style.color = "#fff";
-                        elPlat.innerText = m.plat;
-                        if(i===1) document.getElementById('fv2-timer').innerText = Math.ceil(rem) + " MIN";
-                    }
-                } else if(m) {
-                    elBat.innerText = m.startBattery + "%"; elBat.style.color = "#aaa";
-                    elPlat.innerText = "WAIT"; elPlat.style.color = "var(--blue)";
-                } else {
-                    elBat.innerText = "RDY"; elBat.style.color = "#444";
-                    elPlat.innerText = "EMPTY"; elPlat.style.color = "#444";
-                    if(i===1) document.getElementById('fv2-timer').innerText = "";
-                }
-            });
-        }
-
-        // Update Tampilan User View (Personal Mode)
-        function updateUserView() {
-            const uv = document.getElementById('userView');
-            const fv = document.getElementById('frontView');
-            const fp = document.getElementById('fpArea');
-            
-            // Check if user is logged in
-            if(!currentUserPlat) {
-                uv.style.display = 'none';
-                fv.style.display = 'block';
-                fp.style.display = 'flex';
-                return;
-            }
-
-            // Find user in slots
-            const mySlotIdx = latestSlots.findIndex(s => s && s.plat === currentUserPlat);
-            const myQueueIdx = latestQueue.findIndex(q => q && q.plat === currentUserPlat);
-
-            if(mySlotIdx === -1 && myQueueIdx === -1) {
-                // User removed / kicked / finished
-                localStorage.removeItem('myPlat');
-                currentUserPlat = null;
-                showAlert("SESI ANDA TELAH BERAKHIR / DIBERSIHKAN ADMIN");
-                return;
-            }
-
-            // SWITCH TO USER VIEW
-            uv.style.display = 'flex';
-            fv.style.display = 'none';
-            fp.style.display = 'none';
-
-            // Populate User Data
-            const uvPlat = document.getElementById('uvPlat');
-            const uvStat = document.getElementById('uvStat');
-            const uvRing = document.getElementById('uvYellowRing');
-            
-            uvPlat.innerText = currentUserPlat;
-
-            if(mySlotIdx !== -1) {
-                // User is charging
-                const m = latestSlots[mySlotIdx];
-                const qLen = latestQueue.length;
-                const st = m.startTime ? (m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime)) : new Date();
-                let dur = m.isManualTime ? m.durationMinutes : calculateDuration(m.startBattery, calculateTargetLimit(qLen));
-                const rem = ((new Date(st.getTime() + dur*60000)) - new Date())/60000;
-                
-                let dispBat = m.startBattery;
-                if(m.startTime) {
-                     const target = calculateTargetLimit(qLen);
-                     const timeToTarget = calculateDuration(target, 100);
-                     dispBat = getBatteryFromRemTime(rem + timeToTarget);
-                }
-
-                uvStat.innerText = `CHARGING: ${dispBat}% | ${Math.ceil(rem)} MIN LEFT`;
-                
-                // Ring animation logic: Scale based on battery (0.8 to 1.3)
-                const scale = 0.8 + ((dispBat / 100) * 0.5);
-                uvRing.style.transform = `scale(${scale})`;
-                uvRing.style.borderColor = "var(--accent)";
-
-            } else {
-                // User is in queue
-                uvStat.innerText = `WAITING LIST #${myQueueIdx + 1}`;
-                uvRing.style.transform = `scale(0.8)`;
-                uvRing.style.borderColor = "#ff9900";
-            }
-
-            // Footer Info
-            const occupiedSlots = latestSlots.filter(s => s).length;
-            document.getElementById('uvFooterSlots').innerText = `${occupiedSlots} / 3 TERISI`;
-            document.getElementById('uvFooterQueue').innerText = `#${myQueueIdx !== -1 ? myQueueIdx + 1 : '-'}`;
-        }
-
-        // --- 4. GPS & REGISTER LOGIC ---
-        function getDist(lat1,lon1,lat2,lon2){ const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))); }
-
-        if(navigator.geolocation) {
-            navigator.geolocation.watchPosition((pos) => {
-                const dist = getDist(pos.coords.latitude, pos.coords.longitude, STATION_LOC.lat, STATION_LOC.lng);
-                const btn = document.getElementById('fp-trigger');
-                const lbl = document.getElementById('fp-label');
-                
-                if(dist <= MAX_DIST_KM) {
-                    isUserInArea = true; btn.classList.add('active');
-                    lbl.innerText = "LOKASI TERVERIFIKASI"; lbl.style.color = "var(--blue)";
-                } else {
-                    isUserInArea = false; btn.classList.remove('active');
-                    lbl.innerText = "DILUAR JANGKAUAN"; lbl.style.color = "#555";
-                }
-            });
-        }
+        // --- 2. BUSINESS LOGIC (TRANSACTION SECURE) ---
+        window.formatPlatInput = (el) => {
+            let val = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            let match = val.match(/^([A-Z]{1,2})(\d{1,4})?([A-Z]{0,3})?$/);
+            if (match) {
+                let formatted = match[1];
+                if (match[2]) formatted += " " + match[2];
+                if (match[3]) formatted += " " + match[3];
+                el.value = formatted;
+            } else { el.value = val; }
+        };
 
         window.checkLocationAndOpen = () => {
-            if(!isUserInArea) { showAlert("GPS DILUAR AREA (MAX 200M)"); return; }
             const btn = document.getElementById('fp-trigger');
             btn.classList.add('scanning');
-            setTimeout(() => {
-                btn.classList.remove('scanning');
-                document.getElementById('regModal').style.display='flex';
+            // Simulasi GPS Check (Hardcoded success)
+            setTimeout(() => { 
+                btn.classList.remove('scanning'); 
+                document.getElementById('regModal').style.display='flex'; 
             }, 1500);
         };
 
+        // FUNGSI LOGGING (Menulis ke DB agar Admin bisa baca)
+        const addLogEntry = (logsArr, msg) => {
+            const time = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+            logsArr.unshift(`[${time}] ${msg}`);
+            if(logsArr.length > 50) logsArr.pop(); // Batasi 50 log terakhir agar DB tidak berat
+            return logsArr;
+        };
+
         window.submitReg = () => {
-            const p = document.getElementById('regPlat').value.toUpperCase().replace(/\s/g,'');
-            const n = document.getElementById('regName').value.trim();
-            const w = document.getElementById('regWA').value.trim();
-            const b = parseInt(document.getElementById('regBat').value);
+            const p = document.getElementById('regPlat').value; 
+            const n = document.getElementById('regName').value.trim().toUpperCase();
+            const b = parseInt(document.getElementById('regBat').value); 
+            const platRegex = /^[A-Z]{1,2}\s\d{1,4}\s[A-Z]{1,3}$/;
 
-            if(!p || !n) { showAlert("LENGKAPI DATA"); return; }
+            if(!p || !n || isNaN(b)) { window.showAlert("DATA BELUM LENGKAP!"); return; }
+            if(!platRegex.test(p)) { window.showAlert("FORMAT PLAT SALAH (CONTOH: B 1234 XYZ)"); return; }
             
-            // Strike System
-            let strikes = parseInt(localStorage.getItem('gpsStrikes')||'0');
-            if(strikes >= 3) { showAlert("PERANGKAT DIBLOKIR KARENA SPAM GPS"); return; }
-
+            // TRANSACTION: Mencegah data hilang/bentrok saat user daftar bersamaan
             runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data()||{};
-                if((d.blockedList||[]).includes(p)) throw "PLAT DIBLOKIR ADMIN";
+                const docSnap = await t.get(ref);
+                if (!docSnap.exists()) { throw "Document does not exist!"; }
                 
-                let s=d.chargingSlots||[null,null,null], q=d.waitingQueue||[];
-                if(s.some(x=>x?.plat===p)||q.some(x=>x?.plat===p)) throw "PLAT SUDAH ADA DI SISTEM";
+                const d = docSnap.data();
+                let s = d.chargingSlots || [null,null,null];
+                let q = d.waitingQueue || [];
+                let l = d.systemLogs || [];
+                
+                // Cek apakah plat sudah ada di sistem
+                const isExist = s.some(x => x && x.plat === p) || q.some(x => x.plat === p);
+                if(isExist) throw "Plat nomor sudah terdaftar!";
 
-                const tar = calculateTargetLimit(q.length);
-                const dur = calculateDuration(b, tar);
-                const emptyIdx = s.findIndex(x=>x===null);
-                
+                const emptyIdx = s.findIndex(x => x === null);
+                const dur = calculateDuration(b, 100);
+
                 if(emptyIdx !== -1) {
-                    s[emptyIdx]={plat:p, userName:n, wa:w, startBattery:b, targetLimit:tar, durationMinutes:dur, startTime:null, readyTime:new Date()};
+                    s[emptyIdx] = {plat:p, userName:n, startBattery:b, startTime:new Date(), durationMinutes:dur};
+                    l = addLogEntry(l, `USER JOIN: ${p} (${n}) masuk ke SLOT ${emptyIdx+1}`);
                 } else {
-                    q.push({plat:p, userName:n, wa:w, startBattery:b, targetLimit:100, durationMinutes:0, startTime:null});
+                    q.push({plat:p, userName:n, startBattery:b});
+                    l = addLogEntry(l, `USER QUEUE: ${p} (${n}) masuk antrian ke-${q.length}`);
                 }
-                t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-            }).then(() => {
-                localStorage.setItem('myPlat', p);
-                currentUserPlat = p;
-                document.getElementById('regModal').style.display='none';
-                logToTerm("USER_REG", `New User: ${p}`, "l-suc");
-            }).catch(e => showAlert("ERROR: " + e));
-        };
-
-        // --- 5. ADMIN LOGIC (TERMUX STYLE) ---
-        function logToTerm(tag, msg, color="l-inf") {
-            const box = document.getElementById('termLog');
-            const time = new Date().toLocaleTimeString();
-            box.innerHTML += `<div class="log-line"><span class="l-time">[${time}]</span> <span class="${color}">${tag}: ${msg}</span></div>`;
-            box.scrollTop = box.scrollHeight;
-            
-            // Sync to Firebase Log
-            if(tag !== "INIT") addDoc(logRef, {timestamp: new Date(), tag: tag, msg: msg});
-        }
-
-        window.goAdmin = () => {
-            if(prompt("PIN SYSTEM") === "8080") {
-                document.getElementById('adminArea').style.display='block';
-                logToTerm("AUTH", "Admin Access Granted", "l-suc");
-            }
-        };
-        window.logoutAdmin = () => { document.getElementById('adminArea').style.display='none'; };
-
-        // Helper update select options
-        function updateAdminSelects() {
-            const sOpts = latestSlots.map((_,i)=>`<option value="${i}">Slot ${i+1}</option>`).join('');
-            document.getElementById('admSlotSel').innerHTML = sOpts;
-        }
-
-        window.admManualAssign = () => {
-            const s = document.getElementById('admSlotSel').value;
-            const p = document.getElementById('admPlat').value.toUpperCase();
-            const b = parseInt(document.getElementById('admBat').value);
-            if(!p) return;
-            
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                const tar = calculateTargetLimit(d.waitingQueue.length);
-                d.chargingSlots[s] = {plat:p, userName:'ADMIN', wa:'-', startBattery:b, targetLimit:tar, durationMinutes:calculateDuration(b, tar), startTime:null, readyTime: new Date()};
-                t.update(ref, {chargingSlots: d.chargingSlots});
-            }).then(() => logToTerm("ADM_ASSIGN", `Force Slot ${parseInt(s)+1} -> ${p}`));
-        };
-
-        window.admClearSlot = () => {
-            const s = document.getElementById('admSlotSel').value;
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                const p = d.chargingSlots[s]?.plat || "Unknown";
-                d.chargingSlots[s] = null;
-                // Auto Pull Queue
-                if(d.waitingQueue.length > 0) {
-                    const next = d.waitingQueue.shift();
-                    const tar = calculateTargetLimit(d.waitingQueue.length);
-                    d.chargingSlots[s] = {...next, startTime:null, readyTime:new Date(), targetLimit:tar, durationMinutes:calculateDuration(next.startBattery, tar)};
-                }
-                t.update(ref, {chargingSlots: d.chargingSlots, waitingQueue: d.waitingQueue});
-                return p;
-            }).then((p) => logToTerm("ADM_CLEAR", `Cleared ${p} from Slot ${parseInt(s)+1}`, "l-warn"));
-        };
-
-        window.admBlock = () => {
-            const p = document.getElementById('admBlockPlat').value.toUpperCase();
-            if(p) updateDoc(ref, {blockedList: arrayUnion(p)}).then(()=>logToTerm("ADM_BLOCK", `Blocked ${p}`, "l-err"));
-        };
-        window.admUnblock = () => {
-            const p = document.getElementById('admBlockPlat').value.toUpperCase();
-            if(p) updateDoc(ref, {blockedList: arrayRemove(p)}).then(()=>logToTerm("ADM_UNBLOCK", `Unblocked ${p}`, "l-suc"));
-        };
-        window.admStopAll = () => {
-            if(confirm("DARURAT: MATIKAN SEMUA?")) {
-                updateDoc(ref, {chargingSlots: [null,null,null]}).then(()=>logToTerm("ADM_EMERGENCY", "STOPPED ALL SLOTS", "l-err"));
-            }
-        };
-
-        // --- 6. USER CONTROLS (GLOSSY BUTTONS) ---
-        window.userStop = () => {
-            if(!confirm("Hentikan pengisian daya?")) return;
-            if(!currentUserPlat) return;
-            
-            // Find slot
-            const idx = latestSlots.findIndex(s => s && s.plat === currentUserPlat);
-            if(idx !== -1) {
-                runTransaction(db, async(t)=>{
-                    const d=(await t.get(ref)).data();
-                    d.chargingSlots[idx] = null;
-                    if(d.waitingQueue.length > 0) {
-                        const next = d.waitingQueue.shift();
-                        const tar = calculateTargetLimit(d.waitingQueue.length);
-                        d.chargingSlots[idx] = {...next, startTime:null, readyTime:new Date(), targetLimit:tar, durationMinutes:calculateDuration(next.startBattery, tar)};
-                    }
-                    t.update(ref, {chargingSlots: d.chargingSlots, waitingQueue: d.waitingQueue});
-                }).then(() => {
-                    localStorage.removeItem('myPlat');
-                    currentUserPlat = null;
-                    logToTerm("USER_STOP", `User stopped charging`);
-                });
-            }
+                
+                t.update(ref, {chargingSlots:s, waitingQueue:q, systemLogs:l});
+            }).then(() => { 
+                localStorage.setItem('myPlat', p); 
+                currentUserPlat = p; 
+                document.getElementById('regModal').style.display='none'; 
+                window.showAlert("BERHASIL MASUK SISTEM");
+            }).catch((err) => {
+                console.error(err);
+                window.showAlert("ERROR: " + (err.message || err));
+            });
         };
 
         window.userEditTimer = () => {
-             const m = prompt("Masukkan waktu baru (menit):");
-             if(m && !isNaN(m)) {
-                const idx = latestSlots.findIndex(s => s && s.plat === currentUserPlat);
-                if(idx !== -1) {
-                    runTransaction(db, async(t)=>{
-                         const d=(await t.get(ref)).data();
-                         d.chargingSlots[idx].isManualTime = true;
-                         d.chargingSlots[idx].durationMinutes = parseInt(m);
-                         d.chargingSlots[idx].startTime = new Date(); // Reset start time to now
-                         t.update(ref, {chargingSlots: d.chargingSlots});
-                    });
+            if(!currentUserPlat) return;
+            window.askInput("EDIT TIMER", "MASUKKAN MENIT BARU", (val) => {
+                const m = parseInt(val);
+                if(isNaN(m) || m < 1) { window.showAlert("ANGKA TIDAK VALID"); return; }
+
+                runTransaction(db, async(t) => {
+                    const docSnap = await t.get(ref);
+                    const d = docSnap.data();
+                    let s = d.chargingSlots;
+                    let l = d.systemLogs || [];
+
+                    const idx = s.findIndex(x => x && x.plat === currentUserPlat);
+                    if(idx === -1) throw "Sesi anda tidak ditemukan / sudah berakhir.";
+
+                    s[idx].durationMinutes = m;
+                    s[idx].startTime = new Date(); // Reset start time ke sekarang
+                    l = addLogEntry(l, `USER EDIT: ${currentUserPlat} ubah timer jadi ${m} min`);
+
+                    t.update(ref, { chargingSlots: s, systemLogs: l });
+                }).then(() => window.showAlert("TIMER DIUPDATE")).catch(e => window.showAlert(e));
+            });
+        };
+
+        window.userStop = () => {
+            if(!currentUserPlat) return;
+            window.askConfirm("STOP CHARGING DAN KELUAR?", () => {
+                runTransaction(db, async(t) => {
+                    const docSnap = await t.get(ref);
+                    const d = docSnap.data();
+                    let s = d.chargingSlots;
+                    let l = d.systemLogs || [];
+
+                    const idx = s.findIndex(x => x && x.plat === currentUserPlat);
+                    if(idx === -1) throw "Sesi sudah berakhir.";
+
+                    const oldPlat = s[idx].plat;
+                    s[idx] = null; // Kosongkan slot
+                    l = addLogEntry(l, `USER STOP: ${oldPlat} keluar dari SLOT ${idx+1}`);
+
+                    t.update(ref, { chargingSlots: s, systemLogs: l });
+                }).then(() => {
+                    localStorage.removeItem('myPlat');
+                    currentUserPlat = null;
+                    window.location.reload();
+                }).catch(e => window.showAlert(e));
+            });
+        };
+
+        // --- 3. ADMIN FUNCTIONS (SECURE) ---
+        window.checkAdminAuth = () => {
+            window.askInput("ADMIN ACCESS", "MASUKKAN PIN", (pin) => {
+                if(pin === "8080") { // PIN SIMPLE
+                    document.getElementById('adminArea').style.display='block';
+                    // Render logs saat admin masuk
+                    renderAdminLogs(); 
+                } else {
+                    window.showAlert("PIN SALAH!");
                 }
-             }
+            });
+        };
+        window.logoutAdmin = () => { document.getElementById('adminArea').style.display='none'; };
+
+        window.admManualAssign = () => {
+            const slotIdx = parseInt(document.getElementById('admSlotSel').value);
+            const p = document.getElementById('admPlat').value.toUpperCase();
+            const b = parseInt(document.getElementById('admBat').value || "50");
+
+            if(!p) { window.showAlert("PLAT HARUS DIISI"); return; }
+
+            window.askConfirm(`PAKSA ISI SLOT ${slotIdx+1} DENGAN ${p}?`, () => {
+                runTransaction(db, async(t) => {
+                    const docSnap = await t.get(ref);
+                    let d = docSnap.data();
+                    let s = d.chargingSlots;
+                    let l = d.systemLogs || [];
+
+                    // Override slot
+                    s[slotIdx] = {
+                        plat: p, 
+                        userName: 'ADMIN_FORCE', 
+                        startBattery: b, 
+                        startTime: new Date(), 
+                        durationMinutes: 30
+                    };
+                    l = addLogEntry(l, `ADMIN: Force Assign ${p} ke SLOT ${slotIdx+1}`);
+
+                    t.update(ref, { chargingSlots: s, systemLogs: l });
+                }).then(() => window.showAlert("SUCCESS")).catch(e => window.showAlert(e));
+            });
         };
 
-        // --- HELPER MATH & VIEW SWITCH ---
-        window.switchView = (mode) => {
-            if(mode === 'front') {
-                document.getElementById('userView').style.display='none';
-                document.getElementById('frontView').style.display='block';
-                document.getElementById('fpArea').style.display='flex';
+        window.admClearSlot = () => {
+            const slotIdx = parseInt(document.getElementById('admSlotSel').value);
+            window.askConfirm(`KOSONGKAN SLOT ${slotIdx+1}?`, () => {
+                runTransaction(db, async(t) => {
+                    const docSnap = await t.get(ref);
+                    let d = docSnap.data();
+                    let s = d.chargingSlots;
+                    let l = d.systemLogs || [];
+
+                    if(s[slotIdx]) {
+                        l = addLogEntry(l, `ADMIN: Kick ${s[slotIdx].plat} dari SLOT ${slotIdx+1}`);
+                        s[slotIdx] = null;
+                        t.update(ref, { chargingSlots: s, systemLogs: l });
+                    }
+                }).then(() => window.showAlert("SLOT DIKOSONGKAN")).catch(e => window.showAlert(e));
+            });
+        };
+
+        function renderAdminLogs() {
+            const box = document.getElementById('termLog');
+            if(!logs || logs.length === 0) {
+                box.innerHTML = '<div class="log-line">No logs available.</div>';
+                return;
             }
-        };
+            // Format log biar kayak terminal
+            box.innerHTML = logs.map(line => {
+                // Pisahkan jam dan pesan
+                const parts = line.split('] ');
+                if(parts.length > 1) {
+                    return `<div class="log-line"><span class="time">${parts[0]}]</span> <span class="act">${parts[1]}</span></div>`;
+                }
+                return `<div class="log-line">${line}</div>`;
+            }).join('');
+        }
 
+        // --- 4. REALTIME LISTENER & RENDER ---
+        onSnapshot(ref, (snap) => {
+            const d = snap.data(); 
+            if(!d) {
+                // Init doc jika belum ada
+                updateDoc(ref, { chargingSlots: [null,null,null], waitingQueue: [], systemLogs: [] });
+                return;
+            }
+
+            latestSlots = d.chargingSlots || [null, null, null];
+            latestQueue = d.waitingQueue || [];
+            logs = d.systemLogs || [];
+
+            document.getElementById('qCountDisplay').innerText = latestQueue.length;
+            
+            // Render Views
+            updateFrontView();
+            updateUserView();
+            
+            // Render Log if Admin Open
+            if(document.getElementById('adminArea').style.display === 'block') {
+                renderAdminLogs();
+            }
+
+            // Update Admin Select Options
+            const admSel = document.getElementById('admSlotSel');
+            if(admSel && admSel.children.length !== latestSlots.length) {
+                admSel.innerHTML = latestSlots.map((_,i)=>`<option value="${i}">Slot ${i+1}</option>`).join('');
+            }
+        });
+
+        function updateFrontView() {
+            const circles = document.querySelectorAll('.circle-ui');
+            latestSlots.forEach((m, i) => {
+                const elBat = document.getElementById(`fv${i+1}-bat`);
+                const elPlat = document.getElementById(`fv${i+1}-plat`);
+                const elTimer = document.getElementById(`fv${i+1}-timer`);
+                const elCircle = circles[i];
+                
+                if (m && m.plat) { // SLOT TERISI
+                     elCircle.classList.add('active'); 
+                     elBat.classList.remove('ready-mode');
+
+                     if(m.startTime) {
+                        const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
+                        const rem = ((new Date(st.getTime() + m.durationMinutes*60000)) - new Date())/60000;
+
+                        if(rem <= 0) {
+                             elBat.innerText = "DONE";
+                             elBat.style.color = "var(--accent)"; 
+                             if(elTimer) elTimer.innerText = "CHARGING COMPLETE";
+                        } else {
+                             const timeToTarget = calculateDuration(90, 100); 
+                             const dispBat = getBatteryFromRemTime(rem + timeToTarget);
+                             let finalBat = (isNaN(dispBat) || dispBat===undefined) ? m.startBattery : dispBat;
+                             // Visual tweak: jangan turun dibawah bat awal
+                             if(finalBat < m.startBattery) finalBat = m.startBattery;
+                             
+                             elBat.innerText = finalBat + "%";
+                             elBat.style.color = "#fff";
+                             if(elTimer) elTimer.innerText = Math.ceil(rem) + " MIN LEFT";
+                        }
+                        elPlat.innerText = m.plat;
+                     } else {
+                        elBat.innerText = (m.startBattery || 0) + "%"; 
+                        elPlat.innerText = m.plat;
+                     }
+
+                } else { // SLOT KOSONG
+                    elCircle.classList.remove('active'); 
+                    elBat.classList.add('ready-mode'); 
+                    elBat.innerText = "READY"; 
+                    elBat.style.color = "#555";
+                    elPlat.innerText = ""; 
+                    if(elTimer) elTimer.innerText = "";
+                }
+            });
+        }
+
+        function updateUserView() {
+            // Cek apakah user ada di slot atau antrian
+            const mySlotIdx = latestSlots.findIndex(s => s && s.plat === currentUserPlat);
+            const myQueueIdx = latestQueue.findIndex(q => q && q.plat === currentUserPlat);
+            
+            const uv = document.getElementById('userView');
+            const fv = document.getElementById('frontView');
+            const fp = document.getElementById('fpArea');
+
+            // Logic Switch View
+            if(!currentUserPlat) { 
+                // Mode Tamu
+                uv.style.display = 'none'; fv.style.display = 'block'; fp.style.display = 'flex'; 
+                return; 
+            }
+
+            // Jika user punya sesi, tampilkan UserView
+            uv.style.display = 'flex'; fv.style.display = 'none'; fp.style.display = 'none';
+            
+            if(mySlotIdx !== -1) {
+                // USER SEDANG CHARGING
+                const m = latestSlots[mySlotIdx];
+                document.getElementById('uvSlotTitle').innerText = "CHARGING DI SLOT " + (mySlotIdx + 1);
+                
+                let finalBat = m.startBattery;
+                let finalRem = 0;
+
+                if(m.startTime) {
+                    const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
+                    const rem = ((new Date(st.getTime() + m.durationMinutes*60000)) - new Date())/60000;
+                    finalRem = Math.ceil(rem);
+                    const timeToTarget = calculateDuration(90, 100); 
+                    const dispBat = getBatteryFromRemTime(rem + timeToTarget);
+                    finalBat = isNaN(dispBat) ? m.startBattery : dispBat;
+                    if(finalBat < m.startBattery) finalBat = m.startBattery;
+                }
+
+                document.getElementById('uvBatVal').innerText = finalBat + "%";
+                document.getElementById('uvTimer').innerText = (finalRem > 0 ? finalRem : "0") + " MIN";
+                
+                // Ring Progress Animation
+                const circumference = 2 * Math.PI * 45;
+                const offset = circumference - (finalBat / 100) * circumference;
+                const ring = document.getElementById('uvBatRing');
+                if(ring) {
+                    ring.style.strokeDasharray = `${circumference} ${circumference}`;
+                    ring.style.strokeDashoffset = offset;
+                }
+            } else if (myQueueIdx !== -1) {
+                // USER DALAM ANTRIAN
+                document.getElementById('uvSlotTitle').innerText = "MENUNGGU GILIRAN";
+                document.getElementById('uvBatVal').innerText = "Q-" + (myQueueIdx + 1);
+                document.getElementById('uvTimer').innerText = "HARAP BERSABAR";
+                document.getElementById('uvBatRing').style.strokeDashoffset = 2 * Math.PI * 45; // Kosong
+            } else {
+                // Plat tersimpan di LocalStorage tapi tidak ada di DB (misal dikick admin)
+                alert("Sesi anda telah berakhir atau dihapus admin.");
+                localStorage.removeItem('myPlat');
+                window.location.reload();
+            }
+
+            // Footer info
+            let otherStatus = "";
+            latestSlots.forEach((s, i) => {
+                if(i !== mySlotIdx) {
+                    otherStatus += `S${i+1}: ${s ? '⛔' : '✅'}  `;
+                }
+            });
+            const uvOther = document.getElementById('uvOtherSlots');
+            if(uvOther) uvOther.innerText = otherStatus;
+            document.getElementById('uvFooterQueue').innerText = latestQueue.length;
+        }
+
+        // CHARGING CURVE LOGIC (Estimasi)
+        const CHARGING_CURVE = [[100,0], [99,1], [95,4], [90,17], [89,18], [85,22], [81,25], [72,33], [61,45], [50,50], [20,68], [0,86]];
         function calculateDuration(start, target) {
-            if (start >= target) return 5;
             let timeStart=90, timeTarget=0;
             for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(start<=CHARGING_CURVE[i][0] && start>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-start)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeStart=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i][1]); break; } }
             for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(target<=CHARGING_CURVE[i][0] && target>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-target)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeTarget=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i][1]); break; } }
             return Math.max(1, Math.ceil(timeStart - timeTarget));
         }
-        function calculateTargetLimit(len) { if(len >= 11) return 85; if(len >= 6) return 90; if(len >= 3) return 95; return 100; }
         function getBatteryFromRemTime(rem) {
             if (rem <= 0) return 100;
             for (let i=0; i<CHARGING_CURVE.length-1; i++) {
@@ -802,48 +868,6 @@
             }
             return 0;
         }
-
-        window.showAlert = (msg) => {
-            document.getElementById('alertMsg').innerText = msg;
-            document.getElementById('customAlert').style.display='flex';
-        };
-
-        // --- AUTO SYSTEM (INTERVAL) ---
-        // Menangani auto-start setelah 5 menit dan auto-clear setelah selesai
-        setInterval(()=>{
-            if(!latestSlots) return;
-            latestSlots.forEach((m,i)=>{
-                if(m && !m.startTime && m.readyTime) {
-                    if((new Date() - (m.readyTime.toDate ? m.readyTime.toDate() : new Date(m.readyTime))) >= 300000) { 
-                        runTransaction(db, async(t)=>{
-                            const d=(await t.get(ref)).data();
-                            if(d.chargingSlots[i] && !d.chargingSlots[i].startTime) {
-                                d.chargingSlots[i].startTime = new Date();
-                                t.update(ref, d);
-                            }
-                        });
-                    }
-                }
-                if(m && m.startTime) {
-                    const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
-                    let dur = m.isManualTime ? m.durationMinutes : calculateDuration(m.startBattery, m.targetLimit||100);
-                    const finishTime = new Date(st.getTime() + dur*60000);
-                    if(new Date() > new Date(finishTime.getTime() + 60000)) { // 1 min buffer
-                        runTransaction(db, async(t)=>{
-                            const d = (await t.get(ref)).data();
-                            d.chargingSlots[i] = null;
-                            if(d.waitingQueue.length > 0) {
-                                const next = d.waitingQueue.shift();
-                                const tar = calculateTargetLimit(d.waitingQueue.length);
-                                d.chargingSlots[i] = {...next, startTime:null, readyTime:new Date(), targetLimit:tar, durationMinutes:calculateDuration(next.startBattery, tar)};
-                            }
-                            t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue});
-                        });
-                    }
-                }
-            });
-        }, 3000);
-
     </script>
 </body>
 </html>
