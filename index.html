@@ -71,21 +71,8 @@
         .btn-glossy { padding: 12px 30px; border: none; border-radius: 50px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; color: #fff; cursor: pointer; position: relative; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: 0.3s; flex: 1; }
         .btn-glossy.stop { border-color: var(--red); color: var(--red); box-shadow: 0 0 15px rgba(255,0,60,0.3); }
         .btn-glossy.edit { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 15px rgba(204,255,0,0.3); }
-        .uv-footer { position: absolute; bottom: 85px; width: 90%; background: rgba(20,20,20,0.9); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; font-family: 'Inter'; font-size: 11px; color: #aaa; }
+        .uv-footer { position: absolute; bottom: 100px; width: 90%; background: rgba(20,20,20,0.9); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; font-family: 'Inter'; font-size: 11px; color: #aaa; }
         .uv-nav-link { color: #555; text-decoration: underline; cursor: pointer; font-size: 10px; margin-top: 10px; display: block; text-align: center; }
-
-        /* --- MODAL --- */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 3000; justify-content: center; align-items: center; }
-        .modal-box { background: rgba(10, 10, 10, 0.95); border: 2px solid var(--blue); padding: 35px 25px; border-radius: 20px; width: 85%; max-width: 350px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.2); text-align: center; position: relative; animation: modalPop 0.3s ease-out; }
-        @keyframes modalPop { 0%{transform: scale(0.8); opacity: 0;} 100%{transform: scale(1); opacity: 1;} }
-        .q-list-item { background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--orange); }
-        .q-plat { font-family: 'Orbitron'; font-weight: bold; font-size: 14px; color: #fff; } .q-det { font-size: 10px; color: #aaa; text-align: right; }
-        
-        .input-group { position: relative; margin-bottom: 30px; width: 100%; }
-        .reg-input { width: 100%; padding: 10px 5px; background: transparent; border: none; border-bottom: 2px solid #555; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; text-align: center; transition: 0.3s; letter-spacing: 1px; border-radius: 0; }
-        .reg-input:focus { outline: none; border-bottom-color: var(--blue); box-shadow: 0 10px 10px -10px rgba(0, 240, 255, 0.5); }
-        .reg-label { position: absolute; top: 10px; left: 0; width: 100%; text-align: center; color: #888; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; pointer-events: none; transition: 0.3s ease all; }
-        .reg-input:focus ~ .reg-label, .reg-input:valid ~ .reg-label { top: -20px; font-size: 10px; color: var(--blue); text-shadow: 0 0 5px var(--blue); letter-spacing: 2px; }
 
         /* FINGERPRINT BARU - REAL SVG */
         .fp-area { position: absolute; bottom: 110px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 50; }
@@ -96,20 +83,29 @@
             box-shadow: 0 0 20px rgba(204, 255, 0, 0.2); 
         }
         .fp-btn:active { transform: scale(0.95); box-shadow: 0 0 30px var(--accent); background: rgba(204, 255, 0, 0.1); }
-        
         .fp-svg { width: 55px; height: 55px; fill: var(--accent); opacity: 0.6; transition: 0.5s; }
         .fp-btn:active .fp-svg, .fp-btn.scanning .fp-svg { opacity: 1; filter: drop-shadow(0 0 10px var(--accent)); }
-        
-        /* Scan Animation Bar */
-        .scan-line {
-            position: absolute; width: 100%; height: 3px; background: #fff;
-            box-shadow: 0 0 10px #fff; top: 0; opacity: 0;
-        }
+        .scan-line { position: absolute; width: 100%; height: 3px; background: #fff; box-shadow: 0 0 10px #fff; top: 0; opacity: 0; }
         .fp-btn.scanning .scan-line { animation: scanDown 1.5s infinite linear; opacity: 1; }
         @keyframes scanDown { 0% { top: 0; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-        /* ADMIN & PLAYER STYLES (Keep Same) */
-        .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 1px solid var(--accent); padding: 10px 20px; display: flex; align-items: center; gap: 15px; z-index: 2000; height: 70px; }
+        /* PLAYER BAR STYLE LAMA + DASHBOARD BTN STYLE BARU */
+        .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 1px solid var(--accent); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 2000; height: 70px; }
+        .music-visualizer { display: flex; align-items: flex-end; gap: 4px; height: 25px; margin-right: 15px; }
+        .bar { width: 4px; background: var(--accent); border-radius: 2px; animation: equalizer 1s ease-in-out infinite; box-shadow: 0 0 5px var(--accent); }
+        @keyframes equalizer { 0% { height: 5px; opacity: 0.5; } 50% { height: 25px; opacity: 1; box-shadow: 0 0 10px var(--accent); } 100% { height: 5px; opacity: 0.5; } }
+        .bar:nth-child(1) { animation-duration: 0.8s; } .bar:nth-child(2) { animation-duration: 1.1s; } .bar:nth-child(3) { animation-duration: 0.9s; } .bar:nth-child(4) { animation-duration: 1.2s; } .bar:nth-child(5) { animation-duration: 1.0s; }
+        
+        .footer-dash-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--accent); color: var(--accent);
+            padding: 8px 15px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px;
+            font-weight: 800; letter-spacing: 1px; cursor: pointer; transition: 0.3s;
+            display: none; align-items: center; text-transform: uppercase;
+            box-shadow: 0 0 5px rgba(204,255,0,0.1);
+        }
+        .footer-dash-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
+        
+        /* Modal & Admin Styles Standard */
         #playlistPopup { display: none; position: fixed; bottom: 70px; left: 0; width: 100%; background: rgba(0,0,0,0.95); border-top: 2px solid var(--blue); height: 60vh; overflow-y: auto; z-index: 2500; backdrop-filter: blur(10px); }
         .track-item { padding: 15px 20px; border-bottom: 1px solid #222; font-family: 'Orbitron'; font-size: 12px; color: #666; cursor: pointer; transition: 0.3s; display: flex; align-items: center; letter-spacing: 1px; }
         .track-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); font-weight: 900; border-left: 4px solid var(--accent); background: rgba(204, 255, 0, 0.05); }
@@ -133,6 +129,16 @@
         .status-KRITIS { border-left-color: var(--red); background: rgba(255,0,0,0.1); }
         .status-AWAS { border-left-color: orange; }
         .status-INFO { border-left-color: var(--accent); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 3000; justify-content: center; align-items: center; }
+        .modal-box { background: rgba(10, 10, 10, 0.95); border: 2px solid var(--blue); padding: 35px 25px; border-radius: 20px; width: 85%; max-width: 350px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.2); text-align: center; position: relative; animation: modalPop 0.3s ease-out; }
+        @keyframes modalPop { 0%{transform: scale(0.8); opacity: 0;} 100%{transform: scale(1); opacity: 1;} }
+        .q-list-item { background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--orange); }
+        .q-plat { font-family: 'Orbitron'; font-weight: bold; font-size: 14px; color: #fff; } .q-det { font-size: 10px; color: #aaa; text-align: right; }
+        .input-group { position: relative; margin-bottom: 30px; width: 100%; }
+        .reg-input { width: 100%; padding: 10px 5px; background: transparent; border: none; border-bottom: 2px solid #555; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; text-align: center; transition: 0.3s; letter-spacing: 1px; border-radius: 0; }
+        .reg-input:focus { outline: none; border-bottom-color: var(--blue); box-shadow: 0 10px 10px -10px rgba(0, 240, 255, 0.5); }
+        .reg-label { position: absolute; top: 10px; left: 0; width: 100%; text-align: center; color: #888; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; pointer-events: none; transition: 0.3s ease all; }
+        .reg-input:focus ~ .reg-label, .reg-input:valid ~ .reg-label { top: -20px; font-size: 10px; color: var(--blue); text-shadow: 0 0 5px var(--blue); letter-spacing: 2px; }
     </style>
 </head>
 <body onclick="firstInteraction()"> 
@@ -141,6 +147,7 @@
         <div class="header-container">
             <h1 class="main-title">FC KELAPA GADING</h1>
             <div class="sub-brand">HOME OF MLU</div>
+            
             <div class="queue-header-info" onclick="showQueueDetails()">ANTRIAN: <span id="qCountDisplay">0</span> (KLIK DETAIL)</div>
             <div class="gear-btn" onclick="askAdminPin()">⚙️</div>
         </div>
@@ -204,9 +211,8 @@
                 <div id="uvOtherSlots" style="text-align:left; flex:1;">LOADING...</div>
                 <div style="text-align:right;">ANTRIAN: <b class="uv-hl" id="uvFooterQueue">-</b></div>
             </div>
-            <div class="uv-nav-link" onclick="switchView('front')">[ KEMBALI KE HALAMAN UTAMA ]</div>
+            <div class="uv-nav-link" onclick="switchView('front')">[ LIHAT DEPAN ]</div>
         </div>
-
         <div class="fp-area" id="fpArea">
             <div id="fp-trigger" class="fp-btn" onclick="checkLocationAndOpen()">
                 <div class="scan-line"></div>
@@ -229,24 +235,26 @@
         </div>
 
         <div class="player-bar">
-            <div id="m-btn" onclick="window.togglePlay()" style="color:var(--accent); cursor:pointer; font-size:24px;">▶</div>
-            <div style="flex:1; margin:0 15px; height:40px; display:flex; align-items:center; cursor:pointer;" onclick="window.togglePlaylist()">
-                <div style="width:100%; height:2px; background:#333; position:relative; overflow:hidden;">
-                    <div id="hb-anim" style="width:100%; height:100%; background:var(--accent); transform:scaleX(0); transition:0.1s;"></div>
+            <div class="music-info" onclick="togglePlaylist()" style="display:flex; align-items:center; flex:1; overflow:hidden; cursor:pointer;">
+                <div class="music-visualizer" id="visualizerAnim">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
+                <div style="overflow:hidden;">
+                    <div class="track-title" id="track-name" style="white-space:nowrap;">NO MUSIC</div>
+                    <div style="font-size:8px; color:#666; margin-top:2px;">TAP FOR PLAYLIST ▲</div>
                 </div>
             </div>
-            <div style="text-align:right; width:120px;" onclick="window.togglePlaylist()">
-                <div id="track-name" style="font-family:'Orbitron'; font-size:10px; color:var(--accent); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">NO MUSIC</div>
-                <div style="font-size:8px; color:#666;">TAP FOR PLAYLIST ▲</div>
-            </div>
+            
+            <button id="btnMyDash" class="footer-dash-btn" onclick="forceView('user')">
+                MY DASHBOARD
+            </button>
         </div>
     </div>
 
     <div id="queueDetailModal" class="modal" style="z-index: 3100;">
         <div class="modal-box" style="border-color:var(--orange); max-width:400px;">
             <h3 style="color:var(--orange); margin-top:0; font-family:'Orbitron'; letter-spacing:2px;">DAFTAR ANTRIAN</h3>
-            <div id="qDetailList" style="max-height:300px; overflow-y:auto; margin:15px 0;">
-                </div>
+            <div id="qDetailList" style="max-height:300px; overflow-y:auto; margin:15px 0;"></div>
             <button onclick="document.getElementById('queueDetailModal').style.display='none'" class="btn-glossy" style="width:100%;">TUTUP</button>
         </div>
     </div>
@@ -311,7 +319,8 @@
                 <button onclick="forceView('user', 0)" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">VIEW S1</button>
                 <button onclick="forceView('user', 1)" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">VIEW S2</button>
                 <button onclick="forceView('user', 2)" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">VIEW S3</button>
-                <button onclick="closeAdminPanel()" class="adm-btn red" style="width:auto; padding:8px 10px; font-size:10px;">CLOSE</button>
+                <button onclick="adminLogout()" class="adm-btn red" style="width:auto; padding:8px 10px; font-size:10px;">LOGOUT</button>
+                <button onclick="closeAdminPanel()" class="adm-btn" style="width:auto; padding:8px 10px; font-size:10px; background:#444; color:#fff;">TUTUP</button>
             </div>
         </div>
 
@@ -370,13 +379,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, updateDoc, arrayUnion, arrayRemove, collection, addDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- VERSION CHECKER (ANTI CACHE NYANGKUT) ---
-        const APP_VERSION = "2.5-STABLE"; 
+        // --- CONFIG & INIT ---
+        const APP_VERSION = "3.1-FIX-QUEUE"; 
         if(localStorage.getItem('app_ver') !== APP_VERSION) {
-            console.log("New version detected. Clearing cache...");
-            localStorage.clear(); // Hapus data lama yg bikin nyangkut
-            localStorage.setItem('app_ver', APP_VERSION);
-            window.location.reload(); // Refresh paksa
+            localStorage.clear(); localStorage.setItem('app_ver', APP_VERSION); window.location.reload();
         }
 
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
@@ -384,7 +390,6 @@
         const db = getFirestore(app);
         const ref = doc(db, "antrian", "utama");
         const logRef = collection(db, "activityLog");
-        
         const FONNTE_TOKEN = "MuR8CucXAsYd2YvWBxVo"; 
 
         let latestSlots = [null, null, null];
@@ -393,34 +398,17 @@
         let adminSpyIdx = null;
         let isProcessing = false;
 
-        // --- MUSIC PLAYER ---
+        // --- MUSIC PLAYER ENGINE ---
         const baseURL = "https://mlump3player.netlify.app/";
         const rawList = ["Ada Apa Denganmu.mp3", "anji-menunggu-kamu.mp3", "Anugerah Terindah Yang Pernah Kumiliki.mp3", "armada_asalkan_kau_bahagia.mp3", "Bendera - Cokelat - 2003.mp3", "Bintang Di Surga.mp3", "Bon Jovi - Always .MP3", "Bon Jovi - Its My Life .mp3", "Bon Jovi - You Give Love A Bad Name.mp3", "Dan - Sheila On 7 - 1999.mp3"];
         const playlist = rawList.map(file => ({ title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','')), url: baseURL + file }));
         const audio = document.getElementById('audio');
-        let currentTrackIdx = 0;
-        let audioUnlocked = false;
-        let isTrackSelected = false;
-        let audioInterval = null;
+        let currentTrackIdx = 0; let audioUnlocked = false; let isTrackSelected = false;
 
         window.firstInteraction = () => {
             if (audioUnlocked) return;
             const silent = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFAmZtdCAQAAAAAQABAIAAAIAAAIABAABhZGF0YQAAAAA=");
             silent.play().then(() => { audioUnlocked = true; }).catch(e => console.log("Audio locked"));
-        };
-
-        const plContainer = document.getElementById('playlistContainer');
-        playlist.forEach((song, idx) => {
-            const el = document.createElement('div');
-            el.className = 'track-item';
-            el.innerText = `${idx + 1}. ${song.title}`;
-            el.onclick = (e) => { e.stopPropagation(); window.playTrack(idx); }; 
-            plContainer.appendChild(el);
-        });
-
-        window.togglePlaylist = () => {
-            const p = document.getElementById('playlistPopup');
-            p.style.display = p.style.display === 'block' ? 'none' : 'block';
         };
 
         window.playTrack = (idx) => {
@@ -434,93 +422,24 @@
 
         window.togglePlay = () => {
             if(!isTrackSelected) { window.playTrack(0); return; }
-            if(audio.paused) { audio.play().then(() => setPlayingState(true)); } 
-            else { audio.pause(); setPlayingState(false); }
+            if(audio.paused) audio.play().then(() => setPlayingState(true)); else { audio.pause(); setPlayingState(false); }
         };
 
+        // VISUALIZER TOGGLE (JS Only controls opacity/display, animation in CSS)
         function setPlayingState(isPlaying) {
-            const mBtn = document.getElementById('m-btn');
-            const hbAnim = document.getElementById('hb-anim');
+            const vis = document.getElementById('visualizerAnim');
             if(isPlaying) {
-                mBtn.innerText = "⏸";
-                if(audioInterval) clearInterval(audioInterval);
-                audioInterval = setInterval(() => { hbAnim.style.transform = `scaleX(${0.5 + Math.random()})`; }, 100);
-            } else { mBtn.innerText = "▶"; clearInterval(audioInterval); hbAnim.style.transform = `scaleX(0)`; }
-        }
-
-        audio.addEventListener('ended', () => { 
-            currentTrackIdx = (currentTrackIdx + 1) % playlist.length; 
-            window.playTrack(currentTrackIdx); 
-        });
-
-        // --- MODAL FUNCTIONS ---
-        window.showCustomAlert = (msg) => { document.getElementById('alertMsg').innerText = msg; document.getElementById('alertModal').style.display = 'flex'; };
-        
-        window.showCustomConfirm = (msg, yesCallback) => {
-            document.getElementById('confirmMsg').innerText = msg;
-            const btnYes = document.getElementById('btnConfirmYes');
-            const newBtn = btnYes.cloneNode(true);
-            btnYes.parentNode.replaceChild(newBtn, btnYes);
-            newBtn.onclick = () => { document.getElementById('confirmModal').style.display = 'none'; yesCallback(); };
-            document.getElementById('confirmModal').style.display = 'flex';
-        };
-
-        window.showCustomInput = (title, callback) => {
-            document.getElementById('inputTitle').innerText = title;
-            document.getElementById('inputVal').value = "";
-            const btnOk = document.getElementById('btnInputOk');
-            const newBtn = btnOk.cloneNode(true);
-            btnOk.parentNode.replaceChild(newBtn, btnOk);
-            newBtn.onclick = () => {
-                if(document.getElementById('inputVal').value) {
-                    document.getElementById('inputModal').style.display = 'none';
-                    callback(document.getElementById('inputVal').value);
-                }
-            };
-            document.getElementById('inputModal').style.display = 'flex';
-            document.getElementById('inputVal').focus();
-        };
-
-        window.showQueueDetails = () => {
-            const c = document.getElementById('qDetailList');
-            c.innerHTML = "";
-            if(latestQueue.length === 0) {
-                c.innerHTML = "<div style='text-align:center; color:#666; font-size:12px;'>ANTRIAN KOSONG</div>";
+                vis.style.opacity = "1"; // Show equalizer
             } else {
-                latestQueue.forEach((q, i) => {
-                    c.innerHTML += `
-                        <div class="q-list-item">
-                            <div class="q-plat">#${i+1} ${q.plat}</div>
-                            <div class="q-det">
-                                ${q.userName}<br>
-                                Bat: ${q.startBattery}%
-                            </div>
-                        </div>
-                    `;
-                });
+                vis.style.opacity = "0.3"; // Dim equalizer
             }
-            document.getElementById('queueDetailModal').style.display = 'flex';
-        };
-
-        function formatWA(num) {
-            let n = num.replace(/\D/g,'');
-            if(n.startsWith('0')) n = '62' + n.substring(1);
-            if(!n.startsWith('62')) n = '62' + n;
-            return n;
         }
-
-        async function sendFonnteNotif(targetWA, message) {
-            if(!targetWA || targetWA.length < 5 || targetWA === '-') return;
-            const formattedWA = formatWA(targetWA);
-            try {
-                const formData = new FormData();
-                formData.append('target', formattedWA);
-                formData.append('message', message);
-                await fetch('https://api.fonnte.com/send', { method: 'POST', headers: { 'Authorization': FONNTE_TOKEN }, body: formData });
-            } catch(e) { console.error("WA Error", e); }
-        }
-
-        // --- SYSTEM FUNCTIONS ---
+        
+        window.togglePlaylist = () => { const p = document.getElementById('playlistPopup'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
+        const plContainer = document.getElementById('playlistContainer');
+        playlist.forEach((song, idx) => { const el = document.createElement('div'); el.className = 'track-item'; el.innerText = `${idx + 1}. ${song.title}`; el.onclick = (e) => { e.stopPropagation(); window.playTrack(idx); }; plContainer.appendChild(el); });
+        audio.addEventListener('ended', () => { currentTrackIdx = (currentTrackIdx + 1) % playlist.length; window.playTrack(currentTrackIdx); });
+        // --- CORE FUNCTIONS ---
         window.formatPlatInput = (el) => {
             let val = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
             let match = val.match(/^([A-Z]{1,2})(\d{1,4})?([A-Z]{0,3})?$/);
@@ -529,13 +448,15 @@
 
         window.checkLocationAndOpen = () => {
             const btn = document.getElementById('fp-trigger');
-            btn.classList.add('scanning'); // Efek scan
+            btn.classList.add('scanning');
+            // Simulasi scan 1.5 detik lalu buka modal
             setTimeout(() => { 
-                btn.classList.remove('scanning');
+                btn.classList.remove('scanning'); 
                 document.getElementById('regModal').style.display = 'flex'; 
             }, 1500);
         };
 
+        // --- SUBMIT DENGAN LOGIKA NOMOR ANTRIAN BARU (FIX) ---
         window.submitReg = () => {
             const p = document.getElementById('regPlat').value.toUpperCase();
             const n = document.getElementById('regName').value.toUpperCase();
@@ -548,39 +469,42 @@
                 let s=d.chargingSlots||[null,null,null], q=d.waitingQueue||[];
                 if(s.some(x=>x&&x.plat===p) || q.some(x=>x.plat===p)) throw "PLAT SUDAH ADA";
                 
+                // --- LOGIC NOMOR ANTRIAN (ANTI-RESET) ---
+                // Cek nomor tertinggi di antrian
+                const maxInQueue = q.length > 0 ? Math.max(...q.map(item => item.qNo || 0)) : 0;
+                // Cek nomor tertinggi di slot (orang yg sedang ngecas)
+                const maxInSlots = s.reduce((max, slot) => {
+                    return (slot && slot.qNo) ? Math.max(max, slot.qNo) : max;
+                }, 0);
+                // Ambil yg paling tinggi + 1
+                let nextNo = Math.max(maxInQueue, maxInSlots) + 1;
+                // ----------------------------------------
+
                 const newQCount = q.length + (s.includes(null) ? 0 : 1);
                 const globalTarget = calculateTargetLimit(newQCount); 
-                
                 const dur = calculateDuration(b, globalTarget);
                 const emptyIdx = s.findIndex(x=>x===null);
                 
                 if(emptyIdx !== -1) { 
-                    s[emptyIdx] = {plat:p, userName:n, wa:w, startBattery:b, startTime:null, durationMinutes:dur, targetLimit:globalTarget}; 
+                    s[emptyIdx] = {plat:p, userName:n, wa:w, startBattery:b, startTime:null, durationMinutes:dur, targetLimit:globalTarget, qNo: nextNo}; 
                 } else { 
-                    q.push({plat:p, userName:n, wa:w, startBattery:b}); 
+                    q.push({plat:p, userName:n, wa:w, startBattery:b, qNo: nextNo}); 
                 }
 
-                s.forEach((slot, i) => {
+                // Smart Adjustment
+                s.forEach((slot) => {
                     if(slot && slot.startTime && !slot.isManualTime) {
                         const newDur = calculateDuration(slot.startBattery, globalTarget);
-                        if(newDur < slot.durationMinutes) {
-                            slot.durationMinutes = newDur;
-                            slot.targetLimit = globalTarget;
-                            slot.autoAdjusted = true; 
-                        }
+                        if(newDur < slot.durationMinutes) { slot.durationMinutes = newDur; slot.targetLimit = globalTarget; slot.autoAdjusted = true; }
                     }
                 });
 
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
             }).then(() => { 
-                localStorage.setItem('myPlat', p); 
-                currentUserPlat = p; 
+                localStorage.setItem('myPlat', p); currentUserPlat = p; 
                 document.getElementById('regModal').style.display='none';
                 showCustomAlert("BERHASIL MASUK!");
-                
-                // --- FIX: LANGSUNG BUKA USER VIEW ---
-                forceView('user'); // Pindah tampilan ke mode User
-                
+                forceView('user'); 
             }).catch(e => showCustomAlert(e));
         };
 
@@ -590,8 +514,7 @@
             showCustomConfirm("MULAI CHARGING?", () => {
                  const idx = latestSlots.findIndex(s => s && s.plat === targetPlat);
                  if(idx !== -1) {
-                     let newSlots = [...latestSlots];
-                     newSlots[idx].startTime = new Date(); 
+                     let newSlots = [...latestSlots]; newSlots[idx].startTime = new Date(); 
                      updateDoc(ref, { chargingSlots: newSlots });
                  }
             });
@@ -603,9 +526,7 @@
                 if(m && !isNaN(m) && targetPlat) {
                     const idx = latestSlots.findIndex(s => s && s.plat === targetPlat);
                     if(idx !== -1) {
-                        let newSlots = [...latestSlots];
-                        newSlots[idx].durationMinutes = parseInt(m);
-                        newSlots[idx].startTime = new Date(); 
+                        let newSlots = [...latestSlots]; newSlots[idx].durationMinutes = parseInt(m); newSlots[idx].startTime = new Date(); 
                         updateDoc(ref, { chargingSlots: newSlots });
                     }
                 }
@@ -618,16 +539,42 @@
                 if(targetPlat) {
                     const idx = latestSlots.findIndex(s => s && s.plat === targetPlat);
                     if(idx !== -1) {
-                       let newSlots = [...latestSlots];
-                       newSlots[idx] = null;
+                       let newSlots = [...latestSlots]; newSlots[idx] = null;
                        updateDoc(ref, { chargingSlots: newSlots }).then(() => {
                            if(adminSpyIdx === null) { localStorage.removeItem('myPlat'); currentUserPlat = null; window.location.reload(); }
                        });
+                    } else {
+                        // Kalau cuma antri (belum masuk slot)
+                        runTransaction(db, async(t)=>{
+                            const d=(await t.get(ref)).data(); let q=d.waitingQueue||[];
+                            const qIdx = q.findIndex(x=>x.plat===targetPlat);
+                            if(qIdx !== -1) { q.splice(qIdx, 1); t.update(ref, {waitingQueue:q}); }
+                        }).then(() => { localStorage.removeItem('myPlat'); currentUserPlat = null; window.location.reload(); });
                     }
                 }
             });
         };
 
+        // --- ADMIN FUNCTIONS ---
+        window.askAdminPin = () => {
+            if(sessionStorage.getItem('adminSession') === 'active') { openAdminPanel(); } 
+            else {
+                showCustomInput("PIN ADMIN:", (pin) => {
+                    if(pin === "8080") { sessionStorage.setItem('adminSession', 'active'); openAdminPanel(); } 
+                    else { showCustomAlert("PIN SALAH"); }
+                });
+            }
+        };
+
+        function openAdminPanel() {
+            document.getElementById('adminOverlay').style.display = 'block';
+            onSnapshot(query(logRef, orderBy("timestamp", "desc"), limit(50)), renderLogs);
+        }
+
+        window.adminLogout = () => { sessionStorage.removeItem('adminSession'); document.getElementById('adminOverlay').style.display = 'none'; showCustomAlert("LOGOUT SUKSES"); };
+        window.closeAdminPanel = () => { document.getElementById('adminOverlay').style.display = 'none'; };
+        
+        // --- VIEW CONTROLLER ---
         window.switchView = (mode) => { 
             if(mode === 'front') { 
                 document.getElementById('userView').style.display='none'; 
@@ -637,16 +584,6 @@
             } 
         };
 
-        window.askAdminPin = () => {
-            showCustomInput("PIN ADMIN:", (pin) => {
-                if(pin === "8080") {
-                    document.getElementById('adminOverlay').style.display = 'block';
-                    onSnapshot(query(logRef, orderBy("timestamp", "desc"), limit(50)), renderLogs);
-                } else { showCustomAlert("PIN SALAH"); }
-            });
-        };
-        window.closeAdminPanel = () => { document.getElementById('adminOverlay').style.display = 'none'; };
-        
         window.forceView = (type, idx = null) => {
             document.getElementById('adminOverlay').style.display = 'none';
             if(type === 'front') {
@@ -658,20 +595,107 @@
                 document.getElementById('frontView').style.display = 'none';
                 document.getElementById('userView').style.display = 'flex';
                 document.getElementById('fpArea').style.display = 'none';
-                if (idx !== null) { adminSpyIdx = idx; }
-                updateUserView(); // Refresh data user view
+                if (idx !== null) { adminSpyIdx = idx; updateUserView(); }
             }
         };
 
-        function log(action, plat, det) { addDoc(logRef, { timestamp: new Date(), action: action, plat: plat, user: 'ADMIN', details: det }); }
-        function renderLogs(snap) {
-            const c = document.getElementById('logContainer'); if(snap.empty) return;
-            let h = '';
-            snap.forEach(doc => {
-                const d = doc.data();
-                const t = d.timestamp?.toDate ? d.timestamp.toDate().toLocaleString('id-ID') : '-';
-                h += `<div class="log-card status-${d.action.includes('FAIL')?'KRITIS':d.action.includes('ASSIGN')?'AWAS':'INFO'}"><div class="log-head"><span class="log-time">${t}</span><span>${d.user||'SYS'}</span></div><div class="log-body"><b>${d.action}</b>: ${d.plat}</div></div>`;
+        // --- DATA SYNC ---
+        onSnapshot(ref, (snap) => {
+            const d = snap.data(); if(!d) return;
+            latestSlots = d.chargingSlots || [null, null, null];
+            latestQueue = d.waitingQueue || [];
+            
+            document.getElementById('qCountDisplay').innerText = latestQueue.length;
+            
+            // Check Tombol Dashboard User
+            const dashBtn = document.getElementById('btnMyDash');
+            if(currentUserPlat) {
+                const inSlot = latestSlots.some(s => s && s.plat === currentUserPlat);
+                const inQueue = latestQueue.some(q => q.plat === currentUserPlat);
+                if(inSlot || inQueue) dashBtn.style.display = 'flex';
+                else { dashBtn.style.display = 'none'; localStorage.removeItem('myPlat'); currentUserPlat = null; }
+            } else { dashBtn.style.display = 'none'; }
+
+            updateFrontView();
+            updateUserView();
+            
+            // Update Admin Selects
+            const sOpt = latestSlots.map((_,i)=>`<option value="${i}">Slot ${i+1}</option>`).join('');
+            document.getElementById('manSlot').innerHTML = sOpt; document.getElementById('qTarget').innerHTML = sOpt;
+            const qOpt = latestQueue.length ? latestQueue.map((x,i)=>`<option value="${i}">#${x.qNo||'?'} ${x.plat}</option>`).join('') : '<option value="-1">Kosong</option>';
+            document.getElementById('qIdx').innerHTML = qOpt;
+            document.getElementById('blockList').innerText = "Blokir: " + (d.blockedList||[]).join(', ');
+        });
+
+        setInterval(() => {
+            if(!latestSlots) return;
+            latestSlots.forEach((m, i) => {
+                if(m && m.startTime) {
+                    const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
+                    const diffMS = (new Date(st.getTime() + m.durationMinutes*60000)) - new Date();
+                    const remSec = diffMS / 1000;
+                    
+                    if(remSec <= -1 && !isProcessing) { isProcessing = true; finishSlot(i, m); }
+
+                    let txt = "DONE";
+                    if(remSec > 0) {
+                        const min = Math.floor(remSec / 60); const sec = Math.floor(remSec % 60);
+                        txt = `${min}:${sec < 10 ? '0'+sec : sec}`;
+                    }
+                    const elTimer = document.getElementById(`fv${i+1}-timer`); if(elTimer) elTimer.innerText = txt;
+                    if((adminSpyIdx === i) || (currentUserPlat === m.plat && adminSpyIdx === null)) {
+                        const uvT = document.getElementById('uvTimer'); if(uvT) uvT.innerText = txt;
+                    }
+                }
             });
+        }, 1000);
+
+        // --- HELPERS ---
+        window.showQueueDetails = () => {
+            const c = document.getElementById('qDetailList'); c.innerHTML = "";
+            if(latestQueue.length === 0) { c.innerHTML = "<div style='text-align:center; color:#666; font-size:12px;'>ANTRIAN KOSONG</div>"; } 
+            else {
+                latestQueue.forEach((q) => {
+                    // Gunakan qNo untuk menampilkan nomor tiket
+                    c.innerHTML += `<div class="q-list-item"><div class="q-plat">#${q.qNo||'?'} ${q.plat}</div><div class="q-det">${q.userName}<br>Bat: ${q.startBattery}%</div></div>`;
+                });
+            }
+            document.getElementById('queueDetailModal').style.display = 'flex';
+        };
+
+        function finishSlot(i, m) {
+            runTransaction(db, async(t)=>{
+                const d = (await t.get(ref)).data();
+                if(!d.chargingSlots[i] || d.chargingSlots[i].plat !== m.plat) return;
+                const oldWA = d.chargingSlots[i].wa; const oldName = d.chargingSlots[i].userName; const wasAdjusted = d.chargingSlots[i].autoAdjusted;
+                d.chargingSlots[i] = null;
+                if(d.waitingQueue.length > 0) {
+                    const next = d.waitingQueue.shift();
+                    const tar = calculateTargetLimit(d.waitingQueue.length); const dur = calculateDuration(next.startBattery, tar);
+                    d.chargingSlots[i] = { ...next, startTime: null, readyTime: new Date(), targetLimit: tar, durationMinutes: dur };
+                }
+                t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue});
+                return {oldWA, oldName, wasAdjusted};
+            }).then((res) => {
+                if(res) {
+                    let msg = `Halo ${res.oldName}, motor ${m.plat} sudah selesai charging.`;
+                    if(res.wasAdjusted) msg = `Halo ${res.oldName}, karena antrian padat, target charging motor ${m.plat} disesuaikan otomatis. Sekarang sudah selesai.`;
+                    sendFonnteNotif(res.oldWA, msg);
+                    log('AUTO_FINISH', m.plat, {reason: res.wasAdjusted ? 'Dynamic Limit' : 'Time Up'});
+                }
+            }).finally(() => { isProcessing = false; });
+        }
+
+        async function sendFonnteNotif(targetWA, message) {
+            if(!targetWA || targetWA.length < 5) return;
+            let n = targetWA.replace(/\D/g,''); if(n.startsWith('0')) n='62'+n.substring(1);
+            try { const f = new FormData(); f.append('target', n); f.append('message', message); await fetch('https://api.fonnte.com/send', { method: 'POST', headers: { 'Authorization': FONNTE_TOKEN }, body: f }); } catch(e){}
+        }
+
+        function log(action, plat, det) { addDoc(logRef, { timestamp: new Date(), action, plat, user: 'SYS', details: det }); }
+        function renderLogs(snap) {
+            const c = document.getElementById('logContainer'); if(snap.empty) return; let h = '';
+            snap.forEach(doc => { const d = doc.data(); const t = d.timestamp?.toDate().toLocaleString()||'-'; h += `<div class="log-card status-INFO"><div class="log-head"><span class="log-time">${t}</span></div><div class="log-body"><b>${d.action}</b>: ${d.plat}</div></div>`; });
             c.innerHTML = h;
         }
 
@@ -681,204 +705,94 @@
             runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data();
                 const dur = calculateDuration(b, 100); 
-                d.chargingSlots[s] = {plat:p, userName:'ADMIN', wa:'-', startBattery:b, durationMinutes:dur, startTime:new Date(), targetLimit:100};
+                d.chargingSlots[s] = {plat:p, userName:'ADMIN', wa:'-', startBattery:b, durationMinutes:dur, startTime:new Date(), targetLimit:100, qNo:'ADM'};
                 t.update(ref, {chargingSlots:d.chargingSlots});
-            }).then(()=>log('MANUAL_ASSIGN', p, {slot:s}));
+            });
         };
-
         window.clearSlot = () => {
             const s = document.getElementById('manSlot').value;
             showCustomConfirm('KOSONGKAN?', () => {
                 runTransaction(db, async(t)=>{
-                    const d = (await t.get(ref)).data();
-                    const q = d.waitingQueue || [];
+                    const d = (await t.get(ref)).data(); const q = d.waitingQueue || [];
                     d.chargingSlots[s] = null;
                     if(q.length > 0) {
                         const next = q.shift();
-                        const currentQLen = q.length;
-                        const tar = calculateTargetLimit(currentQLen);
-                        const dur = calculateDuration(next.startBattery, tar);
+                        const tar = calculateTargetLimit(q.length); const dur = calculateDuration(next.startBattery, tar);
                         d.chargingSlots[s] = { ...next, startTime: new Date(), durationMinutes: dur, targetLimit: tar };
                     }
                     t.update(ref, { chargingSlots: d.chargingSlots, waitingQueue: q });
-                    log('FORCE_CLEAR', 'SLOT '+s, null);
                 });
             });
         };
-
+        
+        // ADMIN QUEUE JUGA PAKAI LOGIC ANTI-RESET
         window.regQueue = () => {
             const p=document.getElementById('qPlat').value.toUpperCase(), n=document.getElementById('qName').value, b=parseInt(document.getElementById('qBat').value);
             if(!p) return showCustomAlert('Data Kurang');
             runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(); 
-                let s=d.chargingSlots||[null,null,null], q=d.waitingQueue||[];
-                q.push({plat:p, userName:n, wa:'-', startBattery:b});
-
-                const newQCount = q.length;
-                const globalTarget = calculateTargetLimit(newQCount);
+                const d=(await t.get(ref)).data(); let q=d.waitingQueue||[]; let s=d.chargingSlots||[];
                 
-                s.forEach((slot, i) => {
-                    if(slot && slot.startTime && !slot.isManualTime) {
-                        const newDur = calculateDuration(slot.startBattery, globalTarget);
-                        if(newDur < slot.durationMinutes) {
-                            slot.durationMinutes = newDur;
-                            slot.targetLimit = globalTarget;
-                            slot.autoAdjusted = true; 
-                        }
-                    }
-                });
+                // LOGIC NOMOR (SAMA SEPERTI USER)
+                const maxInQueue = q.length > 0 ? Math.max(...q.map(item => item.qNo || 0)) : 0;
+                const maxInSlots = s.reduce((max, slot) => { return (slot && slot.qNo && typeof slot.qNo === 'number') ? Math.max(max, slot.qNo) : max; }, 0);
+                let nextNo = Math.max(maxInQueue, maxInSlots) + 1;
 
-                t.update(ref, {waitingQueue:q, chargingSlots:s});
-            }).then(()=>log('ADM_Q_REG', p, null));
+                q.push({plat:p, userName:n, wa:'-', startBattery:b, qNo: nextNo});
+                t.update(ref, {waitingQueue:q});
+            });
         };
 
         window.moveQueue = () => {
-            const qi=document.getElementById('qIdx').value, si=document.getElementById('qTarget').value;
-            if(qi<0) return;
+            const qi=document.getElementById('qIdx').value, si=document.getElementById('qTarget').value; if(qi<0) return;
             runTransaction(db, async(t)=>{
                 const d=(await t.get(ref)).data(); const q=d.waitingQueue; const s=d.chargingSlots;
                 if(s[si]) throw "Penuh";
                 const item = q.splice(qi,1)[0];
-                const tar = calculateTargetLimit(q.length);
-                const dur = calculateDuration(item.startBattery, tar);
+                const tar = calculateTargetLimit(q.length); const dur = calculateDuration(item.startBattery, tar);
                 item.startTime = new Date(); item.durationMinutes = dur; item.targetLimit = tar;
                 s[si] = item;
                 t.update(ref, {chargingSlots:s, waitingQueue:q});
             });
         };
-        
         window.doBlock = () => { const p=document.getElementById('blockPlat').value.toUpperCase(); if(p) updateDoc(ref, {blockedList: arrayUnion(p)}); };
         window.doUnblock = () => { const p=document.getElementById('blockPlat').value.toUpperCase(); if(p) updateDoc(ref, {blockedList: arrayRemove(p)}); };
 
-        onSnapshot(ref, (snap) => {
-            const d = snap.data(); if(!d) return;
-            latestSlots = d.chargingSlots || [null, null, null];
-            latestQueue = d.waitingQueue || [];
-            document.getElementById('qCountDisplay').innerText = latestQueue.length;
-            updateFrontView();
-            updateUserView();
-            
-            const sOpt = latestSlots.map((_,i)=>`<option value="${i}">Slot ${i+1}</option>`).join('');
-            document.getElementById('manSlot').innerHTML = sOpt; document.getElementById('qTarget').innerHTML = sOpt;
-            const qOpt = latestQueue.length ? latestQueue.map((x,i)=>`<option value="${i}">#${i+1} ${x.plat}</option>`).join('') : '<option value="-1">Kosong</option>';
-            document.getElementById('qIdx').innerHTML = qOpt;
-            document.getElementById('blockList').innerText = "Blokir: " + (d.blockedList||[]).join(', ');
-        });
-
-        setInterval(() => {
-            if(!latestSlots) return;
-            latestSlots.forEach((m, i) => {
-                if(m && m.startTime) {
-                    const durationToUse = m.durationMinutes; 
-                    const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
-                    const finishTime = new Date(st.getTime() + durationToUse*60000);
-                    const now = new Date();
-                    const diffMS = finishTime - now;
-                    const remSec = diffMS / 1000;
-                    
-                    if(remSec <= -1 && !isProcessing) { 
-                         isProcessing = true;
-                         finishSlot(i, m);
-                    }
-
-                    let txt = "DONE";
-                    if(remSec > 0) {
-                        const min = Math.floor(remSec / 60);
-                        const sec = Math.floor(remSec % 60);
-                        txt = `${min}:${sec < 10 ? '0'+sec : sec}`;
-                    }
-                    
-                    const elTimer = document.getElementById(`fv${i+1}-timer`);
-                    if(elTimer) elTimer.innerText = txt;
-                    
-                    if((adminSpyIdx === i) || (currentUserPlat === m.plat && adminSpyIdx === null)) {
-                        const uvT = document.getElementById('uvTimer');
-                        if(uvT) uvT.innerText = txt;
-                    }
-                }
-            });
-        }, 1000);
-
-        function finishSlot(i, m) {
-            runTransaction(db, async(t)=>{
-                const d = (await t.get(ref)).data();
-                if(!d.chargingSlots[i] || d.chargingSlots[i].plat !== m.plat) return;
-                
-                const oldWA = d.chargingSlots[i].wa;
-                const oldName = d.chargingSlots[i].userName;
-                const wasAdjusted = d.chargingSlots[i].autoAdjusted;
-
-                d.chargingSlots[i] = null;
-                
-                if(d.waitingQueue.length > 0) {
-                    const next = d.waitingQueue.shift();
-                    const tar = calculateTargetLimit(d.waitingQueue.length);
-                    const dur = calculateDuration(next.startBattery, tar);
-                    d.chargingSlots[i] = { ...next, startTime: null, readyTime: new Date(), targetLimit: tar, durationMinutes: dur };
-                }
-                
-                t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue});
-                return {oldWA, oldName, wasAdjusted};
-            }).then((res) => {
-                if(res) {
-                    let msg = `Halo ${res.oldName}, motor ${m.plat} sudah selesai charging.`;
-                    if(res.wasAdjusted) msg = `Halo ${res.oldName}, karena antrian padat, target charging motor ${m.plat} disesuaikan otomatis. Sekarang sudah selesai.`;
-                    
-                    sendFonnteNotif(res.oldWA, msg);
-                    log('SYSTEM_AUTO_FINISH', m.plat, {reason: res.wasAdjusted ? 'Dynamic Limit Reached' : 'Time Up'});
-                }
-            }).finally(() => {
-                isProcessing = false;
-            });
-        }
+        // --- MODAL & UI ---
+        window.showCustomAlert = (msg) => { document.getElementById('alertMsg').innerText = msg; document.getElementById('alertModal').style.display = 'flex'; };
+        window.showCustomConfirm = (msg, yesCallback) => { document.getElementById('confirmMsg').innerText = msg; const btnYes = document.getElementById('btnConfirmYes'); const newBtn = btnYes.cloneNode(true); btnYes.parentNode.replaceChild(newBtn, btnYes); newBtn.onclick = () => { document.getElementById('confirmModal').style.display = 'none'; yesCallback(); }; document.getElementById('confirmModal').style.display = 'flex'; };
+        window.showCustomInput = (title, callback) => { document.getElementById('inputTitle').innerText = title; document.getElementById('inputVal').value = ""; const btnOk = document.getElementById('btnInputOk'); const newBtn = btnOk.cloneNode(true); btnOk.parentNode.replaceChild(newBtn, btnOk); newBtn.onclick = () => { if(document.getElementById('inputVal').value) { document.getElementById('inputModal').style.display = 'none'; callback(document.getElementById('inputVal').value); } }; document.getElementById('inputModal').style.display = 'flex'; document.getElementById('inputVal').focus(); };
 
         function updateFrontView() {
             latestSlots.forEach((m, i) => {
-                const elBat = document.getElementById(`fv${i+1}-bat`);
-                const elPlat = document.getElementById(`fv${i+1}-plat`);
-                const elTimer = document.getElementById(`fv${i+1}-timer`);
-                const elCircle = document.getElementById(`fv${i+1}-circle`);
-                
+                const elBat = document.getElementById(`fv${i+1}-bat`); const elPlat = document.getElementById(`fv${i+1}-plat`); const elTimer = document.getElementById(`fv${i+1}-timer`); const elCircle = document.getElementById(`fv${i+1}-circle`);
                 elCircle.classList.remove('active-blue', 'active-yellow');
-                
                 if (m && m.plat) {
-                     if(i === 1) elCircle.classList.add('active-yellow');
-                     else elCircle.classList.add('active-blue');
+                     if(i === 1) elCircle.classList.add('active-yellow'); else elCircle.classList.add('active-blue');
                      elBat.classList.remove('ready-mode');
-                     
                      if(m.startTime) {
-                        const totalSec = m.durationMinutes * 60;
-                        const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
-                        const elapsedSec = (new Date() - st) / 1000;
-                        let progress = elapsedSec / totalSec;
-                        if(progress > 1) progress = 1;
+                        const totalSec = m.durationMinutes * 60; const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); const elapsedSec = (new Date() - st) / 1000;
+                        let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
                         let estBat = Math.round(m.startBattery + ((100 - m.startBattery) * progress));
                         if(estBat > 100) estBat = 100;
-                        if(elapsedSec >= totalSec) elBat.innerText = "DONE";
-                        else elBat.innerText = estBat + "%";
-                     } else { 
-                         elBat.innerText = m.startBattery + "%"; 
-                         if(elTimer) elTimer.innerText = "WAIT START";
-                     }
-                     elPlat.innerText = m.plat;
-                } else {
-                    elBat.classList.add('ready-mode'); elBat.innerText = "READY"; 
-                    elPlat.innerText = ""; if(elTimer) elTimer.innerText = "";
-                }
+                        if(elapsedSec >= totalSec) elBat.innerText = "DONE"; else elBat.innerText = estBat + "%";
+                     } else { elBat.innerText = m.startBattery + "%"; if(elTimer) elTimer.innerText = "WAIT START"; }
+                     
+                     // Tampilkan nomor antrian kecil di samping plat (opsional, tapi bagus untuk info)
+                     let qInfo = m.qNo ? `(#${m.qNo}) ` : '';
+                     elPlat.innerText = qInfo + m.plat;
+                     
+                } else { elBat.classList.add('ready-mode'); elBat.innerText = "READY"; elPlat.innerText = ""; if(elTimer) elTimer.innerText = ""; }
             });
         }
 
         function updateUserView() {
-            const uv = document.getElementById('userView');
-            const fv = document.getElementById('frontView');
-            const fp = document.getElementById('fpArea');
+            const uv = document.getElementById('userView'); const fv = document.getElementById('frontView'); const fp = document.getElementById('fpArea');
             if(!currentUserPlat && adminSpyIdx === null) { uv.style.display = 'none'; fv.style.display = 'block'; fp.style.display = 'flex'; return; }
             if(adminSpyIdx !== null) { uv.style.display = 'flex'; fv.style.display = 'none'; fp.style.display = 'none'; }
 
             const mySlotIdx = (adminSpyIdx !== null) ? adminSpyIdx : latestSlots.findIndex(s => s && s.plat === currentUserPlat);
             const myQueueIdx = (adminSpyIdx !== null) ? -1 : latestQueue.findIndex(q => q.plat === currentUserPlat);
-            const btnContainer = document.getElementById('uvActionBtns');
-            const ringContainer = document.getElementById('uvRingContainer');
+            const btnContainer = document.getElementById('uvActionBtns'); const ringContainer = document.getElementById('uvRingContainer');
             
             if(mySlotIdx !== -1) {
                 const m = latestSlots[mySlotIdx];
@@ -886,52 +800,35 @@
                 document.getElementById('uvQueueLabel').style.display = 'none';
                 ringContainer.className = 'uv-ring-container mode-charging'; 
                 if(!m) { document.getElementById('uvBatVal').innerText = "EMPTY"; btnContainer.innerHTML = ""; return; }
-
                 if(m.startTime) {
-                    ringContainer.classList.add('is-charging');
-                    document.getElementById('btnStartBig').style.display = 'none';
-                    document.getElementById('uvBatVal').style.display = 'block';
-                    document.getElementById('uvTimer').style.display = 'block';
-                    const totalSec = m.durationMinutes * 60;
-                    const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
-                    const elapsedSec = (new Date() - st) / 1000;
+                    ringContainer.classList.add('is-charging'); document.getElementById('btnStartBig').style.display = 'none'; document.getElementById('uvBatVal').style.display = 'block'; document.getElementById('uvTimer').style.display = 'block';
+                    const totalSec = m.durationMinutes * 60; const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); const elapsedSec = (new Date() - st) / 1000;
                     let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
-                    let estBat = Math.round(m.startBattery + ((100 - m.startBattery) * progress));
-                    document.getElementById('uvBatVal').innerText = estBat + "%";
+                    let estBat = Math.round(m.startBattery + ((100 - m.startBattery) * progress)); document.getElementById('uvBatVal').innerText = estBat + "%";
                     btnContainer.innerHTML = `<button class="btn-glossy edit" onclick="window.userEditTimer()">⏱ EDIT TIMER</button><button class="btn-glossy stop" onclick="window.userStop()">🛑 STOP</button>`;
                 } else {
-                    ringContainer.classList.remove('is-charging');
-                    document.getElementById('btnStartBig').style.display = 'flex';
-                    document.getElementById('uvBatVal').style.display = 'none';
-                    document.getElementById('uvTimer').style.display = 'none';
+                    ringContainer.classList.remove('is-charging'); document.getElementById('btnStartBig').style.display = 'flex'; document.getElementById('uvBatVal').style.display = 'none'; document.getElementById('uvTimer').style.display = 'none';
                     btnContainer.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">❌ BATAL</button>`; 
                 }
             } else if (myQueueIdx !== -1) {
                 document.getElementById('uvSlotTitle').innerText = "MENUNGGU GILIRAN";
                 ringContainer.className = 'uv-ring-container mode-queue';
-                document.getElementById('btnStartBig').style.display = 'none';
-                document.getElementById('uvTimer').style.display = 'none';
-                document.getElementById('uvQueueLabel').style.display = 'block';
+                document.getElementById('btnStartBig').style.display = 'none'; document.getElementById('uvTimer').style.display = 'none'; document.getElementById('uvQueueLabel').style.display = 'block';
                 btnContainer.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">BATAL ANTRI</button>`;
                 document.getElementById('uvBatVal').style.display = 'block';
-                document.getElementById('uvBatVal').innerText = "#" + (myQueueIdx + 1);
+                // Tampilkan Nomor Antrian yang Benar (qNo)
+                document.getElementById('uvBatVal').innerText = "#" + (latestQueue[myQueueIdx].qNo || '?');
             }
-            let otherStatus = "";
-            latestSlots.forEach((s, i) => { if(i !== mySlotIdx) { otherStatus += `SLOT ${i+1}: ${s ? 'ISI' : 'KOSONG'}   `; } });
+            let otherStatus = ""; latestSlots.forEach((s, i) => { if(i !== mySlotIdx) { otherStatus += `SLOT ${i+1}: ${s ? 'ISI' : 'KOSONG'}   `; } });
             document.getElementById('uvOtherSlots').innerText = otherStatus;
         }
 
-        // --- DYNAMIC RULES ---
-        function calculateTargetLimit(qLength) {
-            if (qLength >= 10) return 85; 
-            if (qLength >= 5) return 90;
-            return 100;
-        }
+        function calculateTargetLimit(qLength) { if (qLength >= 10) return 85; if (qLength >= 5) return 90; return 100; }
         const CHARGING_CURVE = [[100,0], [99,1], [95,4], [90,17], [89,18], [85,22], [81,25], [72,33], [61,45], [50,50], [20,68], [0,86]];
         function calculateDuration(start, target) {
             let timeStart=90, timeTarget=0;
             for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(start<=CHARGING_CURVE[i][0] && start>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-start)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeStart=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i+1][1]); break; } }
-            for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(target<=CHARGING_CURVE[i][0] && target>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-target)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeTarget=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i][1]); break; } }
+            for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(target<=CHARGING_CURVE[i][0] && target>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-target)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeTarget=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i+1][1]); break; } }
             return Math.max(1, Math.ceil(timeStart - timeTarget));
         }
     </script>
