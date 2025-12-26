@@ -3,354 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FC KELAPA GADING - ULTIMATE SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>FC KELAPA GADING - ULTIMATE HYBRID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;500;700&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #020205; --accent: #CCFF00; --blue: #00F0FF; --red: #ff003c; --orange: #ffaa00; --term-bg: #0d0d0d; --grey: #333333; }
+        /* --- STYLE DASAR --- */
+        :root { --bg: #000000; --card-bg: #0a0a0a; --accent: #CCFF00; --blue: #00F0FF; --red: #ff003c; --orange: #ffaa00; --term-bg: #0d0d0d; --grey: #333333; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow-x: hidden; height: 100vh; background-image: radial-gradient(circle at 50% 30%, #0d1a2b 0%, #000 70%); }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
 
-        /* UI UTAMA */
-        .header-container { padding: 20px; text-align: center; position: relative; z-index: 100; background: linear-gradient(to bottom, #000 0%, transparent 100%); }
-        .main-title { font-family: 'Orbitron'; font-weight: 900; font-size: 24px; color: var(--blue); text-shadow: 0 0 15px var(--blue); margin: 0; letter-spacing: 2px; }
-        .sub-brand { font-family: 'Inter'; font-size: 10px; color: var(--accent); letter-spacing: 4px; font-weight: 700; margin-top: 5px; text-shadow: 0 0 5px var(--accent); }
-        .queue-header-info { margin-top: 15px; font-family: 'Orbitron'; font-weight: 700; font-size: 16px; color: #FFFFFF; background: rgba(255,255,255,0.1); display: inline-block; padding: 5px 15px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.3s; }
-        .queue-header-info:active { transform: scale(0.95); background: rgba(255,255,255,0.2); }
-        .gear-btn { position: absolute; right: 20px; top: 25px; font-size: 20px; cursor: pointer; opacity: 0.7; transition: 0.3s; z-index: 101; }
+        /* HEADER & GLITCH EFFECT */
+        .top-nav { padding: 15px 20px; text-align: center; height: 12vh; display: flex; flex-direction: column; justify-content: center; z-index: 10; position: relative; }
+        .main-title { font-family: 'Teko', sans-serif; font-size: 45px; font-weight: 700; line-height: 0.9; color: #fff; position: relative; display: inline-block; margin: 0; text-shadow: 0 0 5px rgba(0, 240, 255, 0.3); }
+        .main-title::before, .main-title::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); opacity: 0; }
+        .main-title::before { color: var(--red); z-index: -1; animation: glitch-effect-1 5s infinite; }
+        .main-title::after { color: var(--blue); z-index: -2; animation: glitch-effect-2 5s infinite; }
+        @keyframes glitch-effect-1 { 0% { opacity: 0; transform: translate(0); clip-path: inset(0 0 0 0); } 92% { opacity: 0; transform: translate(0); } 93% { opacity: 1; transform: translate(-2px, 1px); clip-path: inset(20% 0 80% 0); } 94% { opacity: 1; transform: translate(2px, -1px); clip-path: inset(60% 0 10% 0); } 95% { opacity: 1; transform: translate(-1px, 2px); clip-path: inset(40% 0 50% 0); } 96% { opacity: 0; transform: translate(0); } 100% { opacity: 0; } }
+        @keyframes glitch-effect-2 { 0% { opacity: 0; transform: translate(0); clip-path: inset(0 0 0 0); } 94% { opacity: 0; transform: translate(0); } 95% { opacity: 1; transform: translate(2px, 1px); clip-path: inset(10% 0 60% 0); } 96% { opacity: 1; transform: translate(-2px, -1px); clip-path: inset(80% 0 5% 0); } 97% { opacity: 1; transform: translate(1px, -2px); clip-path: inset(30% 0 20% 0); } 98% { opacity: 0; transform: translate(0); } 100% { opacity: 0; } }
+        .brand-sub { font-size: 12px; color: var(--accent); letter-spacing: 5px; font-weight: 700; margin-top: 5px; }
+        .gear-btn { position: absolute; right: 20px; top: 35px; font-size: 24px; cursor: pointer; color: #fff; z-index: 101; opacity: 0.5; transition: 0.3s; }
+        .gear-btn:hover { opacity: 1; transform: rotate(90deg); }
+
+        /* FRONT VIEW CARD */
+        #frontView { height: 53vh; display: flex; justify-content: center; align-items: flex-start; padding-top: 40px; gap: 10px; position: relative; width: 100%; }
+        .onyx-card { position: relative; width: 30%; height: 280px; background: #0a0a0a; border-radius: 15px; display: flex; flex-direction: column; justify-content: space-between; padding: 15px 5px; border: 2px solid var(--blue); box-shadow: 0 0 15px rgba(0, 240, 255, 0.1); overflow: hidden; transition: 0.3s; }
+        .onyx-card:nth-child(1), .onyx-card:nth-child(3) { transform: translateY(30px); opacity: 0.8; }
+        .onyx-card:nth-child(2) { transform: translateY(-20px) scale(1.1); z-index: 5; box-shadow: 0 0 30px rgba(0,240,255,0.2); }
+        .onyx-card.charging::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(transparent, transparent, transparent, var(--accent)); animation: rotate-border 4s linear infinite; z-index: 0; }
+        .onyx-card.charging::after { content: ''; position: absolute; inset: 3px; background: #0a0a0a; border-radius: 12px; z-index: 0; }
+        @keyframes rotate-border { 100% { transform: rotate(360deg); } }
+        .oc-header, .oc-body, .oc-footer, .oc-progress-bg { position: relative; z-index: 2; text-align: center; }
+        .oc-plat { font-family:'Inter'; font-weight: 900; font-size: 16px; color: #fff; margin-bottom: 2px; }
+        .oc-name { font-size: 10px; color: #fff; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; width: 100%; white-space: nowrap; }
+        .oc-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .oc-big-num { font-family: 'Teko', sans-serif; font-weight: 500; color: #fff; line-height: 0.8; transition: 0.3s; }
+        .num-charging { font-size: 70px; text-shadow: 0 0 20px var(--blue); }
+        .num-ready { font-size: 35px; letter-spacing: 2px; color: #fff; } 
+        .oc-status { font-family: 'JetBrains Mono'; font-size: 10px; font-weight: 700; padding: 6px 10px; border-radius: 4px; display: inline-block; background: #222; color: #fff; margin-top: 5px; border: 1px solid #333; }
+        .oc-progress-bg { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: #222; z-index: 5; }
+        .oc-progress-fill { height: 100%; width: 0%; background: var(--blue); transition: width 1s linear; box-shadow: 0 0 10px var(--blue); }
         
-        /* SLOT VIEW (Lingkaran Depan) */
-        #frontView { display: block; position: relative; height: 400px; width: 100%; transition: 0.5s; }
-        .slot-box { position: absolute; display: flex; flex-direction: column; align-items: center; transition: 0.5s; }
-        .fv-side { width: 130px; top: 160px; z-index: 5; }
-        .fv-left { left: 5px; } .fv-right { right: 5px; }
-        .fv-mid { width: 220px; top: 40px; left: 50%; transform: translateX(-50%); z-index: 20; }
+        .onyx-card.charging .oc-plat { color: var(--blue); }
+        .onyx-card.charging .oc-status { background: rgba(0, 240, 255, 0.1); color: var(--blue); border-color: var(--blue); }
+        .onyx-card.full .oc-big-num { color: var(--accent); text-shadow: 0 0 20px var(--accent); }
+        .onyx-card.full .oc-status { background: var(--accent); color: #000; animation: blink 1s infinite; }
+        .onyx-card.full .oc-progress-fill { background: var(--accent); }
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        /* [NEW] TIMER MERAH & BLINKING (Saat waktu habis/masa tenggang) */
+        .timer-danger {
+            color: var(--red) !important;
+            font-size: 20px !important;
+            font-weight: 900;
+            letter-spacing: 2px;
+            animation: blink-red 0.5s infinite;
+            text-shadow: 0 0 20px var(--red);
+            background: rgba(255, 0, 0, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid var(--red);
+            display: inline-block;
+        }
+        @keyframes blink-red { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.05); } }
+
+        /* CONTROL AREA */
+        .control-area { height: 37vh; width: 100%; background: linear-gradient(to top, #000 20%, transparent 100%); display: flex; flex-direction: column; align-items: center; z-index: 50; padding-top: 5px; }
+        .fp-text { font-family:'Orbitron'; font-size:12px; color:#fff; margin-bottom: 8px; letter-spacing: 2px; font-weight:bold; }
+        .fp-container { position: relative; width: 90px; height: 90px; display: flex; justify-content: center; align-items: center; }
+        .fp-btn { width: 75px; height: 75px; background: #000; border: 3px solid var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 0 15px var(--accent); }
+        .fp-svg { width: 45px; height: 45px; fill: var(--accent); opacity: 0.8; }
+        .fp-btn.scanning .fp-svg { filter: drop-shadow(0 0 10px var(--accent)); animation: pulseScan 1s infinite; }
+        @keyframes pulseScan { 0%{opacity:0.6} 50%{opacity:1} 100%{opacity:0.6} }
+        .info-row { width: 100%; text-align: center; margin-top: 10px; height: 35px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .antrian-text { font-family: 'Orbitron'; font-size: 20px; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--blue); cursor: pointer; }
+        .dash-btn { background: rgba(204, 255, 0, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 5px 15px; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: 800; cursor: pointer; display: none; text-transform: uppercase; }
+
+        /* MUSIC HEARTBEAT */
+        .music-wrapper { width: 95%; display: flex; align-items: center; justify-content: space-between; margin-top: auto; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; }
+        .hb-container { width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        .hb-svg { width: 100%; height: 100%; overflow: visible; }
+        /* Style Default Heartbeat */
+        .hb-path { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; stroke-dashoffset: 60; animation: ecg-beat 1.5s linear infinite; }
+        @keyframes ecg-beat { 0% { stroke-dashoffset: 60; opacity: 0; } 10% { opacity: 1; } 50% { stroke-dashoffset: 0; opacity: 1; stroke: var(--accent); filter: drop-shadow(0 0 5px var(--accent)); } 90% { stroke-dashoffset: -60; opacity: 1; stroke: var(--blue); } 100% { stroke-dashoffset: -60; opacity: 0; } }
+        /* [NEW] Class untuk garis datar saat musik mati */
+        .hb-path.flat { stroke-dasharray: 0; stroke-dashoffset: 0; animation: none; stroke: #333; }
         
-        .circle-ui { width: 100%; aspect-ratio: 1/1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 4px solid #333; background: var(--bg); position: relative; box-shadow: inset 0 0 20px #000; transition: 0.3s; padding: 10px; text-align: center; }
-        .fv-mid .circle-ui { box-shadow: 0 0 40px #000; border-width: 6px; } 
-        
-        .ring-spinner { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; border: 4px solid transparent; border-top-color: var(--grey); animation: none; z-index: 1; opacity: 0.3; }
-        .active-blue .ring-spinner { border: 4px solid transparent; border-top-color: var(--blue); border-right-color: var(--blue); opacity: 1; box-shadow: 0 0 15px var(--blue); animation: spinRing 2s linear infinite; }
-        .active-yellow .ring-spinner { border: 4px solid transparent; border-top-color: var(--accent); border-right-color: var(--accent); opacity: 1; box-shadow: 0 0 15px var(--accent); animation: spinRing 2s linear infinite; }
-        @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Layout Isi Lingkaran Baru */
-        .fv-plat { font-family: 'Orbitron'; font-weight: 900; color: var(--blue); text-shadow: 0 0 10px var(--blue); font-size: 16px; margin-bottom: 2px; z-index: 2; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .fv-mid .fv-plat { font-size: 26px; margin-bottom: 5px; }
-        
-        .fv-name { font-family: 'Inter'; font-weight: 800; color: #fff; font-size: 11px; margin-bottom: 5px; z-index: 2; text-transform: uppercase; letter-spacing: 1px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 0 5px rgba(0,0,0,0.8); }
-        .fv-mid .fv-name { font-size: 14px; margin-bottom: 10px; }
-
-        .fv-bat { font-family: 'Orbitron'; font-weight: 900; color: var(--accent); font-size: 28px; z-index: 2; line-height: 1; text-shadow: 0 0 5px var(--accent); }
-        .fv-mid .fv-bat { font-size: 60px; }
-        .ready-mode { color: #444 !important; text-shadow: none !important; font-size: 14px !important; letter-spacing: 2px; }
-        .fv-mid .ready-mode { font-size: 24px !important; }
-
-        .fv-timer { font-family: 'JetBrains Mono'; font-weight: bold; font-size: 10px; color: #fff; margin-top: 5px; z-index: 2; background: rgba(0,0,0,0.5); padding: 2px 6px; border-radius: 4px; }
-        .fv-mid .fv-timer { font-size: 14px; margin-top: 10px; }
-
-        .slot-label { margin-top: 10px; font-family: 'Orbitron'; font-size: 12px; font-weight: 900; color: #444; letter-spacing: 1px; }
-        .active-blue + .slot-label { color: var(--blue); text-shadow: 0 0 10px var(--blue); }
-        .active-yellow + .slot-label { color: var(--accent); text-shadow: 0 0 10px var(--accent); }
+        .m-btn { background:none; border:none; color:#fff; font-size:20px; cursor: pointer; }
+        .track-info { font-family:'JetBrains Mono'; font-size:11px; font-weight:bold; color:#fff; width: 140px; text-align: center; white-space: nowrap; overflow: hidden; }
 
         /* USER VIEW DASHBOARD */
         #userView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 0; }
+        .uv-header { padding-top:20px; width:100%; position:relative; text-align: center; }
         .uv-ring-container { position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; margin: 30px 0; }
-        .ring-blue { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 8px solid var(--blue); border-radius: 45% 55% 40% 60% / 55% 45% 60% 40%; box-shadow: 0 0 20px var(--blue), inset 0 0 20px var(--blue); opacity: 0.3; transition: 0.5s; }
-        .ring-yellow { position: absolute; width: 90%; height: 90%; border-radius: 50%; border: 3px solid var(--accent); border-radius: 55% 45% 60% 40% / 45% 55% 40% 60%; box-shadow: 0 0 15px var(--accent); opacity: 0; transition: 0.5s; }
-        .ring-queue { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 4px dashed var(--orange); opacity: 0; transition: 0.5s; box-shadow: 0 0 15px var(--orange); animation: spinSlow 10s linear infinite; }
-        .mode-charging .ring-blue { opacity: 1; box-shadow: 0 0 40px var(--blue); } .mode-charging .ring-yellow { opacity: 1; animation: wobbleSpin 4s linear infinite; }
-        .mode-queue .ring-blue { display: none; } .mode-queue .ring-yellow { display: none; } .mode-queue .ring-queue { opacity: 1; }
-        .mode-finish .ring-blue { border-color: var(--accent); box-shadow: 0 0 40px var(--accent); } 
-        @keyframes wobbleSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } @keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ring-blue { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 8px solid var(--blue); border-radius: 45% 55% 40% 60% / 55% 45% 60% 40%; box-shadow: 0 0 20px var(--blue); opacity: 0.3; transition: 0.5s; }
+        .ring-yellow { position: absolute; width: 90%; height: 90%; border: 3px solid var(--accent); border-radius: 40% 60% 50% 50% / 50% 50% 60% 40%; opacity: 0; transition: 0.5s; }
+        .ring-queue { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 4px dashed var(--orange); opacity: 0; animation: spinSlow 10s linear infinite; }
+        
+        .mode-charging .ring-blue { opacity: 1; box-shadow: 0 0 40px var(--blue); } 
+        .mode-charging .ring-yellow { opacity: 1; animation: wobbleSpin 2s linear infinite; }
+        .mode-queue .ring-queue { opacity: 1; } 
+        .mode-finish .ring-blue { border-color: var(--accent); box-shadow: 0 0 40px var(--accent); }
+        @keyframes wobbleSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } 
+        @keyframes spinSlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         .uv-center-content { position: absolute; z-index: 10; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-        .btn-start-circle { width: 120px; height: 120px; border-radius: 50%; background: rgba(0, 255, 0, 0.1); border: 2px solid #0f0; color: #0f0; font-family: 'Orbitron'; font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 0 20px rgba(0,255,0,0.3); display: flex; align-items: center; justify-content: center; text-align: center; animation: pulseBtn 2s infinite; }
+        .btn-start-circle { width: 120px; height: 120px; border-radius: 50%; background: rgba(0, 255, 0, 0.1); border: 2px solid #0f0; color: #0f0; font-family: 'Orbitron'; font-weight: 900; font-size: 18px; cursor: pointer; box-shadow: 0 0 20px rgba(0,255,0,0.3); display: flex; align-items: center; justify-content: center; animation: pulseBtn 2s infinite; }
         @keyframes pulseBtn { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
-        .uv-bat-val { font-family: 'Orbitron'; font-size: 70px; font-weight: 900; color: #fff; text-shadow: 0 0 30px #fff; display: block; }
-        .uv-timer { font-family: 'Orbitron'; font-size: 20px; font-weight: 700; color: var(--blue); margin-top: 5px; text-shadow: 0 0 10px var(--blue); display: block; }
-        .uv-q-label { font-family: 'Inter'; font-size: 12px; color: var(--orange); margin-top: 5px; letter-spacing: 2px; font-weight: bold; }
-        .uv-slot-title { font-family: 'Orbitron'; font-size: 18px; color: #fff; margin-bottom: 5px; letter-spacing: 3px; font-weight: bold; margin-top: 10px; }
-        
-        /* User View Buttons Centered */
-        .uv-controls { display: flex; gap: 15px; margin-top: 20px; z-index: 10; width: 90%; justify-content: center; align-items: center; }
-        .btn-glossy { padding: 12px 0; border: none; border-radius: 50px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; color: #fff; cursor: pointer; position: relative; overflow: hidden; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 5px 15px rgba(0,0,0,0.5); backdrop-filter: blur(5px); transition: 0.3s; flex: 1; text-align: center; white-space:nowrap; }
-        .btn-glossy.stop { border-color: var(--red); color: var(--red); box-shadow: 0 0 15px rgba(255,0,60,0.3); }
-        .btn-glossy.edit { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 15px rgba(204,255,0,0.3); }
-        .btn-glossy.pause { border-color: var(--blue); color: var(--blue); box-shadow: 0 0 15px rgba(0,240,255,0.3); }
-        .btn-glossy:active { transform: scale(0.95); }
+        .uv-bat-val { font-family: 'Orbitron'; font-size: 70px; font-weight: 900; color: #fff; text-shadow: 0 0 30px #fff; }
+        .uv-timer { font-family: 'Orbitron'; font-size: 20px; font-weight: 700; color: var(--blue); margin-top: 5px; }
+        .uv-controls { display: flex; gap: 15px; margin-top: 20px; z-index: 10; width: 90%; justify-content: center; }
+        .uv-footer { position: absolute; bottom: 85px; width: 95%; }
+        .uv-nav-link { position:absolute; bottom:20px; width:100%; color: var(--accent); font-family: 'Orbitron'; font-size: 10px; font-weight: 900; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; text-align: center; transition: 0.3s; padding: 10px; background: rgba(0,0,0,0.5); border-top: 1px solid #333; }
+        .uv-nav-link:hover { color: #fff; text-shadow: 0 0 10px var(--accent); background: rgba(204, 255, 0, 0.1); }
 
-        .uv-footer { position: absolute; bottom: 100px; width: 90%; background: rgba(20,20,20,0.9); border: 1px solid #333; border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; font-family: 'Inter'; font-size: 11px; color: #aaa; }
-        .uv-nav-link { color: #555; text-decoration: underline; cursor: pointer; font-size: 10px; margin-top: 10px; display: block; text-align: center; }
-
-        /* FINGERPRINT AREA */
-        .fp-area { position: absolute; bottom: 110px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 50; }
-        .fp-btn { width: 90px; height: 90px; border-radius: 50%; background: rgba(0,0,0,0.4); border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); cursor: pointer; transition: 0.5s; box-shadow: 0 0 20px rgba(204, 255, 0, 0.2); }
-        .fp-btn:active { transform: scale(0.95); box-shadow: 0 0 30px var(--accent); background: rgba(204, 255, 0, 0.1); }
-        .fp-svg { width: 55px; height: 55px; fill: var(--accent); opacity: 0.6; transition: 0.5s; }
-        .fp-btn.scanning .fp-svg { opacity: 1; filter: drop-shadow(0 0 10px var(--accent)); }
-        .scan-line { position: absolute; width: 100%; height: 3px; background: #fff; box-shadow: 0 0 10px #fff; top: 0; opacity: 0; }
-        .fp-btn.scanning .scan-line { animation: scanDown 1.5s infinite linear; opacity: 1; }
-        @keyframes scanDown { 0% { top: 0; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-
-        /* PLAYER BAR & BUTTONS */
-        .player-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #050505; border-top: 1px solid var(--accent); padding: 5px 15px; display: flex; align-items: center; justify-content: space-between; z-index: 2000; height: 75px; }
-        .music-ctrl-box { display: flex; align-items: center; gap: 15px; flex: 1; }
-        .music-btn { background: transparent; border: none; color: var(--accent); font-size: 20px; cursor: pointer; transition: 0.2s; padding: 5px; }
-        .music-btn:active { transform: scale(0.8); color: #fff; }
+        /* [REVISI ADMIN] TOMBOL & INPUT LEBIH BESAR & JELAS */
+        #adminOverlay { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#141414; z-index:9999; padding:20px; overflow-y:auto; color:#eee; }
+        .adm-header-box { display: flex; flex-direction: column; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; gap: 15px; }
+        .adm-card { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; width: 100%; margin-bottom: 20px; }
+        /* Input diperbesar tingginya dan bordernya */
+        .adm-input, .adm-select { width: 100%; height: 50px; padding: 0 15px; background: #222; border: 1px solid var(--blue); color: #fff; margin-bottom: 15px; border-radius: 8px; font-size: 16px; font-family: 'Inter'; font-weight: bold; }
+        .adm-input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 10px var(--accent); }
+        /* Tombol diperbesar area tekannya */
+        .adm-btn { width: 100%; height: 50px; padding: 0; background: var(--accent); border: none; font-weight: 900; cursor: pointer; border-radius: 8px; color: #000; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; margin-top:5px; }
+        .btn-glossy { padding: 12px 0; border-radius: 50px; font-family: 'Orbitron'; font-weight: 900; color: #fff; cursor: pointer; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); width:100%; }
         
-        .track-info { flex: 2; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 10px; border-left: 1px solid #333; margin-left: 10px; height: 40px; }
-        .track-title { white-space: nowrap; font-family: 'Orbitron'; font-size: 10px; color: #fff; animation: marquee 10s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        
-        .footer-dash-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--accent); color: var(--accent); padding: 8px 12px; border-radius: 6px; font-family: 'Orbitron'; font-size: 9px; font-weight: 800; letter-spacing: 1px; cursor: pointer; transition: 0.3s; display: none; align-items: center; text-transform: uppercase; box-shadow: 0 0 5px rgba(204,255,0,0.1); white-space: nowrap; }
-        .footer-dash-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
-        
-        /* POPUPS & MODALS */
-        #playlistPopup { display: none; position: fixed; bottom: 75px; left: 0; width: 100%; background: rgba(0,0,0,0.95); border-top: 2px solid var(--blue); height: 60vh; overflow-y: auto; z-index: 2500; backdrop-filter: blur(10px); }
-        .track-item { padding: 15px 20px; border-bottom: 1px solid #222; font-family: 'Orbitron'; font-size: 12px; color: #666; cursor: pointer; transition: 0.3s; display: flex; align-items: center; letter-spacing: 1px; }
-        .track-item.active { color: var(--accent); text-shadow: 0 0 10px var(--accent); font-weight: 900; border-left: 4px solid var(--accent); background: rgba(204, 255, 0, 0.05); }
-        
-        /* ADMIN PANEL LENGKAP */
-        #adminOverlay { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:#141414; z-index:9999; padding:20px; overflow-y:auto; color:#eee; font-family:'Inter', sans-serif; }
-        .adm-header-box { display: flex; flex-direction: column; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; gap: 10px;}
-        .adm-h1 { margin: 0; font-size: 16px; color: var(--accent); }
-        .adm-grid { display: flex; flex-direction: column; gap: 20px; }
-        @media(min-width: 768px) { .adm-grid { display: grid; grid-template-columns: 350px 1fr; } .adm-header-box { flex-direction: row; justify-content: space-between; align-items: center; } } 
-        .adm-card { background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; width: 100%; }
-        .adm-h2 { font-size: 14px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; color: #aaa; letter-spacing: 1px; }
-        .adm-input, .adm-select { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; margin-bottom: 10px; border-radius: 8px; font-size: 14px; box-sizing:border-box; }
-        .adm-btn { width: 100%; padding: 12px; background: var(--accent); border: none; font-weight: 900; cursor: pointer; border-radius: 8px; font-size: 14px; color: #000; text-transform: uppercase; }
-        .adm-btn.red { background: rgba(255,68,68,0.2); color: var(--red); border: 1px solid var(--red); }
-        .adm-btn.blue { background: rgba(0, 240, 255, 0.2); color: var(--blue); border: 1px solid var(--blue); }
-        .adm-btn-group { display: flex; gap: 8px; width: 100%; }
-        .adm-btn-group input, .adm-btn-group select, .adm-btn-group button { flex: 1; }
-        
-        /* ADMIN QUICK DASH */
-        .quick-dash-row { display: flex; justify-content: space-between; align-items: center; background: #252525; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid #555; }
+        /* Grid untuk Quick Dashboard agar rapi */
+        .quick-dash-row { display: grid; grid-template-columns: 1fr; gap: 10px; background: #222; padding: 15px; border-radius: 10px; border-left: 5px solid #555; margin-bottom: 10px; }
         .quick-dash-row.active { border-left-color: var(--accent); background: #2a2a2a; }
-        .qd-info { font-size: 12px; color: #fff; font-family: 'JetBrains Mono'; }
-        .qd-actions { display: flex; gap: 5px; }
-        .qd-btn { padding: 5px 10px; font-size: 10px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .qd-stop { background: rgba(255,0,60,0.2); color: var(--red); border: 1px solid var(--red); }
-        .qd-pause { background: rgba(0,240,255,0.2); color: var(--blue); border: 1px solid var(--blue); }
-        .qd-start { background: rgba(204,255,0,0.2); color: var(--accent); border: 1px solid var(--accent); }
-        .qd-clear { background: #444; color: #aaa; border: 1px solid #666; }
+        .qd-info { font-size: 14px; color: #fff; font-weight: bold; font-family: 'JetBrains Mono'; margin-bottom: 5px; }
+        .adm-action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+        .adm-action-grid button { height: 40px; border-radius: 5px; font-weight: bold; font-size: 12px; cursor: pointer; border: 1px solid #555; color: #fff; background: #333; }
+        .adm-action-grid .btn-stop { border-color: var(--red); color: var(--red); background: rgba(255,0,60,0.1); }
+        .adm-action-grid .btn-start { border-color: var(--accent); color: var(--accent); background: rgba(204,255,0,0.1); }
+        .adm-action-grid .btn-pause { border-color: var(--blue); color: var(--blue); background: rgba(0,240,255,0.1); }
+        .adm-action-grid .btn-clear { border-color: #fff; color: #fff; background: rgba(255,255,255,0.1); }
 
-        .log-container { height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px; }
-        .log-card { background: #252525; padding: 12px; border-radius: 8px; border-left: 4px solid #555; font-size: 12px; }
-        .log-head { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; color: #888; font-size: 10px; }
-        .log-time { color: var(--accent); font-family: monospace; font-size: 11px; }
-        .status-INFO { border-left-color: var(--accent); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; }
+        .modal-box { background: #111; border: 2px solid var(--blue); padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 3000; justify-content: center; align-items: center; }
-        .modal-box { background: rgba(10, 10, 10, 0.95); border: 2px solid var(--blue); padding: 35px 25px; border-radius: 20px; width: 85%; max-width: 350px; box-shadow: 0 0 50px rgba(0, 240, 255, 0.2); text-align: center; position: relative; animation: modalPop 0.3s ease-out; }
-        @keyframes modalPop { 0%{transform: scale(0.8); opacity: 0;} 100%{transform: scale(1); opacity: 1;} }
-        .q-list-item { background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 5px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--orange); }
-        .q-plat { font-family: 'Orbitron'; font-weight: bold; font-size: 14px; color: #fff; } .q-det { font-size: 10px; color: #aaa; text-align: right; }
-        
+        #playlistPopup { display: none; position: fixed; bottom: 85px; left: 0; width: 100%; background: #111; border-top: 2px solid var(--blue); height: 50vh; overflow-y: auto; z-index: 2500; padding: 10px; }
+        .track-item { padding: 15px; border-bottom: 1px solid #333; color: #aaa; font-size: 14px; cursor: pointer; }
+        .track-item.active { color: var(--accent); font-weight: bold; }
+
         .input-group { position: relative; margin-bottom: 30px; width: 100%; }
-        .reg-input { width: 100%; padding: 10px 5px; background: transparent; border: none; border-bottom: 2px solid #555; color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 800; text-align: center; transition: 0.3s; letter-spacing: 1px; border-radius: 0; }
-        .reg-input:focus { outline: none; border-bottom-color: var(--blue); box-shadow: 0 10px 10px -10px rgba(0, 240, 255, 0.5); }
-        .reg-label { position: absolute; top: 10px; left: 0; width: 100%; text-align: center; color: #888; font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: bold; pointer-events: none; transition: 0.3s ease all; }
-        .reg-input:focus ~ .reg-label, .reg-input:valid ~ .reg-label { top: -20px; font-size: 10px; color: var(--blue); text-shadow: 0 0 5px var(--blue); letter-spacing: 2px; }
+        .reg-input { width: 100%; padding: 10px 5px; background: transparent; border: none; border-bottom: 2px solid #555; color: #fff; font-family: 'JetBrains Mono'; font-size: 18px; text-align: center; }
+        .reg-label { position: absolute; top: 10px; left: 0; width: 100%; text-align: center; color: #888; font-family: 'Orbitron'; font-size: 12px; pointer-events: none; transition: 0.3s; }
+        .reg-input:focus ~ .reg-label, .reg-input:valid ~ .reg-label { top: -20px; font-size: 10px; color: var(--blue); }
     </style>
 </head>
-<body onclick="firstInteraction()"> 
+<body onclick="firstInteraction()">
+    <div class="top-nav">
+        <h1 class="main-title" data-text="FC KELAPA GADING">FC KELAPA GADING</h1>
+        <div class="brand-sub">HOME OF MLU</div>
+        <div class="gear-btn" onclick="askAdminPin()">⚙️</div>
+    </div>
 
-    <div id="mainUI">
-        <div class="header-container">
-            <h1 class="main-title">FC KELAPA GADING</h1>
-            <div class="sub-brand">HOME OF MLU</div>
-            
-            <div class="queue-header-info" onclick="showQueueDetails()">ANTRIAN: <span id="qCountDisplay">0</span> (KLIK DETAIL)</div>
-            <div class="gear-btn" onclick="askAdminPin()">⚙️</div>
+    <div id="frontView">
+        <div class="onyx-card" id="card-1">
+            <div class="oc-header">
+                <div class="oc-plat" id="p1-plat">-</div>
+                <div class="oc-name" id="p1-name">AVAILABLE</div>
+            </div>
+            <div class="oc-body">
+                <div class="oc-big-num num-ready" id="p1-main">READY</div>
+            </div>
+            <div class="oc-footer">
+                <div class="oc-status" id="p1-status">READY</div>
+                <div style="font-family:'JetBrains Mono'; margin-top:5px; font-size:12px; height:25px;" id="p1-timer"></div>
+            </div>
+            <div class="oc-progress-bg"><div class="oc-progress-fill" id="p1-bar"></div></div>
         </div>
 
-        <div id="frontView">
-            <div class="slot-box fv-side fv-left">
-                <div class="circle-ui" id="fv1-circle">
-                    <div class="ring-spinner"></div>
-                    <div class="fv-plat" id="fv1-plat"></div>
-                    <div class="fv-name" id="fv1-name"></div>
-                    <div class="fv-bat ready-mode" id="fv1-bat">READY</div>
-                    <div class="fv-timer" id="fv1-timer"></div>
-                </div>
-                <div class="slot-label">SLOT 1</div>
+        <div class="onyx-card" id="card-2">
+            <div class="oc-header">
+                <div class="oc-plat" id="p2-plat">-</div>
+                <div class="oc-name" id="p2-name">AVAILABLE</div>
             </div>
-
-            <div class="slot-box fv-mid">
-                <div class="circle-ui" id="fv2-circle">
-                    <div class="ring-spinner"></div>
-                    <div class="fv-plat" id="fv2-plat"></div>
-                    <div class="fv-name" id="fv2-name"></div>
-                    <div class="fv-bat ready-mode" id="fv2-bat">READY</div>
-                    <div class="fv-timer" id="fv2-timer"></div>
-                </div>
-                <div class="slot-label">SLOT 2</div>
+            <div class="oc-body">
+                <div class="oc-big-num num-ready" id="p2-main">READY</div>
             </div>
-
-            <div class="slot-box fv-side fv-right">
-                <div class="circle-ui" id="fv3-circle">
-                    <div class="ring-spinner"></div>
-                    <div class="fv-plat" id="fv3-plat"></div>
-                    <div class="fv-name" id="fv3-name"></div>
-                    <div class="fv-bat ready-mode" id="fv3-bat">READY</div>
-                    <div class="fv-timer" id="fv3-timer"></div>
-                </div>
-                <div class="slot-label">SLOT 3</div>
+            <div class="oc-footer">
+                <div class="oc-status" id="p2-status">READY</div>
+                <div style="font-family:'JetBrains Mono'; margin-top:5px; font-size:12px; height:25px;" id="p2-timer"></div>
             </div>
+            <div class="oc-progress-bg"><div class="oc-progress-fill" id="p2-bar"></div></div>
         </div>
 
-        <div id="userView">
-            <div class="header-container" style="padding-top:20px; width:100%; position:relative;">
-                <h1 class="main-title" style="font-size:20px;">FC KELAPA GADING</h1>
-                <div class="sub-brand">HOME OF MLU</div>
-                <div class="gear-btn" onclick="askAdminPin()">⚙️</div> 
+        <div class="onyx-card" id="card-3">
+            <div class="oc-header">
+                <div class="oc-plat" id="p3-plat">-</div>
+                <div class="oc-name" id="p3-name">AVAILABLE</div>
             </div>
-            <div class="uv-slot-title" id="uvSlotTitle">SLOT -</div>
-            
-            <div class="uv-ring-container" id="uvRingContainer">
-                <div class="ring-blue"></div>
-                <div class="ring-yellow"></div>
-                <div class="ring-queue"></div> 
-                <div class="uv-center-content">
-                    <button class="btn-start-circle" id="btnStartBig" onclick="window.userStart()">START</button>
-                    <div id="uvInfoDisplay">
-                        <div class="uv-bat-val" id="uvBatVal">0%</div>
-                        <div class="uv-timer" id="uvTimer">00:00</div>
-                        <div class="uv-q-label" id="uvQueueLabel" style="display:none;">ANTRIAN</div>
-                    </div>
-                </div>
+            <div class="oc-body">
+                <div class="oc-big-num num-ready" id="p3-main">READY</div>
             </div>
-
-            <div class="uv-controls" id="uvActionBtns"></div>
-            <div class="uv-footer">
-                <div id="uvOtherSlots" style="text-align:left; flex:1;">LOADING...</div>
-                <div style="text-align:right;">ANTRIAN: <b class="uv-hl" id="uvFooterQueue">-</b></div>
+            <div class="oc-footer">
+                <div class="oc-status" id="p3-status">READY</div>
+                <div style="font-family:'JetBrains Mono'; margin-top:5px; font-size:12px; height:25px;" id="p3-timer"></div>
             </div>
-            <div class="uv-nav-link" onclick="switchView('front')">[ LIHAT DEPAN ]</div>
+            <div class="oc-progress-bg"><div class="oc-progress-fill" id="p3-bar"></div></div>
         </div>
-        <div class="fp-area" id="fpArea">
-            <div id="fp-trigger" class="fp-btn" onclick="checkLocationAndOpen()">
-                <div class="scan-line"></div>
-                <svg class="fp-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50,10 C35,10 25,25 25,40 C25,45 23,45 23,40 C23,20 38,5 50,5 C62,5 77,20 77,40 C77,45 75,45 75,40 C75,25 65,10 50,10 Z 
-                             M50,18 C40,18 32,28 32,40 C32,45 30,45 30,40 C30,25 40,14 50,14 C60,14 70,25 70,40 C70,45 68,45 68,40 C68,28 60,18 50,18 Z
-                             M50,26 C43,26 38,32 38,40 C38,55 30,60 30,70 C30,75 32,75 32,70 C32,62 38,58 38,45 C38,35 45,30 50,30 C55,30 62,35 62,45 C62,58 68,62 68,70 C68,75 70,75 70,70 C70,60 62,55 62,40 C62,32 57,26 50,26 Z
-                             M20,50 C20,50 20,80 50,95 C80,80 80,50 80,50 C80,48 78,48 78,50 C78,75 75,85 50,92 C25,85 22,75 22,50 C22,48 20,48 20,50 Z"/>
+    </div>
+
+    <div class="control-area" id="fpArea">
+        <div class="fp-text" id="fp-label">SCAN LOCATION</div>
+        
+        <div class="fp-container">
+            <div class="fp-btn" id="fp-trigger" onclick="checkLocationAndOpen()">
+                <svg class="fp-svg" viewBox="0 0 24 24">
+                    <path d="M17.81 4.47c-.08 0-.16-.02-.23-.06C15.66 3.42 14 3 12.01 3c-1.98 0-3.86.47-5.57 1.41-.24.13-.54.04-.68-.2-.13-.24-.04-.55.2-.68C7.82 2.52 9.86 2 12.01 2c2.13 0 3.99.47 6.03 1.52.25.13.34.43.21.67-.09.18-.26.28-.44.28zM3.5 9.72c-.1 0-.2-.03-.29-.09-.23-.16-.28-.47-.12-.7.99-1.4 2.25-2.5 3.75-3.27C9.98 4.04 14 4.03 17.15 5.65c1.5.77 2.76 1.86 3.75 3.25.16.22.11.54-.12.7-.23.16-.54.11-.7-.12-.9-1.26-2.04-2.25-3.39-2.94-2.87-1.47-6.54-1.47-9.4.01-1.36.7-2.5 1.7-3.4 2.96-.08.14-.23.21-.39.21zm6.25 12.07c-.13 0-.26-.05-.35-.15-.87-.87-1.34-1.43-2.01-2.64-.69-1.23-1.05-2.73-1.05-4.34 0-2.97 2.54-5.39 5.66-5.39s5.66 2.42 5.66 5.39c0 .28-.22.5-.5.5s-.5-.22-.5-.5c0-2.42-2.09-4.39-4.66-4.39-2.57 0-4.66 1.97-4.66 4.39 0 1.44.32 2.77.93 3.85.64 1.15 1.08 1.64 1.85 2.42.19.2.19.51 0 .71-.11.1-.24.15-.37.15zm7.17-1.85c-1.19 0-2.24-.3-3.1-.89-1.49-1.01-2.38-2.65-2.38-4.39 0-.28.22-.5.5-.5s.5.22.5.5c0 1.41.72 2.74 1.94 3.56.71.48 1.54.71 2.54.71.24 0 .64-.03 1.04-.1.27-.05.53.13.58.41.05.27-.13.53-.41.58-.57.11-1.07.12-1.21.12zM14.91 22c-.04 0-.09-.01-.13-.02-1.59-.44-2.63-1.03-3.72-2.1-1.4-1.39-2.17-3.24-2.17-5.22 0-1.62 1.38-2.94 3.08-2.94 1.7 0 3.08 1.32 3.08 2.94 0 1.07.93 1.94 2.08 1.94s2.08-.87 2.08-1.94c0-3.77-3.25-6.83-7.25-6.83-2.84 0-5.44 1.58-6.45 3.94-.11.25-.41.37-.67.26-.25-.11-.37-.41-.26-.67 1.13-2.62 4.07-4.39 7.38-4.39 4.53 0 8.25 3.42 8.25 7.69 0 1.62-1.38 2.94-3.08 2.94s-3.08-1.32-3.08-2.94c0-1.07-.93-1.94-2.08-1.94s-2.08.87-2.08 1.94c0 1.71.66 3.31 1.87 4.51.95.94 1.86 1.46 3.27 1.85.27.07.42.35.35.61-.05.23-.26.38-.47.38z"/>
                 </svg>
             </div>
-            <div id="fp-label" style="position:absolute; bottom:-25px; font-family:'Orbitron'; font-size:10px; color:#666; width:200px; text-align:center;">SCAN LOKASI (GPS WAJIB)</div>
         </div>
 
-        <div id="playlistPopup">
-            <div style="padding:15px; border-bottom:1px solid #333; position:sticky; top:0; background:#000; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-family:'Orbitron'; color:var(--blue);">SELECT TRACK</span>
-                <span onclick="window.togglePlaylist()" style="color:#666; cursor:pointer;">[ CLOSE ]</span>
-            </div>
-            <div id="playlistContainer"></div>
+        <div class="info-row">
+            <div id="qCountDisplay" class="antrian-text" onclick="showQueueDetails()">ANTRIAN: 0</div>
+            <button id="btnMyDash" class="dash-btn" onclick="forceView('user')" style="display:none;">MY DASHBOARD</button>
         </div>
 
-        <div class="player-bar">
-            <div class="music-ctrl-box">
-                <button class="music-btn" onclick="prevTrack()">⏮</button>
-                <button class="music-btn" onclick="togglePlay()" id="playPauseBtn">⏯</button>
-                <button class="music-btn" onclick="nextTrack()">⏭</button>
+        <div class="music-wrapper">
+            <button class="m-btn" onclick="prevTrack()">⏮</button>
+            <div class="hb-container"><svg class="hb-svg" viewBox="0 0 50 20"><path class="hb-path" d="M0,10 L10,10 L15,2 L20,18 L25,10 L50,10" /></svg></div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="track-info" onclick="togglePlaylist()" id="track-name">SELECT MUSIC</div>
+                <button class="m-btn" onclick="togglePlay()" id="playPauseBtn" style="font-size:30px; color:var(--blue);">⏯</button>
             </div>
-            
-            <div class="track-info" onclick="togglePlaylist()" style="cursor:pointer;">
-                <div class="track-title" id="track-name">NO MUSIC</div>
-            </div>
-            
-            <button id="btnMyDash" class="footer-dash-btn" onclick="forceView('user')">MY DASHBOARD</button>
-            <button id="btnRegAgain" class="footer-dash-btn" style="display:flex; margin-left:10px;" onclick="sessionStorage.removeItem('monitorMode');window.location.reload()">DAFTAR</button>
+            <div class="hb-container"><svg class="hb-svg" viewBox="0 0 50 20"><path class="hb-path" d="M0,10 L10,10 L15,2 L20,18 L25,10 L50,10" /></svg></div>
+            <button class="m-btn" onclick="nextTrack()">⏭</button>
         </div>
     </div>
 
-    <div id="adminOverlay">
-        <div class="adm-header-box">
-            <h1 class="adm-h1">ADMIN CONSOLE</h1>
-            <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                <button onclick="forceView('front')" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">FRONT</button>
-                <button onclick="forceView('user', 0)" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">VIEW S1</button>
-                <button onclick="forceView('user', 1)" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">VIEW S2</button>
-                <button onclick="forceView('user', 2)" class="adm-btn blue" style="width:auto; padding:8px 10px; font-size:10px;">VIEW S3</button>
-                <button onclick="adminLogout()" class="adm-btn red" style="width:auto; padding:8px 10px; font-size:10px;">LOGOUT</button>
-                <button onclick="closeAdminPanel()" class="adm-btn" style="width:auto; padding:8px 10px; font-size:10px; background:#444; color:#fff;">TUTUP</button>
+    <div id="userView">
+        <div class="uv-header">
+            <h1 class="main-title" style="font-size:30px;" data-text="FC KELAPA GADING">FC KELAPA GADING</h1>
+            <div class="brand-sub">HOME OF MLU</div>
+        </div>
+        
+        <div class="uv-slot-title" id="uvSlotTitle" style="font-family:'Orbitron'; font-size:30px; color:var(--blue); font-weight:900; margin-top:10px;">SLOT -</div>
+        <div id="uvUserName" style="font-family:'Inter'; font-size:18px; color:#fff; font-weight:bold; letter-spacing:2px; margin-bottom:10px;">USER</div>
+        
+        <div class="uv-ring-container" id="uvRingContainer">
+            <div class="ring-blue"></div>
+            <div class="ring-yellow"></div>
+            <div class="ring-queue"></div> 
+            <div class="uv-center-content">
+                <button class="btn-start-circle" id="btnStartBig" onclick="window.userStart()">START</button>
+                <div id="uvInfoDisplay" style="display:none;">
+                    <div class="uv-bat-val" id="uvBatVal">0%</div>
+                    <div class="uv-timer" id="uvTimer">00:00</div>
+                    <div class="uv-q-label" id="uvQueueLabel" style="display:none;">ANTRIAN</div>
+                </div>
             </div>
         </div>
 
-        <div class="adm-card" style="margin-bottom:20px;">
-            <h2 class="adm-h2" style="color:var(--blue);">QUICK DASHBOARD</h2>
-            <div id="adminQuickDash">
-                <div style="color:#666; font-size:12px;">Loading slots...</div>
+        <div class="uv-controls" id="uvActionBtns"></div>
+
+        <div class="uv-footer" style="display:flex; justify-content:center;">
+             <div class="music-wrapper" style="width:100%;">
+                <button class="m-btn" onclick="prevTrack()">⏮</button>
+                <div class="hb-container"><svg class="hb-svg" viewBox="0 0 50 20"><path class="hb-path" d="M0,10 L10,10 L15,2 L20,18 L25,10 L50,10" /></svg></div>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <div class="track-info" onclick="togglePlaylist()" id="uv-track-name">SELECT MUSIC</div>
+                    <button class="m-btn" onclick="togglePlay()" id="uvPlayBtn" style="font-size:30px; color:var(--blue);">⏯</button>
+                </div>
+                <div class="hb-container"><svg class="hb-svg" viewBox="0 0 50 20"><path class="hb-path" d="M0,10 L10,10 L15,2 L20,18 L25,10 L50,10" /></svg></div>
+                <button class="m-btn" onclick="nextTrack()">⏭</button>
             </div>
         </div>
-
-        <div class="adm-grid">
-            <div>
-                <div class="adm-card">
-                    <h2 class="adm-h2">KONTROL LANJUTAN</h2>
-                    <select id="manSlot" class="adm-select"></select>
-                    <div class="adm-btn-group">
-                        <input id="manPlat" class="adm-input" placeholder="Plat">
-                        <input id="manBat" class="adm-input" type="number" placeholder="%" style="flex:0.4;">
-                    </div>
-                    <button onclick="manualAssign()" class="adm-btn">ISI SLOT (PAKSA)</button>
-                    
-                    <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
-                    <div class="adm-btn-group">
-                        <select id="sToQSelect" class="adm-select" style="flex:2"></select>
-                        <button onclick="slotToQueue()" class="adm-btn blue">KEMBALIKAN KE ANTRIAN</button>
-                    </div>
-                    <div class="adm-btn-group" style="margin-top:5px;">
-                        <select id="swapS1" class="adm-select"></select>
-                        <select id="swapS2" class="adm-select"></select>
-                        <button onclick="swapSlots()" class="adm-btn blue">TUKAR SLOT</button>
-                    </div>
-                </div>
-
-                <div class="adm-card" style="margin-top:20px;">
-                    <h2 class="adm-h2">ANTRIAN MANUAL</h2>
-                    <input id="qPlat" class="adm-input" placeholder="Plat">
-                    <div class="adm-btn-group">
-                        <input id="qName" class="adm-input" placeholder="Nama">
-                        <input id="qBat" class="adm-input" type="number" placeholder="%" style="flex:0.4;">
-                    </div>
-                    <button onclick="regQueue()" class="adm-btn">DAFTAR ANTRIAN</button>
-                    <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
-                    <label style="font-size:10px; color:#888;">PINDAHKAN ANTRIAN</label>
-                    <div class="adm-btn-group">
-                        <select id="qIdx" class="adm-select" style="flex:2"></select>
-                        <select id="qTarget" class="adm-select" style="flex:1"></select>
-                    </div>
-                    <button onclick="moveQueue()" class="adm-btn">PINDAHKAN</button>
-                </div>
-
-                <div class="adm-card" style="margin-top:20px;">
-                    <h2 class="adm-h2">SYSTEM</h2>
-                    <div class="adm-btn-group">
-                        <button onclick="doBlock()" class="adm-btn red">BLOKIR</button>
-                        <input id="blockPlat" class="adm-input" placeholder="Plat Bermasalah" style="flex:2;">
-                    </div>
-                    <div id="blockList" style="font-size:10px; color:var(--red); margin-top:5px;"></div>
-                    
-                    <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
-                    <div class="adm-btn-group">
-                        <button onclick="stopAll()" class="adm-btn red">STOP ALL (DARURAT)</button>
-                        <button onclick="resetDB()" class="adm-btn red">RESET SYSTEM</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="adm-card">
-                <h2 class="adm-h2" style="color:var(--accent);">LOG AKTIVITAS LENGKAP</h2>
-                <div id="logContainer" class="log-container">
-                    <div style="text-align:center; color:#666; padding-top:50px;">Menunggu Data...</div>
-                </div>
-            </div>
+        
+        <div class="uv-nav-link" onclick="switchView('front')">
+            <span style="border: 1px solid var(--accent); padding: 5px 20px; border-radius: 20px; background:rgba(0,0,0,0.8);">[ KEMBALI KE DEPAN ]</span>
         </div>
     </div>
+
+   
 
     <div id="queueDetailModal" class="modal" style="z-index: 3100;">
         <div class="modal-box" style="border-color:var(--orange); max-width:400px;">
@@ -359,27 +284,116 @@
             <button onclick="document.getElementById('queueDetailModal').style.display='none'" class="btn-glossy" style="width:100%;">TUTUP</button>
         </div>
     </div>
+        <div id="adminOverlay">
+        <div class="adm-header-box">
+            <h1 class="adm-h1">ADMIN CONSOLE</h1>
+            <div style="display:flex; gap:5px; flex-wrap:wrap; flex:1; justify-content: flex-end;">
+                <button onclick="forceView('front')" class="adm-btn blue" style="flex:1;">FRONT</button>
+                <button onclick="forceView('user', 0)" class="adm-btn blue" style="flex:1;">S1</button>
+                <button onclick="forceView('user', 1)" class="adm-btn blue" style="flex:1;">S2</button>
+                <button onclick="forceView('user', 2)" class="adm-btn blue" style="flex:1;">S3</button>
+                <button onclick="adminLogout()" class="adm-btn red" style="flex:1;">LOGOUT</button>
+                <button onclick="closeAdminPanel()" class="adm-btn" style="flex:1; background:#444; color:#fff;">X</button>
+            </div>
+        </div>
+
+        <div class="adm-card" style="margin-bottom:20px;">
+            <h2 class="adm-h2" style="color:var(--blue); border-bottom:1px solid #333; padding-bottom:5px;">QUICK DASHBOARD (REALTIME)</h2>
+            <div id="adminQuickDash">
+                <div style="color:#666; font-size:12px;">Loading slots...</div>
+            </div>
+        </div>
+
+        <div class="adm-grid">
+            <div class="adm-card">
+                <h2 class="adm-h2" style="color:var(--accent); border-bottom:1px solid #333; padding-bottom:5px;">KONTROL LANJUTAN</h2>
+                
+                <div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+                    <select id="manSlot" class="adm-select" style="flex:1; min-width:60px;"></select>
+                    <input id="manPlat" class="adm-input" placeholder="PLAT NOMOR" style="flex:3; min-width:100px;">
+                    <input id="manBat" class="adm-input" type="number" placeholder="%" style="flex:1; min-width:50px;">
+                </div>
+                
+                <button onclick="manualAssign()" class="adm-btn">ISI SLOT (PAKSA)</button>
+                
+                <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
+                <div class="adm-btn-group" style="display:flex; gap:5px;">
+                    <select id="sToQSelect" class="adm-select" style="flex:2"></select>
+                    <button onclick="slotToQueue()" class="adm-btn" style="background:var(--blue); color:#000;">KE ANTRIAN</button>
+                </div>
+                <div class="adm-btn-group" style="margin-top:10px; display:flex; gap:5px;">
+                    <select id="swapS1" class="adm-select"></select>
+                    <select id="swapS2" class="adm-select"></select>
+                    <button onclick="swapSlots()" class="adm-btn" style="background:var(--blue); color:#000;">TUKAR</button>
+                </div>
+            </div>
+
+            <div class="adm-card">
+                <h2 class="adm-h2" style="color:var(--orange); border-bottom:1px solid #333; padding-bottom:5px;">ANTRIAN MANUAL</h2>
+                <div style="margin-bottom:10px;">
+                    <input id="qPlat" class="adm-input" placeholder="PLAT NOMOR (Wajib)">
+                </div>
+                
+                <div class="adm-btn-group" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+                    <input id="qName" class="adm-input" placeholder="NAMA PENGGUNA" style="flex:3; min-width:100px;">
+                    <input id="qBat" class="adm-input" type="number" placeholder="%" style="flex:1; min-width:50px;">
+                </div>
+                
+                <button onclick="regQueue()" class="adm-btn">DAFTAR ANTRIAN</button>
+                <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
+                <label style="font-size:10px; color:#888;">PINDAHKAN ANTRIAN</label>
+                <div class="adm-btn-group" style="display:flex; gap:5px;">
+                    <select id="qIdx" class="adm-select" style="flex:2"></select>
+                    <select id="qTarget" class="adm-select" style="flex:1"></select>
+                </div>
+                <button onclick="moveQueue()" class="adm-btn">PINDAHKAN</button>
+            </div>
+
+            <div class="adm-card">
+                <h2 class="adm-h2" style="color:var(--red); border-bottom:1px solid #333; padding-bottom:5px;">SYSTEM</h2>
+                <div class="adm-btn-group" style="display:flex; gap:5px; margin-bottom:10px;">
+                    <button onclick="doBlock()" class="adm-btn" style="background:var(--red); color:#fff; flex:1;">BLOKIR</button>
+                    <input id="blockPlat" class="adm-input" placeholder="PLAT MASALAH" style="flex:2;">
+                </div>
+                <div id="blockList" style="font-size:10px; color:var(--red); margin-top:5px; min-height:15px;"></div>
+                
+                <hr style="border:0; border-top:1px dashed #333; margin:15px 0;">
+                <div class="adm-btn-group" style="display:flex; gap:5px;">
+                    <button onclick="stopAll()" class="adm-btn" style="background:var(--red); color:#fff;">STOP ALL</button>
+                    <button onclick="resetDB()" class="adm-btn" style="background:var(--red); color:#fff;">RESET SYSTEM</button>
+                </div>
+            </div>
+
+            <div class="adm-card">
+                <h2 class="adm-h2" style="color:#fff; border-bottom:1px solid #333; padding-bottom:5px;">LOG AKTIVITAS</h2>
+                <div id="logContainer" class="log-container">
+                    <div style="text-align:center; color:#666; padding-top:50px;">Menunggu Data...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div id="regModal" class="modal">
         <div class="modal-box">
             <h2 style="font-family:'Orbitron'; color:var(--blue); margin-top:0; margin-bottom:30px; letter-spacing:2px; text-shadow:0 0 10px var(--blue);">REGISTRASI</h2>
             <div class="input-group">
-                <input id="regPlat" class="reg-input" required oninput="formatPlatInput(this)">
+                <input id="regPlat" class="reg-input" required placeholder=" " oninput="formatPlatInput(this)">
                 <label class="reg-label">PLAT NOMOR</label>
             </div>
             <div class="input-group">
-                <input id="regName" class="reg-input" required>
+                <input id="regName" class="reg-input" required placeholder=" ">
                 <label class="reg-label">NAMA PENGGUNA</label>
             </div>
             <div class="input-group">
-                <input id="regWA" class="reg-input" type="number" required>
+                <input id="regWA" class="reg-input" type="number" required placeholder=" ">
                 <label class="reg-label">NOMOR WHATSAPP</label>
             </div>
             <div class="input-group">
-                <input id="regBat" class="reg-input" type="number" min="0" max="100" required>
+                <input id="regBat" class="reg-input" type="number" min="0" max="100" required placeholder=" ">
                 <label class="reg-label">BATERAI SAAT INI (%)</label>
             </div>
-            <button onclick="submitReg()" class="btn-glossy blue" style="width:100%; margin-top:15px;">DAPATKAN SLOT</button>
+            <button onclick="submitReg()" class="btn-glossy" style="background:var(--blue); color:#000; width:100%; margin-top:15px;">DAPATKAN SLOT</button>
             <button onclick="document.getElementById('regModal').style.display='none'" style="background:transparent; border:none; color:#666; cursor:pointer; margin-top:15px; font-family:'Inter'; font-size:12px;">[ BATAL ]</button>
         </div>
     </div>
@@ -389,7 +403,7 @@
             <h3 id="inputTitle" style="color:var(--accent); margin-top:0;">INPUT</h3>
             <input id="inputVal" class="reg-input" style="margin-bottom:20px;">
             <div style="display:flex; gap:10px;">
-                <button id="btnInputOk" class="btn-glossy edit">OK</button>
+                <button id="btnInputOk" class="btn-glossy" style="border-color:var(--accent); color:var(--accent);">OK</button>
                 <button onclick="document.getElementById('inputModal').style.display='none'" class="btn-glossy" style="background:transparent;">BATAL</button>
             </div>
         </div>
@@ -398,7 +412,7 @@
     <div id="alertModal" class="modal" style="z-index: 3200;">
         <div class="modal-box" style="border-color:var(--blue);">
             <h3 style="color:#fff; margin-top:0; font-size:14px;" id="alertMsg">MESSAGE</h3>
-            <button onclick="document.getElementById('alertModal').style.display='none'" class="btn-glossy blue" style="width:100%; margin-top:20px;">OK</button>
+            <button onclick="document.getElementById('alertModal').style.display='none'" class="btn-glossy" style="background:var(--blue); color:#000; width:100%; margin-top:20px;">OK</button>
         </div>
     </div>
 
@@ -406,10 +420,18 @@
         <div class="modal-box" style="border-color:var(--red);">
             <h3 style="color:#fff; margin-top:0; font-size:14px;" id="confirmMsg">ARE YOU SURE?</h3>
             <div style="display:flex; gap:10px; margin-top:20px;">
-                <button id="btnConfirmYes" class="btn-glossy stop">YES</button>
+                <button id="btnConfirmYes" class="btn-glossy" style="border-color:var(--red); color:var(--red);">YES</button>
                 <button onclick="document.getElementById('confirmModal').style.display='none'" class="btn-glossy" style="background:transparent;">NO</button>
             </div>
         </div>
+    </div>
+
+    <div id="playlistPopup">
+        <div style="padding:15px; border-bottom:1px solid #333; position:sticky; top:0; background:#000; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-family:'Orbitron'; color:var(--blue); font-weight:bold;">TRACK LIST</span>
+            <span onclick="window.togglePlaylist()" style="color:#666; cursor:pointer; font-size:12px;">TUTUP [X]</span>
+        </div>
+        <div id="playlistContainer"></div>
     </div>
 
     <audio id="audio" crossorigin="anonymous"></audio>
@@ -417,8 +439,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, updateDoc, arrayUnion, arrayRemove, collection, addDoc, query, orderBy, limit, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- CONFIG & INIT ---
-        const APP_VERSION = "3.3-FINAL"; 
+        // --- KONFIGURASI ---
+        const APP_VERSION = "6.0-FINAL-REQUEST"; 
         if(localStorage.getItem('app_ver') !== APP_VERSION) {
             localStorage.clear(); localStorage.setItem('app_ver', APP_VERSION); window.location.reload();
         }
@@ -432,7 +454,7 @@
         const STATION_LOC = { lat: -6.171583, lng: 106.899844 }; 
         const MAX_DIST_KM = 0.2; 
 
-        // !!! UBAH KE FALSE JIKA SUDAH LIVE DI LOKASI !!!
+        // !!! PENTING: Ubah ke false jika sudah live di lokasi !!!
         let USE_FAKE_GPS = true; 
 
         let latestSlots = [null, null, null];
@@ -441,15 +463,25 @@
         let adminSpyIdx = null;
         let isProcessing = false;
 
-        // --- MUSIC PLAYER ENGINE ---
+        // --- MUSIC PLAYER ENGINE (Update: JSON & Flat Heartbeat) ---
         const baseURL = "https://mlump3player.netlify.app/";
         let playlist = [];
+        // Fallback playlist jika JSON gagal
         const defaultList = ["Ada Apa Denganmu.mp3", "anji-menunggu-kamu.mp3", "Anugerah Terindah Yang Pernah Kumiliki.mp3", "armada_asalkan_kau_bahagia.mp3", "Bendera - Cokelat - 2003.mp3", "Bintang Di Surga.mp3", "Bon Jovi - Always .MP3", "Bon Jovi - Its My Life .mp3", "Bon Jovi - You Give Love A Bad Name.mp3", "Dan - Sheila On 7 - 1999.mp3"];
         
+        // Load Playlist dari JSON
         fetch('playlist.json').then(r => r.json()).then(data => {
-            playlist = data.map(file => ({ title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','')), url: baseURL + file }));
+            // Support format object {url: "..."} atau string langsung
+            playlist = data.map(item => {
+                const url = typeof item === 'object' ? item.url : baseURL + item;
+                // Ambil nama file dari URL, decode, dan hilangkan ekstensi
+                const rawName = url.split('/').pop();
+                const title = decodeURIComponent(rawName.replace(/\.mp3$/i, ''));
+                return { title: title, url: url };
+            });
             initPlayer();
-        }).catch(() => {
+        }).catch(err => {
+            console.log("Gagal load playlist.json, pakai default.", err);
             playlist = defaultList.map(file => ({ title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','')), url: baseURL + file }));
             initPlayer();
         });
@@ -459,51 +491,63 @@
 
         function initPlayer() {
             const plContainer = document.getElementById('playlistContainer'); plContainer.innerHTML = '';
-            playlist.forEach((song, idx) => { const el = document.createElement('div'); el.className = 'track-item'; el.innerText = `${idx + 1}. ${song.title}`; el.onclick = (e) => { e.stopPropagation(); window.playTrack(idx); }; plContainer.appendChild(el); });
+            playlist.forEach((song, idx) => { 
+                const el = document.createElement('div'); el.className = 'track-item'; el.innerText = `${idx + 1}. ${song.title}`; 
+                el.onclick = (e) => { e.stopPropagation(); window.playTrack(idx); }; 
+                plContainer.appendChild(el); 
+            });
+            setHeartbeatFlat(true); // Default datar
         }
 
         window.firstInteraction = () => {
             if (audioUnlocked) return;
+            // Silent audio untuk unlock autoplay policy browser
             const silent = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFAmZtdCAQAAAAAQABAIAAAIAAAIABAABhZGF0YQAAAAA=");
             silent.play().then(() => { audioUnlocked = true; }).catch(e => console.log("Audio locked"));
         };
 
         window.playTrack = (idx) => {
             audioUnlocked = true; currentTrackIdx = idx; isTrackSelected = true;
-            audio.src = playlist[idx].url;
-            document.getElementById('track-name').innerText = playlist[idx].title;
-            document.getElementById('playlistPopup').style.display = 'none';
-            document.querySelectorAll('.track-item').forEach((el, i) => { el.classList.toggle('active', i === idx); });
-            audio.play().then(() => {
-                document.getElementById('playPauseBtn').innerText = "⏸";
-                setPlayingState(true);
-            }).catch(() => document.getElementById('playPauseBtn').innerText = "⏯");
+            if(playlist[idx]) {
+                audio.src = playlist[idx].url;
+                const title = playlist[idx].title;
+                document.getElementById('track-name').innerText = title; 
+                const uvTrack = document.getElementById('uv-track-name'); if(uvTrack) uvTrack.innerText = title;
+                document.getElementById('playlistPopup').style.display = 'none';
+                document.querySelectorAll('.track-item').forEach((el, i) => { el.classList.toggle('active', i === idx); });
+                audio.play().then(() => { updatePlayBtnIcons("⏸"); setHeartbeatFlat(false); })
+                     .catch(() => { updatePlayBtnIcons("⏯"); setHeartbeatFlat(true); });
+            }
         };
 
         window.togglePlay = () => {
             if(!isTrackSelected) { window.playTrack(0); return; }
-            if(audio.paused) {
-                audio.play().then(() => {
-                    document.getElementById('playPauseBtn').innerText = "⏸";
-                    setPlayingState(true);
-                });
-            } else {
-                audio.pause(); 
-                document.getElementById('playPauseBtn').innerText = "⏯";
-                setPlayingState(false);
+            if(audio.paused) { 
+                audio.play().then(() => { updatePlayBtnIcons("⏸"); setHeartbeatFlat(false); }); 
+            } else { 
+                audio.pause(); updatePlayBtnIcons("⏯"); setHeartbeatFlat(true); 
             }
         };
-        window.nextTrack = () => { currentTrackIdx = (currentTrackIdx + 1) % playlist.length; window.playTrack(currentTrackIdx); }
-        window.prevTrack = () => { currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length; window.playTrack(currentTrackIdx); }
-        window.togglePlaylist = () => { const p = document.getElementById('playlistPopup'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
-        audio.addEventListener('ended', () => window.nextTrack());
-
-        function setPlayingState(isPlaying) {
-            const vis = document.getElementById('visualizerAnim');
-            if(isPlaying) vis.style.opacity = "1"; else vis.style.opacity = "0.3";
+        
+        function updatePlayBtnIcons(icon) {
+            document.getElementById('playPauseBtn').innerText = icon;
+            const uvBtn = document.getElementById('uvPlayBtn'); if(uvBtn) uvBtn.innerText = icon;
         }
 
-        // --- CORE FUNCTIONS (GPS & REG) ---
+        function setHeartbeatFlat(isFlat) {
+            const paths = document.querySelectorAll('.hb-path');
+            paths.forEach(p => {
+                if(isFlat) p.classList.add('flat');
+                else p.classList.remove('flat');
+            });
+        }
+
+        window.togglePlaylist = () => { const p = document.getElementById('playlistPopup'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
+        window.nextTrack = () => { currentTrackIdx = (currentTrackIdx + 1) % playlist.length; window.playTrack(currentTrackIdx); }
+        window.prevTrack = () => { currentTrackIdx = (currentTrackIdx - 1 + playlist.length) % playlist.length; window.playTrack(currentTrackIdx); }
+        audio.addEventListener('ended', () => window.nextTrack());
+
+        // --- CORE FUNCTIONS ---
         window.formatPlatInput = (el) => {
             let val = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
             let match = val.match(/^([A-Z]{1,2})(\d{1,4})?([A-Z]{0,3})?$/);
@@ -540,7 +584,18 @@
             }, {enableHighAccuracy: true, timeout: 10000});
         };
 
+        // --- REGISTRASI (UPDATE: ADMIN BYPASS 1 HP BANYAK PLAT) ---
         window.submitReg = () => {
+            // Cek apakah user login sebagai admin
+            const isAdmin = sessionStorage.getItem('adminSession') === 'active';
+            
+            // Jika BUKAN admin, terapkan aturan 1 HP 1 Plat
+            if(!isAdmin && localStorage.getItem('myPlat')) {
+                showCustomAlert("AKSES DITOLAK: ANDA SUDAH MEMILIKI SESI AKTIF!");
+                document.getElementById('regModal').style.display='none';
+                return;
+            }
+
             const p = document.getElementById('regPlat').value.toUpperCase();
             const n = document.getElementById('regName').value.toUpperCase();
             const w = document.getElementById('regWA').value;
@@ -551,39 +606,48 @@
                 const d=(await t.get(ref)).data()||{};
                 if((d.blockedList||[]).includes(p)) throw "PLAT DIBLOKIR";
                 let s=d.chargingSlots||[null,null,null], q=d.waitingQueue||[];
+                
+                // Validasi Duplikasi
                 if(s.some(x=>x&&x.plat===p) || q.some(x=>x.plat===p)) throw "PLAT SUDAH ADA";
                 
-                const maxInQueue = q.length > 0 ? Math.max(...q.map(item => item.qNo || 0)) : 0;
-                const maxInSlots = s.reduce((max, slot) => { return (slot && slot.qNo) ? Math.max(max, slot.qNo) : max; }, 0);
-                let nextNo = Math.max(maxInQueue, maxInSlots) + 1;
+                // Logic Antrian Fix: Reset ke 1 jika kosong, Lanjut jika ada antrian
+                let nextNo = 1;
+                if(q.length > 0) {
+                    const maxQ = Math.max(...q.map(item => parseInt(item.qNo) || 0));
+                    nextNo = maxQ + 1;
+                }
 
                 const dur = calculateDuration(b, 98); 
                 const emptyIdx = s.findIndex(x=>x===null);
                 
+                const newData = {plat:p, userName:n, wa:w, startBattery:b, qNo: nextNo, targetLimit:98};
+
                 if(emptyIdx !== -1) { 
-                    s[emptyIdx] = {plat:p, userName:n, wa:w, startBattery:b, startTime:null, durationMinutes:dur, targetLimit:98, qNo: nextNo}; 
+                    s[emptyIdx] = { ...newData, startTime:null, durationMinutes:dur }; 
                 } else { 
-                    q.push({plat:p, userName:n, wa:w, startBattery:b, qNo: nextNo}); 
+                    q.push(newData); 
                 }
                 
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
             }).then(() => { 
-                localStorage.setItem('myPlat', p); currentUserPlat = p; 
+                // Simpan myPlat HANYA jika bukan admin (agar user biasa terkunci)
+                if(!isAdmin) {
+                    localStorage.setItem('myPlat', p); currentUserPlat = p; 
+                }
                 document.getElementById('regModal').style.display='none';
                 showCustomAlert("BERHASIL MASUK!");
-                forceView('user'); 
+                // Jika Admin, jangan lempar ke dashboard user, tetap di tempat
+                if(!isAdmin) forceView('user'); 
             }).catch(e => showCustomAlert(e));
         };
 
+        // --- USER ACTIONS ---
         window.userStart = () => {
             const targetPlat = (adminSpyIdx !== null) ? (latestSlots[adminSpyIdx] ? latestSlots[adminSpyIdx].plat : null) : currentUserPlat;
             if(!targetPlat) return;
             showCustomConfirm("MULAI CHARGING?", () => {
                  const idx = latestSlots.findIndex(s => s && s.plat === targetPlat);
-                 if(idx !== -1) {
-                     let newSlots = [...latestSlots]; newSlots[idx].startTime = new Date(); 
-                     updateDoc(ref, { chargingSlots: newSlots });
-                 }
+                 if(idx !== -1) { let newSlots = [...latestSlots]; newSlots[idx].startTime = new Date(); updateDoc(ref, { chargingSlots: newSlots }); }
             });
         };
 
@@ -592,10 +656,7 @@
             showCustomInput("MENIT BARU:", (m) => {
                 if(m && !isNaN(m) && targetPlat) {
                     const idx = latestSlots.findIndex(s => s && s.plat === targetPlat);
-                    if(idx !== -1) {
-                        let newSlots = [...latestSlots]; newSlots[idx].durationMinutes = parseInt(m); newSlots[idx].startTime = new Date(); newSlots[idx].isManualTime = true;
-                        updateDoc(ref, { chargingSlots: newSlots });
-                    }
+                    if(idx !== -1) { let newSlots = [...latestSlots]; newSlots[idx].durationMinutes = parseInt(m); newSlots[idx].startTime = new Date(); newSlots[idx].isManualTime = true; updateDoc(ref, { chargingSlots: newSlots }); }
                 }
             });
         };
@@ -639,7 +700,7 @@
                            if(adminSpyIdx === null) { localStorage.removeItem('myPlat'); currentUserPlat = null; window.location.reload(); }
                        });
                     } else {
-                        // Kalau cuma antri
+                        // Batal saat masih antri
                         runTransaction(db, async(t)=>{
                             const d=(await t.get(ref)).data(); let q=d.waitingQueue||[];
                             const qIdx = q.findIndex(x=>x.plat===targetPlat);
@@ -672,7 +733,7 @@
         window.switchView = (mode) => { 
             if(mode === 'front') { 
                 document.getElementById('userView').style.display='none'; 
-                document.getElementById('frontView').style.display='block'; 
+                document.getElementById('frontView').style.display='flex'; 
                 document.getElementById('fpArea').style.display='flex'; 
                 adminSpyIdx = null; 
             } 
@@ -681,7 +742,7 @@
         window.forceView = (type, idx = null) => {
             document.getElementById('adminOverlay').style.display = 'none';
             if(type === 'front') {
-                document.getElementById('frontView').style.display = 'block';
+                document.getElementById('frontView').style.display = 'flex';
                 document.getElementById('userView').style.display = 'none';
                 document.getElementById('fpArea').style.display = 'flex';
                 adminSpyIdx = null;
@@ -693,22 +754,30 @@
             }
         };
 
-        // --- DATA SYNC & RENDER ---
+        // --- SNAPSHOT & RENDER ---
         onSnapshot(ref, (snap) => {
             const d = snap.data(); if(!d) return;
             latestSlots = d.chargingSlots || [null, null, null];
             latestQueue = d.waitingQueue || [];
             
-            document.getElementById('qCountDisplay').innerText = latestQueue.length;
+            document.getElementById('qCountDisplay').innerText = "ANTRIAN: " + latestQueue.length;
             
             const dashBtn = document.getElementById('btnMyDash');
             const regBtn = document.getElementById('btnRegAgain');
+            const qCountEl = document.getElementById('qCountDisplay');
+
             if(currentUserPlat) {
                 const inSlot = latestSlots.some(s => s && s.plat === currentUserPlat);
                 const inQueue = latestQueue.some(q => q.plat === currentUserPlat);
-                if(inSlot || inQueue) { dashBtn.style.display = 'block'; regBtn.style.display = 'none'; }
-                else { dashBtn.style.display = 'none'; regBtn.style.display = 'block'; localStorage.removeItem('myPlat'); currentUserPlat = null; }
-            } else { dashBtn.style.display = 'none'; regBtn.style.display = 'block'; }
+                if(inSlot || inQueue) { 
+                    dashBtn.style.display = 'block'; qCountEl.style.display = 'none'; if(regBtn) regBtn.style.display = 'none';
+                } else { 
+                    dashBtn.style.display = 'none'; qCountEl.style.display = 'flex'; if(regBtn) regBtn.style.display = 'block'; 
+                    localStorage.removeItem('myPlat'); currentUserPlat = null; 
+                }
+            } else { 
+                dashBtn.style.display = 'none'; qCountEl.style.display = 'flex'; if(regBtn) regBtn.style.display = 'block'; 
+            }
 
             updateFrontView();
             updateUserView();
@@ -721,100 +790,165 @@
             document.getElementById('blockList').innerText = "Blokir: " + (d.blockedList||[]).join(', ');
         });
 
-        // --- ADMIN QUICK DASHBOARD RENDERER ---
+        // --- UPDATE FRONT VIEW ---
+        function updateFrontView() {
+            latestSlots.forEach((m, i) => {
+                const elCard = document.getElementById(`card-${i+1}`);
+                const elPlat = document.getElementById(`p${i+1}-plat`);
+                const elName = document.getElementById(`p${i+1}-name`);
+                const elMain = document.getElementById(`p${i+1}-main`);
+                const elStatus = document.getElementById(`p${i+1}-status`);
+                const elBar = document.getElementById(`p${i+1}-bar`);
+                const elTimer = document.getElementById(`p${i+1}-timer`);
+
+                elCard.classList.remove('charging', 'full'); 
+                elMain.classList.remove('num-charging', 'num-ready'); 
+                elTimer.classList.remove('timer-danger'); // Remove red class default
+                elBar.style.width = '0%';
+                
+                if (m && m.plat) {
+                     elPlat.innerText = m.plat;
+                     elName.innerText = m.userName || "USER";
+                     if(m.startTime) {
+                        const totalSec = m.durationMinutes * 60; 
+                        const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); 
+                        const elapsedSec = (new Date() - st) / 1000;
+                        let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
+                        let estBat = Math.round(m.startBattery + ((98 - m.startBattery) * progress)); if(estBat > 98) estBat = 98;
+                        elBar.style.width = (progress * 100) + "%";
+                        if(elapsedSec >= totalSec) {
+                            elMain.innerText = "FULL"; elStatus.innerText = "COMPLETE"; elCard.classList.add('full'); elMain.classList.add('num-charging');
+                        } else {
+                            elMain.innerText = estBat + "%"; elStatus.innerText = "CHARGING"; elCard.classList.add('charging'); elMain.classList.add('num-charging');
+                        }
+                     } else { 
+                        elMain.innerText = "READY"; elMain.classList.add('num-ready');
+                        elStatus.innerText = "PRESS START"; 
+                        if(elTimer) elTimer.innerText = "WAITING...";
+                     }
+                } else { 
+                    elPlat.innerText = "-"; elName.innerText = "AVAILABLE"; 
+                    elMain.innerText = "READY"; elMain.classList.add('num-ready');
+                    elStatus.innerText = "READY";
+                    if(elTimer) elTimer.innerText = "";
+                }
+            });
+        }
+
+        // --- UPDATE USER DASHBOARD ---
+        function updateUserView() {
+            const uv = document.getElementById('userView'); const fv = document.getElementById('frontView'); const fp = document.getElementById('fpArea');
+            if(!currentUserPlat && adminSpyIdx === null) { uv.style.display = 'none'; fv.style.display = 'flex'; fp.style.display = 'flex'; return; }
+            if(adminSpyIdx !== null) { uv.style.display = 'flex'; fv.style.display = 'none'; fp.style.display = 'none'; }
+
+            const mySlotIdx = (adminSpyIdx !== null) ? adminSpyIdx : latestSlots.findIndex(s => s && s.plat === currentUserPlat);
+            const myQueueIdx = (adminSpyIdx !== null) ? -1 : latestQueue.findIndex(q => q.plat === currentUserPlat);
+            const btnContainer = document.getElementById('uvActionBtns'); const ringContainer = document.getElementById('uvRingContainer');
+            
+            const startBtn = document.getElementById('btnStartBig');
+            const infoDisplay = document.getElementById('uvInfoDisplay');
+
+            if(mySlotIdx !== -1) {
+                const m = latestSlots[mySlotIdx];
+                document.getElementById('uvSlotTitle').innerText = (adminSpyIdx !== null ? "ADMIN - " : "") + "SLOT " + (mySlotIdx + 1);
+                document.getElementById('uvQueueLabel').style.display = 'none';
+                if(!m) { document.getElementById('uvBatVal').innerText = "EMPTY"; btnContainer.innerHTML = ""; return; }
+                
+                if(m.startTime) {
+                    ringContainer.className = 'uv-ring-container mode-charging'; 
+                    startBtn.style.display = 'none'; infoDisplay.style.display = 'block'; document.getElementById('uvTimer').style.display = 'block';
+                    const totalSec = m.durationMinutes * 60; const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); const elapsedSec = (new Date() - st) / 1000;
+                    let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
+                    let estBat = Math.round(m.startBattery + ((98 - m.startBattery) * progress)); document.getElementById('uvBatVal').innerText = estBat + "%";
+                    if(elapsedSec >= totalSec) { document.getElementById('uvBatVal').innerText = "FULL"; ringContainer.classList.add('mode-finish'); }
+                    btnContainer.innerHTML = `<button class="btn-glossy pause" onclick="window.userPause()">⏸ PAUSE</button><button class="btn-glossy edit" onclick="window.userEditTimer()">⏱ EDIT</button><button class="btn-glossy stop" onclick="window.userStop()">🛑 STOP</button>`;
+                } else {
+                    ringContainer.className = 'uv-ring-container'; startBtn.style.display = 'flex'; infoDisplay.style.display = 'none';
+                    btnContainer.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">❌ BATAL</button>`; 
+                }
+            } else if (myQueueIdx !== -1) {
+                document.getElementById('uvSlotTitle').innerText = "MENUNGGU GILIRAN";
+                ringContainer.className = 'uv-ring-container mode-queue';
+                startBtn.style.display = 'none'; infoDisplay.style.display = 'block';
+                document.getElementById('uvTimer').style.display = 'none'; document.getElementById('uvQueueLabel').style.display = 'block';
+                btnContainer.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">BATAL ANTRI</button>`;
+                document.getElementById('uvBatVal').innerText = "#" + (latestQueue[myQueueIdx].qNo || '?');
+            }
+            let otherStatus = ""; latestSlots.forEach((s, i) => { if(i !== mySlotIdx) { otherStatus += `SLOT ${i+1}: ${s ? 'ISI' : 'KOSONG'}   `; } });
+            document.getElementById('uvOtherSlots').innerText = otherStatus;
+        }
+
+        // --- ADMIN QUICK ACTION (Direct Logic) ---
         function renderAdminQuickDash() {
             const c = document.getElementById('adminQuickDash');
             let h = '';
             latestSlots.forEach((s, i) => {
-                let status = 'KOSONG';
-                let timer = '';
+                let status = 'KOSONG'; let timer = '';
                 if(s) {
                     if(s.startTime) {
                         const st = s.startTime.toDate ? s.startTime.toDate() : new Date(s.startTime);
                         const diffMS = (new Date(st.getTime() + s.durationMinutes*60000)) - new Date();
                         const remSec = diffMS / 1000;
-                        if(remSec > 0) {
-                            const min = Math.floor(remSec/60);
-                            timer = `(${min}m)`;
-                            status = `${s.startBattery}% ➔ 98%`;
-                        } else {
-                            status = "SELESAI";
-                        }
-                    } else {
-                        status = "READY";
-                    }
+                        if(remSec > 0) { const min = Math.floor(remSec/60); timer = `(${min}m)`; status = `${s.startBattery}% ➔ 98%`; } else { status = "SELESAI"; }
+                    } else { status = "READY"; }
                 }
-                
+                // Tombol aksi memanggil fungsi direct (adminDirectStop dll)
                 h += `
                 <div class="quick-dash-row ${s ? 'active' : ''}">
-                    <div class="qd-info">
-                        <b>SLOT ${i+1}</b> ${s ? `| ${s.plat} | ${status} ${timer}` : '| - - -'}
-                    </div>
-                    <div class="qd-actions">
+                    <div class="qd-info"><b>SLOT ${i+1}</b> ${s ? `| ${s.plat} | ${status} ${timer}` : '| - - -'}</div>
+                    <div class="adm-action-grid">
                         ${s ? `
-                            <button class="qd-btn qd-stop" onclick="window.adminStop(${i}, '${s.plat}')">STOP</button>
-                            ${s.startTime ? 
-                                `<button class="qd-btn qd-pause" onclick="window.adminPause(${i})">PAUSE</button>` : 
-                                `<button class="qd-btn qd-start" onclick="window.adminStart(${i}, '${s.plat}')">START</button>`
-                            }
-                            <button class="qd-btn qd-clear" onclick="window.adminClear(${i})">CLEAR</button>
-                        ` : `
-                            <button class="qd-btn qd-clear" disabled>EMPTY</button>
-                        `}
+                            <button class="btn-stop" onclick="window.adminDirectStop(${i}, '${s.plat}')">STOP</button>
+                            ${s.startTime ? `<button class="btn-pause" onclick="window.adminDirectPause(${i})">PAUSE</button>` : `<button class="btn-start" onclick="window.adminDirectStart(${i})">START</button>`}
+                            <button class="btn-clear" onclick="window.adminDirectClear(${i})">CLEAR</button>
+                        ` : `<button disabled style="grid-column: 1 / -1; opacity:0.3; padding:8px;">EMPTY</button>`}
                     </div>
                 </div>`;
             });
             c.innerHTML = h;
         }
 
-        window.adminStop = (i, p) => { adminSpyIdx=i; currentUserPlat=p; window.userStop(); adminSpyIdx=null; currentUserPlat=localStorage.getItem('myPlat'); };
-        window.adminPause = (i) => { adminSpyIdx=i; currentUserPlat=latestSlots[i].plat; window.userPause(); adminSpyIdx=null; currentUserPlat=localStorage.getItem('myPlat'); };
-        window.adminStart = (i, p) => { adminSpyIdx=i; currentUserPlat=p; window.userStart(); adminSpyIdx=null; currentUserPlat=localStorage.getItem('myPlat'); };
-        window.adminClear = (i) => { document.getElementById('manSlot').value = i; window.clearSlot(); };
+        window.adminDirectStop = (i, p) => { showCustomConfirm(`STOP SLOT ${i+1}?`, () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[i] = null; if(d.waitingQueue.length>0){ const next = d.waitingQueue.shift(); const dur = calculateDuration(next.startBattery, 98); d.chargingSlots[i] = {...next, startTime:null, durationMinutes:dur}; } t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue}); }); }); };
+        window.adminDirectPause = (i) => { showCustomConfirm(`PAUSE SLOT ${i+1}?`, () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const slot=d.chargingSlots[i]; if(slot && slot.startTime){ const st=slot.startTime.toDate?slot.startTime.toDate():new Date(slot.startTime); const rem=Math.max(0, (new Date(st.getTime()+slot.durationMinutes*60000)-new Date())/60000); d.chargingSlots[i]={...slot, startTime:null, durationMinutes:rem}; t.update(ref, {chargingSlots:d.chargingSlots}); } }); }); };
+        window.adminDirectStart = (i) => { showCustomConfirm(`START SLOT ${i+1}?`, () => { let newSlots=[...latestSlots]; newSlots[i].startTime=new Date(); updateDoc(ref, {chargingSlots:newSlots}); }); };
+        window.adminDirectClear = (i) => { showCustomConfirm(`CLEAR SLOT ${i+1}?`, () => { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[i] = null; if(d.waitingQueue.length>0){ const next=d.waitingQueue.shift(); const dur=calculateDuration(next.startBattery, 98); d.chargingSlots[i]={...next, startTime:null, durationMinutes:dur}; } t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue}); }); }); };
 
         setInterval(() => {
             if(!latestSlots) return;
             latestSlots.forEach((m, i) => {
                 if(m && !m.startTime && m.readyTime) {
                     const rTime = m.readyTime.toDate ? m.readyTime.toDate() : new Date(m.readyTime);
-                    if((new Date() - rTime) > 300000 && !isProcessing) { // 5 menit
+                    if((new Date() - rTime) > 300000 && !isProcessing) { 
                         isProcessing = true;
-                        runTransaction(db, async(t)=>{
-                            const d=(await t.get(ref)).data();
-                            if(d.chargingSlots[i] && !d.chargingSlots[i].startTime) {
-                                d.chargingSlots[i].startTime = new Date(); t.update(ref, d);
-                            }
-                        }).finally(()=>isProcessing=false);
+                        runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); if(d.chargingSlots[i] && !d.chargingSlots[i].startTime) { d.chargingSlots[i].startTime = new Date(); t.update(ref, d); } }).finally(()=>isProcessing=false);
                     }
                 }
-
                 if(m && m.startTime) {
                     const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime);
                     const diffMS = (new Date(st.getTime() + m.durationMinutes*60000)) - new Date();
                     const remSec = diffMS / 1000;
                     
-                    // Grace Period 5 Menit (300 detik)
                     if(remSec <= -300 && !isProcessing) { isProcessing = true; finishSlot(i, m); }
-
+                    
                     let txt = "DONE";
-                    if(remSec > 0) {
-                        const min = Math.floor(remSec / 60); const sec = Math.floor(remSec % 60);
-                        txt = `${min}:${sec < 10 ? '0'+sec : sec}`;
-                    } else {
-                        const graceLeft = 300 + remSec;
-                        if(graceLeft > 0) {
-                            const gm = Math.floor(graceLeft / 60); const gs = Math.floor(graceLeft % 60);
-                            txt = `SELESAI (${gm}:${gs < 10 ? '0'+gs : gs})`;
-                        } else { txt = "AUTO CLEAR..."; }
+                    const elTimer = document.getElementById(`p${i+1}-timer`);
+                    
+                    if(remSec > 0) { 
+                        const min = Math.floor(remSec / 60); const sec = Math.floor(remSec % 60); txt = `${min}:${sec < 10 ? '0'+sec : sec}`; 
+                        if(elTimer) elTimer.classList.remove('timer-danger');
+                    } else { 
+                        const graceLeft = 300 + remSec; 
+                        if(graceLeft > 0) { 
+                            const gm = Math.floor(graceLeft / 60); const gs = Math.floor(graceLeft % 60); txt = `SELESAI (${gm}:${gs < 10 ? '0'+gs : gs})`; 
+                            // [LOGIC UPDATE] Timer Merah & Berkedip saat masa tenggang
+                            if(elTimer) elTimer.classList.add('timer-danger');
+                        } else { txt = "AUTO CLEAR..."; } 
                     }
                     
-                    const elTimer = document.getElementById(`fv${i+1}-timer`); if(elTimer) elTimer.innerText = txt;
+                    if(elTimer) elTimer.innerText = txt;
                     if((adminSpyIdx === i) || (currentUserPlat === m.plat && adminSpyIdx === null)) {
                         const uvT = document.getElementById('uvTimer'); if(uvT) uvT.innerText = txt;
-                        if(remSec <= 0) {
-                            const btns = document.getElementById('uvActionBtns');
-                            if(btns) btns.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">${txt}</button>`;
-                        }
+                        if(remSec <= 0) { const btns = document.getElementById('uvActionBtns'); if(btns) btns.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">${txt}</button>`; }
                     }
                 }
             });
@@ -823,11 +957,7 @@
         window.showQueueDetails = () => {
             const c = document.getElementById('qDetailList'); c.innerHTML = "";
             if(latestQueue.length === 0) { c.innerHTML = "<div style='text-align:center; color:#666; font-size:12px;'>ANTRIAN KOSONG</div>"; } 
-            else {
-                latestQueue.forEach((q) => {
-                    c.innerHTML += `<div class="q-list-item"><div class="q-plat">#${q.qNo||'?'} ${q.plat}</div><div class="q-det">${q.userName}<br>Bat: ${q.startBattery}%</div></div>`;
-                });
-            }
+            else { latestQueue.forEach((q) => { c.innerHTML += `<div class="q-list-item"><div class="q-plat">#${q.qNo||'?'} ${q.plat}</div><div class="q-det">${q.userName}<br>Bat: ${q.startBattery}%</div></div>`; }); }
             document.getElementById('queueDetailModal').style.display = 'flex';
         };
 
@@ -860,84 +990,15 @@
         }
 
         function log(action, plat, det) { addDoc(logRef, { timestamp: new Date(), action, plat, user: 'SYS', details: det }); }
-        function renderLogs(snap) {
-            const c = document.getElementById('logContainer'); if(snap.empty) return; let h = '';
-            snap.forEach(doc => { const d = doc.data(); const t = d.timestamp?.toDate().toLocaleString()||'-'; h += `<div class="log-card status-INFO"><div class="log-head"><span class="log-time">${t}</span></div><div class="log-body"><b>${d.action}</b>: ${d.plat}</div></div>`; });
-            c.innerHTML = h;
-        }
+        function renderLogs(snap) { const c = document.getElementById('logContainer'); if(snap.empty) return; let h = ''; snap.forEach(doc => { const d = doc.data(); const t = d.timestamp?.toDate().toLocaleString()||'-'; h += `<div class="log-card status-INFO"><div class="log-head"><span class="log-time">${t}</span></div><div class="log-body"><b>${d.action}</b>: ${d.plat}</div></div>`; }); c.innerHTML = h; }
 
-        window.manualAssign = () => {
-            const s=document.getElementById('manSlot').value, p=document.getElementById('manPlat').value.toUpperCase(), b=parseInt(document.getElementById('manBat').value);
-            if(!p) return showCustomAlert('Isi Plat');
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                const dur = calculateDuration(b, 98); 
-                d.chargingSlots[s] = {plat:p, userName:'ADMIN', wa:'-', startBattery:b, durationMinutes:dur, startTime:new Date(), targetLimit:98, qNo:'ADM'};
-                t.update(ref, {chargingSlots:d.chargingSlots});
-            });
-        };
-        window.clearSlot = () => {
-            const s = document.getElementById('manSlot').value;
-            showCustomConfirm('KOSONGKAN & TARIK?', () => {
-                runTransaction(db, async(t)=>{
-                    const d = (await t.get(ref)).data(); const q = d.waitingQueue || [];
-                    d.chargingSlots[s] = null;
-                    if(q.length > 0) {
-                        const next = q.shift();
-                        const dur = calculateDuration(next.startBattery, 98);
-                        d.chargingSlots[s] = { ...next, startTime: null, readyTime: new Date(), durationMinutes: dur, targetLimit: 98 };
-                    }
-                    t.update(ref, { chargingSlots: d.chargingSlots, waitingQueue: q });
-                });
-            });
-        };
-        window.slotToQueue = () => {
-            const sIdx = document.getElementById('sToQSelect').value;
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(); const s = d.chargingSlots[sIdx];
-                if(!s) throw "Slot Kosong";
-                d.waitingQueue.push({...s, startTime:null, durationMinutes:0});
-                d.chargingSlots[sIdx] = null;
-                t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue});
-            }).then(()=>showCustomAlert('Sukses Pindah ke Antrian'));
-        };
-        window.swapSlots = () => {
-            const s1 = document.getElementById('swapS1').value; const s2 = document.getElementById('swapS2').value;
-            if(s1 === s2) return;
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data();
-                [d.chargingSlots[s1], d.chargingSlots[s2]] = [d.chargingSlots[s2], d.chargingSlots[s1]];
-                t.update(ref, {chargingSlots:d.chargingSlots});
-            }).then(()=>showCustomAlert('Posisi Ditukar'));
-        };
+        window.manualAssign = () => { const s=document.getElementById('manSlot').value, p=document.getElementById('manPlat').value.toUpperCase(), b=parseInt(document.getElementById('manBat').value); if(!p) return showCustomAlert('Isi Plat'); runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const dur = calculateDuration(b, 98); d.chargingSlots[s] = {plat:p, userName:'ADMIN', wa:'-', startBattery:b, durationMinutes:dur, startTime:new Date(), targetLimit:98, qNo:'ADM'}; t.update(ref, {chargingSlots:d.chargingSlots}); }); };
+        window.slotToQueue = () => { const sIdx = document.getElementById('sToQSelect').value; runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const s = d.chargingSlots[sIdx]; if(!s) throw "Slot Kosong"; d.waitingQueue.push({...s, startTime:null, durationMinutes:0}); d.chargingSlots[sIdx] = null; t.update(ref, {chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue}); }).then(()=>showCustomAlert('Sukses')); };
+        window.swapSlots = () => { const s1 = document.getElementById('swapS1').value; const s2 = document.getElementById('swapS2').value; if(s1 === s2) return; runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); [d.chargingSlots[s1], d.chargingSlots[s2]] = [d.chargingSlots[s2], d.chargingSlots[s1]]; t.update(ref, {chargingSlots:d.chargingSlots}); }).then(()=>showCustomAlert('Sukses')); };
         window.stopAll = () => { showCustomConfirm("MATIKAN SEMUA?", ()=>{ updateDoc(ref, {chargingSlots:[null,null,null]}); }); };
         window.resetDB = () => { showCustomConfirm("RESET TOTAL?", ()=>{ setDoc(ref, {chargingSlots:[null,null,null], waitingQueue:[], blockedList:[]}); }); };
-
-        window.regQueue = () => {
-            const p=document.getElementById('qPlat').value.toUpperCase(), n=document.getElementById('qName').value, b=parseInt(document.getElementById('qBat').value);
-            if(!p) return showCustomAlert('Data Kurang');
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(); let q=d.waitingQueue||[]; let s=d.chargingSlots||[];
-                const maxInQueue = q.length > 0 ? Math.max(...q.map(item => item.qNo || 0)) : 0;
-                const maxInSlots = s.reduce((max, slot) => { return (slot && slot.qNo) ? Math.max(max, slot.qNo) : max; }, 0);
-                let nextNo = Math.max(maxInQueue, maxInSlots) + 1;
-                q.push({plat:p, userName:n, wa:'-', startBattery:b, qNo: nextNo});
-                t.update(ref, {waitingQueue:q});
-            });
-        };
-
-        window.moveQueue = () => {
-            const qi=document.getElementById('qIdx').value, si=document.getElementById('qTarget').value; if(qi<0) return;
-            runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data(); const q=d.waitingQueue; const s=d.chargingSlots;
-                if(s[si]) throw "Penuh";
-                const item = q.splice(qi,1)[0];
-                const dur = calculateDuration(item.startBattery, 98);
-                item.startTime = null; item.readyTime = new Date(); item.durationMinutes = dur; item.targetLimit = 98;
-                s[si] = item;
-                t.update(ref, {chargingSlots:s, waitingQueue:q});
-            });
-        };
+        window.regQueue = () => { const p=document.getElementById('qPlat').value.toUpperCase(), n=document.getElementById('qName').value, b=parseInt(document.getElementById('qBat').value); if(!p) return showCustomAlert('Data Kurang'); runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let q=d.waitingQueue||[]; let s=d.chargingSlots||[]; let nextNo = 1; if(q.length > 0) { const maxQ = Math.max(...q.map(item => parseInt(item.qNo) || 0)); nextNo = maxQ + 1; } q.push({plat:p, userName:n, wa:'-', startBattery:b, qNo: nextNo}); t.update(ref, {waitingQueue:q}); }); };
+        window.moveQueue = () => { const qi=document.getElementById('qIdx').value, si=document.getElementById('qTarget').value; if(qi<0) return; runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); const q=d.waitingQueue; const s=d.chargingSlots; if(s[si]) throw "Penuh"; const item = q.splice(qi,1)[0]; const dur = calculateDuration(item.startBattery, 98); item.startTime = null; item.readyTime = new Date(); item.durationMinutes = dur; item.targetLimit = 98; s[si] = item; t.update(ref, {chargingSlots:s, waitingQueue:q}); }); };
         window.doBlock = () => { const p=document.getElementById('blockPlat').value.toUpperCase(); if(p) updateDoc(ref, {blockedList: arrayUnion(p)}); };
         window.doUnblock = () => { const p=document.getElementById('blockPlat').value.toUpperCase(); if(p) updateDoc(ref, {blockedList: arrayRemove(p)}); };
 
@@ -945,107 +1006,8 @@
         window.showCustomConfirm = (msg, yesCallback) => { document.getElementById('confirmMsg').innerText = msg; const btnYes = document.getElementById('btnConfirmYes'); const newBtn = btnYes.cloneNode(true); btnYes.parentNode.replaceChild(newBtn, btnYes); newBtn.onclick = () => { document.getElementById('confirmModal').style.display = 'none'; yesCallback(); }; document.getElementById('confirmModal').style.display = 'flex'; };
         window.showCustomInput = (title, callback) => { document.getElementById('inputTitle').innerText = title; document.getElementById('inputVal').value = ""; const btnOk = document.getElementById('btnInputOk'); const newBtn = btnOk.cloneNode(true); btnOk.parentNode.replaceChild(newBtn, btnOk); newBtn.onclick = () => { if(document.getElementById('inputVal').value) { document.getElementById('inputModal').style.display = 'none'; callback(document.getElementById('inputVal').value); } }; document.getElementById('inputModal').style.display = 'flex'; document.getElementById('inputVal').focus(); };
 
-        function updateFrontView() {
-            latestSlots.forEach((m, i) => {
-                const elBat = document.getElementById(`fv${i+1}-bat`); const elPlat = document.getElementById(`fv${i+1}-plat`); const elTimer = document.getElementById(`fv${i+1}-timer`); const elCircle = document.getElementById(`fv${i+1}-circle`); const elName = document.getElementById(`fv${i+1}-name`);
-                elCircle.classList.remove('active-blue', 'active-yellow', 'mode-finish');
-                if (m && m.plat) {
-                     if(i === 1) elCircle.classList.add('active-yellow'); else elCircle.classList.add('active-blue');
-                     elBat.classList.remove('ready-mode');
-                     
-                     if(m.startTime) {
-                        const totalSec = m.durationMinutes * 60; const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); const elapsedSec = (new Date() - st) / 1000;
-                        let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
-                        let estBat = Math.round(m.startBattery + ((98 - m.startBattery) * progress)); if(estBat > 98) estBat = 98;
-                        
-                        if(elapsedSec >= totalSec) {
-                            elBat.innerText = "FULL";
-                            elCircle.classList.remove('active-blue','active-yellow'); elCircle.classList.add('mode-finish'); 
-                        } else {
-                            elBat.innerText = estBat + "%";
-                        }
-                     } else { elBat.innerText = m.startBattery + "%"; if(elTimer) elTimer.innerText = "WAIT START"; }
-                     
-                     elPlat.innerText = m.plat;
-                     elName.innerText = m.userName || "";
-                     
-                } else { elBat.classList.add('ready-mode'); elBat.innerText = "READY"; elPlat.innerText = ""; elName.innerText = ""; if(elTimer) elTimer.innerText = ""; }
-            });
-        }
-
-        function updateUserView() {
-            const uv = document.getElementById('userView'); const fv = document.getElementById('frontView'); const fp = document.getElementById('fpArea');
-            if(!currentUserPlat && adminSpyIdx === null) { uv.style.display = 'none'; fv.style.display = 'block'; fp.style.display = 'flex'; return; }
-            if(adminSpyIdx !== null) { uv.style.display = 'flex'; fv.style.display = 'none'; fp.style.display = 'none'; }
-
-            const mySlotIdx = (adminSpyIdx !== null) ? adminSpyIdx : latestSlots.findIndex(s => s && s.plat === currentUserPlat);
-            const myQueueIdx = (adminSpyIdx !== null) ? -1 : latestQueue.findIndex(q => q.plat === currentUserPlat);
-            const btnContainer = document.getElementById('uvActionBtns'); const ringContainer = document.getElementById('uvRingContainer');
-            
-            if(mySlotIdx !== -1) {
-                const m = latestSlots[mySlotIdx];
-                document.getElementById('uvSlotTitle').innerText = (adminSpyIdx !== null ? "ADMIN - " : "") + "SLOT " + (mySlotIdx + 1);
-                document.getElementById('uvQueueLabel').style.display = 'none';
-                ringContainer.className = 'uv-ring-container mode-charging'; 
-                if(!m) { document.getElementById('uvBatVal').innerText = "EMPTY"; btnContainer.innerHTML = ""; return; }
-                
-                if(m.startTime) {
-                    ringContainer.classList.add('is-charging'); document.getElementById('btnStartBig').style.display = 'none'; document.getElementById('uvBatVal').style.display = 'block'; document.getElementById('uvTimer').style.display = 'block';
-                    const totalSec = m.durationMinutes * 60; const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); const elapsedSec = (new Date() - st) / 1000;
-                    let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
-                    let estBat = Math.round(m.startBattery + ((98 - m.startBattery) * progress)); document.getElementById('uvBatVal').innerText = estBat + "%";
-                    
-                    if(elapsedSec >= totalSec) {
-                        document.getElementById('uvBatVal').innerText = "FULL";
-                        ringContainer.classList.add('mode-finish');
-                    }
-
-                    btnContainer.innerHTML = `
-                        <button class="btn-glossy pause" onclick="window.userPause()">⏸ PAUSE</button>
-                        <button class="btn-glossy edit" onclick="window.userEditTimer()">⏱ EDIT</button>
-                        <button class="btn-glossy stop" onclick="window.userStop()">🛑 STOP</button>`;
-                } else {
-                    ringContainer.classList.remove('is-charging'); document.getElementById('btnStartBig').style.display = 'flex'; document.getElementById('uvBatVal').style.display = 'none'; document.getElementById('uvTimer').style.display = 'none';
-                    btnContainer.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">❌ BATAL</button>`; 
-                }
-            } else if (myQueueIdx !== -1) {
-                document.getElementById('uvSlotTitle').innerText = "MENUNGGU GILIRAN";
-                ringContainer.className = 'uv-ring-container mode-queue';
-                document.getElementById('btnStartBig').style.display = 'none'; document.getElementById('uvTimer').style.display = 'none'; document.getElementById('uvQueueLabel').style.display = 'block';
-                btnContainer.innerHTML = `<button class="btn-glossy stop" onclick="window.userStop()">BATAL ANTRI</button>`;
-                document.getElementById('uvBatVal').style.display = 'block';
-                document.getElementById('uvBatVal').innerText = "#" + (latestQueue[myQueueIdx].qNo || '?');
-            }
-            let otherStatus = ""; latestSlots.forEach((s, i) => { if(i !== mySlotIdx) { otherStatus += `SLOT ${i+1}: ${s ? 'ISI' : 'KOSONG'}   `; } });
-            document.getElementById('uvOtherSlots').innerText = otherStatus;
-        }
-
-        const CHARGING_CURVE = [
-            [100,0], [99,2], [91,9], 
-            [82,25], [81,26], [79,30], [75,32], [72,35], 
-            [70,39], [59,49], [51,55], [50,56], [22,71], [20,72], [0,90]
-        ];
-        function calculateTargetLimit(qLength) { return 98; } 
-        
-        function calculateDuration(start, target) {
-            if (start >= target) return 5;
-            let timeStart=90, timeTarget=0;
-            for(let i=0; i<CHARGING_CURVE.length-1; i++){ 
-                if(start<=CHARGING_CURVE[i][0] && start>=CHARGING_CURVE[i+1][0]) { 
-                    const r=(CHARGING_CURVE[i][0]-start)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); 
-                    timeStart=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i+1][1]); 
-                    break; 
-                }
-            }
-            for(let i=0; i<CHARGING_CURVE.length-1; i++){ 
-                if(target<=CHARGING_CURVE[i][0] && target>=CHARGING_CURVE[i+1][0]) { 
-                    const r=(CHARGING_CURVE[i][0]-target)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); 
-                    timeTarget=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i+1][1]); 
-                    break; 
-                }
-            }
-            return Math.max(1, Math.ceil(timeStart - timeTarget));
-        }
+        const CHARGING_CURVE = [ [100,0], [99,2], [91,9], [82,25], [81,26], [79,30], [75,32], [72,35], [70,39], [59,49], [51,55], [50,56], [22,71], [20,72], [0,90] ];
+        function calculateDuration(start, target) { if (start >= target) return 5; let timeStart=90, timeTarget=0; for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(start<=CHARGING_CURVE[i][0] && start>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-start)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeStart=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i+1][1]); break; } } for(let i=0; i<CHARGING_CURVE.length-1; i++){ if(target<=CHARGING_CURVE[i][0] && target>=CHARGING_CURVE[i+1][0]) { const r=(CHARGING_CURVE[i][0]-target)/(CHARGING_CURVE[i][0]-CHARGING_CURVE[i+1][0]); timeTarget=CHARGING_CURVE[i][1]+r*(CHARGING_CURVE[i+1][1]-CHARGING_CURVE[i+1][1]); break; } } return Math.max(1, Math.ceil(timeStart - timeTarget)); }
     </script>
 </body>
 </html>
