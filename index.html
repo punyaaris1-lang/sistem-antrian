@@ -362,12 +362,11 @@
     <div id="playlistPopup"><div style="padding:15px; border-bottom:1px solid #333; position:sticky; top:0; background:#000; display:flex; justify-content:space-between; align-items:center;"><span style="font-family:'Orbitron'; color:var(--blue);">SELECT TRACK</span><span onclick="window.togglePlaylist()" style="color:#666; cursor:pointer;">[ CLOSE ]</span></div><div id="playlistContainer"></div></div>
     <audio id="audio" crossorigin="anonymous"></audio>
     <script type="module">
-        // IMPORT FIREBASE YANG SUDAH DIBERSIHKAN (FIX ERROR)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, updateDoc, arrayUnion, arrayRemove, collection, addDoc, query, orderBy, limit, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // --- KONFIGURASI ---
-        const APP_VERSION = "4.0-PREMIUM-FULL"; 
+        const APP_VERSION = "4.1-MUSIC-FIXED"; 
         if(localStorage.getItem('app_ver') !== APP_VERSION) {
             localStorage.clear(); localStorage.setItem('app_ver', APP_VERSION); window.location.reload();
         }
@@ -381,7 +380,7 @@
         const STATION_LOC = { lat: -6.171583, lng: 106.899844 }; 
         const MAX_DIST_KM = 0.2; 
 
-        let USE_FAKE_GPS = true; // Ubah ke false saat live
+        let USE_FAKE_GPS = true; 
         let latestSlots = [null, null, null];
         let latestQueue = [];
         let currentUserPlat = localStorage.getItem('myPlat') || null;
@@ -397,21 +396,43 @@
             if (match) { el.value = match[1] + (match[2] ? " " + match[2] : "") + (match[3] ? " " + match[3] : ""); } else { el.value = val; }
         };
 
-        // --- MUSIC PLAYER (ROOT FOLDER) ---
-        // BaseURL dikosongkan agar membaca dari folder yang sama dengan file HTML
-        const baseURL = ""; 
+        // --- SMART MUSIC PLAYER ENGINE (FIXED) ---
         let playlist = [];
-        // Fallback list jika playlist.json gagal dimuat
-        const defaultList = ["Ada Apa Denganmu.mp3", "anji-menunggu-kamu.mp3", "Anugerah Terindah Yang Pernah Kumiliki.mp3", "armada_asalkan_kau_bahagia.mp3", "Bendera - Cokelat - 2003.mp3", "Bintang Di Surga.mp3", "Bon Jovi - Always .MP3", "Bon Jovi - Its My Life .mp3", "Bon Jovi - You Give Love A Bad Name.mp3", "Dan - Sheila On 7 - 1999.mp3"];
+        const defaultList = ["Ada Apa Denganmu.mp3", "anji-menunggu-kamu.mp3"]; // Fallback jika JSON gagal
         
-        fetch('playlist.json').then(r => r.json()).then(data => {
-            playlist = data.map(file => ({ title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','')), url: baseURL + file }));
-            initPlayer();
-        }).catch(() => {
-            // Jika tidak ada JSON, pakai list default asumsi file ada di root
-            playlist = defaultList.map(file => ({ title: decodeURIComponent(file.replace('.mp3','').replace('.MP3','')), url: baseURL + file }));
-            initPlayer();
-        });
+        // Fungsi memproses data lagu agar fleksibel
+        function parseTrack(item) {
+            let url = "";
+            let title = "";
+
+            if (typeof item === 'object' && item.url) {
+                // Jika format JSON: { "url": "https://..." }
+                url = item.url;
+                title = item.title || decodeURIComponent(url.split('/').pop().replace(/\.mp3$/i, ''));
+            } else if (typeof item === 'string') {
+                // Jika format String: "Lagu.mp3"
+                url = item;
+                title = decodeURIComponent(item.replace(/\.mp3$/i, ''));
+            }
+
+            return { title: title, url: url };
+        }
+
+        // Load Playlist
+        fetch('playlist.json')
+            .then(r => r.json())
+            .then(data => {
+                // Paksa data jadi Array jika user lupa pakai []
+                const list = Array.isArray(data) ? data : [data];
+                playlist = list.map(item => parseTrack(item));
+                console.log("Playlist Loaded:", playlist);
+                initPlayer();
+            })
+            .catch(err => {
+                console.log("Gagal load JSON, pakai default.", err);
+                playlist = defaultList.map(item => parseTrack(item));
+                initPlayer();
+            });
 
         const audio = document.getElementById('audio');
         let currentTrackIdx = 0; let audioUnlocked = false; let isTrackSelected = false;
@@ -427,19 +448,29 @@
 
         window.firstInteraction = () => {
             if (audioUnlocked) return;
+            // Silent play untuk memancing audio permission browser
             const silent = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFAmZtdCAQAAAAAQABAIAAAIAAAIABAABhZGF0YQAAAAA=");
             silent.play().then(() => { audioUnlocked = true; }).catch(e => console.log("Audio locked"));
         };
 
         window.playTrack = (idx) => {
             vibrateHP(50); audioUnlocked = true; currentTrackIdx = idx; isTrackSelected = true;
+            
+            // Cek apakah URL valid
+            if(!playlist[idx] || !playlist[idx].url) return;
+
             audio.src = playlist[idx].url;
             const title = playlist[idx].title;
+            
             document.getElementById('track-name').innerText = title; 
             const uvTrack = document.getElementById('uv-track-name'); if(uvTrack) uvTrack.innerText = title;
             document.getElementById('playlistPopup').style.display = 'none';
+            
             document.querySelectorAll('.track-item').forEach((el, i) => { el.classList.toggle('active', i === idx); });
-            audio.play().then(() => updatePlayBtnIcons("⏸")).catch(() => updatePlayBtnIcons("⏯"));
+            audio.play().then(() => updatePlayBtnIcons("⏸")).catch(e => {
+                console.log("Play Error:", e);
+                updatePlayBtnIcons("⏯");
+            });
         };
 
         window.togglePlay = () => {
@@ -454,137 +485,61 @@
         window.togglePlaylist = () => { vibrateHP(30); const p = document.getElementById('playlistPopup'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
         audio.addEventListener('ended', () => window.nextTrack());
 
-        // --- GPS & SMART BUTTON LOGIC ---
+        // --- GPS & BUTTON ---
         function getDist(lat1,lon1,lat2,lon2){ const R=6371; const dLat=(lat2-lat1)*Math.PI/180; const dLon=(lon2-lon1)*Math.PI/180; const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2); return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))); }
 
         window.checkLocationAndOpen = () => {
-            vibrateHP(50);
-            const btn = document.getElementById('fp-trigger');
-            
-            // Efek Scanning
-            btn.classList.add('scanning'); 
-            
-            if(USE_FAKE_GPS) {
-                // Simulasi Sukses
-                setTimeout(() => { 
-                    btn.classList.remove('scanning'); 
-                    btn.classList.add('active'); // Ubah jadi berwarna
-                    document.getElementById('regModal').style.display = 'flex'; 
-                }, 800);
-                return;
-            }
-
+            vibrateHP(50); const btn = document.getElementById('fp-trigger'); btn.classList.add('scanning');
+            if(USE_FAKE_GPS) { setTimeout(() => { btn.classList.remove('scanning'); btn.classList.add('active'); document.getElementById('regModal').style.display = 'flex'; }, 800); return; }
             navigator.geolocation.getCurrentPosition((pos) => {
                 const dist = getDist(pos.coords.latitude, pos.coords.longitude, STATION_LOC.lat, STATION_LOC.lng);
                 btn.classList.remove('scanning');
-                
-                if(dist > MAX_DIST_KM) {
-                    showCustomAlert(`LOKASI JAUH: ${dist.toFixed(2)}km. HARUS < 0.2km`);
-                    btn.classList.remove('active'); // Tetap Grey
-                } else {
-                    btn.classList.add('active'); // Jadi Berwarna
-                    document.getElementById('regModal').style.display = 'flex';
-                }
-            }, (err) => {
-                btn.classList.remove('scanning');
-                showCustomAlert("GPS ERROR. AKTIFKAN GPS.");
-            }, {enableHighAccuracy: true, timeout: 10000});
+                if(dist > MAX_DIST_KM) { showCustomAlert(`LOKASI JAUH: ${dist.toFixed(2)}km. HARUS < 0.2km`); btn.classList.remove('active'); } 
+                else { btn.classList.add('active'); document.getElementById('regModal').style.display = 'flex'; }
+            }, (err) => { btn.classList.remove('scanning'); showCustomAlert("GPS ERROR. AKTIFKAN GPS."); }, {enableHighAccuracy: true, timeout: 10000});
         };
 
-        // --- NEW: POPUP LIST ANTRIAN ---
+        // --- POPUP ANTRIAN ---
         window.showQueueList = () => {
-            vibrateHP(30);
-            const listContainer = document.getElementById('qDetailList');
-            if(latestQueue.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">ANTRIAN KOSONG</div>';
-            } else {
+            vibrateHP(30); const listContainer = document.getElementById('qDetailList');
+            if(latestQueue.length === 0) { listContainer.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">ANTRIAN KOSONG</div>'; } 
+            else {
                 let html = '';
                 latestQueue.forEach((q, i) => {
                     let qNum = q.qNo ? `#${q.qNo}` : `#${i+1}`;
-                    html += `
-                    <div style="background:rgba(255,255,255,0.05); padding:10px; margin-bottom:5px; border-radius:5px; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <div style="font-family:'Teko'; font-size:18px; color:#fff;">${q.plat}</div>
-                            <div style="font-size:10px; color:#aaa;">${q.userName}</div>
-                        </div>
-                        <div style="font-family:'Orbitron'; font-weight:bold; color:var(--accent); font-size:14px;">${qNum}</div>
-                    </div>`;
+                    html += `<div style="background:rgba(255,255,255,0.05); padding:10px; margin-bottom:5px; border-radius:5px; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center;"><div><div style="font-family:'Teko'; font-size:18px; color:#fff;">${q.plat}</div><div style="font-size:10px; color:#aaa;">${q.userName}</div></div><div style="font-family:'Orbitron'; font-weight:bold; color:var(--accent); font-size:14px;">${qNum}</div></div>`;
                 });
                 listContainer.innerHTML = html;
             }
             document.getElementById('queueDetailModal').style.display = 'flex';
         }
 
-        // --- REGISTRASI (DEVICE LOCK & ADMIN BYPASS) ---
+        // --- SUBMIT REGISTRASI ---
         window.submitReg = () => {
-            vibrateHP(50);
-            const p = document.getElementById('regPlat').value.toUpperCase();
-            const n = document.getElementById('regName').value.toUpperCase();
-            const w = document.getElementById('regWA').value;
-            const b = parseInt(document.getElementById('regBat').value);
-            
+            vibrateHP(50); const p = document.getElementById('regPlat').value.toUpperCase(); const n = document.getElementById('regName').value.toUpperCase(); const w = document.getElementById('regWA').value; const b = parseInt(document.getElementById('regBat').value);
             if(!p || !n || !w || isNaN(b)) { showCustomAlert("LENGKAPI DATA"); return; }
-            
-            // CEK DEVICE LOCK
-            const isAdmin = sessionStorage.getItem('adminSession') === 'active';
-            const existingSession = localStorage.getItem('myPlat');
-            
-            // Jika bukan admin DAN sudah punya sesi di HP ini -> BLOKIR
-            if(!isAdmin && existingSession) {
-                // Cek apakah plat yg tersimpan masih aktif di server?
-                const isStillActive = latestSlots.some(s => s && s.plat === existingSession) || latestQueue.some(q => q.plat === existingSession);
-                if(isStillActive) {
-                    showCustomAlert("ANDA MASIH PUNYA ANTRIAN AKTIF (" + existingSession + "). HARAP TUNGGU.");
-                    return;
-                }
-            }
-
+            const isAdmin = sessionStorage.getItem('adminSession') === 'active'; const existingSession = localStorage.getItem('myPlat');
+            if(!isAdmin && existingSession) { const isStillActive = latestSlots.some(s => s && s.plat === existingSession) || latestQueue.some(q => q.plat === existingSession); if(isStillActive) { showCustomAlert("ANDA MASIH PUNYA ANTRIAN AKTIF (" + existingSession + "). HARAP TUNGGU."); return; } }
             runTransaction(db, async(t)=>{
-                const d=(await t.get(ref)).data()||{};
-                if((d.blockedList||[]).includes(p)) throw "PLAT DIBLOKIR";
-                
-                let s=d.chargingSlots||[null,null,null];
-                let q=d.waitingQueue||[];
-                
+                const d=(await t.get(ref)).data()||{}; if((d.blockedList||[]).includes(p)) throw "PLAT DIBLOKIR";
+                let s=d.chargingSlots||[null,null,null], q=d.waitingQueue||[];
                 if(s.some(x=>x&&x.plat===p) || q.some(x=>x.plat===p)) throw "PLAT SUDAH ADA";
-                
-                const maxInQueue = q.length > 0 ? Math.max(...q.map(item => item.qNo || 0)) : 0;
-                const maxInSlots = s.reduce((max, slot) => { return (slot && slot.qNo) ? Math.max(max, slot.qNo) : max; }, 0);
-                let nextNo = Math.max(maxInQueue, maxInSlots) + 1;
-                
-                const dur = calculateDuration(b, 98); 
-                const emptyIdx = s.findIndex(x=>x===null);
-                
-                if(emptyIdx !== -1) { 
-                    s[emptyIdx] = {plat:p, userName:n, wa:w, startBattery:b, startTime:null, durationMinutes:dur, targetLimit:98, qNo: nextNo}; 
-                } else { 
-                    q.push({plat:p, userName:n, wa:w, startBattery:b, qNo: nextNo}); 
-                }
+                const maxInQueue = q.length > 0 ? Math.max(...q.map(item => item.qNo || 0)) : 0; const maxInSlots = s.reduce((max, slot) => { return (slot && slot.qNo) ? Math.max(max, slot.qNo) : max; }, 0); let nextNo = Math.max(maxInQueue, maxInSlots) + 1;
+                const dur = calculateDuration(b, 98); const emptyIdx = s.findIndex(x=>x===null);
+                if(emptyIdx !== -1) { s[emptyIdx] = {plat:p, userName:n, wa:w, startBattery:b, startTime:null, durationMinutes:dur, targetLimit:98, qNo: nextNo}; } 
+                else { q.push({plat:p, userName:n, wa:w, startBattery:b, qNo: nextNo}); }
                 t.set(ref, {chargingSlots:s, waitingQueue:q}, {merge:true});
-            }).then(() => { 
-                // Jika bukan admin, simpan sesi
-                if(!isAdmin) {
-                    localStorage.setItem('myPlat', p); 
-                    currentUserPlat = p; 
-                } else {
-                    showCustomAlert("SUKSES DAFTAR (MODE ADMIN)");
-                }
-                document.getElementById('regModal').style.display='none'; 
-                vibrateHP(300); 
-                if(!isAdmin) forceView('user'); 
-            }).catch(e => showCustomAlert(e));
+            }).then(() => { if(!isAdmin) { localStorage.setItem('myPlat', p); currentUserPlat = p; } else { showCustomAlert("SUKSES DAFTAR (MODE ADMIN)"); } document.getElementById('regModal').style.display='none'; vibrateHP(300); if(!isAdmin) forceView('user'); }).catch(e => showCustomAlert(e));
         };
 
-        // --- CORE LOGIC (VIEW, UPDATE) ---
-        // (Logic di bawah ini sama dengan part sebelumnya, memastikan fungsi berjalan normal)
+        // --- CORE FUNCTIONS ---
         window.switchView = (mode) => { vibrateHP(50); if(mode === 'front') { document.getElementById('userView').style.display='none'; document.getElementById('frontView').style.display='flex'; document.getElementById('fpArea').style.display='flex'; adminSpyIdx = null; } };
         window.forceView = (type, idx = null) => { vibrateHP(50); document.getElementById('adminOverlay').style.display = 'none'; if(type === 'front') { document.getElementById('frontView').style.display = 'flex'; document.getElementById('userView').style.display = 'none'; document.getElementById('fpArea').style.display = 'flex'; adminSpyIdx = null; } else { document.getElementById('frontView').style.display = 'none'; document.getElementById('userView').style.display = 'flex'; document.getElementById('fpArea').style.display = 'none'; if (idx !== null) { adminSpyIdx = idx; updateUserView(); } } };
-
         window.userStart = () => { const targetPlat = (adminSpyIdx !== null) ? (latestSlots[adminSpyIdx] ? latestSlots[adminSpyIdx].plat : null) : currentUserPlat; if(!targetPlat) return; vibrateHP(50); showCustomConfirm("MULAI CHARGING?", () => { vibrateHP(100); const idx = latestSlots.findIndex(s => s && s.plat === targetPlat); if(idx !== -1) { let newSlots = [...latestSlots]; newSlots[idx].startTime = new Date(); updateDoc(ref, { chargingSlots: newSlots }); } }); };
         window.userEditTimer = () => { const targetPlat = (adminSpyIdx !== null) ? (latestSlots[adminSpyIdx] ? latestSlots[adminSpyIdx].plat : null) : currentUserPlat; showCustomInput("MENIT BARU:", (m) => { if(m && !isNaN(m) && targetPlat) { const idx = latestSlots.findIndex(s => s && s.plat === targetPlat); if(idx !== -1) { let newSlots = [...latestSlots]; newSlots[idx].durationMinutes = parseInt(m); newSlots[idx].startTime = new Date(); newSlots[idx].isManualTime = true; updateDoc(ref, { chargingSlots: newSlots }); } } }); };
         window.userPause = () => { vibrateHP(50); const targetPlat = (adminSpyIdx !== null) ? (latestSlots[adminSpyIdx] ? latestSlots[adminSpyIdx].plat : null) : currentUserPlat; showCustomConfirm("PAUSE (TAHAN SLOT)?", () => { vibrateHP(50); const idx = latestSlots.findIndex(s => s && s.plat === targetPlat); if(idx !== -1) { runTransaction(db, async(t)=>{ const d = (await t.get(ref)).data(); const slot = d.chargingSlots[idx]; if(slot && slot.startTime) { const st = slot.startTime.toDate ? slot.startTime.toDate() : new Date(slot.startTime); const end = new Date(st.getTime() + slot.durationMinutes*60000); const remMin = Math.max(0, (end - new Date())/60000); d.chargingSlots[idx] = {...slot, startTime: null, durationMinutes: remMin, readyTime: new Date()}; t.update(ref, {chargingSlots: d.chargingSlots}); } }); } }); };
         window.userStop = () => { vibrateHP(50); const targetPlat = (adminSpyIdx !== null) ? (latestSlots[adminSpyIdx] ? latestSlots[adminSpyIdx].plat : null) : currentUserPlat; showCustomConfirm("STOP & KELUAR?", () => { vibrateHP(100); if(targetPlat) { const idx = latestSlots.findIndex(s => s && s.plat === targetPlat); if(idx !== -1) { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); d.chargingSlots[idx] = null; if(d.waitingQueue.length > 0) { const next = d.waitingQueue.shift(); const dur = calculateDuration(next.startBattery, 98); d.chargingSlots[idx] = { ...next, startTime: null, durationMinutes: dur, targetLimit: 98, readyTime: new Date() }; } t.update(ref, {chargingSlots: d.chargingSlots, waitingQueue: d.waitingQueue}); }).then(() => { if(adminSpyIdx === null) { localStorage.removeItem('myPlat'); currentUserPlat = null; window.location.reload(); } }); } else { runTransaction(db, async(t)=>{ const d=(await t.get(ref)).data(); let q=d.waitingQueue||[]; const qIdx = q.findIndex(x=>x.plat===targetPlat); if(qIdx !== -1) { q.splice(qIdx, 1); t.update(ref, {waitingQueue:q}); } }).then(() => { localStorage.removeItem('myPlat'); currentUserPlat = null; window.location.reload(); }); } } }); };
-
+        
         window.askAdminPin = () => { vibrateHP(50); if(sessionStorage.getItem('adminSession') === 'active') { openAdminPanel(); } else { showCustomInput("PIN ADMIN:", (pin) => { if(pin === "8080") { sessionStorage.setItem('adminSession', 'active'); openAdminPanel(); } else { showCustomAlert("PIN SALAH"); } }); } };
         function openAdminPanel() { document.getElementById('adminOverlay').style.display = 'block'; onSnapshot(query(logRef, orderBy("timestamp", "desc"), limit(50)), renderLogs); }
         window.adminLogout = () => { sessionStorage.removeItem('adminSession'); document.getElementById('adminOverlay').style.display = 'none'; showCustomAlert("LOGOUT SUKSES"); };
@@ -598,8 +553,7 @@
                      elPlat.innerText = m.plat; elName.innerText = m.userName || "USER";
                      if(m.startTime) {
                         const totalSec = m.durationMinutes * 60; const st = m.startTime.toDate ? m.startTime.toDate() : new Date(m.startTime); const elapsedSec = (new Date() - st) / 1000;
-                        let progress = elapsedSec / totalSec; if(progress > 1) progress = 1;
-                        let estBat = Math.round(m.startBattery + ((98 - m.startBattery) * progress)); if(estBat > 98) estBat = 98;
+                        let progress = elapsedSec / totalSec; if(progress > 1) progress = 1; let estBat = Math.round(m.startBattery + ((98 - m.startBattery) * progress)); if(estBat > 98) estBat = 98;
                         elBar.style.width = (progress * 100) + "%";
                         if(elapsedSec >= totalSec) { elMain.innerText = "FULL"; elStatus.innerText = "COMPLETE"; elCard.classList.add('full'); elMain.classList.add('num-charging'); } 
                         else { elMain.innerText = estBat + "%"; elStatus.innerText = "CHARGING"; elCard.classList.add('charging'); elMain.classList.add('num-charging'); }
@@ -633,8 +587,7 @@
         }
 
         onSnapshot(ref, (snap) => {
-            const d = snap.data(); if(!d) return;
-            latestSlots = d.chargingSlots || [null, null, null]; latestQueue = d.waitingQueue || [];
+            const d = snap.data(); if(!d) return; latestSlots = d.chargingSlots || [null, null, null]; latestQueue = d.waitingQueue || [];
             document.getElementById('qCountDisplay').innerText = "ANTRIAN: " + latestQueue.length;
             const dashBtn = document.getElementById('btnMyDash'); const qCountText = document.getElementById('qCountDisplay');
             if(currentUserPlat) { const inSlot = latestSlots.some(s => s && s.plat === currentUserPlat); const inQueue = latestQueue.some(q => q.plat === currentUserPlat); if(inSlot || inQueue) { dashBtn.style.display = 'block'; qCountText.style.display = 'none'; } else { dashBtn.style.display = 'none'; qCountText.style.display = 'block'; localStorage.removeItem('myPlat'); currentUserPlat = null; } } else { dashBtn.style.display = 'none'; qCountText.style.display = 'block'; }
@@ -676,5 +629,3 @@
             return Math.max(1, Math.ceil(timeStart - timeTarget));
         }
     </script>
-</body>
-</html>
