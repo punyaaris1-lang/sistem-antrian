@@ -16,6 +16,7 @@
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
         
+        /* FONT DIGANTI JADI TEKO SEMUA (Kecuali terminal) */
         body { 
             font-family: 'Teko', sans-serif; 
             background: #000 url('1763947427555.jpg') no-repeat center center fixed;
@@ -42,6 +43,7 @@
             justify-content: center; text-align: center; z-index: 10; position: relative; 
             background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); flex-shrink: 0;
         }
+        /* ADMIN TRIGGER: DBLCLICK */
         .main-title { 
             font-size: clamp(40px, 6vh, 60px); 
             font-weight: 700; 
@@ -57,7 +59,7 @@
             flex: 1; 
             display: flex; 
             justify-content: center; 
-            align-items: flex-start; /* LOGO DIATAS */
+            align-items: flex-start; /* LOGO NAIK DIATAS */
             padding-top: 30px; 
             position: relative; z-index: 5; transition: opacity 0.5s;
         }
@@ -70,10 +72,11 @@
         }
         @keyframes floatLogo { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 
+        /* LOGO & FOOTER HIDDEN SAAT LOGIN */
         body.login-mode #logo-area { opacity: 0.1; pointer-events: none; }
         body.login-mode .bottom-panel { display: none !important; }
 
-        /* --- SCREENS --- */
+        /* --- SCREENS MANAGEMENT --- */
         .screen {
             position: absolute; inset: 0; top: 12vh; bottom: 0;
             display: none; flex-direction: column; 
@@ -83,10 +86,13 @@
             align-items: center;
         }
         .screen.active { display: flex; animation: fadeIn 0.5s forwards; }
+        
         #screen-login { justify-content: flex-start; padding-top: 20px; }
         #screen-login .onyx-panel { margin: 0 auto; }
+
         @keyframes fadeIn { from{opacity:0; transform:scale(0.95);} to{opacity:1; transform:scale(1);} }
 
+        /* --- TERMINAL LOGIN --- */
         .onyx-panel {
             width: 90%; max-width: 400px;
             background: rgba(10, 10, 10, 0.95);
@@ -97,8 +103,14 @@
             margin: auto; 
         }
         .term-line { margin-bottom: 15px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #ccc; }
-        .term-input { background: none; border: none; outline: none; color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 16px; width: 60%; font-weight: bold; text-transform: uppercase; caret-color: var(--cyan); }
+        .term-input { 
+            background: none; border: none; outline: none; 
+            color: var(--cyan); font-family: 'JetBrains Mono', monospace; 
+            font-size: 16px; width: 60%; font-weight: bold; text-transform: uppercase;
+            caret-color: var(--cyan); 
+        }
         .locked { color: var(--accent); cursor: pointer; border-bottom: 1px dashed #555; } 
+        .locked:hover { color: #fff; }
 
         /* --- SLOT VIEW --- */
         #screen-slots { flex-direction: row; align-items: center; justify-content: center; gap: 10px; padding: 0 15px; }
@@ -108,24 +120,29 @@
         .onyx-card { width: 100%; height: 100%; background: rgba(10, 10, 10, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); cursor: pointer; z-index: 2; }
         .card-bg-layer { position: absolute; inset: 0; background-image: url('1763947427555.jpg'); background-size: cover; opacity: 0.25; z-index: 0; filter: grayscale(100%) contrast(120%); }
         .card-content { position: relative; z-index: 5; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 15px; }
+        
         .cc-top { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; min-height: 60px; justify-content: center; }
         .oc-name { font-weight: 600; font-size: clamp(18px, 2vh, 24px); color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); text-align: center; }
         .oc-plat { font-family: 'JetBrains Mono'; font-weight: 700; font-size: clamp(12px, 1.5vh, 16px); color: var(--accent); margin-top: 5px; }
+        
         .cc-center { flex: 1; display: flex; align-items: center; justify-content: center; }
         .oc-num { font-weight: 700; font-size: clamp(90px, 15vw, 150px); line-height: 0.8; transition:0.3s; }
+        
         .filled .oc-num { color: var(--cyan); text-shadow: 0 0 20px rgba(0, 240, 255, 0.4); animation:none; }
         .empty .oc-num { color: #222; text-shadow: none; animation: glitchText 4s infinite; }
         @keyframes glitchText { 0%, 94% { color: #222; opacity: 0.5; } 95% { color: var(--accent); text-shadow: 0 0 15px var(--accent); opacity: 1; transform: skewX(10deg); } 96% { transform: skewX(0deg); } 97% { color: var(--accent); } 100% { color: #222; opacity: 0.5; } }
+        
         .cc-bottom { flex: 0 0 auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .btn-action { width: 100%; padding: 12px 0; border: none; border-radius: 8px; font-family: 'Teko'; font-weight: 600; font-size: 20px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .btn-select { background: rgba(204, 255, 0, 0.1); border: 1px solid var(--accent); color: var(--accent); animation: pulse 2s infinite; display:none; }
         .onyx-card.empty .btn-select { display: block; }
+
         .snake-border { position: absolute; inset: -3px; background: conic-gradient(transparent, transparent, transparent, var(--cyan)); z-index: 1; animation: rotateSnake 3s linear infinite; display: none; border-radius: 18px; }
         .onyx-card.active-snake .snake-border { display: block; }
         .inner-bg { position: absolute; inset: 1px; background: rgba(5,5,5,0.95); border-radius: 15px; z-index: 2; }
         @keyframes rotateSnake { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- ACTIVE DASHBOARD --- */
+        /* --- ACTIVE CHARGING DASHBOARD --- */
         #screen-active-dashboard { z-index: 200; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
         .ad-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px; padding-bottom: 25vh; }
         .ad-info { text-align: center; margin-top: 20px; }
@@ -133,7 +150,17 @@
         .ad-name { font-size: clamp(30px, 4vw, 50px); color: #fff; font-weight: 700; text-shadow: 0 0 20px rgba(255,255,255,0.3); line-height: 1; }
         .ad-plat { font-family: 'JetBrains Mono'; font-size: clamp(16px, 2vw, 24px); color: #aaa; letter-spacing: 2px; margin-top: 10px; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 5px; display: inline-block; }
         .ad-main { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
-        .ad-big-num { font-size: clamp(200px, 45vw, 400px); line-height: 0.8; font-weight: 700; color: var(--cyan); text-shadow: 0 0 50px var(--cyan), 0 0 10px #fff; animation: breathe 3s infinite ease-in-out; }
+        
+        /* FONT NOMOR DIPERBAIKI: LEBIH KECIL DIKIT BIAR TAJAM */
+        .ad-big-num { 
+            font-size: clamp(120px, 35vw, 250px); /* Ukuran disesuaikan agar tidak blur */
+            line-height: 0.8; 
+            font-weight: 700; 
+            color: var(--cyan); 
+            text-shadow: 0 0 40px var(--cyan), 0 0 5px #fff; 
+            animation: breathe 3s infinite ease-in-out; 
+        }
+        
         .ad-bottom { width: 100%; display: flex; justify-content: center; }
         .btn-luxury { width: 90%; max-width: 350px; padding: 15px 0; background: linear-gradient(135deg, #ff0000 0%, #990000 100%); color: #fff; font-family: 'Teko'; font-size: 30px; font-weight: 700; letter-spacing: 2px; border: 2px solid #ff5e5e; border-radius: 15px; cursor: pointer; box-shadow: 0 0 30px rgba(255, 0, 60, 0.6), inset 0 0 10px rgba(0,0,0,0.5); text-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: all 0.3s; position: relative; overflow: hidden; }
         .btn-luxury::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent); transform: rotate(45deg); animation: shine 3s infinite; }
@@ -141,10 +168,10 @@
         @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
         @keyframes breathe { 0%,100%{transform:scale(1); opacity:1;} 50%{transform:scale(1.05); opacity:0.9;} }
 
-        /* --- WAITING DASHBOARD (QUEUE LIST VISUAL) --- */
+        /* --- WAITING DASHBOARD (QUEUE LIST VISUAL - UPDATED) --- */
         #waitingDashboard { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .q-visual-list { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; max-height: 60vh; overflow-y: hidden; }
-        .q-item { font-size: 22px; color: rgba(255,255,255,0.5); margin: 0; padding: 5px 0; transition: all 0.4s ease; text-align: center; font-weight: 500; display:flex; align-items:center; justify-content:center; }
+        .q-item { font-size: 22px; color: rgba(255,255,255,0.5); margin: 0px 0; padding: 5px 0; transition: all 0.4s ease; text-align: center; font-weight: 500; display:flex; align-items:center; justify-content:center; }
         .q-item span { margin-left: 10px; color: #fff; font-weight: 700; }
         .q-you { font-size: clamp(40px, 8vw, 70px); color: var(--cyan); margin: 15px 0; position: relative; animation: breath 2s infinite ease-in-out; font-weight: 700; line-height: 1; text-shadow: 0 0 25px var(--cyan); opacity: 1 !important; z-index: 10; }
         .q-you span { font-size: 40px; opacity: 1; margin-left: 15px; letter-spacing: 0px; color: var(--accent); font-weight: 700; font-family: 'Teko'; vertical-align: middle; text-shadow: 0 0 15px var(--accent); }
@@ -363,12 +390,14 @@
         // --- ADMIN TRIGGER ---
         window.toggleAdmin = () => {
              const pass = prompt("MASUKKAN KODE ADMIN:");
-             if(pass === "8080") { // GANTI PASSWORD DISINI
-                 localStorage.setItem('adm_ok', '1');
-                 alert("MODE ADMIN AKTIF");
-                 location.reload();
+             
+             if(pass === "8080") { 
+                 localStorage.setItem('adm_ok', '1'); // For Index
+                 localStorage.setItem('admin_acc', '1'); // For Admin Panel
+                 alert("LOGIN SUKSES! MENUJU ADMIN PANEL...");
+                 window.location.href = 'admin.html'; 
              } else {
-                 if(pass) alert("KODE SALAH");
+                 if(pass) alert("KODE SALAH!");
              }
         }
 
