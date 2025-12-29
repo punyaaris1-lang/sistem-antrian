@@ -49,7 +49,7 @@
         /* --- BIG LOGO AREA --- */
         #logo-area {
             flex: 1; display: flex; justify-content: center; align-items: center;
-            position: relative; z-index: 5; transition: opacity 0.5s;
+            position: relative; z-index: 5; transition: opacity 0.5s; padding-bottom: 120px;
         }
         .big-logo {
             width: 80%; max-width: 300px; height: auto;
@@ -328,7 +328,7 @@
         let myPlat = localStorage.getItem('myPlat');
         window.activeSlotIdx = -1;
 
-        const STATION_LAT = -6.171583; const STATION_LNG = 106.899844; const MAX_DIST_KM = 1.0; 
+        const STATION_LAT = -6.171583; const STATION_LNG = 106.899844; const MAX_DIST_KM = 10.0; 
         const $ = (id) => document.getElementById(id);
         const vibrate = () => { if(navigator.vibrate) navigator.vibrate(50); };
         function showMsg(title, body) { $('msgTitle').innerText=title; $('msgBody').innerText=body; $('msgModal').style.display='flex'; }
