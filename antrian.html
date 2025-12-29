@@ -16,7 +16,6 @@
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
         
-        /* FONT DIGANTI JADI TEKO SEMUA (Kecuali terminal) */
         body { 
             font-family: 'Teko', sans-serif; 
             background: #000 url('1763947427555.jpg') no-repeat center center fixed;
@@ -46,10 +45,14 @@
         .main-title { font-size: clamp(40px, 6vh, 60px); font-weight: 700; line-height: 0.9; color: #fff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.5); }
         .sub-title { font-size: 14px; color: var(--accent); letter-spacing: 4px; font-weight: 600; margin-top: 0px; text-transform: uppercase; }
 
-        /* --- BIG LOGO AREA --- */
+        /* --- BIG LOGO AREA (UPDATED POSISI NAIK) --- */
         #logo-area {
-            flex: 1; display: flex; justify-content: center; align-items: center;
-            position: relative; z-index: 5; transition: opacity 0.5s; padding-bottom: 120px;
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; /* Posisi di ATAS, bukan tengah */
+            padding-top: 30px; /* Jarak sedikit dari header */
+            position: relative; z-index: 5; transition: opacity 0.5s;
         }
         .big-logo {
             width: 80%; max-width: 300px; height: auto;
@@ -75,7 +78,6 @@
         }
         .screen.active { display: flex; animation: fadeIn 0.5s forwards; }
         
-        /* LOGIN SCREEN ALIGNMENT */
         #screen-login { justify-content: flex-start; padding-top: 20px; }
         #screen-login .onyx-panel { margin: 0 auto; }
 
@@ -135,14 +137,11 @@
         #screen-active-dashboard { z-index: 200; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); }
         .ad-container { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px; padding-bottom: 25vh; }
         .ad-info { text-align: center; margin-top: 20px; }
-        /* NEW SLOT LABEL ABOVE NAME */
         .ad-slot-label { font-size: 24px; color: var(--accent); font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px var(--accent); margin-bottom: 5px; }
         .ad-name { font-size: clamp(30px, 4vw, 50px); color: #fff; font-weight: 700; text-shadow: 0 0 20px rgba(255,255,255,0.3); line-height: 1; }
         .ad-plat { font-family: 'JetBrains Mono'; font-size: clamp(16px, 2vw, 24px); color: #aaa; letter-spacing: 2px; margin-top: 10px; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 5px; display: inline-block; }
-        
         .ad-main { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
         .ad-big-num { font-size: clamp(200px, 45vw, 400px); line-height: 0.8; font-weight: 700; color: var(--cyan); text-shadow: 0 0 50px var(--cyan), 0 0 10px #fff; animation: breathe 3s infinite ease-in-out; }
-        
         .ad-bottom { width: 100%; display: flex; justify-content: center; }
         .btn-luxury { width: 90%; max-width: 350px; padding: 15px 0; background: linear-gradient(135deg, #ff0000 0%, #990000 100%); color: #fff; font-family: 'Teko'; font-size: 30px; font-weight: 700; letter-spacing: 2px; border: 2px solid #ff5e5e; border-radius: 15px; cursor: pointer; box-shadow: 0 0 30px rgba(255, 0, 60, 0.6), inset 0 0 10px rgba(0,0,0,0.5); text-shadow: 0 2px 5px rgba(0,0,0,0.5); transition: all 0.3s; position: relative; overflow: hidden; }
         .btn-luxury::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent); transform: rotate(45deg); animation: shine 3s infinite; }
@@ -150,14 +149,37 @@
         @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
         @keyframes breathe { 0%,100%{transform:scale(1); opacity:1;} 50%{transform:scale(1.05); opacity:0.9;} }
 
-        /* --- WAITING DASHBOARD (QUEUE LIST) --- */
+        /* --- WAITING DASHBOARD (QUEUE LIST VISUAL - UPDATED) --- */
         #waitingDashboard { display: none; position: fixed; inset: 0; z-index: 3000; background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
         .q-visual-list { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; max-height: 60vh; overflow-y: hidden; }
-        .q-item { font-size: 24px; color: #fff; opacity: 0.35; margin: 10px 0; transition: all 0.4s ease; text-align: center; font-weight: 500; }
-        .q-you { font-size: clamp(50px, 8vw, 80px); color: var(--cyan); margin: 20px 0; position: relative; animation: breath 1.6s infinite; font-weight: 700; line-height: 1; text-shadow: 0 0 20px var(--cyan); }
+        
+        /* JARAK RAPAT & TRANSPARAN */
+        .q-item { 
+            font-size: 22px; 
+            color: rgba(255,255,255,0.5); /* Agak transparan tapi jelas */
+            margin: 0px 0; /* Rapat */
+            padding: 5px 0;
+            transition: all 0.4s ease; 
+            text-align: center; 
+            font-weight: 500; 
+        }
+        
+        /* USER AKTIF: TERANG & JELAS */
+        .q-you { 
+            font-size: clamp(50px, 8vw, 80px); 
+            color: var(--cyan); 
+            margin: 10px 0; 
+            position: relative; 
+            animation: breath 2s infinite ease-in-out; 
+            font-weight: 700; 
+            line-height: 1; 
+            text-shadow: 0 0 25px var(--cyan); 
+            opacity: 1 !important; /* JAMIN TIDAK BLUR */
+            z-index: 10;
+        }
         .q-you span { font-size: 14px; opacity: 0.8; margin-left: 10px; letter-spacing: 2px; color: #fff; font-weight: normal; font-family: 'JetBrains Mono'; vertical-align: middle; }
 
-        @keyframes breath { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+        @keyframes breath { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
 
         /* --- FOOTER --- */
         .bottom-panel { height: 35vh; min-height: 250px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 20; position: fixed; bottom: 0; width: 100%; background: linear-gradient(to top, #000 90%, transparent); padding-bottom: 20px; }
@@ -185,7 +207,6 @@
         .btn-g { width: 100%; padding: 12px; background: var(--cyan); color: #000; font-family: 'Teko'; font-size: 20px; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; margin-top: 10px; }
         .btn-cancel { width: 100%; padding: 10px; border: 1px solid #555; background: transparent; color: #888; font-family: 'Teko'; font-size: 18px; border-radius: 50px; margin-top: 5px; cursor: pointer; }
 
-        /* DUST/QUEUE ANIMATIONS */
         #stream-container .loading-bar, #stream-container .loading-fill { height: 2px; }
     </style>
 </head>
@@ -316,6 +337,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, collection, addDoc, query, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // --- KONFIGURASI TESTING ---
+        const ENABLE_GPS = false; // Set TRUE untuk nyalakan GPS, FALSE untuk bypass
+        // ---------------------------
+
         const firebaseConfig = { apiKey: "AIzaSyALIlkIDALIk83K8s1htalvW6rmNNw02Go", authDomain: "sistem-antrian-b1c39.firebaseapp.com", projectId: "sistem-antrian-b1c39", storageBucket: "sistem-antrian-b1c39.firebasestorage.app", messagingSenderId: "454124587608", appId: "1:454124587608:web:34fbb0f5211067a67f982d" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -328,7 +353,7 @@
         let myPlat = localStorage.getItem('myPlat');
         window.activeSlotIdx = -1;
 
-        const STATION_LAT = -6.171583; const STATION_LNG = 106.899844; const MAX_DIST_KM = 10.0; 
+        const STATION_LAT = -6.171583; const STATION_LNG = 106.899844; const MAX_DIST_KM = 1.0; 
         const $ = (id) => document.getElementById(id);
         const vibrate = () => { if(navigator.vibrate) navigator.vibrate(50); };
         function showMsg(title, body) { $('msgTitle').innerText=title; $('msgBody').innerText=body; $('msgModal').style.display='flex'; }
@@ -358,7 +383,11 @@
         window.checkLocAndRegister = () => {
             const isAdmin = localStorage.getItem('adm_ok'); 
             const btn = $('fpBtn'); 
-            if(isAdmin) { runLogin(); return; }
+            
+            // --- LOGIKA TOGGLE GPS ---
+            if(isAdmin || !ENABLE_GPS) { runLogin(); return; }
+            // ------------------------
+
             if(navigator.geolocation) {
                 btn.style.opacity = 0.5;
                 navigator.geolocation.getCurrentPosition((pos) => {
@@ -501,6 +530,9 @@
         function renderQueueList() {
             const container = $('queue-visual-list');
             container.innerHTML = '';
+            
+            // Tampilkan max 5 items (2 sebelum, 1 user, 2 sesudah) jika list panjang, atau semua jika pendek
+            // Untuk simplifikasi visual "scrolling", kita render semua tapi user di tengah (scroll otomatis nanti di fitur advance, skrg list biasa)
             
             localQueue.forEach((q, idx) => {
                 const el = document.createElement('div');
