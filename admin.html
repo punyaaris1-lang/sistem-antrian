@@ -7,14 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050505; --panel: #111; --border: #333; --accent: #CCFF00; --cyan: #00F0FF; --red: #FF003C; }
-        body { background: #0a0a0a; color: #fff; font-family: 'JetBrains Mono', monospace; padding: 10px; font-size: 11px; }
+        body { background: #0a0a0a; color: #fff; font-family: 'JetBrains Mono', monospace; padding: 10px; font-size: 11px; margin: 0; }
         
         /* BOX STYLING */
         .box { border: 1px solid #333; padding: 15px; margin-bottom: 15px; background: #000; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         h3 { margin: 0 0 15px 0; color: var(--cyan); border-bottom: 1px solid #333; padding-bottom: 5px; font-family: 'Teko', sans-serif; font-size: 18px; letter-spacing: 1px; }
         
         /* BUTTONS */
-        button { cursor: pointer; padding: 8px 12px; margin: 0; font-weight: bold; font-family: 'Teko'; font-size: 14px; letter-spacing: 0.5px; border-radius: 4px; transition: 0.2s; border: none; text-transform: uppercase; width: 100%; }
+        button { cursor: pointer; padding: 8px 12px; margin: 0; font-weight: bold; font-family: 'Teko'; font-size: 14px; letter-spacing: 0.5px; border-radius: 4px; transition: 0.2s; border: none; text-transform: uppercase; }
         button:hover { filter: brightness(1.2); transform: translateY(-1px); }
         button:active { transform: translateY(1px); }
         
@@ -22,126 +22,151 @@
         .btn-green { background: linear-gradient(45deg, #050, #090); color: #fff; border: 1px solid #0f0; }
         .btn-blue { background: linear-gradient(45deg, #005, #009); color: #fff; border: 1px solid #00f; }
         .btn-yellow { background: linear-gradient(45deg, #550, #990); color: #fff; border: 1px solid #ff0; }
-        .btn-mini { padding: 4px 8px; font-size: 12px; width: auto; margin: 0 2px; }
+        .btn-mini { padding: 4px 8px; font-size: 12px; margin: 2px; }
 
         /* INPUTS */
         input, select { background: #1a1a1a; color: #fff; border: 1px solid #444; padding: 8px; border-radius: 4px; font-family: 'JetBrains Mono'; width: 100%; box-sizing: border-box; }
         table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        td, th { border: 1px solid #333; padding: 8px; text-align: left; }
+        td, th { border: 1px solid #333; padding: 8px; text-align: left; vertical-align: middle; }
         th { background: #111; color: var(--accent); }
 
-        /* SLOT GRID */
-        .slot-grid { display:flex; gap:10px; }
-        .slot-item { flex:1; border:1px solid #333; padding:10px; background: #050505; text-align: center; border-radius: 5px; }
+        /* SLOT GRID RESPONSIVE */
+        .slot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
+        .slot-item { border: 1px solid #333; padding: 10px; background: #050505; text-align: center; border-radius: 5px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; }
         
         /* ANALYTICS */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; }
         .stat-card { background: #111; padding: 10px; border: 1px solid #333; border-radius: 5px; }
-        .stat-val { font-size: 24px; color: var(--accent); font-family: 'Teko'; }
+        .stat-val { font-size: 20px; color: var(--accent); font-family: 'Teko'; }
         
-        /* --- CUSTOM MODAL POPUP (KEREN) --- */
+        /* LOGS TABLE STYLE (NEW) */
+        .log-table { width: 100%; font-size: 10px; color: #aaa; }
+        .log-table th { background: #222; color: #fff; border-bottom: 2px solid #444; }
+        .log-table td { border-bottom: 1px solid #222; padding: 6px; }
+        .badge { padding: 2px 6px; border-radius: 3px; font-weight: bold; color: #000; font-size: 9px; }
+        .b-add { background: #00FF66; }
+        .b-del { background: #FF003C; color: #fff; }
+        .b-edit { background: #CCFF00; }
+        .b-sys { background: #00F0FF; }
+
+        /* CUSTOM MODAL */
         #customModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-box { background: #111; border: 1px solid var(--cyan); width: 90%; max-width: 350px; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 0 30px rgba(0, 240, 255, 0.2); animation: popIn 0.3s; }
+        .modal-box { background: #111; border: 1px solid var(--cyan); width: 85%; padding: 20px; border-radius: 10px; text-align: center; animation: popIn 0.3s; }
         @keyframes popIn { from{transform:scale(0.8); opacity:0;} to{transform:scale(1); opacity:1;} }
-        .modal-title { font-family: 'Teko'; font-size: 24px; color: #fff; margin-bottom: 10px; letter-spacing: 1px; }
-        .modal-desc { font-family: 'JetBrains Mono'; color: #aaa; margin-bottom: 20px; font-size: 12px; line-height: 1.5; }
-        .modal-btns { display: flex; gap: 10px; justify-content: center; }
-        .mb-yes { flex:1; background: var(--cyan); color: #000; border: none; font-size: 16px; padding: 10px; }
-        .mb-no { flex:1; background: transparent; border: 1px solid #555; color: #888; font-size: 16px; padding: 10px; }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+        .mb-yes { flex:1; background: var(--cyan); color: #000; }
+        .mb-no { flex:1; background: transparent; border: 1px solid #555; color: #888; }
     </style>
 </head>
 <body>
 
     <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-        <span style="font-family:'Teko'; font-size:28px; color:var(--cyan);">ADMIN PANEL <span style="color:var(--accent);">v3.6</span></span>
+        <span style="font-family:'Teko'; font-size:24px; color:var(--cyan);">ADMIN PANEL <span style="color:var(--accent);">v4.2 (FIX)</span></span>
         <div style="display:flex; gap:5px;">
-            <button onclick="window.location.href='antrian.html'" class="btn-blue" style="width:auto;">DEPAN</button>
-            <button onclick="logout()" class="btn-red" style="width:auto;">KELUAR</button>
+            <button onclick="window.location.href='index.html'" class="btn-blue">DEPAN</button>
+            <button onclick="logout()" class="btn-red">KELUAR</button>
         </div>
     </div>
 
     <div class="box" style="border-top: 3px solid var(--cyan);">
-        <h3>1. LIVE MONITORING & CONTROL</h3>
+        <h3>1. MONITOR & KONTROL</h3>
         <div class="slot-grid">
             <div id="slot1" class="slot-item">LOADING...</div>
             <div id="slot2" class="slot-item">LOADING...</div>
             <div id="slot3" class="slot-item">LOADING...</div>
         </div>
-        <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #333; display:grid; grid-template-columns: 2fr 1fr 2fr 1fr; gap:5px; align-items:center;">
-            <select id="moveSrc"><option value="0">SLOT 1</option><option value="1">SLOT 2</option><option value="2">SLOT 3</option></select>
-            <div style="text-align:center;">➟</div>
-            <select id="moveDest"><option value="1">SLOT 2</option><option value="2">SLOT 3</option><option value="0">SLOT 1</option></select>
-            <button onclick="askConfirm('Tukar posisi user antar slot?', moveSlotUser)" class="btn-blue">TUKAR</button>
+        
+        <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #333;">
+            <div style="color:#888; margin-bottom:5px;">TUKAR POSISI SLOT:</div>
+            <div style="display:grid; grid-template-columns: 1fr auto 1fr auto; gap:5px; align-items:center;">
+                <select id="moveSrc"><option value="0">S 1</option><option value="1">S 2</option><option value="2">S 3</option></select>
+                <div>➟</div>
+                <select id="moveDest"><option value="1">S 2</option><option value="2">S 3</option><option value="0">S 1</option></select>
+                <button onclick="askConfirm('Tukar User?', moveSlotUser)" class="btn-blue">GO</button>
+            </div>
         </div>
     </div>
 
     <div class="box" style="border-top: 3px solid var(--accent);">
-        <h3>2. MANAJEMEN ANTRIAN</h3>
-        <div id="queueTable" style="max-height:300px; overflow-y:auto; margin-bottom:10px;"></div>
+        <h3>2. ANTRIAN & INPUT</h3>
+        <div id="queueTable" style="max-height:250px; overflow-y:auto; margin-bottom:10px;"></div>
         
         <div style="border-top:1px dashed #333; padding-top:10px;">
-            <div style="margin-bottom:5px; color:#888;">INPUT USER MANUAL (VIP/GUEST):</div>
-            
+            <div style="margin-bottom:5px; color:#888;">INPUT MANUAL:</div>
             <div style="display:flex; gap:5px; margin-bottom:5px;">
-                <input id="newPlat" placeholder="PLAT (B 1234 XY)" style="flex:1; text-transform:uppercase;">
-                <input id="newName" placeholder="NAMA USER" style="flex:1.5; text-transform:uppercase;">
+                <input id="newPlat" placeholder="PLAT (B 1234)" style="flex:1; text-transform:uppercase;">
+                <input id="newName" placeholder="NAMA" style="flex:1; text-transform:uppercase;">
             </div>
-
-            <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap:5px;">
-                <button onclick="askConfirm('Tambah ke Antrian?', () => manualAdd('queue'))" class="btn-green">+ ANTRI</button>
-                <button onclick="askConfirm('Langsung SLOT 1?', () => manualAdd(0))" class="btn-yellow">S1</button>
-                <button onclick="askConfirm('Langsung SLOT 2?', () => manualAdd(1))" class="btn-yellow">S2</button>
-                <button onclick="askConfirm('Langsung SLOT 3?', () => manualAdd(2))" class="btn-yellow">S3</button>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
+                <button onclick="askConfirm('Tambah ke Antrian?', () => manualAdd('queue'))" class="btn-green">+ ANTRIAN</button>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:2px;">
+                    <button onclick="askConfirm('Force Slot 1?', () => manualAdd(0))" class="btn-yellow">S1</button>
+                    <button onclick="askConfirm('Force Slot 2?', () => manualAdd(1))" class="btn-yellow">S2</button>
+                    <button onclick="askConfirm('Force Slot 3?', () => manualAdd(2))" class="btn-yellow">S3</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="box" style="border-top: 3px solid #fff;">
         <h3 style="display:flex; justify-content:space-between; align-items:center;">
-            5. STATISTIK HARI INI
+            STATISTIK HARI INI
             <button onclick="loadAnalytics()" class="btn-blue btn-mini">REFRESH</button>
         </h3>
         <div class="stat-grid">
-            <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div style="color:#666">SELESAI</div></div>
-            <div class="stat-card"><div class="stat-val" id="stat-busy">-</div><div style="color:#666">JAM SIBUK</div></div>
-            <div class="stat-card"><div class="stat-val" id="stat-avg">0m</div><div style="color:#666">RATA-RATA</div></div>
-            <div class="stat-card"><div class="stat-val" id="stat-active">0</div><div style="color:#666">DLM ANTRIAN</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-total">0</div><div style="font-size:9px; color:#666">SELESAI</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-busy">-</div><div style="font-size:9px; color:#666">JAM SIBUK</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-avg">0m</div><div style="font-size:9px; color:#666">AVG DURASI</div></div>
+            <div class="stat-card"><div class="stat-val" id="stat-active">0</div><div style="font-size:9px; color:#666">QUEUE</div></div>
         </div>
     </div>
 
     <div class="box">
-        <h3>3. LAPORAN & DATA</h3>
-        <div style="display:flex; gap:5px; align-items:center; margin-bottom:10px;">
-            <select id="reportRange" onchange="toggleCustomDate()" style="flex:1;">
+        <h3>3. LAPORAN</h3>
+        <div style="display:flex; gap:5px; margin-bottom:10px;">
+            <select id="reportRange" onchange="toggleCustomDate()" style="flex:2;">
                 <option value="today">HARI INI</option>
                 <option value="yesterday">KEMARIN</option>
-                <option value="7days">7 HARI TERAKHIR</option>
-                <option value="custom">CUSTOM TANGGAL...</option>
+                <option value="7days">7 HARI</option>
+                <option value="custom">CUSTOM...</option>
             </select>
-            <button onclick="generateReport()" class="btn-green" style="width:auto; white-space:nowrap;">DOWNLOAD CSV</button>
+            <button onclick="generateReport()" class="btn-green" style="flex:1;">CSV</button>
         </div>
-        <div id="customDateArea" style="display:none; margin-bottom:10px; background:#222; padding:10px;">
-            DARI: <input type="date" id="dateStart"> SAMPAI: <input type="date" id="dateEnd">
+        <div id="customDateArea" style="display:none; margin-bottom:10px; background:#222; padding:5px;">
+            <input type="date" id="dateStart" style="margin-bottom:5px;">
+            <input type="date" id="dateEnd">
         </div>
-        <button onclick="askConfirm('PERINGATAN KERAS!\nSemua data antrian dan slot akan dihapus.\nReset sistem sekarang?', resetSystem)" class="btn-red" style="width:100%; margin-top:10px;">⚠ RESET TOTAL SYSTEM (00:00) ⚠</button>
+        <button onclick="askConfirm('RESET TOTAL SYSTEM??', resetSystem)" class="btn-red" style="width:100%;">⚠ RESET DATA (00:00) ⚠</button>
     </div>
 
     <div class="box">
-        <h3>4. SYSTEM LOGS</h3>
-        <div id="logArea" style="height:120px; overflow-y:scroll; color:#666; font-size:10px;"></div>
+        <h3>4. SYSTEM LOGS (REALTIME)</h3>
+        <div style="max-height:200px; overflow-y:auto; border:1px solid #222;">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th width="20%">JAM</th>
+                        <th width="20%">AKSI</th>
+                        <th>DETAIL</th>
+                    </tr>
+                </thead>
+                <tbody id="logBody">
+                    <tr><td colspan="3" align="center">Loading Logs...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div id="customModal">
         <div class="modal-box">
-            <div class="modal-title" id="modalTitle">KONFIRMASI ADMIN</div>
-            <div class="modal-desc" id="modalText">Apakah anda yakin melakukan tindakan ini?</div>
+            <h2 style="margin:0 0 10px 0; font-family:'Teko'; color:#fff;">KONFIRMASI</h2>
+            <div id="modalText" style="color:#ccc; margin-bottom:20px;">Text</div>
             <div class="modal-btns">
-                <button id="btnYes" class="mb-yes">YA, LAKUKAN</button>
-                <button onclick="closeModal()" class="mb-no">BATAL</button>
+                <button id="btnYes" class="mb-yes">YA</button>
+                <button onclick="closeModal()" class="mb-no">TIDAK</button>
             </div>
         </div>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, runTransaction, collection, addDoc, query, orderBy, limit, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -157,33 +182,57 @@
         let cachedSlots = [];
         let cachedQueue = [];
 
-        // PASSWORD CHECK (PIN: 8080)
+        // PASSWORD CHECK
         if(!localStorage.getItem('admin_acc')) {
-            const p = prompt("MASUKKAN PIN ADMIN:");
+            const p = prompt("PIN ADMIN:");
             if(p !== "8080") { window.location.href='index.html'; }
             else localStorage.setItem('admin_acc', '1');
         }
         window.logout = () => { localStorage.removeItem('admin_acc'); window.location.href='index.html'; };
 
-        // --- CUSTOM CONFIRM MODAL LOGIC ---
+        // MODAL LOGIC
         let currentCallback = null;
         window.askConfirm = (text, callback) => {
             document.getElementById('modalText').innerText = text;
             document.getElementById('customModal').style.display = 'flex';
             currentCallback = callback;
         };
-        document.getElementById('btnYes').onclick = () => {
-            if(currentCallback) currentCallback();
-            closeModal();
-        };
-        window.closeModal = () => {
-            document.getElementById('customModal').style.display = 'none';
-            currentCallback = null;
-        };
+        document.getElementById('btnYes').onclick = () => { if(currentCallback) currentCallback(); closeModal(); };
+        window.closeModal = () => { document.getElementById('customModal').style.display = 'none'; currentCallback = null; };
 
-        // --- CORE LISTENER ---
+        // === HELPER: GET DATE WIB ===
+        function getWIBDateString() {
+            return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+        }
+
+        // LISTENER & AUTO RESET LOGIC
         onSnapshot(mainRef, (snap) => {
             const d = snap.data();
+            if(!d) return;
+
+            // --- AUTO RESET 00:00 WIB ---
+            const todayWIB = getWIBDateString();
+            
+            // Cek apakah tanggal di DB sudah kadaluarsa (kemarin)
+            if (d.lastResetDate !== todayWIB) {
+                console.log("Mendeteksi Hari Baru. Resetting...");
+                runTransaction(db, async(t) => {
+                    const freshDoc = await t.get(mainRef);
+                    // Pastikan belum direset user lain
+                    if (freshDoc.data().lastResetDate !== todayWIB) {
+                        t.update(mainRef, { 
+                            lastResetDate: todayWIB, 
+                            waitingQueue: [],        
+                            chargingSlots: [null,null,null],
+                            recycledNumbers: [], 
+                            lastTicket: 0
+                        });
+                        addLog("AUTO_RESET", `New Day: ${todayWIB}`);
+                    }
+                });
+                // Jangan return, biarkan render berjalan agar UI update
+            }
+
             cachedSlots = d.chargingSlots || [null,null,null];
             cachedQueue = d.waitingQueue || [];
 
@@ -191,16 +240,16 @@
                 const el = document.getElementById(`slot${i+1}`);
                 if(s) {
                     el.innerHTML = `
-                        <div style="color:var(--cyan); font-size:16px; font-weight:bold;">${s.plat}</div>
-                        <div style="color:#fff;">${s.userName} (#${s.qNo})</div>
-                        <div class="slot-actions" style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:5px;">
-                            <button class="btn-red" onclick="askConfirm('Selesaikan sesi charging ${s.plat}?', () => forceStop(${i}))">STOP</button>
-                            <button class="btn-yellow" onclick="askConfirm('Tarik ${s.plat} kembali ke antrian?', () => kickToQueue(${i}))">ANTRI</button>
+                        <div style="color:var(--cyan); font-weight:bold; font-size:14px;">${s.plat}</div>
+                        <div style="font-size:10px; color:#ccc;">${s.userName} (#${s.qNo})</div>
+                        <div style="margin-top:auto; display:grid; grid-template-columns:1fr 1fr; gap:2px;">
+                            <button class="btn-red btn-mini" onclick="askConfirm('Stop Charging?', ()=>forceStop(${i}))">STOP</button>
+                            <button class="btn-yellow btn-mini" onclick="askConfirm('Tarik ke Antrian?', ()=>kickToQueue(${i}))">ANTRI</button>
                         </div>
                     `;
                     el.style.border = "1px solid var(--cyan)";
                 } else {
-                    el.innerHTML = `<div style="color:#444; padding:15px;">SLOT ${i+1}<br>KOSONG</div>`;
+                    el.innerHTML = `<div style="color:#444; margin:auto;">KOSONG</div>`;
                     el.style.border = "1px solid #333";
                 }
             });
@@ -210,23 +259,21 @@
         });
 
         function renderQueueTable() {
-            let h = `<table><tr><th style="width:30px">#</th><th>USER</th><th>CONTROL</th></tr>`;
-            if(cachedQueue.length === 0) h += `<tr><td colspan="3" style="text-align:center; padding:10px; color:#444;">TIDAK ADA ANTRIAN</td></tr>`;
+            let h = `<table><tr><th width="20">#</th><th>USER</th><th>AKSI</th></tr>`;
+            if(cachedQueue.length === 0) h += `<tr><td colspan="3" style="text-align:center; color:#444;">KOSONG</td></tr>`;
             
             cachedQueue.forEach((q, idx) => {
                 h += `<tr>
                     <td>${q.qNo}</td>
                     <td><b style="color:var(--accent)">${q.plat}</b><br>${q.userName}</td>
                     <td>
-                        <div style="display:flex; gap:2px; margin-bottom:2px;">
-                            <button class="btn-blue btn-mini" onclick="askConfirm('Naikkan prioritas ${q.plat}?', () => switchQueue(${idx}, -1))">⬆</button>
-                            <button class="btn-blue btn-mini" onclick="askConfirm('Turunkan prioritas ${q.plat}?', () => switchQueue(${idx}, 1))">⬇</button>
-                            <button class="btn-red btn-mini" style="flex:1" onclick="askConfirm('Hapus ${q.plat} dari antrian?', () => delQueue('${q.plat}'))">HAPUS</button>
-                        </div>
-                        <div style="display:flex; gap:2px;">
-                            <button class="btn-green btn-mini" onclick="askConfirm('Masukan ${q.plat} ke Slot 1?', () => pushToSlot('${q.plat}', 0))">S1</button>
-                            <button class="btn-green btn-mini" onclick="askConfirm('Masukan ${q.plat} ke Slot 2?', () => pushToSlot('${q.plat}', 1))">S2</button>
-                            <button class="btn-green btn-mini" onclick="askConfirm('Masukan ${q.plat} ke Slot 3?', () => pushToSlot('${q.plat}', 2))">S3</button>
+                        <div style="display:flex; gap:2px; flex-wrap:wrap;">
+                            <button class="btn-blue btn-mini" onclick="switchQueue(${idx},-1)">⬆</button>
+                            <button class="btn-blue btn-mini" onclick="switchQueue(${idx},1)">⬇</button>
+                            <button class="btn-green btn-mini" onclick="pushToSlot('${q.plat}',0)">S1</button>
+                            <button class="btn-green btn-mini" onclick="pushToSlot('${q.plat}',1)">S2</button>
+                            <button class="btn-green btn-mini" onclick="pushToSlot('${q.plat}',2)">S3</button>
+                            <button class="btn-red btn-mini" onclick="askConfirm('Hapus?', ()=>delQueue('${q.plat}'))">X</button>
                         </div>
                     </td>
                 </tr>`;
@@ -235,51 +282,50 @@
             document.getElementById('queueTable').innerHTML = h;
         }
 
-        // --- ACTIONS (WRAPPED IN LOGIC) ---
-        window.switchQueue = (idx, dir) => {
-            runTransaction(db, async(t) => {
-                const d = (await t.get(mainRef)).data();
-                let q = d.waitingQueue;
-                const targetIdx = idx + dir;
-                if(targetIdx < 0 || targetIdx >= q.length) return;
-                [q[idx], q[targetIdx]] = [q[targetIdx], q[idx]];
-                t.update(mainRef, { waitingQueue: q });
-                addLog("ADMIN_SWITCH", `Swap Q pos ${idx} with ${targetIdx}`);
-            });
-        };
+        // --- ACTIONS ---
 
+        // FIX: Manual Add sekarang memaksa update tanggal agar tidak dihapus Auto-Reset
         window.manualAdd = (target) => {
-            const p = document.getElementById('newPlat').value.toUpperCase().replace(/\s/g, '');
+            const p = document.getElementById('newPlat').value.toUpperCase();
             const n = document.getElementById('newName').value.toUpperCase();
             if(!p) return alert("PLAT KOSONG");
 
             runTransaction(db, async(t) => {
                 const d = (await t.get(mainRef)).data();
                 if([...(d.chargingSlots||[]), ...d.waitingQueue].some(u => u && u.plat === p)) throw "Plat Exist";
-                let newNo = (d.recycledNumbers||[]).length > 0 ? d.recycledNumbers.sort((a,b)=>a-b).shift() : (d.lastTicket||0) + 1;
-                let last = (d.recycledNumbers||[]).length > 0 ? d.lastTicket : newNo;
-                const u = { plat: p, userName: n, wa: 'ADMIN', qNo: newNo, entryTime: Date.now() };
+                
+                let newNo = (d.recycledNumbers||[]).length>0 ? d.recycledNumbers.sort((a,b)=>a-b).shift() : (d.lastTicket||0)+1;
+                let last = (d.recycledNumbers||[]).length>0 ? d.lastTicket : newNo;
+                const u = { plat:p, userName:n, wa:'ADMIN', qNo:newNo, entryTime:Date.now() };
 
-                if(target === 'queue') { d.waitingQueue.push(u); addLog("ADMIN_ADD", `Q: ${p}`); }
-                else { 
-                    if(d.chargingSlots[target]) throw "Penuh"; 
-                    u.startTime = Date.now(); d.chargingSlots[target] = u; 
-                    addLog("ADMIN_ADD", `Slot ${target+1}: ${p}`);
+                if(target === 'queue') d.waitingQueue.push(u);
+                else {
+                    if(d.chargingSlots[target]) throw "Slot Penuh";
+                    u.startTime = Date.now(); d.chargingSlots[target] = u;
                 }
-                t.update(mainRef, { waitingQueue: d.waitingQueue, chargingSlots: d.chargingSlots, recycledNumbers: d.recycledNumbers||[], lastTicket: last });
-            }).then(()=>{ document.getElementById('newPlat').value=''; document.getElementById('newName').value=''; }).catch(e => alert(e));
+
+                // KEY FIX: Update lastResetDate ke HARI INI saat input data
+                t.update(mainRef, { 
+                    waitingQueue:d.waitingQueue, 
+                    chargingSlots:d.chargingSlots, 
+                    recycledNumbers:d.recycledNumbers||[], 
+                    lastTicket:last,
+                    lastResetDate: getWIBDateString() // Mencegah auto-reset menghapus data ini
+                });
+                addLog("ADMIN_ADD", `${p} (${n})`);
+            }).then(()=>{ document.getElementById('newPlat').value=''; }).catch(e=>alert(e));
         };
 
-        window.pushToSlot = (plat, sIdx) => {
+        window.pushToSlot = (p, sIdx) => {
             runTransaction(db, async(t) => {
                 const d = (await t.get(mainRef)).data();
-                if(d.chargingSlots[sIdx]) throw "Slot Penuh";
-                const i = d.waitingQueue.findIndex(x => x.plat === plat);
-                if(i < 0) throw "User Hilang";
-                const u = d.waitingQueue.splice(i, 1)[0];
+                if(d.chargingSlots[sIdx]) throw "Penuh";
+                const i = d.waitingQueue.findIndex(x => x.plat === p);
+                if(i<0) throw "Hilang";
+                const u = d.waitingQueue.splice(i,1)[0];
                 u.startTime = Date.now(); d.chargingSlots[sIdx] = u;
-                t.update(mainRef, { waitingQueue: d.waitingQueue, chargingSlots: d.chargingSlots });
-                addLog("ADMIN_PUSH", `${plat} -> S${sIdx+1}`);
+                t.update(mainRef, { waitingQueue:d.waitingQueue, chargingSlots:d.chargingSlots });
+                addLog("START_CHARGE", `${p} -> S${sIdx+1}`);
             }).catch(e=>alert(e));
         };
 
@@ -288,23 +334,9 @@
                 const d = (await t.get(mainRef)).data();
                 const u = d.chargingSlots[i];
                 if(!u) return;
-                d.chargingSlots[i] = null; delete u.startTime; d.waitingQueue.unshift(u);
-                t.update(mainRef, { chargingSlots: d.chargingSlots, waitingQueue: d.waitingQueue });
-                addLog("ADMIN_KICK", `S${i+1} -> Q: ${u.plat}`);
-            });
-        };
-
-        window.moveSlotUser = () => {
-            const s1 = document.getElementById('moveSrc').value;
-            const s2 = document.getElementById('moveDest').value;
-            if(s1 == s2) return alert("Slot sama");
-            runTransaction(db, async(t) => {
-                const d = (await t.get(mainRef)).data();
-                const tmp = d.chargingSlots[s1];
-                d.chargingSlots[s1] = d.chargingSlots[s2];
-                d.chargingSlots[s2] = tmp;
-                t.update(mainRef, { chargingSlots: d.chargingSlots });
-                addLog("ADMIN_SWAP", `S${parseInt(s1)+1} <-> S${parseInt(s2)+1}`);
+                d.chargingSlots[i]=null; delete u.startTime; d.waitingQueue.unshift(u);
+                t.update(mainRef, { chargingSlots:d.chargingSlots, waitingQueue:d.waitingQueue });
+                addLog("MOVE_QUEUE", `${u.plat} from S${i+1}`);
             });
         };
 
@@ -312,7 +344,21 @@
             runTransaction(db, async(t) => {
                 const d = (await t.get(mainRef)).data();
                 const u = d.chargingSlots[i];
-                if(u) { addDoc(histRef, { ...u, finishTime: new Date(), timestamp: new Date(), by: 'ADMIN' }); d.chargingSlots[i] = null; t.update(mainRef, { chargingSlots: d.chargingSlots }); addLog("ADMIN_STOP", u.plat); }
+                if(u) { addDoc(histRef, {...u, finishTime:new Date(), timestamp:new Date(), by:'ADMIN'}); d.chargingSlots[i]=null; t.update(mainRef, {chargingSlots:d.chargingSlots}); addLog("STOP_CHARGE", `${u.plat} S${i+1}`); }
+            });
+        };
+
+        window.moveSlotUser = () => {
+            const s1 = document.getElementById('moveSrc').value;
+            const s2 = document.getElementById('moveDest').value;
+            if(s1==s2) return alert("Sama");
+            runTransaction(db, async(t) => {
+                const d = (await t.get(mainRef)).data();
+                const t1 = d.chargingSlots[s1];
+                d.chargingSlots[s1] = d.chargingSlots[s2];
+                d.chargingSlots[s2] = t1;
+                t.update(mainRef, { chargingSlots:d.chargingSlots });
+                addLog("SWAP_SLOT", `S${parseInt(s1)+1} <-> S${parseInt(s2)+1}`);
             });
         };
 
@@ -320,61 +366,51 @@
             runTransaction(db, async(t) => {
                 const d = (await t.get(mainRef)).data();
                 const i = d.waitingQueue.findIndex(x => x.plat === p);
-                if(i > -1) { 
-                    const u = d.waitingQueue.splice(i, 1)[0]; 
-                    let r = d.recycledNumbers || []; r.push(u.qNo);
-                    t.update(mainRef, { waitingQueue: d.waitingQueue, recycledNumbers: r });
-                    addLog("ADMIN_DEL", p);
+                if(i>-1) {
+                    const u = d.waitingQueue.splice(i,1)[0];
+                    let r = d.recycledNumbers||[]; r.push(u.qNo);
+                    t.update(mainRef, { waitingQueue:d.waitingQueue, recycledNumbers:r });
+                    addLog("DELETE_Q", p);
                 }
             });
         };
 
         window.resetSystem = () => {
             runTransaction(db, async(t) => {
-                t.update(mainRef, { chargingSlots: [null,null,null], waitingQueue: [], recycledNumbers: [], lastTicket: 0 });
-                addLog("ADMIN_RESET", "FULL SYSTEM WIPE");
+                t.update(mainRef, { chargingSlots:[null,null,null], waitingQueue:[], recycledNumbers:[], lastTicket:0, lastResetDate: getWIBDateString() });
+                addLog("MANUAL_RESET", "Reset by Admin");
             });
         };
 
-        // --- REPORTING & ANALYTICS ---
-        window.toggleCustomDate = () => {
-            document.getElementById('customDateArea').style.display = (document.getElementById('reportRange').value === 'custom') ? 'block' : 'none';
-        }
-
+        // EXPORT & LOG
+        window.toggleCustomDate = () => { document.getElementById('customDateArea').style.display = (document.getElementById('reportRange').value === 'custom') ? 'block' : 'none'; }
+        
         window.generateReport = async () => {
             const range = document.getElementById('reportRange').value;
             let start = new Date(); start.setHours(0,0,0,0);
             let end = new Date(); end.setHours(23,59,59,999);
-
             if(range === 'yesterday') { start.setDate(start.getDate()-1); end.setDate(end.getDate()-1); }
             else if(range === '7days') { start.setDate(start.getDate()-6); }
             else if(range === 'custom') {
-                start = new Date(document.getElementById('dateStart').value); start.setHours(0,0,0,0);
+                start = new Date(document.getElementById('dateStart').value);
                 end = new Date(document.getElementById('dateEnd').value); end.setHours(23,59,59,999);
             }
-
+            
             const q = query(histRef, orderBy("timestamp", "desc"));
             const snap = await getDocs(q);
-            let csv = `LAPORAN FC KG (${start.toLocaleDateString()} - ${end.toLocaleDateString()})\n\nTANGGAL,MASUK,KELUAR,DURASI(M),ANTRIAN,PLAT,NAMA\n`;
-            let total = 0, tDur = 0;
-
-            snap.forEach(doc => {
-                const d = doc.data();
-                const dDate = d.timestamp.toDate();
-                if(dDate >= start && dDate <= end) {
-                    let dur = 0;
-                    if(d.startTime && d.finishTime) dur = Math.round((d.finishTime.toDate() - d.startTime)/60000);
-                    csv += `${d.timestamp.toDate().toLocaleDateString()},${d.entryTime?new Date(d.entryTime).toLocaleTimeString():'-'},${d.finishTime?d.finishTime.toDate().toLocaleTimeString():'-'},${dur},${d.qNo},${d.plat},${d.userName}\n`;
-                    total++; tDur += dur;
+            let csv = "TANGGAL,MASUK,KELUAR,DURASI,PLAT,NAMA\n";
+            snap.forEach(d => {
+                const x = d.data();
+                const dt = x.timestamp.toDate();
+                if(dt >= start && dt <= end) {
+                    const dur = (x.startTime && x.finishTime) ? Math.round((x.finishTime.toDate()-x.startTime)/60000) : 0;
+                    csv += `${dt.toLocaleDateString()},${x.entryTime?new Date(x.entryTime).toLocaleTimeString():'-'},${x.finishTime?x.finishTime.toDate().toLocaleTimeString():'-'},${dur},${x.plat},${x.userName}\n`;
                 }
             });
-            
-            csv = `RINGKASAN: TOTAL MOTOR: ${total}, RATA-RATA DURASI: ${total>0?Math.round(tDur/total):0} Menit\n\n` + csv;
-            
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = 'Report.csv'; a.click();
-        }
+        };
 
         window.loadAnalytics = async () => {
             const today = new Date(); today.setHours(0,0,0,0);
@@ -392,15 +428,27 @@
         };
         setTimeout(loadAnalytics, 2000);
 
-        // --- LOG DISPLAY ---
-        onSnapshot(query(logRef, orderBy("timestamp", "desc"), limit(30)), (snap) => {
+        // --- NEW LOG LISTENER ---
+        onSnapshot(query(logRef, orderBy("timestamp", "desc"), limit(50)), (snap) => {
             let h = '';
             snap.forEach(d => {
                 const data = d.data();
-                h += `<div>[${data.timestamp.toDate().toLocaleTimeString()}] ${data.action} - ${data.details}</div>`;
+                const time = data.timestamp ? data.timestamp.toDate().toLocaleTimeString() : '-';
+                
+                let badgeClass = 'b-sys';
+                if(data.action.includes('ADD')) badgeClass = 'b-add';
+                if(data.action.includes('DEL') || data.action.includes('STOP')) badgeClass = 'b-del';
+                if(data.action.includes('SWAP') || data.action.includes('MOVE')) badgeClass = 'b-edit';
+
+                h += `<tr>
+                    <td>${time}</td>
+                    <td><span class="badge ${badgeClass}">${data.action}</span></td>
+                    <td style="color:#fff;">${data.details}</td>
+                </tr>`;
             });
-            document.getElementById('logArea').innerHTML = h;
+            document.getElementById('logBody').innerHTML = h;
         });
+
         function addLog(act, det) { addDoc(logRef, { action: act, details: det, timestamp: new Date() }); }
     </script>
 </body>
