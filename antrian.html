@@ -22,7 +22,9 @@
         body { 
             font-family: 'Rajdhani', sans-serif;
             background: #000;
-            /* BACKGROUND IMAGE LOGO */
+            /* BACKGROUND IMAGE */
+            /* Pastikan logo.jpg untuk background tetap ada jika masih ingin dipakai sbg background */
+            /* Jika ingin background hitam polos, hapus baris background-image ini */
             background-image: linear-gradient(to bottom, rgba(0,0,0,0.9), #000), url('logo.jpg'); 
             background-size: cover; background-position: center;
             color: #fff; margin: 0; overflow: hidden; 
@@ -70,10 +72,18 @@
         .btn-pilih { display: none; background: rgba(255, 215, 0, 0.2); border: 1px solid #FFD700; color: #FFD700; padding: 4px 10px; border-radius: 6px; margin-left: 10px; font-size: 10px; font-weight: bold; animation: blink 2s infinite; }
         .slot-card.empty .btn-pilih { display: inline-block; }
 
-        /* === 4. MIDDLE BUTTON & LOGO === */
+        /* === 4. MIDDLE BUTTON & LOGO (UPDATED FOR PNG) === */
         .mid-action-area { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 50; }
         .logo-btn { width: 100px; height: 100px; position: relative; cursor: pointer; transition: transform 0.2s; display: flex; justify-content: center; align-items: center; }
-        .logo-img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.6)); animation: breatheLogo 3s infinite ease-in-out; }
+        
+        /* UPDATE: Hapus mix-blend-mode agar PNG transparan terlihat jelas */
+        .logo-img { 
+            width: 100%; height: 100%; object-fit: contain; 
+            /* mix-blend-mode: screen; <--- HAPUS INI */
+            filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.6)); 
+            animation: breatheLogo 3s infinite ease-in-out; 
+        }
+        
         .tap-hint { font-size: 11px; color: var(--cyan); letter-spacing: 2px; margin-top: 10px; font-weight: bold; text-shadow: 0 0 10px rgba(0,240,255,0.5); animation: blink 2s infinite; }
         .logo-btn:active { transform: scale(0.9); }
 
@@ -87,7 +97,7 @@
         .qbt-lbl { font-size: 8px; color: #aaa; letter-spacing: 1px; text-align: center; }
         .qbt-val { font-family: 'Teko'; font-size: 42px; line-height: 0.8; color: #fff; margin-top: 2px; }
 
-        /* === 6. CUSTOM MODAL (PENGGANTI ALERT) === */
+        /* === 6. CUSTOM MODAL === */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.2s; }
         .modal-box { width: 85%; max-width: 350px; background: #111; border: 1px solid var(--cyan); border-radius: 15px; padding: 25px; text-align: center; box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); transform: scale(0.9); animation: popUp 0.3s forwards; }
         .modal-msg { font-size: 18px; color: #fff; margin-bottom: 25px; font-family: 'Rajdhani'; font-weight: 600; line-height: 1.4; }
@@ -104,7 +114,7 @@
         .holo-input { background: transparent; border: none; border-bottom: 2px solid #333; width: 100%; color: #fff; font-family: 'Teko'; font-size: 42px; text-align: center; outline: none; margin: 20px 0; text-transform: uppercase; }
         .btn-next { width: 100%; padding: 15px; background: var(--cyan); color: #000; font-family: 'Rajdhani'; font-weight: bold; font-size: 18px; border-radius: 50px; border:none; cursor: pointer; box-shadow: 0 0 20px rgba(0,240,255,0.4); }
 
-        /* === 8. WAITING DASHBOARD (FIXED: FULL WIDTH AUTO) === */
+        /* === 8. WAITING DASHBOARD (FULL WIDTH) === */
         #waitingDashboard { 
             justify-content: flex-start !important; 
             padding: 20px; 
@@ -114,7 +124,7 @@
         /* Kartu Monitor */
         .queue-status-card {
             flex: 0 0 auto; 
-            width: 100%; /* FIX: AUTO SESUAI LAYAR */
+            width: 100%; 
             background: rgba(20, 25, 30, 0.9); border: 1px solid var(--glass-border);
             border-radius: 20px; padding: 20px; 
             display: flex; flex-direction: column; align-items: center;
@@ -131,10 +141,10 @@
         .qsc-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; animation: counterSpin 4s infinite linear; }
         .qsc-rank-big { font-family: 'Teko'; font-size: 60px; line-height: 0.8; color: #fff; text-shadow: 0 0 20px var(--cyan); }
         
-        /* List Wrapper (Fix: Full Width) */
+        /* List Wrapper */
         .queue-list-wrapper { 
             flex: 1; 
-            width: 100%; /* FIX: FULL WIDTH */
+            width: 100%;
             overflow-y: auto; 
             min-height: 0;
             border-top: 1px solid rgba(255,255,255,0.1); 
@@ -219,7 +229,7 @@
 
     <div class="mid-action-area">
         <div class="logo-btn" onclick="window.handleMainAction()">
-            <img src="logo.jpg" class="logo-img" alt="LOGO ERROR">
+            <img src="logo.png" class="logo-img" alt="LOGO ERROR (Harus logo.png)">
         </div>
         <div class="tap-hint" id="mainBtnLabel">TAP UNTUK DAFTAR</div>
 
