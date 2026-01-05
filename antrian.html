@@ -103,17 +103,17 @@
         .holo-input { background: transparent; border: none; border-bottom: 2px solid #333; width: 100%; color: #fff; font-family: 'Teko'; font-size: 42px; text-align: center; outline: none; margin: 20px 0; text-transform: uppercase; }
         .btn-next { width: 100%; padding: 15px; background: var(--cyan); color: #000; font-family: 'Rajdhani'; font-weight: bold; font-size: 18px; border-radius: 50px; border:none; cursor: pointer; box-shadow: 0 0 20px rgba(0,240,255,0.4); }
 
-        /* === 8. WAITING DASHBOARD (FIX LAYOUT & SCROLL) === */
+        /* === 8. WAITING DASHBOARD (FULL WIDTH FIX) === */
         #waitingDashboard { 
             justify-content: flex-start !important; 
             padding: 20px; 
             padding-top: 50px; 
         }
         
-        /* Kartu Monitor (Anti Shrink) */
+        /* Kartu Monitor (Full Width) */
         .queue-status-card {
-            flex: 0 0 auto; /* JANGAN MENGECIL */
-            width: 100%; max-width: 360px;
+            flex: 0 0 auto;
+            width: 100%; /* MENGIKUTI LEBAR LAYAR */
             background: rgba(20, 25, 30, 0.9); border: 1px solid var(--glass-border);
             border-radius: 20px; padding: 20px; 
             display: flex; flex-direction: column; align-items: center;
@@ -130,18 +130,18 @@
         .qsc-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; animation: counterSpin 4s infinite linear; }
         .qsc-rank-big { font-family: 'Teko'; font-size: 60px; line-height: 0.8; color: #fff; text-shadow: 0 0 20px var(--cyan); }
         
-        /* List Wrapper (Scrollable) */
+        /* List Wrapper (Scrollable & Full Width) */
         .queue-list-wrapper { 
-            flex: 1; /* Isi sisa ruang */
-            width: 100%; max-width: 360px;
-            overflow-y: auto; /* Scroll aktif */
+            flex: 1; /* Mengisi sisa ruang ke bawah */
+            width: 100%; /* FULL WIDTH */
+            overflow-y: auto; /* Scroll Vertikal Aktif */
             min-height: 0;
             border-top: 1px solid rgba(255,255,255,0.1); 
             padding-top: 10px; margin-bottom: 10px;
             scrollbar-width: none;
         }
         .queue-list-wrapper::-webkit-scrollbar { display: none; }
-        .lbl-list { width: 100%; max-width: 360px; font-size: 10px; color: #666; letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
+        .lbl-list { width: 100%; font-size: 10px; color: #666; letter-spacing: 2px; margin-bottom: 5px; text-transform: uppercase; }
 
         /* List Items (Grid System) */
         .ql-item { 
@@ -283,7 +283,7 @@
             <div id="wdListContainer"></div>
         </div>
         
-        <div style="flex:0 0 auto; width:100%; max-width:360px; display:flex; gap:10px; padding-bottom: 10px;">
+        <div style="flex:0 0 auto; width:100%; display:flex; gap:10px; padding-bottom: 10px;">
             <button onclick="document.getElementById('waitingDashboard').classList.remove('active')" style="flex:1; padding:15px; background:#111; color:#888; border:1px solid #333; border-radius:12px; font-family:'Teko'; font-size:18px;">▼ SEMBUNYIKAN</button>
             <button onclick="cancelQueue()" style="flex:1; padding:15px; background:rgba(255,0,0,0.1); color:red; border:1px solid red; border-radius:12px; font-family:'Teko'; font-size:18px;">BATALKAN</button>
         </div>
