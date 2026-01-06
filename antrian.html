@@ -282,7 +282,6 @@
         </div>
         <div class="scan-status" id="scanText">MENGHUBUNGKAN...</div>
     </div>
-
     <div id="waitingDashboard" class="screen-overlay">
         <div class="header" style="flex: 0 0 auto; margin-bottom: 10px; padding-top: 0;">
             <div class="main-title" style="font-size:32px;">LIVE MONITOR</div>
@@ -338,7 +337,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, runTransaction, collection, addDoc, setDoc, initializeFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // OPTIMISASI 1: Hapus initializeFirestore, pakai getFirestore standar
+        import { getFirestore, doc, onSnapshot, runTransaction, collection, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // === 1. FIREBASE CONFIG ===
         const firebaseConfig = {
@@ -351,16 +351,17 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+        // OPTIMISASI 2: Menggunakan Websocket standar (Jauh lebih hemat kuota daripada LongPolling)
+        const db = getFirestore(app); 
+        
         const mainRef = doc(db, "antrian", "utama");
         const historyRef = collection(db, "riwayatCharging");
 
-        // === 2. PLAYLIST DATA ===
+        // === 2. PLAYLIST DATA (Tetap Sama) ===
         const rawMusicList = [
           { "url": "https://mlump3player.netlify.app/Ada%20Apa%20Denganmu.mp3" }, { "url": "https://mlump3player.netlify.app/anji-menunggu-kamu.mp3" }, { "url": "https://mlump3player.netlify.app/Anugerah%20Terindah%20Yang%20Pernah%20Kumiliki.mp3" }, { "url": "https://mlump3player.netlify.app/armada_asalkan_kau_bahagia.mp3" }, { "url": "https://mlump3player.netlify.app/armada_harusnya_aku.mp3" }, { "url": "https://mlump3player.netlify.app/Bendera%20-%20Cokelat%20-%202003.mp3" }, { "url": "https://mlump3player.netlify.app/Bintang%20Di%20Surga.mp3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Always%20.MP3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20I'll%20Be%20There%20For%20You%20.MP3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Its%20My%20Life%20.mp3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Lay%20Your%20Hands%20On%20Me.MP3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Livin'%20On%20A%20Prayer%20.MP3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20This%20house%20is%20not%20for%20sale.mp3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20Who%20Says%20You%20Can't%20Go%20Home%20%5BDuet%5D.mp3" }, { "url": "https://mlump3player.netlify.app/Bon%20Jovi%20-%20You%20Give%20Love%20A%20Bad%20Name.mp3" }, { "url": "https://mlump3player.netlify.app/Bunda%20-%20Potret%20-%201997.mp3" }, { "url": "https://mlump3player.netlify.app/Cukup%20Siti%20Nurbaya%20-%20Dewa%2019%20-%201995.mp3" }, { "url": "https://mlump3player.netlify.app/Dan%20-%20Sheila%20On%207%20-%201999.mp3" }, { "url": "https://mlump3player.netlify.app/Fourtwnty%20-%20Mangu%20(Official%20Lyric%20Visualizer).mp3" }, { "url": "https://mlump3player.netlify.app/Galang%20Rambu%20Anarki%20-%20Iwan%20Fals%20-%201982.mp3" }, { "url": "https://mlump3player.netlify.app/Guru%20Oemar%20Bakri%20-%20Iwan%20Fals%20-%201981.mp3" }, { "url": "https://mlump3player.netlify.app/Janji%20-%20Gigi%20-%201995.mp3" }, { "url": "https://mlump3player.netlify.app/Judika%20-%20Bagaimana%20Kalau%20Aku%20Tidak%20Baik%20-%20Baik%20Saja.mp3" }, { "url": "https://mlump3player.netlify.app/Judika%20-%20Putus%20atau%20Terus%20(Official%20Music%20Video).mp3" }, { "url": "https://mlump3player.netlify.app/Mahadewi%20-%20Padi%20-%201999.mp3" }, { "url": "https://mlump3player.netlify.app/Melompat%20Lebih%20Tinggi%20-%20Sheila%20on%207%20-%202003.mp3" }, { "url": "https://mlump3player.netlify.app/Mimpi%20-%20Anggun%20C.%20Sasmi%20-%201990.mp3" }, { "url": "https://mlump3player.netlify.app/Mix%20Lagu%20Pop%20Indonesia.mp3" }, { "url": "https://mlump3player.netlify.app/Mungkin%20Nanti.mp3" }, { "url": "https://mlump3player.netlify.app/No%20Doubt%20-%20Don't%20Speak.mp3" }, { "url": "https://mlump3player.netlify.app/PADI%20-%20Kasih%20Tak%20Sampai.mp3" }, { "url": "https://mlump3player.netlify.app/PADI%20-%20Semua%20Tak%20Sama.mp3" }, { "url": "https://mlump3player.netlify.app/Pelangi%20Di%20Matamu.mp3" }, { "url": "https://mlump3player.netlify.app/Pesawat%20Tempurku%20-%20Iwan%20Fals%20-%201987.mp3" }, { "url": "https://mlump3player.netlify.app/Sarjana%20Muda%20-%20Iwan%20Fals%20-%201981.mp3" }, { "url": "https://mlump3player.netlify.app/Sheila%20On%207%20-%20Saat%20Aku%20Lanjut%20Usia%20(Official%20Music%20Video)%20(320).mp3" }, { "url": "https://mlump3player.netlify.app/Slank%20-%20Terlalu%20Manis.mp3" }, { "url": "https://mlump3player.netlify.app/Sobat%20-%20Padi%20-%201999.mp3" }, { "url": "https://mlump3player.netlify.app/Sore%20Tugu%20Pancoran.mp3" }, { "url": "https://mlump3player.netlify.app/Stevie%20B-Dream%20About%20You.mp3" }, { "url": "https://mlump3player.netlify.app/Stinky%20-%20Mungkinkah%20(Official%20Lyric%20Video).mp3" }, { "url": "https://mlump3player.netlify.app/Surat%20Buat%20Wakil%20Rakyat.mp3" }, { "url": "https://mlump3player.netlify.app/Surat%20Buat%20Wakil%20Rakyat%20-%20Iwan%20Fals%20-%201981.mp3" }, { "url": "https://mlump3player.netlify.app/Surti%20Tejo%20(Acoustic).mp3" }, { "url": "https://mlump3player.netlify.app/Terbang%20-%20Gigi%20-%201997.mp3" }, { "url": "https://mlump3player.netlify.app/Terbunuh%20Sepi%20-%20Slank%20-%201994.mp3" }, { "url": "https://mlump3player.netlify.app/Terima%20Kasih.mp3" }, { "url": "https://mlump3player.netlify.app/Ujung%20Aspal%20Pondok%20Gede.mp3" }, { "url": "https://mlump3player.netlify.app/Virgoun%20-%20Surat%20Cinta%20Untuk%20Starla.mp3" }
         ];
 
-        // Logic Auto-Cleaning Titles
         const playlist = rawMusicList.map(item => {
             let cleanTitle = decodeURIComponent(item.url.split('/').pop());
             cleanTitle = cleanTitle.replace(/.mp3/gi, '').replace(/_/g, ' ').replace(/-/g, ' ');
@@ -590,9 +591,16 @@
                 $('screen-scan').classList.remove('active');
                 if(r==="DUPLICATE") { 
                     const reLogin = await customConfirm("Plat sudah ada. Login ulang?");
-                    if(reLogin) { localStorage.setItem('myPlat',formData.plat); location.reload(); } 
+                    // OPTIMISASI 3: Tidak perlu reload untuk reset
+                    if(reLogin) { 
+                        runLogin(); 
+                    } 
                 }
-                else { localStorage.setItem('myPlat',formData.plat); myPlat=formData.plat; openWaitingDashboard(); }
+                else { 
+                    localStorage.setItem('myPlat',formData.plat); 
+                    myPlat=formData.plat; 
+                    openWaitingDashboard(); 
+                }
             });
         }
 
@@ -626,13 +634,20 @@
             }, 300);
         }
 
+        // OPTIMISASI 4: HAPUS location.reload(), GUNAKAN RESET STATE
         window.cancelQueue = async () => {
             const ok = await customConfirm("Batal antri?");
             if(!ok) return;
             runTransaction(db, async(t)=>{
                 const d=(await t.get(mainRef)).data(); const i=d.waitingQueue.findIndex(x=>x.plat===myPlat);
                 if(i!==-1){ d.waitingQueue.splice(i,1); t.update(mainRef,{waitingQueue:d.waitingQueue}); }
-            }).then(()=>{ localStorage.removeItem('myPlat'); location.reload(); });
+            }).then(()=>{ 
+                localStorage.removeItem('myPlat'); 
+                myPlat = null; // Reset variable lokal
+                amIInQueue = false;
+                $('waitingDashboard').classList.remove('active'); // Tutup dashboard
+                updateUI(); // Paksa update tampilan
+            });
         };
 
         window.selectSlot = async (i) => {
@@ -646,6 +661,7 @@
             }).catch(e => customAlert(e));
         };
 
+        // OPTIMISASI 5: HAPUS location.reload(), GUNAKAN RESET STATE
         window.stopCharging = async (i) => {
             const ok = await customConfirm("Stop pengisian?");
             if(!ok) return;
@@ -654,34 +670,44 @@
                 const u=d.chargingSlots[i]; d.chargingSlots[i]=null;
                 if(u) addDoc(historyRef, {...u, finishTime:new Date()});
                 t.update(mainRef,{chargingSlots:d.chargingSlots});
-            }).then(()=>{ localStorage.removeItem('myPlat'); location.reload(); });
+            }).then(()=>{ 
+                localStorage.removeItem('myPlat'); 
+                myPlat = null; 
+                window.activeSlotIdx = -1;
+                toggleDashboard(false); // Tutup active dashboard
+                updateUI();
+            });
         };
         
         window.toggleDashboard = (s) => { if(s) $('screen-active-dashboard').classList.add('active'); else $('screen-active-dashboard').classList.remove('active'); isDashboardMinimized=!s; };
         function startChargeTimer(s){ if(chargeTimerInterval) clearInterval(chargeTimerInterval); chargeTimerInterval=setInterval(()=>{ const d=Math.floor((Date.now()-s)/1000); $('timerVal').innerText=`${Math.floor(d/60).toString().padStart(2,'0')}:${(d%60).toString().padStart(2,'0')}`; },1000); }
         function getDist(lat1,lon1,lat2,lon2){const R=6371;const dLat=(lat2-lat1)*Math.PI/180;const dLon=(lon2-lon1)*Math.PI/180;const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));}
         
+        // OPTIMISASI 6: Admin login tidak perlu reload
         window.toggleAdmin = async () => { 
             const code = await customPrompt("KODE ADMIN:");
             if(code==="1131"){
                 localStorage.setItem('adm_ok','1'); 
                 await customAlert("ADMIN MODE ON"); 
-                location.reload();
+                // Tidak perlu reload, updateUI atau logika lain akan menyesuaikan jika ada
             }
         };
 
-        // === LOGIC GANTI MOTOR (STRICT ADMIN) ===
+        // OPTIMISASI 7: Ganti motor tidak perlu reload
         window.gantiMotor = async () => {
-            // Cek kode dulu
             const code = await customPrompt("MASUKKAN KODE ADMIN:");
             if(code !== "1131") {
                 await customAlert("KODE SALAH! AKSES DITOLAK.");
                 return;
             }
-
-            // Jika kode benar
             localStorage.removeItem('myPlat');
-            location.reload();
+            myPlat = null; // Reset lokal
+            amIInQueue = false;
+            window.activeSlotIdx = -1;
+            toggleDashboard(false);
+            $('waitingDashboard').classList.remove('active');
+            updateUI();
+            await customAlert("Plat berhasil di-reset!");
         };
     </script>
 </body>
