@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge Kokoh Pea Test</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === SETUP BACKGROUND HITAM BIAR NEON KELIHATAN === */
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* === CSS KHUSUS BADGE KOKOH PEA === */
+        :root {
+            --purple: #D000FF; /* Warna Ungu Neon Khas */
+        }
+
+        /* 1. Container Utama Badge */
+        .badge-kokoh-pea {
+            width: 100%;
+            max-width: 150px; /* Lebar dibatasi agar proporsional di slot */
+            height: 55px;
+            background: linear-gradient(135deg, #1a051a, #000);
+            border: 1px solid var(--purple);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(208, 0, 255, 0.4); /* Glow Luar */
+            cursor: default;
+        }
+
+        /* 2. Lingkaran Foto */
+        .pea-img-container {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            overflow: hidden;
+            box-shadow: 0 0 10px var(--purple);
+            background: #000;
+            z-index: 2;
+            flex-shrink: 0; /* Supaya lingkaran tidak gepeng */
+            animation: pulsePea 1.5s infinite ease-in-out; /* Animasi Berdenyut */
+        }
+
+        /* 3. Gambar (cris.png) */
+        .pea-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Memastikan muka memenuhi lingkaran */
+        }
+
+        /* 4. Area Teks */
+        .pea-text-box {
+            flex: 1;
+            text-align: center;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 5px;
+        }
+
+        /* 5. Teks Utama (KOKOH PEA) */
+        .pea-word {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 14px; /* Ukuran pas untuk slot kecil */
+            color: var(--purple);
+            text-shadow: 0 0 5px var(--purple);
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        /* 6. Teks Kecil (Status) */
+        .pea-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 8px;
+            color: #fff;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        /* 7. Efek Kilatan Cahaya (Scan) */
+        .badge-kokoh-pea::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(208, 0, 255, 0.6), transparent);
+            transform: skewX(-20deg);
+            animation: scanFast 3s infinite linear;
+            z-index: 1;
+        }
+
+        /* === ANIMASI === */
+        @keyframes pulsePea {
+            0% { transform: scale(1); border-color: #fff; box-shadow: 0 0 5px var(--purple); }
+            50% { transform: scale(1.05); border-color: var(--purple); box-shadow: 0 0 15px var(--purple); }
+            100% { transform: scale(1); border-color: #fff; box-shadow: 0 0 5px var(--purple); }
+        }
+
+        @keyframes scanFast {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="badge-kokoh-pea">
+        <div class="pea-img-container">
+            <img src="cris.png" class="pea-img" alt="Foto">
+        </div>
+        <div class="pea-text-box">
+            <div class="pea-word">KOKOH PEA</div>
+            <div class="pea-sub">PREMIUM</div>
+        </div>
+    </div>
+
+</body>
+</html>
